@@ -1,25 +1,34 @@
 import React from "react";
 import logo from "../assets/img/logo.png"
-import avatar from "../assets/img/navbar-profile-logo.png"
+import '../assets/css/navbar-sidebar.css'
+import usjpg from '../assets/img/flags/us.jpg'
+import spainjpg from "../assets/img/flags/spain.jpg"
+import germanyjpg from "../assets/img/flags/germany.jpg"
+import italyjpg from "../assets/img/flags/italy.jpg"
+import russiajpg from "../assets/img/flags/russia.jpg"
+import navbparProfileImg from "../assets/img/navbar-profile-logo.png"
+import '../assets/css/navbar-sidebar.css'
+import '../assets/css/table-funtion.css'
+import '../assets/css/style.css'
+import '../assets/css/dark-mode.css'
+import productMemberPng from "../assets/img/projuct-member-img-3.png"
+import {Link} from "react-router-dom"
 
 
 const Navbar = () => {
 
 
-    const toggleLightMode = () => {
-
-        // add functionality here
-    }
-
     return (
         <>
 
+
+            {/* <!-- Navbar Start --> */}
             <nav id="page-topbar" className="isvertical-topbar">
                 <div className="navbar-header">
                     <div className="d-flex">
                         {/* <!-- LOGO --> */}
                         <div className="navbar-brand-box">
-                            <a href="index.html" className="logo logo-dark">
+                            <Link to="index.html" className="logo logo-dark">
                                 <span className="logo-sm">
                                     <img
                                         src={logo}
@@ -28,7 +37,7 @@ const Navbar = () => {
                                         height="38"
                                     />
                                 </span>
-                            </a>
+                            </Link>
                         </div>
 
                         <button
@@ -59,11 +68,11 @@ const Navbar = () => {
                         {/* <!-- end navbar searchbar --> */}
                     </div>
 
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center dropdown-container">
                         <button
                             className="light-mode-button"
                             aria-label="Toggle Light Mode"
-                            onclick={toggleLightMode}
+                            onclick="toggle_light_mode()"
                         >
                             <span></span>
                             <span></span>
@@ -175,140 +184,133 @@ const Navbar = () => {
                             </button>
                         </div>
 
-                        {/* <!--  */}
-                        <div className="dropdown d-inline-block">
-                            <button
-                                type="button"
-                                className="btn header-item noti-icon right-bar-toggle notification-icon"
-                                id="right-bar-toggle-v"
-                            >
-                                <svg
-                                    className="topbar-setting"
-                                    width="30"
-                                    height="30"
-                                    viewBox="0 0 32 32"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M15.9998 20.6154C18.7551 20.6154 20.9888 18.549 20.9888 16C20.9888 13.451 18.7551 11.3846 15.9998 11.3846C13.2444 11.3846 11.0108 13.451 11.0108 16C11.0108 18.549 13.2444 20.6154 15.9998 20.6154Z"
-                                        stroke="#192045"
-                                        stroke-width="1.5"
-                                        stroke-miterlimit="10"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                    <path
-                                        d="M30.6649 9.49923L29.4176 7.50077C28.7291 6.39654 27.2037 6.01923 26.0101 6.65615L25.3541 7.00692C22.8596 8.33846 19.7415 6.67346 19.7415 4.00923V3.30769C19.7415 2.03269 18.6252 1 17.247 1H14.7525C13.3743 1 12.258 2.03269 12.258 3.30769V4.00923C12.258 6.67346 9.13986 8.33962 6.64537 7.00692L5.98931 6.65615C4.7957 6.01923 3.27031 6.39654 2.58183 7.50077L1.33459 9.49923C0.646106 10.6035 1.05396 12.0146 2.24757 12.6515L2.90362 13.0023C5.39812 14.335 5.39812 17.665 2.90362 18.9977L2.24757 19.3485C1.05396 19.9854 0.646106 21.3965 1.33459 22.5008L2.58183 24.4992C3.27031 25.6035 4.7957 25.9808 5.98931 25.3438L6.64537 24.9931C9.13986 23.6604 12.258 25.3265 12.258 27.9908V28.6923C12.258 29.9673 13.3743 31 14.7525 31H17.247C18.6252 31 19.7415 29.9673 19.7415 28.6923V27.9908C19.7415 25.3265 22.8596 23.6604 25.3541 24.9931L26.0101 25.3438C27.2037 25.9808 28.7291 25.6035 29.4176 24.4992L30.6649 22.5008C31.3533 21.3965 30.9455 19.9854 29.7519 19.3485L29.0958 18.9977C26.6013 17.665 26.6013 14.335 29.0958 13.0023L29.7519 12.6515C30.9455 12.0146 31.3546 10.6035 30.6649 9.49923Z"
-                                        stroke="#192045"
-                                        stroke-width="1.5"
-                                        stroke-miterlimit="10"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
+                        {/* <!-- <div className="dropdown d-inline-block">
+        <button
+          type="button"
+          className="btn header-item noti-icon right-bar-toggle notification-icon"
+          id="right-bar-toggle-v"
+        >
+          <svg
+            className="topbar-setting"
+            width="30"
+            height="30"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.9998 20.6154C18.7551 20.6154 20.9888 18.549 20.9888 16C20.9888 13.451 18.7551 11.3846 15.9998 11.3846C13.2444 11.3846 11.0108 13.451 11.0108 16C11.0108 18.549 13.2444 20.6154 15.9998 20.6154Z"
+              stroke="#192045"
+              stroke-width="1.5"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M30.6649 9.49923L29.4176 7.50077C28.7291 6.39654 27.2037 6.01923 26.0101 6.65615L25.3541 7.00692C22.8596 8.33846 19.7415 6.67346 19.7415 4.00923V3.30769C19.7415 2.03269 18.6252 1 17.247 1H14.7525C13.3743 1 12.258 2.03269 12.258 3.30769V4.00923C12.258 6.67346 9.13986 8.33962 6.64537 7.00692L5.98931 6.65615C4.7957 6.01923 3.27031 6.39654 2.58183 7.50077L1.33459 9.49923C0.646106 10.6035 1.05396 12.0146 2.24757 12.6515L2.90362 13.0023C5.39812 14.335 5.39812 17.665 2.90362 18.9977L2.24757 19.3485C1.05396 19.9854 0.646106 21.3965 1.33459 22.5008L2.58183 24.4992C3.27031 25.6035 4.7957 25.9808 5.98931 25.3438L6.64537 24.9931C9.13986 23.6604 12.258 25.3265 12.258 27.9908V28.6923C12.258 29.9673 13.3743 31 14.7525 31H17.247C18.6252 31 19.7415 29.9673 19.7415 28.6923V27.9908C19.7415 25.3265 22.8596 23.6604 25.3541 24.9931L26.0101 25.3438C27.2037 25.9808 28.7291 25.6035 29.4176 24.4992L30.6649 22.5008C31.3533 21.3965 30.9455 19.9854 29.7519 19.3485L29.0958 18.9977C26.6013 17.665 26.6013 14.335 29.0958 13.0023L29.7519 12.6515C30.9455 12.0146 31.3546 10.6035 30.6649 9.49923Z"
+              stroke="#192045"
+              stroke-width="1.5"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div> -->
+*/}
+                        {/* <!-- <div className="dropdown d-inline-block language-switch">
+        <button
+          type="button"
+          className="btn header-item language-switch-icon"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15 0C6.72937 0 0 6.72937 0 15C0 23.2706 6.72937 30 15 30C23.2706 30 30 23.2706 30 15C30 6.72937 23.2706 0 15 0ZM16.25 1.30938V2.86625L14.1163 5H13.3837L10.4206 2.03687C11.8538 1.52875 13.3944 1.25 15 1.25C15.4219 1.25 15.8381 1.27188 16.25 1.30938ZM1.25 15C1.25 11.9625 2.24187 9.15312 3.91625 6.875H9.11625L10.625 8.38375V10.9913L8.49125 13.125L10.3663 15L9.11625 16.25H4.7025L6.4525 20.625H11.875V24.1162L8.75 27.2412C4.3025 24.9612 1.25 20.3319 1.25 15ZM15 28.75C13.2238 28.75 11.5269 28.4075 9.96688 27.7919L13.125 24.6338V19.375H7.29813L6.54813 17.5H9.63438L12.1344 15L10.2594 13.125L11.8756 11.5087V7.86625L9.63375 5.625H4.95438C6.14437 4.35063 7.5725 3.3025 9.16813 2.55188L12.8663 6.25H14.6337L17.5 3.38375V1.48188C19.1644 1.78875 20.7256 2.39313 22.1231 3.2425L17.5 7.86625V13.125H20.625V20.2588L24.8969 24.5306C22.3944 27.1287 18.8838 28.75 15 28.75ZM25.7244 23.5906L21.875 19.7412V11.875H18.75V8.38375L23.1787 3.955C26.5569 6.4625 28.75 10.4794 28.75 15C28.75 18.2488 27.615 21.235 25.7244 23.5906Z"
+              fill="#192045"
+            />
+          </svg>
+        </button>
+        <div className="dropdown-menu dropdown-menu-end">
+          <Link
+            to="javascript:void(0);"
+            className="dropdown-item notify-item language"
+            data-lang="eng"
+          >
+            <img
+              src="./assets/img/flags/us.jpg"
+              alt="user-image"
+              className="me-1"
+              height="12"
+            />
+            <span className="align-middle">English</span>
+          </Link>
 
-                        {/* --> */}
+          <Link
+            to="javascript:void(0);"
+            className="dropdown-item notify-item language"
+            data-lang="sp"
+          >
+            <img
+              src="assets/img/flags/spain.jpg"
+              alt="user-image"
+              className="me-1"
+              height="12"
+            />
+            <span className="align-middle">Spanish</span>
+          </Link>
 
-                        {/* <!-- */}
+          <Link
+            to="javascript:void(0);"
+            className="dropdown-item notify-item language"
+            data-lang="gr"
+          >
+            <img
+              src="assets/img/flags/germany.jpg"
+              alt="user-image"
+              className="me-1"
+              height="12"
+            />
+            <span className="align-middle">German</span>
+          </Link>
 
-                        <div className="dropdown d-inline-block language-switch">
-                            <button
-                                type="button"
-                                className="btn header-item language-switch-icon"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                            >
-                                <svg
-                                    width="30"
-                                    height="30"
-                                    viewBox="0 0 30 30"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M15 0C6.72937 0 0 6.72937 0 15C0 23.2706 6.72937 30 15 30C23.2706 30 30 23.2706 30 15C30 6.72937 23.2706 0 15 0ZM16.25 1.30938V2.86625L14.1163 5H13.3837L10.4206 2.03687C11.8538 1.52875 13.3944 1.25 15 1.25C15.4219 1.25 15.8381 1.27188 16.25 1.30938ZM1.25 15C1.25 11.9625 2.24187 9.15312 3.91625 6.875H9.11625L10.625 8.38375V10.9913L8.49125 13.125L10.3663 15L9.11625 16.25H4.7025L6.4525 20.625H11.875V24.1162L8.75 27.2412C4.3025 24.9612 1.25 20.3319 1.25 15ZM15 28.75C13.2238 28.75 11.5269 28.4075 9.96688 27.7919L13.125 24.6338V19.375H7.29813L6.54813 17.5H9.63438L12.1344 15L10.2594 13.125L11.8756 11.5087V7.86625L9.63375 5.625H4.95438C6.14437 4.35063 7.5725 3.3025 9.16813 2.55188L12.8663 6.25H14.6337L17.5 3.38375V1.48188C19.1644 1.78875 20.7256 2.39313 22.1231 3.2425L17.5 7.86625V13.125H20.625V20.2588L24.8969 24.5306C22.3944 27.1287 18.8838 28.75 15 28.75ZM25.7244 23.5906L21.875 19.7412V11.875H18.75V8.38375L23.1787 3.955C26.5569 6.4625 28.75 10.4794 28.75 15C28.75 18.2488 27.615 21.235 25.7244 23.5906Z"
-                                        fill="#192045"
-                                    />
-                                </svg>
-                            </button>
-                            <div className="dropdown-menu dropdown-menu-end">
-                                <a
-                                    href="javascript:void(0);"
-                                    className="dropdown-item notify-item language"
-                                    data-lang="eng"
-                                >
-                                    <img
-                                        src="../assets/img/flags/us.jpg"
-                                        alt="user-image"
-                                        className="me-1"
-                                        height="12"
-                                    />
-                                    <span className="align-middle">English</span>
-                                </a>
+          <Link
+            to="javascript:void(0);"
+            className="dropdown-item notify-item language"
+            data-lang="it"
+          >
+            <img
+              src="assets//img/flags/italy.jpg"
+              alt="user-image"
+              className="me-1"
+              height="12"
+            />
+            <span className="align-middle">Italian</span>
+          </Link>
 
-                                <a
-                                    href="javascript:void(0);"
-                                    className="dropdown-item notify-item language"
-                                    data-lang="sp"
-                                >
-                                    <img
-                                        src="assets/img/flags/spain.jpg"
-                                        alt="user-image"
-                                        className="me-1"
-                                        height="12"
-                                    />
-                                    <span className="align-middle">Spanish</span>
-                                </a>
-
-                                <a
-                                    href="javascript:void(0);"
-                                    className="dropdown-item notify-item language"
-                                    data-lang="gr"
-                                >
-                                    <img
-                                        src="assets/img/flags/germany.jpg"
-                                        alt="user-image"
-                                        className="me-1"
-                                        height="12"
-                                    />
-                                    <span className="align-middle">German</span>
-                                </a>
-
-                                <a
-                                    href="javascript:void(0);"
-                                    className="dropdown-item notify-item language"
-                                    data-lang="it"
-                                >
-                                    <img
-                                        src="assets//img/flags/italy.jpg"
-                                        alt="user-image"
-                                        className="me-1"
-                                        height="12"
-                                    />
-                                    <span className="align-middle">Italian</span>
-                                </a>
-
-                                <a
-                                    href="javascript:void(0);"
-                                    className="dropdown-item notify-item language"
-                                    data-lang="ru"
-                                >
-                                    <img
-                                        src="assets/img/flags/russia.jpg"
-                                        alt="user-image"
-                                        className="me-1"
-                                        height="12"
-                                    />
-                                    <span className="align-middle">Russian</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* --> */}
+          <Link
+            to="javascript:void(0);"
+            className="dropdown-item notify-item language"
+            data-lang="ru"
+          >
+            <img
+              src="assets/img/flags/russia.jpg"
+              alt="user-image"
+              className="me-1"
+              height="12"
+            />
+            <span className="align-middle">Russian</span>
+          </Link>
+        </div>
+      </div> --> */}
 
                         <div className="dropdown d-inline-block">
                             <button
@@ -346,20 +348,21 @@ const Navbar = () => {
                                             <h5 className="m-0 font-size-15">Notifications</h5>
                                         </div>
                                         <div className="col-auto">
-                                            <a
-                                                href="#!"
+                                            <Link
+                                                to="#!"
                                                 className="small fw-semibold text-decoration-underline"
                                             >
-                                                Mark all as read</a>
+                                                Mark all as read</Link>
+
                                         </div>
                                     </div>
                                 </div>
-                                <div data-simplebar style={{ maxheight: '250px', margintop: '0px' }}>
-                                    <a href="#!" className="text-reset notification-item">
+                                <div data-simplebar style={{ maxHeight: '250px', marginTop: '0px' }}>
+                                    <Link to="#!" className="text-reset notification-item">
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 me-3">
                                                 <img
-                                                    src="assets/img/navbar-profile-logo.png"
+                                                    src={navbparProfileImg}
                                                     className="rounded-circle avatar-sm"
                                                     alt="user-pic"
                                                 />
@@ -376,8 +379,8 @@ const Navbar = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
-                                    <a href="#!" className="text-reset notification-item">
+                                    </Link>
+                                    <Link to="#!" className="text-reset notification-item">
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 avatar-sm me-3">
                                                 <span
@@ -398,8 +401,8 @@ const Navbar = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
-                                    <a href="#!" className="text-reset notification-item">
+                                    </Link>
+                                    <Link to="#!" className="text-reset notification-item">
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 avatar-sm me-3">
                                                 <span
@@ -420,13 +423,14 @@ const Navbar = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </Link>
 
-                                    <a href="#!" className="text-reset notification-item">
+                                    <Link to="#!" className="text-reset notification-item">
                                         <div className="d-flex">
                                             <div className="flex-shrink-0 me-3">
                                                 <img
-                                                    src="assets/img/navbar-profile-logo.png"
+                                                    // src={"assets/img/navbar-profile-logo.png"}
+                                                    src={navbparProfileImg}
                                                     className="rounded-circle avatar-sm"
                                                     alt="user-pic"
                                                 />
@@ -443,16 +447,16 @@ const Navbar = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div className="p-2 border-top d-grid">
-                                    <a
+                                    <Link
                                         className="btn btn-link font-size-14 btn-block text-center"
-                                        style={{ display: 'inline-block', cursor: 'pointer', zindex: '1' }}
+                                        style={{ display: 'inline-block', cursor: 'pointer', zIndex: 1 }}
                                     >
                                         <i className="uil-arrow-circle-right me-1"></i>
                                         <span>View More..</span>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -467,56 +471,1094 @@ const Navbar = () => {
                                 aria-expanded="false"
                             >
                                 <img
-                                    src={avatar}
+                                    className="rounded-circle header-profile-user"
+                                    // src="assets/img/navbar-profile-logo.png"
+                                    src={navbparProfileImg}
                                     alt="Header Avatar"
                                 />
                             </button>
                             <div className="dropdown-menu dropdown-menu-end pt-0 profile-dropdown">
                                 <div className="p-3 border-bottom">
                                     <h6 className="mb-0">Martin Gurley</h6>
-                                    <a href="# " className="mb-0 font-size-11 text-muted">
+                                    <Link to="# " className="mb-0 font-size-11 text-muted">
                                         martin.gurley@email.com
-                                    </a>
+                                    </Link>
                                 </div>
-                                <a className="dropdown-item" href="contacts-profile.html"
+                                <Link className="dropdown-item" to="contacts-profile.html"
                                 ><i
                                     className="mdi mdi-account-circle text-muted font-size-16 align-middle me-2"
                                 ></i>
-                                    <span className="align-middle">Profile</span></a>
-                                <a className="dropdown-item" href="apps-chat.html"
+                                    <span className="align-middle">Profile</span></Link>
+
+                                <Link className="dropdown-item" to="apps-chat.html"
                                 ><i
                                     className="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-2"
                                 ></i>
-                                    <span className="align-middle">Messages</span></a>
-                                <a className="dropdown-item" href="pages-faqs.html"
+                                    <span className="align-middle">Messages</span></Link>
+
+                                <Link className="dropdown-item" to="pages-faqs.html"
                                 ><i
                                     className="mdi mdi-lifebuoy text-muted font-size-16 align-middle me-2"
                                 ></i>
-                                    <span className="align-middle">Help</span></a>
-                                <a className="dropdown-item d-flex align-items-center" href="#"
+                                    <span className="align-middle">Help</span></Link>
+
+                                <Link className="dropdown-item d-flex align-items-center" to="#"
                                 ><i
                                     className="mdi mdi-cog-outline text-muted font-size-16 align-middle me-2"
                                 ></i>
-                                    <span className="align-middle me-3">Settings</span
-                                    ><span className="badge badge-soft-success ms-auto">New</span></a>
-                                <a className="dropdown-item" href="auth-lock-screen.html"><i
-                                    className="mdi mdi-lock text-muted font-size-16 align-middle me-2"></i>
-                                    <span className="align-middle">Lock screen</span></a>
+                                    <span className="align-middle me-3">Settings</span>
+                                    <span className="badge badge-soft-success ms-auto">New</span></Link>
+
+                                <Link className="dropdown-item" to="auth-lock-screen.html"
+                                ><i
+                                    className="mdi mdi-lock text-muted font-size-16 align-middle me-2"
+                                ></i>
+                                    <span className="align-middle">Lock screen</span></Link>
+
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="auth-logout.html"
+                                <Link className="dropdown-item" to="auth-logout.html"
                                 ><i
                                     className="mdi mdi-logout text-muted font-size-16 align-middle me-2"
                                 ></i>
-                                    <span className="align-middle">Logout</span></a>
+                                    <span className="align-middle">Logout</span></Link>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </nav>
+            {/* <!-- Right Sidebar setting Start --> */}
+            {/* <!-- <div className="right-bar">
+  <div data-simplebar className="h-100">
+    <div className="rightbar-title d-flex align-items-center bg-dark p-3">
+      <h5 className="m-0 me-2 text-white">Theme Customizer</h5>
 
-           
+      <Link to="javascript:void(0);" className="right-bar-toggle-close ms-auto">
+        <i className="fa-solid fa-x"></i>
+      </Link>
+    </div>
+    <hr className="m-0" />
+
+    <div className="p-4">
+      <h6 className="mt-4 mb-3">Layout Mode</h6>
+
+      <div className="form-check form-check-inline">
+        <input
+          className="form-check-input"
+          type="radio"
+          name="layout-mode"
+          id="layout-mode-light"
+          value="light"
+        />
+        <label className="form-check-label" for="layout-mode-light"
+          >Light</label
+        >
+      </div>
+
+      <div className="form-check form-check-inline">
+        <input
+          className="form-check-input"
+          type="radio"
+          name="layout-mode"
+          id="layout-mode-dark"
+          value="dark"
+        />
+        <label className="form-check-label" for="layout-mode-dark">Dark</label>
+      </div>
+
+      <h6 className="mt-4 mb-3">Topbar Type</h6>
+
+      <div className="form-check form-check-inline">
+        <input
+          className="form-check-input"
+          type="radio"
+          name="topbar-color"
+          id="topbar-color-light"
+          value="light"
+          onchange="document.body.setAttribute('data-topbar', 'light')"
+        />
+        <label className="form-check-label" for="topbar-color-light"
+          >Light</label
+        >
+      </div>
+      <div className="form-check form-check-inline">
+        <input
+          className="form-check-input"
+          type="radio"
+          name="topbar-color"
+          id="topbar-color-dark"
+          value="dark"
+          onchange="document.body.setAttribute('data-topbar', 'dark')"
+        />
+        <label className="form-check-label" for="topbar-color-dark">Dark</label>
+      </div>
+
+      <div id="sidebar-setting">
+        <h6 className="mt-4 mb-3 sidebar-setting">Sidebar Size</h6>
+
+        <div className="form-check sidebar-setting mt-2">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="sidebar-size"
+            id="sidebar-size-default"
+            value="default"
+            onchange="document.body.setAttribute('data-sidebar-size', 'lg')"
+          />
+          <label className="form-check-label" for="sidebar-size-default"
+            >Default</label
+          >
+        </div>
+        <div className="form-check sidebar-setting mt-2">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="sidebar-size"
+            id="sidebar-size-small"
+            value="small"
+            onchange="document.body.setAttribute('data-sidebar-size', 'sm')"
+          />
+          <label className="form-check-label" for="sidebar-size-small"
+            >Small (Icon View)</label
+          >
+        </div>
+
+        <h6 className="mt-4 mb-3 sidebar-setting">Sidebar Color</h6>
+
+        <div className="form-check sidebar-setting mt-2">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="sidebar-color"
+            id="sidebar-color-light"
+            value="light"
+            onchange="document.body.setAttribute('data-sidebar', 'light')"
+          />
+          <label className="form-check-label" for="sidebar-color-light"
+            >Light</label
+          >
+        </div>
+        <div className="form-check sidebar-setting mt-2">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="sidebar-color"
+            id="sidebar-color-dark"
+            value="dark"
+            onchange="document.body.setAttribute('data-sidebar', 'dark')"
+          />
+          <label className="form-check-label" for="sidebar-color-dark"
+            >Dark</label
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- Right Sidebar bar overlay--> */}
+            <div className="rightbar-overlay"></div>
+            {/* <!-- Navbar End --> */}
+
+            {/* <!-- Left Sidebar Start --> */}
+            <div className="vertical-menu">
+                <button
+                    type="button"
+                    className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn vertical-menu-btn2"
+                >
+                    <i className="fa-solid fa-angles-right"></i>
+                </button>
+                {/* <!-- LOGO Box --> */}
+                <div className="navbar-brand-box">
+                    <Link to="index.html" className="logo logo-dark">
+                        <span className="logo-sm">
+                            <img src={logo} alt="" width="38" height="38" />
+                        </span>
+                        <span className="logo-sm2">
+                            <img src={logo} alt="" width="38" height="38" />
+                        </span>
+                        <span className="logo-lg">
+                            <img src={logo} alt="" width="38" height="38" />
+
+                            <span className="brand-name">PCMSC <span>Pabna</span></span>
+                        </span>
+                    </Link>
+                </div>
+                {/* <!-- Logo Box End --> */}
+
+                {/* <!--- Side Menu --> */}
+                <div data-simplebar className="sidebar-menu-scroll">
+                    <div id="sidebar-menu">
+                        {/* <!-- Left Menu Start --> */}
+                        <div className="nav">
+                            <div className="menu">
+                                <ul>
+                                    <li className="active-link">
+                                        <Link to="./index.html">
+                                            <svg
+                                                width="54"
+                                                height="53"
+                                                viewBox="0 0 54 53"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <rect
+                                                    x="35.5"
+                                                    y="34.5"
+                                                    width="17"
+                                                    height="17"
+                                                    rx="1.5"
+                                                    stroke="#2E97A7"
+                                                    stroke-width="3"
+                                                />
+                                                <rect
+                                                    x="35.5"
+                                                    y="8.5"
+                                                    width="17"
+                                                    height="17"
+                                                    rx="1.5"
+                                                    stroke="#2E97A7"
+                                                    stroke-width="3"
+                                                />
+                                                <rect
+                                                    x="1.5"
+                                                    y="1.5"
+                                                    width="25"
+                                                    height="24"
+                                                    rx="1.5"
+                                                    stroke="#2E97A7"
+                                                    stroke-width="3"
+                                                />
+                                                <rect
+                                                    x="9.5"
+                                                    y="34.5"
+                                                    width="17"
+                                                    height="17"
+                                                    rx="1.5"
+                                                    stroke="#2E97A7"
+                                                    stroke-width="3"
+                                                />
+                                            </svg>
+
+                                            <span className="text">Dashboard</span>
+                                        </Link>
+                                    </li>
+                                    <li className="submenu-active">
+                                        <Link>
+                                            <svg
+                                                width="40"
+                                                height="42"
+                                                viewBox="0 0 40 42"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
+                                                    stroke="white"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+
+                                            <span className="text">Academic Management</span>
+                                            <i className="arrow fa-solid fa-angle-down"></i>
+                                        </Link>
+                                        <ul className="sub-menu">
+                                            <li>
+                                                <Link to="./className.html">
+                                                    <span className="text">className</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./shift.html">
+                                                    <span className="text">Shift</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./section.html">
+                                                    <span className="text">Section</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./session.html">
+                                                    <span className="text">Session</span>
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li className="submenu-active">
+                                        <Link>
+                                            <svg
+                                                width="40"
+                                                height="42"
+                                                viewBox="0 0 40 42"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
+                                                    stroke="white"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+
+                                            <span className="text">Student Management</span>
+                                            <i className="arrow fa-solid fa-angle-down"></i>
+                                        </Link>
+                                        <ul className="sub-menu">
+                                            <li>
+                                                <Link to="./student-list.html">
+                                                    <span className="text">Student Information</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./className-wise-student.html">
+                                                    <span className="text">className Wise Student List</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./migration.html">
+                                                    <span className="text">Migration</span>
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li className="submenu-active">
+                                        <Link>
+                                            <svg
+                                                width="40"
+                                                height="42"
+                                                viewBox="0 0 40 42"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
+                                                    stroke="white"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+
+                                            <span className="text">Exam Management</span>
+                                            <i className="arrow fa-solid fa-angle-down"></i>
+                                        </Link>
+                                        <ul className="sub-menu">
+                                            <li>
+                                                <Link to="./exam-type.html">
+                                                    <span className="text">Exam Type</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./subject.html">
+                                                    <span className="text">Subject</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./grade.html">
+                                                    <span className="text">Grade</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./exam-assign.html">
+                                                    <span className="text">Exam Assign To className</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./mark-entry.html">
+                                                    <span className="text">Mark Entry</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./result-sheet.html">
+                                                    <span className="text">Result</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./combine-result.html">
+                                                    <span className="text">Combine Result</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./mark-sheet.html">
+                                                    <span className="text">Mark Sheet</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./admit-card.html">
+                                                    <span className="text">Admit Card</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./generated-admit-card.html">
+                                                    <span className="text">Generated Admit Card</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./tabulation-sheet.html">
+                                                    <span className="text">Tabulation Sheet</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./generated-tb-sheet.html">
+                                                    <span className="text">Generated TB Sheet</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./seat-plan.html">
+                                                    <span className="text">Seat Plan</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="./generate-id-card.html">
+                                                    <span className="text">Generate ID Card</span>
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li className="active-link">
+                                        <Link to="./sms-management.html">
+                                            <svg
+                                                width="21"
+                                                height="21"
+                                                viewBox="0 0 21 21"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M7.57692 15.25H1.54808C1.40272 15.25 1.26331 15.1874 1.16053 15.0761C1.05774 14.9647 1 14.8137 1 14.6562V8.125C1 6.23533 1.69292 4.42306 2.92634 3.08686C4.15975 1.75067 5.83261 1 7.57692 1C9.32123 1 10.9941 1.75067 12.2275 3.08686C13.4609 4.42306 14.1538 6.23533 14.1538 8.125C14.1538 10.0147 13.4609 11.8269 12.2275 13.1631C10.9941 14.4993 9.32123 15.25 7.57692 15.25Z"
+                                                    stroke="#008AEE"
+                                                    stroke-width="1.44471"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                                <path
+                                                    d="M7.2207 15.25C7.67415 16.6394 8.51414 17.8424 9.62496 18.6931C10.7358 19.5438 12.0628 20.0004 13.4231 20H19.4519C19.5973 20 19.7367 19.9375 19.8395 19.8261C19.9423 19.7148 20 19.5637 20 19.4063V12.875C20.0024 11.0514 19.3583 9.29634 18.2007 7.9723C17.0431 6.64826 15.4604 5.8563 13.7794 5.75992"
+                                                    stroke="#008AEE"
+                                                    stroke-width="1.44471"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                                <rect
+                                                    x="4.42004"
+                                                    y="7.45999"
+                                                    width="0.76"
+                                                    height="0.76"
+                                                    fill="#AF2222"
+                                                    stroke="#008AEE"
+                                                    stroke-width="0.76"
+                                                />
+                                                <rect
+                                                    x="7.46008"
+                                                    y="7.45999"
+                                                    width="0.76"
+                                                    height="0.76"
+                                                    fill="#AF2222"
+                                                    stroke="#008AEE"
+                                                    stroke-width="0.76"
+                                                />
+                                                <rect
+                                                    x="10.5001"
+                                                    y="7.45999"
+                                                    width="0.76"
+                                                    height="0.76"
+                                                    fill="#AF2222"
+                                                    stroke="#008AEE"
+                                                    stroke-width="0.76"
+                                                />
+                                            </svg>
+                                            <span className="text">SMS Management</span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {/* <!-- Sidebar --> */}
+                </div>
+                <li className="log-out">
+                    <Link to="./index.html">
+                        <svg
+                            width="27"
+                            height="27"
+                            viewBox="0 0 27 27"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M19.0556 2.76261H23.2222C24.7564 2.76261 26 3.96443 26 5.44695V6.78912M19.0556 24.2374H23.2222C24.7564 24.2374 26 23.0356 26 21.553V20.2108M2.97958 23.4691L11.3129 25.885C13.0951 26.4018 14.8889 25.1121 14.8889 23.3138V3.6861C14.8889 1.88797 13.0951 0.598274 11.3129 1.11497L2.97958 3.53088C1.80464 3.87151 1 4.91658 1 6.10201V20.8979C1 22.0834 1.80464 23.1285 2.97958 23.4691Z"
+                                stroke="#008AEE"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                            <path
+                                d="M9.33431 13.5H9.33331"
+                                stroke="#008AEE"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                            <path
+                                d="M19.0555 13.5H26M26 13.5L23.2222 10.8156M26 13.5L23.2222 16.1843"
+                                stroke="#008AEE"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+
+                        <span className="text">Log Out</span>
+                    </Link>
+                </li>
+            </div>
+            {/* <!-- Left Sidebar End --> */}
+
+            {/* <!-- Hero Main Content Start --> */}
+            <div className="main-content">
+                <div className="page-content">
+                    {/* <!-- Cards Start --> */}
+                    <section id="cards">
+                        <div className="row">
+                            <div className="col-xl col-sm-6 align-item-stretch">
+                                <div className="card-item">
+                                    <div className="card-body">
+                                        <div className="align-items-center">
+                                            <div className="card-icon">
+                                                <svg
+                                                    width="127"
+                                                    height="80"
+                                                    viewBox="0 0 127 80"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M0.338553 42.3648L47.213 0.813393L109.929 11.8521L63.0199 57.1222L0.338553 42.3648Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.33"
+                                                    />
+                                                    <path
+                                                        d="M108.96 14.1066C108.716 13.2228 107.801 12.7043 106.916 12.9485C106.032 13.1927 105.512 14.107 105.756 14.9908L110.921 33.701C111.164 34.5848 112.079 35.1033 112.964 34.8592C113.849 34.615 114.368 33.7006 114.124 32.8169L108.96 14.1066Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.33"
+                                                    />
+                                                    <path
+                                                        d="M115.438 43.5818C118.126 42.8399 119.704 40.0616 118.963 37.3763C118.221 34.691 115.442 33.1155 112.754 33.8574C110.066 34.5993 108.488 37.3775 109.229 40.0629C109.97 42.7482 112.75 44.3236 115.438 43.5818Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.33"
+                                                    />
+                                                    <path
+                                                        d="M113.663 48.443C114.693 48.8468 115.826 48.9059 116.892 48.6116C117.959 48.3173 118.901 47.6854 119.578 46.8107C121.894 54.5629 124.21 62.3135 126.526 70.0624L119.133 72.1029C117.31 64.2163 115.487 56.3297 113.663 48.443Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.33"
+                                                    />
+                                                    <path
+                                                        d="M29.7881 54.902L63.9972 62.9594L89.6688 38.3744L94.4253 55.6075C93.5349 57.6469 86.4608 73.1115 68.5492 78.1162C50.4897 83.1617 36.3284 73.4099 34.5445 72.1351L29.7881 54.902Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.33"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4>Students</h4>
+                                                <h5>4,000</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-xl col-sm-6 align-item-stretch">
+                                <div className="card-item">
+                                    <div className="card-body">
+                                        <div className="align-items-center">
+                                            <div className="card-icon">
+                                                <svg
+                                                    width="120"
+                                                    height="75"
+                                                    viewBox="0 0 120 75"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M60.0195 43.0643C67.9357 43.0643 73.6646 32.2456 73.6646 24.9366C73.6646 17.4349 67.5292 11.3408 60.0195 11.3408C52.4904 11.3408 46.3744 17.4349 46.3744 24.9366C46.3744 32.2456 52.1033 43.0643 60.0195 43.0643ZM60.0195 15.1978C65.4002 15.1978 69.7937 19.5755 69.7937 24.9366C69.7937 30.9149 64.8582 39.2074 60.0195 39.2074C55.1614 39.2074 50.2453 30.9149 50.2453 24.9366C50.2453 19.5755 54.6195 15.1978 60.0195 15.1978Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.4"
+                                                    />
+                                                    <path
+                                                        d="M120 44.2407C120 37.6067 114.6 32.2263 107.923 32.2263H104.013L97.4709 44.665C97.4323 44.7614 97.3162 44.7614 97.2774 44.665L90.7355 32.2263H86.8258C80.1677 32.2263 74.7871 37.5875 74.7678 44.2214C73.4516 43.7972 72.0388 43.5658 70.5678 43.5658H65.4775L60 53.9603L54.5419 43.5658H49.4516C48 43.5658 46.5871 43.7972 45.2516 44.2214C45.2323 37.5875 39.8323 32.2263 33.1742 32.2263H29.2645L22.7226 44.665C22.6839 44.7614 22.5678 44.7614 22.5291 44.665L15.9871 32.2263H12.0774C5.40008 32.2263 0 37.6067 0 44.2407L0 59.8036H35.4581V75H84.5807V59.8036H120V44.2407ZM80.7097 71.143H39.329V57.5086C39.329 51.8579 44.0235 47.4227 49.4516 47.4227H52.2001C52.3003 47.6157 59.1311 60.7619 58.7033 59.9386L61.4129 59.8808C61.5123 59.6874 68.2438 46.5976 67.8194 47.4227H70.5678C76.1194 47.4227 80.7097 51.9606 80.7097 57.5086V71.143Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.4"
+                                                    />
+                                                    <path
+                                                        d="M108.094 11.6658C108.094 14.6593 106.861 18.5242 104.828 21.6389C102.772 24.7889 100.107 26.873 97.3864 26.873C94.6655 26.873 92.0007 24.7889 89.9449 21.6389C87.9122 18.5241 86.6783 14.6592 86.6783 11.6656C86.6783 5.77863 91.4691 1 97.3864 1C103.304 1 108.094 5.77884 108.094 11.6658Z"
+                                                        stroke="#053B50"
+                                                        stroke-opacity="0.4"
+                                                        stroke-width="2"
+                                                    />
+                                                    <path
+                                                        d="M33.34 11.6658C33.34 14.6593 32.1061 18.5242 30.0734 21.6389C28.0176 24.7889 25.3528 26.873 22.6319 26.873C19.9104 26.873 17.2456 24.7878 15.1899 21.637C13.1573 18.5215 11.9238 14.6565 11.9238 11.6656C11.9238 5.77845 16.7148 1 22.6319 1C28.6423 1 33.34 5.91338 33.34 11.6658Z"
+                                                        stroke="#053B50"
+                                                        stroke-opacity="0.4"
+                                                        stroke-width="2"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4>Teacher’s</h4>
+                                                <h5>21</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-xl col-sm-6 align-item-stretch">
+                                <div className="card-item">
+                                    <div className="card-body">
+                                        <div className="align-items-center">
+                                            <div className="card-icon">
+                                                <svg
+                                                    width="110"
+                                                    height="111"
+                                                    viewBox="0 0 110 111"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M94.882 72.4935C91.3573 73.438 81.9923 75.9473 78.6006 76.8561L77.2094 71.6638C84.3862 65.2165 87.8373 55.5061 85.3186 46.1062L84.598 43.417L86.9239 42.7938C90.7714 41.7628 93.1224 38.016 92.1647 34.4416C91.2069 30.8671 87.2975 28.7977 83.45 29.8287L83.1474 29.9098C82.8458 26.6307 80.0595 24.0173 76.4877 23.809C71.1098 14.4941 59.4685 9.95528 48.1921 12.9768C36.8184 16.0244 29.0092 25.8483 29.1043 36.6836C26.1985 38.5758 25.032 42.133 26.3795 45.1207L25.3023 45.4093C21.4548 46.4402 19.1038 50.187 20.0616 53.7615C21.0194 57.336 24.9288 59.4053 28.7763 58.3744L31.1022 57.7511L31.8228 60.4403C34.3415 69.8402 42.1855 76.5244 51.6244 78.5193L53.0157 83.7116C49.6201 84.6214 40.2267 87.1384 36.7343 88.0741C26.4743 90.8233 20.205 100.815 22.7591 110.347L29.1281 134.116C29.4478 135.309 30.7484 135.998 32.033 135.654C38.3894 133.95 118.219 112.56 122.743 111.348C124.028 111.004 124.81 109.757 124.49 108.564L118.121 84.7945C115.567 75.2626 105.142 69.7444 94.882 72.4935ZM56.0286 87.5362L67.1161 88.7834C67.7679 88.8566 68.4177 88.673 68.9255 88.2986L77.904 81.6747L82.0845 80.5546L84.4005 89.1979L54.1638 97.2999L51.8478 88.6565L56.0286 87.5362ZM93.7041 86.705L89.0523 87.9515L86.7363 79.3081L91.3882 78.0617L93.7041 86.705ZM32.0664 45.3362C32.0218 45.2627 32.2422 45.623 30.9373 43.4929C30.2007 42.2901 30.77 40.7352 32.1275 40.1364C33.48 39.6519 50.4728 31.0314 74.618 28.4093L75.5234 28.3109C77.2789 28.1199 78.6753 29.5524 78.3269 31.1808L77.9106 33.1261C61.9765 34.6102 46.5573 38.7175 32.0664 45.3362ZM87.5128 35.688C87.8321 36.8795 87.0484 38.1284 85.7659 38.4721L83.44 39.0953L82.3547 35.0446L82.4204 34.7365L84.6079 34.1504C85.8904 33.8067 87.1936 34.4965 87.5128 35.688ZM49.3501 17.2985C57.7443 15.0493 66.3889 17.9726 71.1104 24.3183C53.5573 26.6269 40.2241 31.7573 33.9949 34.423C34.8366 26.4938 40.8703 19.5706 49.3501 17.2985ZM27.6183 54.0527C26.3358 54.3963 25.0327 53.7065 24.7134 52.5151C24.3942 51.3236 25.1778 50.0746 26.4603 49.731L28.7862 49.1078L29.9442 53.4295L27.6183 54.0527ZM36.4746 59.1939L33.8627 49.4461C47.8318 43.0429 62.6974 39.0655 78.0584 37.618L80.6668 47.3526C83.6997 58.6718 76.255 70.5366 64.0712 73.8013C51.8874 77.0659 39.5076 70.513 36.4746 59.1939ZM73.0542 74.7636L74.1438 78.8301L66.8587 84.2047L57.8624 83.1927L56.7728 79.1262C62.4755 79.2821 68.1927 77.7506 73.0542 74.7636ZM47.196 89.9029L49.5119 98.5463L44.8601 99.7928L42.5442 91.1494L47.196 89.9029ZM27.4109 109.1C25.4953 101.951 30.1973 94.4577 37.8923 92.3958L40.3076 101.41C37.8389 103.027 36.5387 105.951 37.2935 108.768L42.5045 128.216L33.2009 130.709L27.4109 109.1ZM60.8791 123.292L57.9263 112.272L90.4889 103.547L93.4418 114.567L60.8791 123.292ZM119.259 107.649L109.956 110.142L104.745 90.6947C103.99 87.8776 101.402 85.9953 98.4552 85.829L96.04 76.8152C103.735 74.7533 111.554 78.892 113.469 86.0409L119.259 107.649Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.4"
+                                                    />
+                                                    <path
+                                                        d="M52.1759 53.5971L51.5969 51.4363C51.2771 50.2428 49.9766 49.5544 48.692 49.8986C47.4074 50.2428 46.6253 51.4893 46.9451 52.6827L47.5241 54.8436C47.8439 56.037 49.1444 56.7254 50.429 56.3812C51.7136 56.037 52.4957 54.7905 52.1759 53.5971Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.4"
+                                                    />
+                                                    <path
+                                                        d="M66.7105 52.0186C67.9951 51.6744 68.7772 50.4279 68.4574 49.2345L67.8784 47.0737C67.5586 45.8802 66.2581 45.1918 64.9735 45.536C63.6889 45.8802 62.9068 47.1267 63.2266 48.3201L63.8056 50.4809C64.1254 51.6744 65.4259 52.3628 66.7105 52.0186Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.4"
+                                                    />
+                                                    <path
+                                                        d="M66.1938 57.4674C65.0595 56.8671 63.5867 57.2618 62.9043 58.3488C61.6589 60.3336 58.9609 61.0565 56.8902 59.9603C55.7559 59.36 54.2831 59.7547 53.6007 60.8417C52.9185 61.9289 53.2851 63.2971 54.4195 63.8978C58.7559 66.1927 64.4044 64.6796 67.0127 60.5235C67.695 59.436 67.3284 58.0677 66.1938 57.4674Z"
+                                                        fill="#053B50"
+                                                        fill-opacity="0.4"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4>Staff’s</h4>
+                                                <h5>00</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-xl col-sm-6 align-item-stretch">
+                                <div className="card-item">
+                                    <div className="card-body">
+                                        <div className="align-items-center">
+                                            <div className="card-icon">
+                                                <svg
+                                                    width="80"
+                                                    height="80"
+                                                    viewBox="0 0 80 80"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M75.531 35.7434C76.2483 41.5171 75.5406 47.3784 73.4696 52.8149C71.3985 58.2514 68.0274 63.0975 63.6507 66.9296C59.2741 70.7617 54.0253 73.4631 48.3632 74.7976C42.701 76.1322 36.798 76.0592 31.1702 74.585C25.5424 73.1109 20.3611 70.2805 16.0793 66.3414C11.7975 62.4022 8.54565 57.4742 6.60798 51.9881C4.6703 46.5021 4.10582 40.625 4.96388 34.8709C5.82194 29.1167 8.07643 23.6605 11.5302 18.9794M71.0396 22.3371C68.7009 18.2862 65.5872 14.7356 61.8766 11.8879C58.1659 9.04024 53.9308 6.9513 49.4132 5.74036C44.8955 4.52942 40.1837 4.2202 35.5469 4.83036C30.91 5.44051 26.4388 6.95809 22.3887 9.29645L40.1982 40.1434L71.0396 22.3371Z"
+                                                        stroke="#053B50"
+                                                        stroke-opacity="0.4"
+                                                        stroke-width="7.24254"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4>Students Attendance</h4>
+                                                <h5>80%</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    {/* <!-- Cards End --> */}
+
+                    {/* <!-- Dashboard Table Start --> */}
+                    <div className="data-table">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="heading">
+                                    <h1 className="title">Students Info</h1>
+                                    <input type="text" placeholder="Search Student..." />
+                                </div>
+
+                                {/* <!-- Table --> */}
+                                <div className="table-wrapper">
+                                    <table id="printTable" className="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl No:</th>
+                                                <th>Action</th>
+                                                <th>Student ID</th>
+                                                <th>Student Name</th>
+                                                <th>Father Name</th>
+                                                <th>Mother Name</th>
+                                                <th>Mobile Number</th>
+                                                <th>Photo</th>
+                                                <th>className</th>
+                                                <th>Group</th>
+                                                <th>Roll</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-date="2024-08-05">
+                                                <td>01</td>
+                                                <td>
+                                                    <div id="action_btn">
+                                                        <div id="menu-wrap">
+                                                            <input type="checkbox" className="toggler" />
+                                                            <div className="dots">
+                                                                <div></div>
+                                                            </div>
+                                                            <div className="menu">
+                                                                <div>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn editButton"
+                                                                                data-modal="action-editmodal"
+                                                                            >Edit</Link>
+                                                                        </li>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn deleteButton"
+                                                                                data-modal="action-deletemodal"
+                                                                            >Delete</Link>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <!-- <button className="quick-view">
+                        <i className="fa-regular fa-eye"></i>
+                      </button> --> */}
+                                                    </div>
+                                                </td>
+                                                <td>222101</td>
+                                                <td>Md. Mizan Shekh</td>
+                                                <td>Md. Sujon Shekh</td>
+                                                <td>Mst. Rehana Akhter</td>
+                                                <td>01752-414587</td>
+                                                <td>
+                                                    <div className="client-item">
+                                                        <div className="image">
+                                                            <img
+                                                                src={productMemberPng}
+                                                                alt="client"
+                                                                className="rounded-circle mr-2"
+                                                                width="30"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>One</td>
+                                                <td>Science</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr data-date="2024-08-05">
+                                                <td>02</td>
+                                                <td>
+                                                    <div id="action_btn">
+                                                        <div id="menu-wrap">
+                                                            <input type="checkbox" className="toggler" />
+                                                            <div className="dots">
+                                                                <div></div>
+                                                            </div>
+                                                            <div className="menu">
+                                                                <div>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn"
+                                                                                data-modal="action-editmodal"
+                                                                            >Edit</Link>
+                                                                        </li>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn deleteButton"
+                                                                                data-modal="action-deletemodal"
+                                                                            >Delete</Link>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <!-- <button className="quick-view">
+                        <i className="fa-regular fa-eye"></i>
+                      </button> --> */}
+                                                    </div>
+                                                </td>
+                                                <td>222102</td>
+                                                <td>Khandaker Shanto</td>
+                                                <td>Md. Sujon Shekh</td>
+                                                <td>Mst. Shilpi Khatun</td>
+                                                <td>01752-414587</td>
+                                                <td>
+                                                    <div className="client-item">
+                                                        <div className="image">
+                                                            <img
+                                                                src={productMemberPng}
+                                                                alt="client"
+                                                                className="rounded-circle mr-2"
+                                                                width="30"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>One</td>
+                                                <td>Commerce</td>
+                                                <td>2</td>
+                                            </tr>
+                                            <tr data-date="2024-08-05">
+                                                <td>03</td>
+                                                <td>
+                                                    <div id="action_btn">
+                                                        <div id="menu-wrap">
+                                                            <input type="checkbox" className="toggler" />
+                                                            <div className="dots">
+                                                                <div></div>
+                                                            </div>
+                                                            <div className="menu">
+                                                                <div>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn"
+                                                                                data-modal="action-editmodal"
+                                                                            >Edit</Link>
+                                                                        </li>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn deleteButton"
+                                                                                data-modal="action-deletemodal"
+                                                                            >Delete</Link>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <!-- <button className="quick-view">
+                        <i className="fa-regular fa-eye"></i>
+                      </button> --> */}
+                                                    </div>
+                                                </td>
+                                                <td>222103</td>
+                                                <td>Md. Mizan Shekh</td>
+                                                <td>Md. Sujon Shekh</td>
+                                                <td>Mst. Rehana Akhter</td>
+                                                <td>01752-414587</td>
+                                                <td>
+                                                    <div className="client-item">
+                                                        <div className="image">
+                                                            <img
+                                                                src={productMemberPng}
+                                                                alt="client"
+                                                                className="rounded-circle mr-2"
+                                                                width="30"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>One</td>
+                                                <td>Science</td>
+                                                <td>3</td>
+                                            </tr>
+                                            <tr data-date="2024-08-05">
+                                                <td>04</td>
+                                                <td>
+                                                    <div id="action_btn">
+                                                        <div id="menu-wrap">
+                                                            <input type="checkbox" className="toggler" />
+                                                            <div className="dots">
+                                                                <div></div>
+                                                            </div>
+                                                            <div className="menu">
+                                                                <div>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn"
+                                                                                data-modal="action-editmodal"
+                                                                            >Edit</Link>
+                                                                        </li>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn deleteButton"
+                                                                                data-modal="action-deletemodal"
+                                                                            >Delete</Link>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <!-- <button className="quick-view">
+                        <i className="fa-regular fa-eye"></i>
+                      </button> --> */}
+                                                    </div>
+                                                </td>
+                                                <td>222104</td>
+                                                <td>Md. Mizan Shekh</td>
+                                                <td>Md. Sujon Shekh</td>
+                                                <td>Mst. Rehana Akhter</td>
+                                                <td>01752-414587</td>
+                                                <td>
+                                                    <div className="client-item">
+                                                        <div className="image">
+                                                            <img
+                                                                src={productMemberPng}
+                                                                alt="client"
+                                                                className="rounded-circle mr-2"
+                                                                width="30"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>One</td>
+                                                <td>Commerce</td>
+                                                <td>4</td>
+                                            </tr>
+                                            <tr data-date="2024-08-05">
+                                                <td>05</td>
+                                                <td>
+                                                    <div id="action_btn">
+                                                        <div id="menu-wrap">
+                                                            <input type="checkbox" className="toggler" />
+                                                            <div className="dots">
+                                                                <div></div>
+                                                            </div>
+                                                            <div className="menu">
+                                                                <div>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn"
+                                                                                data-modal="action-editmodal"
+                                                                            >Edit</Link>
+                                                                        </li>
+                                                                        <li>
+                                                                            <Link
+                                                                                to="#"
+                                                                                className="link custom-open-modal-btn openModalBtn deleteButton"
+                                                                                data-modal="action-deletemodal"
+                                                                            >Delete</Link>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <!-- <button className="quick-view">
+                        <i className="fa-regular fa-eye"></i>
+                      </button> --> */}
+                                                    </div>
+                                                </td>
+                                                <td>222105</td>
+                                                <td>Md. Mizan Shekh</td>
+                                                <td>Md. Sujon Shekh</td>
+                                                <td>Mst. Rehana Akhter</td>
+                                                <td>01752-414587</td>
+                                                <td>
+                                                    <div className="client-item">
+                                                        <div className="image">
+                                                            <img
+                                                                src={productMemberPng}
+                                                                alt="client"
+                                                                className="rounded-circle mr-2"
+                                                                width="30"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>One</td>
+                                                <td>Science</td>
+                                                <td>5</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* <!-- Pagination and Display Info --> */}
+                                <div className="my-3">
+                                    <span id="display-info"></span>
+                                </div>
+
+                                <div id="pagination" className="pagination">
+                                    <button id="prevBtn" className="btn">Prev</button>
+                                    <Link to="#" className="page-link page-link--1">1</Link>
+                                    <Link to="#" className="page-link page-link--2">2</Link>
+                                    <Link to="#" className="page-link page-link--3">3</Link>
+                                    <button id="nextBtn" className="btn">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* <!-- Confirmation Modal Start --> */}
+                    <div id="confirmationModal" className="modal">
+                        <div className="modal-content">
+                            <p>Are you sure you want to delete this item?</p>
+                            <div className="modal-buttons">
+                                <button id="confirmYes">Yes</button>
+                                <button id="confirmNo">No</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="copyright">
+                        <p>&copy; 2024. All Rights Reserved.</p>
+                    </div>
+                    {/* <!-- Dashboard Table End --> */}
+                </div>
+            </div>
+            {/* <!-- Hero Main Content End --> */}
+
+            {/* <!-- JAVASCRIPT --> */}
+
+
+            {/* // no comment
+<script src="./assets/js/all-modals.js"></script>
+<script src="./assets/js/fontawesome.js"></script>
+<script src="./assets/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/js/simplebar.min.js"></script>
+<script src="./assets/js/full-screen-toggle.js"></script>
+<script src="./assets/js/table-funtion.js"></script> */}
+
+            {/* <!-- Jquery --> */}
+            {/* <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js"
+  integrity="sha512-8Z5++K1rB3U+USaLKG6oO8uWWBhdYsM3hmdirnOEWp8h2B1aOikj5zBzlXs8QOrvY9OxEnD2QDkbSKKpfqcIWw=="
+  crossorigin="anonymous"
+></script>
+<script src="./assets/js/style.js"></script> */}
+
+
         </>
     )
-};
+}
 
-export default Navbar;
+export default Navbar

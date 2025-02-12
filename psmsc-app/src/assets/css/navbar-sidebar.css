@@ -299,10 +299,6 @@ body[data-topbar="hidden"] .isvertical-topbar {
   background-color: var(--white) !important;
 }
 
-#page-header-notifications-dropdown-v {
-  margin-right: 10px !important;
-}
-
 .dropdown-menu [data-simplebar] {
   margin-top: 0px !important;
 }

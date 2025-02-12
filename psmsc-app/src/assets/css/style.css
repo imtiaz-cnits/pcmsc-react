@@ -1,0 +1,2930 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* ====================
+  Reset Default CSS Start
+  ==================== */
+
+:root {
+  --primary-font: "Poppins", sans-serif;
+  --white: #ffffff;
+  --text-color: #1f4529;
+  --text-color2: #008aee;
+  --primary-color: #1f4529;
+  --secondary-color: #1f4529;
+  --stroke: #1f4529;
+  --btn-hover: #2e97a7;
+  --hover-color: #dbeffd;
+  --gray: #aaaaaa;
+  --box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 17%);
+  --dark-mode-bg: #1e1e1e;
+  --dark-mode-bg2: #121212;
+  --dark-mode-text: #c0c5cb;
+  --content-and-hover-bg: #414141;
+  --black: #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--primary-font);
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--primary-font);
+  margin-top: 0;
+}
+
+p {
+  font-family: var(--primary-font);
+}
+
+span {
+  font-family: var(--primary-font);
+}
+
+a {
+  text-decoration: none !important;
+  font-family: var(--primary-font);
+}
+
+ul {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+  font-family: var(--primary-font);
+}
+
+button {
+  border: none;
+  outline: none;
+  font-family: var(--primary-font);
+}
+
+input {
+  outline: none;
+  font-family: var(--primary-font);
+}
+
+label {
+  font-family: var(--primary-font);
+}
+
+/*====================
+Reset Default CSS End
+====================*/
+
+/* scrollbar */
+html ::-webkit-scrollbar {
+  width: 10px;
+  background-color: var(--hover-color);
+  cursor: pointer;
+}
+
+html ::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  width: 10px;
+  border-radius: 5px;
+  border-color: none !important;
+}
+
+/* scrollbar */
+
+/* ============================================== */
+/* ----------- DashBoard CSS Start--------------- */
+/* ============================================== */
+
+/* Cards Start */
+
+#cards {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+#cards .card-body {
+  position: relative;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  background: var(
+    --Green-Gradient,
+    linear-gradient(180deg, #1f4529 0%, #4dab66 100%)
+  );
+  border-radius: 6px;
+  transition: 0.3s;
+  margin: 10px 0;
+  padding-top: 70px;
+}
+
+#cards .card-body {
+  box-shadow: var(--box-shadow);
+}
+
+#cards .card-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: inline-block;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+}
+
+#cards .card-icon svg {
+  width: 50px;
+  height: 50px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    rotate: -5deg;
+  }
+}
+
+#cards h4 {
+  position: absolute;
+  width: auto;
+  right: 0;
+  top: 0;
+  color: var(--text-color);
+  background: var(--white);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--primary-font);
+  padding: 10px 10px 10px 20px;
+  margin-bottom: 0px;
+  border-bottom-left-radius: 40px;
+  border-top-right-radius: 6px;
+}
+
+#cards h5 {
+  display: block !important;
+  color: var(--white);
+  text-align: left;
+  font-size: 32px;
+  font-weight: 600;
+  padding-left: 10px;
+  font-family: var(--primary-font);
+  margin: 0;
+}
+
+/* Cards End */
+
+/* Table Start */
+
+.data-table .heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.data-table .heading input {
+  padding: 10px;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+
+.data-table .heading input:focus {
+  border-color: var(--stroke);
+}
+
+.data-table .title {
+  color: var(--text-color);
+  font-size: 28px;
+  margin: 0px;
+}
+
+@media screen and (max-width: 992px) {
+  .data-table .title {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .data-table .heading {
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+/* Table End */
+/* ============================================== */
+/* ------------ DashBoard CSS End --------------- */
+/* ============================================== */
+
+/* ============================================== */
+/* ------------ Class Wise CSS Start ------------ */
+/* ============================================== */
+
+/* Class Wise Student Start */
+.class-wise-form .form-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.class-wise-form {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.class-wise-form .heading {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 20px;
+}
+.class-wise-form .form-group {
+  width: 100%;
+  display: inline-block;
+  text-align: left;
+}
+.class-wise-form .form-group label {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left !important;
+  color: var(--text-color);
+}
+.class-wise-form .form-group select {
+  font-size: 16px;
+  color: var(--text-color);
+  width: 100%;
+  height: 44px;
+  padding: 9.78px 10px;
+  border: 1px solid var(--gray);
+  border-radius: 6px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.class-wise-form .form-group select:focus {
+  border: 1px solid var(--stroke);
+}
+
+.class-wise-form .search-btn {
+  width: 30%;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 10px 30px;
+  margin: auto;
+  transition: 0.4s;
+}
+
+.class-wise-form .search-btn:hover {
+  background: var(--btn-hover);
+}
+@media screen and (max-width: 768px) {
+  .class-wise-form .form-wrapper {
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .class-wise-form .search-btn {
+    width: 100%;
+  }
+
+  .class-wise-form .heading {
+    font-size: 28px;
+  }
+}
+/* Class Wise Student End */
+
+/* ============================================== */
+/* ------------ Class Wise CSS End -------------- */
+/* ============================================== */
+
+/* ============================================== */
+/* ------------ Students List CSS Start -------------- */
+/* ============================================== */
+
+/* Data table Start */
+
+#data_table {
+  width: 100%;
+  background: var(--white);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+}
+
+.bredcam {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin: 0px 0px 10px 0px;
+}
+
+.bredcam span {
+  font-size: 30px;
+  padding: 0 6px;
+  color: #aaaaaa;
+}
+
+.bredcam h1 {
+  font-weight: 600;
+  font-size: 32px;
+  margin: 0;
+  font-family: var(--primary-font);
+  color: var(--text-color2);
+}
+
+.bredcam a {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
+  font-family: var(--primary-font);
+  color: var(--text-color);
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.button-container .search-item {
+  display: flex;
+  align-items: center;
+}
+.btn-secondary {
+  font-family: var(--primary-font);
+  font-size: 18px !important;
+  font-weight: 500;
+  background: none;
+  color: var(--text-color);
+  border: none;
+  padding: 6px !important;
+  margin-left: 10px;
+}
+.btn-secondary:hover {
+  background: none;
+  color: var(--text-color);
+  border: none;
+}
+
+.btn-secondary:focus {
+  color: var(--text-color) !important;
+  background-color: var(--hover-color) !important;
+  border-color: none !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+}
+
+.dropdown-menu-custom {
+  display: none;
+  position: absolute;
+  background: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  margin-top: 10px;
+  padding: 0px 0;
+  border: 1px solid var(--gray);
+  border-radius: 6px;
+  left: 10px !important;
+}
+.dropdown-item-custom {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text-color);
+  font-family: var(--primary-font);
+  display: block;
+  text-align: center;
+}
+.dropdown-item-custom:hover {
+  background-color: var(--hover-color);
+  border-radius: 4px;
+}
+
+.file-export-item {
+  display: flex;
+  align-items: center;
+}
+.file-export-item .create-invoice {
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
+  white-space: nowrap;
+  margin-bottom: 4px;
+  height: 30px;
+  border-radius: 5px;
+  background: var(--text-color2);
+  color: var(--white);
+  font-family: var(--primary-font);
+  border: none;
+}
+.file-export-item .create-invoice span {
+  font-size: 28px;
+  padding-right: 6px;
+}
+.file-export-item .create-invoice h3 {
+  font-size: 16px;
+  margin: 0;
+  color: var(--white);
+  font-family: var(--primary-font);
+}
+.file-export-item .dt-button {
+  margin-left: 10px;
+  padding: 0px !important;
+  border: none !important;
+  background: var(--white) !important;
+}
+.file-export-item .dt-button svg path {
+  transition: 0.6s !important;
+}
+
+.file-export-item svg {
+  width: 30px;
+  height: 30px;
+}
+.file-export-item .dt-button svg:hover {
+  fill: var(--text-color2) !important;
+}
+.file-export-item .dt-button svg:hover rect {
+  stroke: none !important;
+}
+.file-export-item .dt-button svg:hover path {
+  fill: var(--white) !important;
+}
+.file-export-item #copyButton svg:hover path {
+  stroke: var(--white) !important;
+  fill: var(--text-color2) !important;
+}
+.entries {
+  display: flex !important;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.entries h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.page-number {
+  background: rgb(214, 214, 214) !important;
+  border: none !important;
+  border-radius: 50% !important;
+}
+
+.custom-pagination .active {
+  background: rgb(180, 115, 115) !important;
+}
+
+.custom-length-menu {
+  background: none;
+  border: 1px solid var(--gray);
+  font-size: 14px;
+  font-family: var(--primary-font);
+  border-radius: 4px;
+}
+
+.custom-length-menu option {
+  text-align: center !important;
+}
+.table-searchbox {
+  display: flex;
+  align-items: center;
+  font-size: 14px !important;
+  width: 300px;
+  padding: 4px 10px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+}
+.table-searchbox svg {
+  margin-bottom: -5px;
+}
+
+#customSearchBox {
+  border: none;
+  width: 100%;
+}
+
+#example {
+  font-family: var(--primary-font);
+  text-align: center;
+}
+
+#example th {
+  white-space: nowrap;
+  font-size: 18px;
+  color: var(--text-color);
+}
+
+#example th:nth-child(1) {
+  padding-left: 0px !important;
+  text-align: left;
+}
+
+#example th:nth-child(8) {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  text-align: center;
+}
+
+table.dataTable thead .sorting {
+  background-image: url(../images/sort_both.png);
+}
+table.dataTable thead .sorting_desc {
+  background-image: url(../images/sort_desc.png) !important;
+}
+table.dataTable thead .sorting_asc {
+  background-image: url(../images/sort_asc.png) !important;
+}
+table.dataTable.display tbody tr > .sorting_1 {
+  background: none !important;
+}
+
+#example th:nth-child(8).sorting {
+  background-image: none !important;
+  cursor: default;
+}
+
+#example td:nth-child(8) {
+  padding-right: 10px !important;
+  text-align: center;
+}
+
+#example td:nth-child(7) {
+  text-align: center;
+}
+
+#example tr {
+  background: var(--white) !important;
+  transition: 0.2s;
+}
+
+#example tbody tr:hover {
+  background: var(--hover-color) !important;
+}
+
+#example .project {
+  text-align: left;
+  padding: 0px 18px;
+  width: 20%;
+  white-space: wrap;
+}
+
+#example .project span,
+#example .serial span {
+  font-size: 14px !important;
+  font-weight: normal;
+  color: var(--text-color);
+  text-align: left;
+}
+
+#example .serial {
+  text-align: left;
+  padding-left: 25px;
+}
+
+#example .serial span {
+  margin-left: -20px !important;
+}
+
+#example .invoice {
+  padding: 0px 18px;
+}
+
+#example .invoice span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+#example .client {
+  width: 20% !important;
+  padding: 0px 10px !important;
+  position: relative;
+  margin: auto;
+  text-align: left !important;
+  vertical-align: super !important;
+}
+
+#example .client-details {
+  width: 100%;
+  white-space: nowrap;
+  position: absolute;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  background: none !important;
+  margin-top: 20px;
+}
+
+#example .client-details .client-profile img {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 50%;
+}
+
+#example .client-details .details {
+  display: block;
+  margin-left: 10px;
+}
+
+#example .client-details h1 {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: 700;
+  font-family: var(--primary-font);
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+#example .client-details h2 {
+  font-size: 14px;
+  font-weight: normal;
+  font-family: var(--primary-font);
+  text-align: left;
+  margin: 0;
+}
+
+#example .total {
+  padding: 0px 18px;
+}
+
+#example .total h1 {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+#example .total h1 span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+#example .total h2 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#example .total h2 span {
+  font-size: 14px;
+  color: #14cc52;
+  padding-right: 5px;
+}
+
+#example .total h3 {
+  font-size: 14px;
+  color: #ff2929;
+}
+
+#example .date span {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: normal;
+}
+
+#example .date {
+  padding: 0px 18px;
+}
+
+#example .status .paid {
+  height: 10px;
+  font-size: 14px;
+  color: var(--white);
+  background: #14cc52;
+  box-shadow: 0px 0px 10px 0px #14cc52;
+  padding: 0 10px;
+  border-radius: 18px;
+  font-weight: normal;
+  padding: 3px 12px;
+}
+
+#example .status .due {
+  font-size: 14px;
+  color: var(--white) !important;
+  font-weight: normal;
+  color: var(--text-color2);
+  background: #ff2929;
+  box-shadow: 0px 0px 10px 0px #ff2929;
+  padding: 0 10px;
+  border-radius: 18px;
+  font-weight: normal;
+  padding: 3px 12px;
+}
+
+#example .status .partial-paid {
+  font-size: 14px;
+  color: var(--white) !important;
+  font-weight: normal;
+  color: var(--text-color2);
+  background: #ff8c3e;
+  box-shadow: 0px 0px 10px 0px #ff8c3e;
+  padding: 0 10px;
+  border-radius: 18px;
+  font-weight: normal;
+  padding: 3px 12px;
+}
+
+#example .edit svg {
+  width: 42px !important;
+  height: 42px;
+}
+
+#example .edit svg path {
+  transition: 0.8s !important;
+}
+
+#example .edit svg:hover rect {
+  fill: var(--text-color2) !important;
+}
+
+#example .edit svg:hover path {
+  fill: var(--white) !important;
+}
+
+#example.dataTable {
+  border: none !important;
+}
+
+#example td {
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: super !important;
+  border-top: none !important;
+  border-bottom: 1px solid #dadada;
+}
+#example td {
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: middle !important;
+  border-top: none !important;
+  border-bottom: 1px solid #dadada;
+  vertical-align: middle;
+}
+
+#example.dataTable thead th {
+  text-align: left;
+  border-bottom: 1px solid #dadada;
+}
+
+#example.dataTable thead th:nth-child(7) {
+  text-align: center !important;
+}
+
+#example.dataTable thead th:nth-child(8) {
+  text-align: center !important;
+}
+
+.button-container .custom-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.custom-pagination .button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color2);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.custom-pagination button.disabled {
+  background-color: #f3f3f3;
+  cursor: not-allowed;
+  display: none;
+}
+
+.custom-pagination .page-number {
+  width: 28px;
+  height: 28px;
+  font-weight: 500;
+  border-radius: 50%;
+  margin: 3px 5px 0px 5px;
+  background: var(--white) !important;
+  color: var(--text-color2) !important;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.custom-pagination .page-number.active {
+  background-color: var(--text-color2) !important;
+  color: var(--white) !important;
+}
+
+.dataTables_info {
+  margin: 20px 0 !important;
+}
+
+.table-wrapper::-webkit-scrollbar {
+  height: 10px !important;
+  background-color: rgb(221, 221, 221);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  height: 10px !important;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+@media screen and (max-width: 1350px) {
+  #example {
+    width: 1100px !important;
+  }
+
+  #example .project {
+    padding: 0px 18px !important;
+  }
+
+  #example .total {
+    padding: 0px 18px !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .file-export-item svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .table-searchbox {
+    width: 200px;
+  }
+
+  .file-export-item .create-invoice {
+    white-space: nowrap;
+    padding: 0px 8px;
+    height: 30px;
+  }
+
+  .file-export-item .create-invoice h3 {
+    font-size: 14px !important;
+  }
+
+  .file-export-item .create-invoice span {
+    font-size: 18px !important;
+    padding: 2px;
+  }
+  .btn-secondary {
+    font-size: 16px !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .button-container {
+    display: block;
+    justify-content: center;
+  }
+  .file-export-item {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+  }
+
+  .button-container .search-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .table-searchbox {
+    width: 100%;
+  }
+  .dropdown-menu-custom {
+    left: -66px !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .file-export-item svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .file-export-item .dt-button {
+    margin-left: 4px;
+  }
+
+  .file-export-item .create-invoice {
+    white-space: nowrap;
+    padding: 0px 4px;
+    height: 28px;
+  }
+
+  .file-export-item .create-invoice h3 {
+    font-size: 12px !important;
+    margin-bottom: -2px;
+  }
+
+  .file-export-item .create-invoice span {
+    font-size: 18px !important;
+    padding: 2px;
+  }
+}
+
+/* Data table End */
+
+/* ============================================== */
+/* ------------ Students List CSS End -------------- */
+/* ============================================== */
+
+/* ============================================== */
+/* ------------ SMS Management CSS End -------------- */
+/* ============================================== */
+
+.sms-bredcam .bredcam-title {
+  width: 68.2%;
+  margin-bottom: 20px;
+}
+
+.sms-bredcam h1 {
+  font-weight: 600;
+  font-size: 32px;
+  margin: 0;
+  color: var(--text-color);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sms-wrapper {
+  width: 100%;
+  gap: 20px;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.sms-wrapper .wrap {
+  width: 70%;
+}
+
+.sms-wrapper .form-row {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.sms-wrapper .sms-balance {
+  margin-top: -58.4px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  background: var(--primary-color);
+  padding: 20px;
+  border-radius: 8px;
+  height: 239px;
+  z-index: 1;
+}
+
+.sms-wrapper .sms-balance h3 {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.sms-wrapper .sms-balance h4 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.sms-wrapper .form-group {
+  flex: 1 1 calc(50% - 15px);
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea .form-group {
+  flex: 1 1 calc(33.33% - 15px);
+  display: flex;
+  flex-direction: column;
+}
+
+.sms-wrapper label,
+.textarea label {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 16px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.form-group select,
+.textarea textarea {
+  padding: 10.33px 10px;
+  height: 44px;
+  border: 1px solid var(--gray);
+  border-radius: 6px;
+  transition: 0.3s;
+  outline: none !important;
+}
+
+.form-group select:focus,
+.textarea textarea:focus {
+  border: 1px solid var(--stroke) !important;
+  outline: none !important;
+}
+
+.sms-wrapper .search-btn {
+  width: 250px;
+  background: var(--primary-color);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 30px;
+  border-radius: 6px;
+  transition: 0.4s;
+  color: var(--white);
+}
+
+.textarea .send-btn {
+  width: 250px;
+  background: var(--primary-color);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 30px;
+  border-radius: 6px;
+  transition: 0.4s;
+  color: var(--white);
+  margin: 20px 0;
+}
+
+.textarea .send-btn:hover,
+.sms-wrapper .search-btn:hover {
+  background: var(--btn-hover);
+}
+
+@media screen and (max-width: 1200px) {
+  .sms-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .sms-wrapper .sms-balance {
+    width: 100%;
+    margin-top: -0px;
+    height: auto !important;
+  }
+
+  .sms-wrapper .wrap {
+    width: 100%;
+  }
+
+  .sms-bredcam .bredcam-title {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .textarea .send-btn,
+  .sms-wrapper .search-btn {
+    padding: 8px 10px;
+  }
+
+  .form-actions {
+    gap: 8px;
+  }
+
+  .sms-bredcam h1 {
+    font-size: 28px;
+  }
+}
+
+/* ============================================== */
+/* ------------ SMS Management CSS End -------------- */
+/* ============================================== */
+
+/* =============================================================== */
+/* ------------ Academic Management All page CSS Start -------------- */
+/* ================================================================ */
+.main-content .class-heading {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--gray);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.main-content .class-heading .heading {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0px;
+}
+
+.main-content .class-heading .create-cls-btn {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 10px 30px;
+  transition: 0.4s;
+}
+
+.main-content .class-heading .create-cls-btn:hover {
+  background: var(--btn-hover);
+}
+
+.main-content .class-group {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-content .class-group .class-search {
+  width: 40% !important;
+}
+
+.main-content .class-group .class-search .form-control {
+  width: 100% !important;
+}
+
+@media screen and (max-width: 768px) {
+  .main-content .class-heading .create-cls-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .main-content .class-heading .heading {
+    font-size: 28px;
+  }
+
+  .main-content .class-group {
+    flex-direction: column;
+  }
+
+  .main-content .class-group .class-search {
+    width: 100% !important;
+  }
+}
+/* =============================================================== */
+/* ------------ Academic Management All page CSS End -------------- */
+/* ================================================================ */
+
+/* =============================================================== */
+/* ------------ Exam Management All page CSS Start -------------- */
+/* ================================================================ */
+.main-content .exam-heading {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main-content .exam-heading .heading {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0px;
+}
+
+.main-content .exam-heading .create-cls-btn {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 10px 30px;
+  transition: 0.4s;
+}
+
+.main-content .exam-heading .create-cls-btn:hover {
+  background: var(--btn-hover);
+}
+
+.main-content .mark-entry-form .form-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content .mark-entry-form .form-row {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.main-content .mark-entry-wrap {
+  text-align: center;
+  box-shadow: none;
+  margin-bottom: 0px;
+}
+
+.main-content .mark-entry-wrap .mark-btn {
+  display: inline-block;
+  width: 30%;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 10px 30px;
+  margin: auto;
+  transition: 0.4s;
+  margin-top: 20px;
+}
+
+.main-content .mark-entry-wrap .mark-btn:hover {
+  background-color: var(--btn-hover);
+}
+
+.main-content .exam-group {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-content .exam-group .exam-search {
+  width: 40% !important;
+}
+
+.main-content .exam-group .exam-search .form-control {
+  width: 100% !important;
+}
+
+.main-content .subject-table-wrapper thead th,
+.main-content .subject-table-wrapper tbody td,
+.main-content .grade-table-wrapper thead th,
+.main-content .grade-table-wrapper tbody td {
+  text-align: center;
+}
+
+.main-content .mark-entry-table tbody td input {
+  width: 100% !important;
+  border: 1px solid var(--gray) !important;
+  padding: 3px 5px;
+  text-align: center;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.main-content .mark-entry-table tbody td input:focus {
+  border-color: var(--stroke) !important;
+}
+
+.main-content .mark-entry-table {
+  border: 1px solid var(--gray) !important;
+}
+
+.main-content .grade-table-wrapper tbody td input {
+  width: 100% !important;
+  text-align: center;
+}
+
+.main-content .subject-table-wrapper thead th:nth-child(1),
+.main-content .subject-table-wrapper tbody td:nth-child(1),
+.main-content .grade-table-wrapper thead th:nth-child(1),
+.main-content .grade-table-wrapper tbody td:nth-child(1) {
+  text-align: left;
+}
+
+.main-content .result-sheet-form {
+  display: block;
+  margin: auto;
+  max-width: 70%;
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+}
+
+.main-content .result-sheet-form input,
+.main-content .result-sheet-form select,
+.main-content .result-sheet-form label {
+  width: 100%;
+  text-align: left;
+}
+
+.main-content .result-sheet-form input {
+  padding: 10.33px 10px;
+  height: 44px;
+  border: 1px solid var(--gray);
+  border-radius: 6px;
+  transition: 0.3s;
+  outline: none !important;
+}
+
+.main-content .result-sheet-form input:focus {
+  border-color: var(--stroke);
+}
+
+.main-content .result-sheet-form label {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 16px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.main-content .result-sheet-form label {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 16px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.main-content .result-sheet-form .search-btn {
+  display: inline-block;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--primary-color);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 10px 30px;
+  margin: auto;
+  transition: 0.4s;
+  margin-top: 20px;
+}
+
+.main-content .result-sheet-form .search-btn:hover {
+  background-color: var(--btn-hover);
+}
+
+@media screen and (max-width: 768px) {
+  .main-content .exam-heading .create-cls-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .main-content .result-sheet-form {
+    max-width: 100%;
+  }
+
+  .main-content .exam-heading .heading {
+    font-size: 28px;
+  }
+
+  .main-content .exam-group {
+    flex-direction: column;
+  }
+
+  .main-content .mark-entry-wrap .mark-btn {
+    width: 100%;
+  }
+
+  .main-content .exam-group .exam-search {
+    width: 100% !important;
+  }
+
+  .mark-entry-form .form-wrapper .form-row {
+    flex-direction: column;
+  }
+}
+
+/* Mark Sheet CSS Start */
+
+.marksheet-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: none;
+  width: 100%;
+  background: var(--white);
+  padding: 20px 20px 20px 20px;
+  border-radius: 5px;
+}
+
+.marksheet-container .watermark {
+  width: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.16;
+}
+
+.marksheet-container .watermark2 {
+  width: 26%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.16;
+}
+
+.marksheet-container .watermark2 img {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: cover;
+  background-position: center;
+}
+
+.marksheet-container .watermark img {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: cover;
+  background-position: center;
+}
+
+.marksheet-container .signature {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.marksheet-container .marksheet-container-wrap {
+  position: relative;
+  z-index: 5;
+}
+
+.marksheet-container .marksheet-container-wrap table td {
+  background: transparent !important;
+}
+
+.marksheet-container .signature .guardian,
+.marksheet-container .signature .class-teacher,
+.marksheet-container .signature .vice-principal {
+  font-size: 12px;
+  color: var(--black);
+  border-top: 1px dotted;
+  padding: 0 20px;
+  margin-top: 30px;
+}
+
+.marksheet-container header {
+  position: relative;
+  text-align: center;
+}
+
+.marksheet-container .info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.marksheet-container header .logo {
+  width: 14%;
+  aspect-ratio: 16 / 16;
+}
+
+.marksheet-container header .logo img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: contain;
+}
+
+.marksheet-container .board-info .code-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.marksheet-container .board-info {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.marksheet-container .code-info h4 {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--black);
+  margin: 0;
+}
+
+.marksheet-container .code-info .bar {
+  font-size: 14px;
+  color: var(--black);
+  margin: 0 10px;
+}
+
+.marksheet-container .grade-sheet-table,
+.marksheet-container .grade-sheet .second-table {
+  overflow: auto;
+}
+
+.marksheet-container .grade-sheet .second-table .subject {
+  width: 160px;
+}
+
+.marksheet-container .grade-sheet .check-table-wrapper table {
+  white-space: nowrap;
+  width: 100% !important;
+}
+
+.marksheet-container .grade-sheet-table::-webkit-scrollbar,
+.marksheet-container .grade-sheet .second-table::-webkit-scrollbar {
+  height: 8px !important;
+  background-color: var(--hover-color);
+  cursor: pointer;
+}
+
+.marksheet-container .board-info h2 {
+  color: var(--text-color);
+  display: inline-block;
+  font-size: 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.marksheet-container .info-wrapper table th,
+.marksheet-container .info-wrapper table td {
+  font-size: 8px !important;
+  color: var(--black);
+  font-weight: 500;
+  padding: 1px 8px;
+}
+.marksheet-container .result-section th,
+.marksheet-container .grade-sheet th,
+.marksheet-container .result-section td,
+.marksheet-container .grade-sheet td {
+  font-size: 11px;
+  color: var(--black);
+  font-weight: 500;
+  padding: 1px 8px;
+}
+
+.marksheet-container .info-wrapper table {
+  width: 260px;
+  border-collapse: collapse;
+}
+
+.marksheet-container .student-info {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.marksheet-container .info-wrapper table th {
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-size: 11px;
+}
+
+.marksheet-container .info-wrapper table td {
+  color: var(--black);
+  font-size: 11px;
+}
+
+.marksheet-container .info-wrapper table th,
+.marksheet-container .info-wrapper table td {
+  border: 1px solid var(--gray);
+}
+.marksheet-container .board-info p {
+  color: var(--black);
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.marksheet-container .result-section {
+  text-align: center;
+}
+
+.marksheet-container .result-section h3 {
+  display: inline-block;
+  color: var(--black);
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid var(--stroke);
+  margin-bottom: 16px;
+}
+
+.marksheet-container .student-info td {
+  vertical-align: top;
+}
+
+.marksheet-container .passed {
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.marksheet-container .gpa {
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.marksheet-container .grade-sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.marksheet-container .grade-sheet th,
+.marksheet-container .grade-sheet td {
+  border: 1px solid var(--gray);
+  text-align: center;
+}
+.marksheet-container .result-section td {
+  border: 1px solid var(--gray);
+}
+.marksheet-container .grade-sheet table .subject {
+  width: 260px;
+  text-align: left;
+}
+
+.marksheet-container .check-table .check {
+  width: 40px;
+}
+
+.marksheet-container .check-table .comments span {
+  height: 36px;
+  display: block;
+  text-align: left;
+}
+
+.marksheet-container .check-table tbody td {
+  text-align: left;
+}
+
+.marksheet-container .grade-sheet th {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* .marksheet-container .result-section tr:nth-child(even),
+.marksheet-container .grade-sheet tr:nth-child(even) {
+  background-color: #f9f9f9;
+} */
+.marksheet-container .grade-sheet-table::-webkit-scrollbar,
+.marksheet-container .student-info-table::-webkit-scrollbar {
+  height: 12px;
+  background-color: var(--hover-color);
+  cursor: pointer;
+}
+
+.marksheet-container .student-info-table::-webkit-scrollbar-thumb,
+.marksheet-container .grade-sheet-table::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  height: 12px;
+  border-radius: 5px;
+  border-color: none !important;
+}
+
+.marksheet-container {
+  position: relative;
+}
+
+.marksheet-container .print-icon {
+  display: inline-block;
+  color: var(--black);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0px 5px 0px 0px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  transition: 0.4s;
+}
+
+.marksheet-container .print-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.marksheet-container .print-icon:hover {
+  background-color: #f9f9f9;
+}
+
+@media print {
+  .marksheet-container .footer a,
+  .marksheet-container .print-icon {
+    display: none;
+  }
+
+  .marksheet-container .info-wrapper table th,
+  .marksheet-container .grade-sheet th,
+  .marksheet-container .board-info h2 {
+    color: var(--black);
+  }
+
+  .marksheet-container {
+    margin: 0;
+    padding: 20px 20px 10px 20px;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    border: 3px solid var(--stroke);
+    box-shadow: none;
+  }
+
+  .marksheet-container .info-wrapper2 {
+    margin-bottom: -26px;
+  }
+
+  .marksheet-container header .logo {
+    width: 140px;
+    aspect-ratio: 16 / 16;
+    margin-right: 50px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .marksheet-container .grade-sheet-table,
+  .marksheet-container .student-info-table {
+    overflow: auto;
+    padding-bottom: 10px !important;
+  }
+  .marksheet-container .grade-sheet-table table,
+  .marksheet-container .student-info-table table {
+    width: 800px;
+  }
+
+  .marksheet-container .board-info h2,
+  .marksheet-container .result-section h3 {
+    font-size: 16px;
+  }
+
+  .marksheet-container .code-info h4,
+  .marksheet-container .board-info p {
+    font-size: 12px;
+  }
+
+  .marksheet-container header .logo {
+    display: none;
+  }
+  .marksheet-container .print-icon .text {
+    display: none !important;
+    padding: 0px !important;
+  }
+  .marksheet-container .print-icon {
+    padding-right: 0px;
+  }
+}
+/* Mark Sheet CSS End */
+
+/* Admit Card Css Start */
+.admit-card {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  border-radius: 6px;
+  background-color: var(--white);
+}
+
+.admit-card .admit-wrapper {
+  position: relative;
+  border: 3px solid var(--stroke);
+  padding: 20px 20px 10px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.admit-card .admit-wrapper::before {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  border-top: 1px dotted var(--stroke);
+}
+
+.admit-card .admit-wrapper:last-child::before {
+  border-top: none;
+}
+
+.admit-card .header .logo {
+  width: 60px;
+  aspect-ratio: 16 / 16;
+}
+
+.admit-card .header .logo img {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  object-fit: contain;
+}
+.admit-card .header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+.admit-card .header .serial {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.admit-card .header .serial h4 {
+  font-size: 12px;
+  color: var(--black);
+  font-weight: 500;
+  margin: 0px;
+}
+.admit-card .header .serial h4 span {
+  margin-left: 5px;
+}
+.admit-card .header .info {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+.admit-card .header h1 {
+  color: var(--text-color);
+  font-size: 16px;
+  margin: 0;
+}
+.admit-card .header h2 {
+  color: var(--black);
+  font-size: 12px;
+  margin: 0;
+}
+.admit-card .header h3 {
+  display: inline-block;
+  border-radius: 30px;
+  padding: 5px 20px;
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  margin-top: 3px;
+  border: 1px solid var(--black);
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+}
+
+.admit-card .print-admit {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  color: var(--black);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0px 5px 0px 0px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  transition: 0.4s;
+  z-index: 1;
+}
+
+.admit-card .print-admit svg {
+  width: 32px;
+  height: 32px;
+}
+
+.admit-card .print-admit:hover {
+  background-color: #f9f9f9;
+}
+
+.admit-card .section {
+  margin-top: 20px;
+}
+
+.admit-card .section .info table strong {
+  display: block;
+  color: var(--black);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.admit-card .section .info table td {
+  color: var(--black);
+  font-size: 12px;
+  vertical-align: text-top;
+  padding: 0px 0 !important;
+}
+.admit-card .section .info table td:nth-child(2) {
+  padding-left: 10px !important;
+}
+
+.admit-card .section .info table td:nth-child(3) {
+  width: 190px;
+  padding-left: 10px !important;
+}
+
+.admit-card .section .info table td:nth-child(4) {
+  display: inline-block;
+}
+
+.admit-card .section .subject {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admit-card .info {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.admit-card .table-wrapper {
+  overflow: auto !important;
+}
+.admit-card .table-wrapper::-webkit-scrollbar {
+  height: 12px;
+  background-color: var(--hover-color);
+  cursor: pointer;
+}
+
+.admit-card .table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  height: 12px;
+  border-radius: 5px;
+  border-color: none !important;
+}
+.admit-card .info .profile .image {
+  display: flex;
+  width: 60px;
+  aspect-ratio: 14 / 16;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+}
+.admit-card .info .profile img {
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+}
+.admit-card .info div p {
+  margin: 0;
+  font-size: 14px;
+}
+.admit-card .footer {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.admit-card .footer p {
+  margin: 0;
+  color: var(--black);
+  font-weight: 500;
+  font-size: 12px;
+  text-align: right;
+  border-top: 1px dotted;
+  padding: 0px 20px;
+}
+.admit-card .footer span {
+  margin: 0;
+  color: var(--black);
+  font-weight: 500;
+  font-size: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .admit-card .header .logo {
+    display: none;
+  }
+  .admit-card {
+    padding-top: 30px;
+  }
+
+  .admit-card .info {
+    width: 700px !important;
+    padding-bottom: 10px;
+  }
+}
+
+@media print {
+  .admit-card .print-admit {
+    display: none;
+  }
+  .admit-card {
+    border: none;
+    padding: 0px;
+  }
+
+  .admit-card .table-wrapper {
+    margin-top: 10px;
+  }
+  .admit-card .header .serial h4 {
+    margin-bottom: 3px;
+  }
+  .admit-card .header h3 {
+    color: var(--text-color);
+  }
+  @page {
+    size: A4;
+    margin: 0 !important;
+    padding: 30px !important;
+  }
+}
+
+/* Admit Card Css End */
+
+/* Tabulation Sheet CSS Start */
+
+.tabulation {
+  position: relative;
+  width: 100%;
+  background: var(--white);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.tabulation .header {
+  position: relative;
+  text-align: center;
+}
+
+.tabulation .header h2 {
+  background-color: var(--primary-color);
+  color: var(--white);
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 24px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.tabulation .header p {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin: 0px 0;
+}
+
+.tabulation .info-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.tabulation .header .logo {
+  position: absolute;
+  top: 45%;
+  left: 45px;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  aspect-ratio: 16 / 16;
+}
+
+.tabulation header .logo img {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  object-fit: contain;
+}
+
+.tabulation .board-info .code-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tabulation .board-info .code-info h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin: 0px;
+}
+
+.tabulation .board-info .code-info .bar {
+  margin: 0 5px;
+  color: var(--text-color);
+}
+
+.tabulation .print-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 0px;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0px 5px 0px 0px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  transition: 0.4s;
+}
+
+.tabulation .print-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.tabulation .print-icon:hover {
+  background-color: #f9f9f9;
+}
+
+.tabulation .code-info h4 {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin: 0;
+}
+.tabulation .tb-table-wrapper {
+  overflow: auto;
+  padding-bottom: 10px;
+}
+.tabulation .table-container {
+  width: 100%;
+  border: 1px solid var(--gray);
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.tabulation .table-container th,
+.table-container td {
+  border: 1px solid var(--gray);
+  text-align: center;
+  padding: 3px 5px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-color);
+}
+.tabulation .table-container td h2 {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.tabulation table .student-info {
+  text-align: left;
+  font-weight: bold;
+}
+.tabulation .info {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.tabulation .tb-table-wrapper::-webkit-scrollbar {
+  height: 12px;
+  background-color: var(--hover-color);
+  cursor: pointer;
+}
+
+.tabulation .tb-table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  height: 12px;
+  border-radius: 5px;
+  border-color: none !important;
+}
+
+@media screen and (max-width: 768px) {
+  .tabulation .header .logo {
+    display: none;
+  }
+}
+
+@media print {
+  .tabulation .header .print-admit {
+    display: none;
+  }
+  .tabulation .header h2 {
+    color: var(--text-color);
+    padding-bottom: 0px;
+  }
+  .tabulation .print-icon {
+    display: none;
+  }
+  .tabulation {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0px;
+  }
+  @page {
+    size: A4;
+    margin: 0 !important;
+    padding: 30px !important;
+  }
+}
+/* Tabulation Sheet CSS End */
+/* =============================================================== */
+/* ------------ Exam Management All page CSS End -------------- */
+/* ================================================================ */
+
+/* =============================================================== */
+/* ------------ Seat Plan page CSS End -------------- */
+/* ================================================================ */
+
+.seat-plan-container {
+  position: relative;
+  background: var(--white);
+  padding: 66px 20px 20px 20px;
+  border-radius: 6px;
+}
+
+.seat-plan-container .seat-wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.seat-plan-container .button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.seat-plan-container .seat-plan-container-wrap {
+  width: 100%;
+  position: relative;
+  border: 3px solid var(--stroke);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.seat-plan-container header {
+  position: relative;
+  text-align: center;
+}
+
+.seat-plan-container .info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.seat-plan-container header .student-profile img {
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.seat-plan-container header .student-profile,
+.seat-plan-container header .logo {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  width: 22%;
+  aspect-ratio: 16 / 16;
+}
+
+.seat-plan-container header .student-profile img,
+.seat-plan-container header .logo img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: contain;
+}
+
+.seat-plan-container .board-info .code-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seat-plan-container .board-info {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.seat-plan-container .board-info h2 {
+  color: var(--text-color);
+  display: inline-block;
+  font-size: 19px;
+  height: 100%;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.seat-plan-container .board-info h4 {
+  font-size: 17px;
+  padding: 4px 20px;
+  font-weight: 600;
+  border-radius: 30px;
+  color: var(--black);
+  border: 1px solid var(--stroke);
+  margin: 0;
+}
+
+.seat-plan-container .board-info p {
+  color: var(--black);
+  font-size: 12px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.seat-plan-container .print-icon {
+  display: inline-block;
+  color: var(--black);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0px 5px 0px 0px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  transition: 0.4s;
+}
+
+.seat-plan-container .print-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.seat-plan-container .board-info .code-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seat-plan-container .code-info .bar {
+  font-size: 14px;
+  color: var(--black);
+  margin: 0 10px;
+}
+
+.seat-plan-container .student-info-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seat-plan-container .student-info-table .roll {
+  border: 1px solid var(--black);
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.seat-plan-container .student-info-table .roll-num {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.seat-plan-container .print-icon:hover {
+  background-color: #f9f9f9;
+}
+
+.seat-plan-container .student-info-table table td {
+  font-size: 15px !important;
+  color: var(--black);
+  font-weight: 500;
+  padding: 0px 8px;
+}
+
+.seat-plan-container .seat-wrapper::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  border-top: 1px dotted var(--stroke);
+}
+
+.seat-plan-container .seat-plan-container-wrap {
+  position: relative;
+}
+
+.seat-plan-container .seat-plan-container-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -14px;
+  width: 2px;
+  height: 100%;
+  border-right: 1px dotted var(--stroke);
+}
+
+.seat-plan-container .seat-plan-container-wrap:last-child::after {
+  border-right: none;
+}
+
+.seat-plan-container .seat-wrapper:last-child {
+  margin-bottom: 0px;
+}
+
+.seat-plan-container .seat-wrapper:last-child::before {
+  border-top: none;
+}
+
+@media print {
+  .seat-plan-container .print-icon {
+    display: none;
+  }
+
+  .seat-plan-container {
+    padding: 0px;
+  }
+
+  .seat-plan-container header .logo img {
+    margin-right: -100px !important;
+  }
+  .seat-plan-container header .student-profile,
+  .seat-plan-container header .logo {
+    width: 140px;
+    aspect-ratio: 16 / 16;
+    margin-right: 50px;
+  }
+}
+
+@media screen and (max-width: 778px) {
+  .seat-plan-container .seat-wrapper {
+    flex-direction: column;
+  }
+
+  .seat-plan-container .seat-plan-container-wrap::after {
+    border-right: none;
+  }
+
+  .seat-plan-container .seat-wrapper::before {
+    border-top: none;
+  }
+}
+
+/* =============================================================== */
+/* ------------ Seat Plan page CSS End -------------- */
+/* ================================================================ */
+
+/* =============================================================== */
+/* ------------ Student ID Card page CSS Start -------------- */
+/* ================================================================ */
+
+.generate-id-container {
+  position: relative;
+  background: var(--white);
+  padding: 66px 20px 20px 20px;
+  border-radius: 6px;
+}
+
+.generate-id-container .seat-wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.generate-id-container .button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.generate-id-container header {
+  position: relative;
+  text-align: center;
+}
+
+.generate-id-container .info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 4px;
+}
+
+.generate-id-container header .student-profile img {
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.generate-id-container header .logo {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  width: 30%;
+  aspect-ratio: 16 / 16;
+}
+
+.generate-id-container header .logo img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: contain;
+}
+
+.generate-id-container .board-info .code-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.generate-id-container .board-info {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+}
+
+.generate-id-container .board-info h2 {
+  color: var(--white);
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.generate-id-container .board-info h4 {
+  font-size: 10px;
+  font-weight: 500;
+  border-radius: 30px;
+  color: var(--white);
+  margin: 0;
+}
+
+.generate-id-container .board-info p {
+  color: var(--white);
+  font-size: 11px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.generate-id-container .print-icon {
+  display: inline-block;
+  color: var(--black);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0px 5px 0px 0px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  transition: 0.4s;
+}
+
+.generate-id-container .print-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.generate-id-container .id-card-wrap {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.generate-id-container .id-card-wrap:nth-last-of-type(1) {
+  margin-bottom: 0px;
+}
+
+.generate-id-container .id-card {
+  width: 100%;
+  border: 3px solid var(--stroke);
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--white);
+  text-align: center;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+}
+
+.generate-id-container .id-card-wrap .header {
+  position: relative;
+  background-color: var(--primary-color);
+  padding: 10px 10px;
+}
+
+.generate-id-container .id-card-wrap .photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 8px auto;
+  border: 3px solid var(--stroke);
+}
+
+.generate-id-container .id-card-wrap .photo img {
+  width: 100%;
+  background-position: center;
+  object-fit: cover;
+  background-size: cover;
+}
+
+.generate-id-container .id-card-wrap .student-name {
+  display: inline-block;
+  color: var(--text-color);
+  margin: 4px auto;
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.generate-id-container .id-card-wrap .details {
+  display: inline-block;
+  text-align: left;
+  font-size: 14px;
+}
+
+.id-card-wrap .details .signature {
+  text-align: right;
+  margin: 16px 0px 0px 0px;
+}
+
+.id-card-wrap .details .signature span {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--black);
+  font-weight: 500;
+  border-top: 1px solid var(--black);
+}
+
+.generate-id-container .details span {
+  font-weight: bold;
+}
+
+.generate-id-container .details table {
+  width: 100%;
+}
+
+.generate-id-container .details table td {
+  padding: 0px 6px;
+  font-size: 11px;
+  color: var(--black);
+}
+
+.generate-id-container .details table td:nth-child(1) {
+  padding-left: 0px;
+}
+
+@media print {
+  .generate-id-container .print-icon {
+    display: none;
+  }
+
+  .generate-id-container {
+    padding: 0px;
+  }
+
+  .generate-id-container .id-card-wrap .footer p,
+  .generate-id-container .board-info h4,
+  .generate-id-container .board-info p {
+    color: var(--black);
+  }
+
+  .generate-id-container .board-info h2 {
+    color: var(--text-color);
+  }
+}
+
+@media screen and (max-width: 778px) {
+  .generate-id-container .id-card-wrap {
+    flex-direction: column;
+  }
+}
+
+/* =============================================================== */
+/* ------------ Student ID Card page CSS End -------------- */
+/* ================================================================ */
+
+/* =============================================================== */
+/* ------------ Filter Select Search Box Js Start -------------- */
+/* ================================================================ */
+
+.select-box-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.select-box-dropdown select {
+  display: none;
+}
+
+.select-dropdown-selected {
+  background-color: var(--white);
+  color: var(--black);
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid var(--gray);
+  display: flex;
+  justify-content: space-between;
+  border-radius: 6px;
+  align-items: center;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+
+.select-dropdown-selected:hover {
+  border: 1px solid var(--stroke);
+}
+
+.select-dropdown-selected .icon {
+  transition: transform 0.3s;
+}
+
+.select-dropdown-items {
+  position: absolute;
+  background-color: var(--white);
+  border: 1px solid var(--stroke);
+  width: 100%;
+  z-index: 1000;
+  padding: 6px;
+  display: none;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  top: 100%;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+
+.select-dropdown-items::-webkit-scrollbar {
+width: 8px;
+background-color: #e6e3e3e5;
+cursor: pointer;
+}
+
+.select-dropdown-items::-webkit-scrollbar-thumb {
+background: #1f4529;
+width: 8px;
+border-radius: 5px;
+border-color: none !important;
+}
+
+.select-dropdown-items .option {
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--black);
+}
+
+.select-dropdown-items .option:hover {
+  background-color: #1f452956;
+}
+
+.select-search-box {
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+  display: none; /* Initially hide the search input */
+}
+
+.select-dropdown-items.show {
+  display: block;
+}
+
+/* Rotate the icon when the dropdown is open */
+.select-dropdown-items.show + .select-dropdown-selected .icon {
+  transform: rotate(180deg);
+}
+
+/* =============================================================== */
+/* ------------ Filter Select Search Box Js End -------------- */
+/* ================================================================ */
+
+
+
+/* =============================================================== */
+/* ------------ Date-Picker CSS Start -------------- */
+/* ================================================================ */
+
+.input-datepicker-wrapper {
+  position: relative;
+  width: 100%;
+}
+.input-datepicker-wrapper .datepicker-picker {
+  background: var(--white);
+  border: 1px solid var(--stroke);
+}
+
+.input-datepicker-wrapper input {
+  width: 100%;
+  border: 1px solid var(--gray);
+}
+
+.input-datepicker-wrapper input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.input-datepicker-wrapper .icon {
+  position: absolute;
+  right: 10px;
+  top: 22px;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #6c757d;
+  pointer-events: none;
+}
+
+.datepicker-header .datepicker-controls .button {
+  color: var(--text-color);
+}
+
+.datepicker-view .dow {
+  color: var(--black);
+}
+
+.datepicker-cell.focused:not(.selected) {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+.datepicker-view .days .datepicker-cell:hover {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+.datepicker-cell.selected {
+  background: orangered;
+}
+
+/* =============================================================== */
+/* ------------ Date-Picker CSS End -------------- */
+/* ================================================================ */
