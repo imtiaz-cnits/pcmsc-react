@@ -21,6 +21,8 @@ import CombineResult from "../pages/CombineResult/CombineResult";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
+import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
+import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
 
 export const router = createBrowserRouter([
   {
@@ -96,20 +98,28 @@ export const router = createBrowserRouter([
             element: <Result />,
           },
           {
-            path: 'combine-result',
-            element: <CombineResult />
+            path: "combine-result",
+            element: <CombineResult />,
           },
           {
-            path: 'mark-sheet',
-            element: <MarkSheet />
+            path: "mark-sheet",
+            element: <MarkSheet />,
           },
           {
-            path: 'admit-card',
-            element: <AdmitCard />
+            path: "admit-card",
+            element: <AdmitCard />,
           },
           {
-            path: 'generated-admit-card',
-            element: <GeneratedAdmitCard />
+            path: "generated-admit-card",
+            element: <GeneratedAdmitCard />,
+          },
+          {
+            path: 'tabulation-sheet',
+            element: <TabulationSheet />
+          },
+          {
+            path: 'generated-tb-sheet',
+            element: <GeneratedTBSheet />
           }
         ],
       },

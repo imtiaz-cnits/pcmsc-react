@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-const AdmitCard = () => {
+const TabulationSheet = () => {
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -10,11 +10,11 @@ const AdmitCard = () => {
               <div className="card-body">
                 {/* <!-- className heading Start --> */}
                 <div className="exam-heading">
-                  <h3 className="heading">Admit Card</h3>
+                  <h3 className="heading">Tabulation Sheet</h3>
                 </div>
-                {/* <!-- className heading End -->
+                {/* <!-- className heading End --> */}
 
-              <!-- Form Start --> */}
+                {/* <!-- Form Start --> */}
                 <div className="className-wise-form mb-2">
                   <div className="mark-entry-form">
                     <form
@@ -148,9 +148,9 @@ const AdmitCard = () => {
         <!-- Table Action Button Modal Start --> */}
         </div>
       </div>
-      {/* <!-- Hero Main Content End -->  */}
+      {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
 
-export default AdmitCard;
+export default TabulationSheet;
