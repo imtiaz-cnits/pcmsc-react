@@ -6,7 +6,6 @@ node_modules
 .env.local
 .env.development
 .env.production
-eslint.config.js
 
 
 # Ignore build and dependency files
@@ -24,3 +23,6 @@ yarn-error.log
 Thumbs.db
 
 .idea
+
+.vsfolder/
+eslint.config.js
