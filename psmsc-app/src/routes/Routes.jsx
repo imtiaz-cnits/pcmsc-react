@@ -16,6 +16,7 @@ import ExamManagement from "../pages/Exam Management/ExamManagement";
 import Subject from "../pages/Subject/Subject";
 import ExamAssignToclassName from "../pages/ExamAssignToClass/ExamAssignToClass";
 import MarkEntry from "../pages/MarkEntry/MarkEntry";
+import Result from "../pages/Result/Result";
 
 export const router = createBrowserRouter([
   {
@@ -79,12 +80,16 @@ export const router = createBrowserRouter([
             element: <Subject />,
           },
           {
-            path: 'exam-assign-to-class',
-            element: <ExamAssignToclassName />
+            path: "exam-assign-to-class",
+            element: <ExamAssignToclassName />,
           },
           {
-            path: 'mark-entry',
-            element: <MarkEntry />
+            path: "mark-entry",
+            element: <MarkEntry />,
+          },
+          {
+            path: 'result',
+            element: <Result />
           }
         ],
       },
