@@ -23,6 +23,7 @@ import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
+import SeatPlan from "../pages/SeatPlan/SeatPlan";
 
 export const router = createBrowserRouter([
   {
@@ -120,6 +121,10 @@ export const router = createBrowserRouter([
           {
             path: 'generated-tb-sheet',
             element: <GeneratedTBSheet />
+          },
+          {
+            path: 'seat-plan',
+            element: <SeatPlan />
           }
         ],
       },
