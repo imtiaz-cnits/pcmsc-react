@@ -38,7 +38,7 @@ $(document).ready(function () {
   if (activeSubmenuLink) {
     // Highlight the active submenu child link
     const activeSubElement = $(
-      `.menu ul li a[href="${activeSubmenuLink}"]`
+      `.menu ul li a[href="${activeSubmenuLink}"]`,
     ).parent();
     activeSubElement.addClass("active");
 
@@ -49,7 +49,7 @@ $(document).ready(function () {
   } else if (activeLink) {
     // Highlight the parent menu link even if no submenu is active
     const activeElement = $(
-      `.menu > ul > li > a[href="${activeLink}"]`
+      `.menu > ul > li > a[href="${activeLink}"]`,
     ).parent();
     activeElement.addClass("active");
     activeElement.find("> ul").slideDown(); // Open submenu if it's a parent
@@ -127,7 +127,7 @@ function toggleSidebar() {
   if (window.innerWidth >= 992) {
     document.body.setAttribute(
       "data-sidebar-size",
-      currentSize === "sm" ? "lg" : "sm"
+      currentSize === "sm" ? "lg" : "sm",
     );
   }
 }
@@ -187,7 +187,7 @@ document
   .forEach(function (toggleBtn) {
     toggleBtn.addEventListener("change", function () {
       const selectedMode = document.querySelector(
-        'input[name="layout-mode"]:checked'
+        'input[name="layout-mode"]:checked',
       ).value;
       document.body.setAttribute("data-layout-mode", selectedMode);
     });
@@ -195,14 +195,14 @@ document
 
 // Navbar Sidebar End ......................
 
-
-
 // Filter Select Search Box Js Start................................................................
 document.addEventListener("DOMContentLoaded", function () {
   const dropdowns = document.querySelectorAll(".select-box-dropdown");
 
   dropdowns.forEach(function (dropdown) {
-    const dropdownSelected = dropdown.querySelector(".select-dropdown-selected");
+    const dropdownSelected = dropdown.querySelector(
+      ".select-dropdown-selected",
+    );
     const dropdownItems = dropdown.querySelector(".select-dropdown-items");
     const searchBox = dropdown.querySelector(".select-search-box");
     const icon = dropdown.querySelector(".icon i");
@@ -211,9 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function toggleSearchInput() {
       const itemCount = dropdownItems.querySelectorAll("div").length;
       if (itemCount >= 3) {
-        searchBox.style.display = 'block';
+        searchBox.style.display = "block";
       } else {
-        searchBox.style.display = 'none';
+        searchBox.style.display = "none";
       }
     }
 
@@ -227,23 +227,27 @@ document.addEventListener("DOMContentLoaded", function () {
       if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
         // If there's not enough space below, show the dropdown above
         dropdownItems.style.bottom = `${dropdownHeight + 10}px`; // Add some space between the dropdown and the container
-        dropdownItems.style.top = 'auto';
+        dropdownItems.style.top = "auto";
       } else {
         // Otherwise, show the dropdown below
-        dropdownItems.style.top = '100%';
-        dropdownItems.style.bottom = 'auto';
+        dropdownItems.style.top = "100%";
+        dropdownItems.style.bottom = "auto";
       }
     }
 
     // Toggle dropdown visibility
     dropdownSelected.addEventListener("click", function (e) {
       e.stopPropagation();
-      
+
       // Close all other dropdowns
       dropdowns.forEach(function (otherDropdown) {
         if (otherDropdown !== dropdown) {
-          otherDropdown.querySelector(".select-dropdown-items").classList.remove("show");
-          otherDropdown.querySelector(".icon i").classList.remove("fa-angle-up");
+          otherDropdown
+            .querySelector(".select-dropdown-items")
+            .classList.remove("show");
+          otherDropdown
+            .querySelector(".icon i")
+            .classList.remove("fa-angle-up");
           otherDropdown.querySelector(".icon i").classList.add("fa-angle-down");
         }
       });
@@ -290,18 +294,19 @@ document.addEventListener("DOMContentLoaded", function () {
         dropdownItems.classList.remove("show");
         icon.classList.remove("fa-angle-up");
         icon.classList.add("fa-angle-down");
-        searchBox.style.display = 'none';
+        searchBox.style.display = "none";
       }
     });
 
     // Select dropdown item
     dropdownItems.addEventListener("click", function (e) {
       if (e.target.tagName === "DIV") {
-        dropdownSelected.querySelector("span").textContent = e.target.textContent;
+        dropdownSelected.querySelector("span").textContent =
+          e.target.textContent;
         dropdownItems.classList.remove("show");
         icon.classList.remove("fa-angle-up");
         icon.classList.add("fa-angle-down");
-        searchBox.style.display = 'none';
+        searchBox.style.display = "none";
       }
     });
   });

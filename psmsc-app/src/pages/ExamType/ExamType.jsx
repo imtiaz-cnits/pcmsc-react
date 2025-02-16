@@ -1,6 +1,4 @@
-import "../../assets/css/all-modal.css";
-
-const Shift = () => {
+const ExamType = () => {
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -10,10 +8,10 @@ const Shift = () => {
             <div className="card">
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
-                <div className="class-heading">
-                  <h3 className="heading">Shift List</h3>
-                  <button className="create-cls-btn" id="classModalBtn">
-                    Add Shift
+                <div className="exam-heading">
+                  <h3 className="heading">Exam List</h3>
+                  <button className="create-cls-btn" id="exmModalBtn">
+                    Add Exam Type
                   </button>
                 </div>
                 {/* <!-- Class heading End --> */}
@@ -21,7 +19,7 @@ const Shift = () => {
                 {/* <!-- Action Buttons --> */}
                 <div className="button-wrapper mb-3">
                   {/* <!-- Search and Filter --> */}
-                  <div className="input-group class-group">
+                  <div className="input-group exam-group">
                     {/* <!-- Entries per page --> */}
                     <div>
                       <div className="entries-page">
@@ -45,13 +43,13 @@ const Shift = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="class-search">
+                    <div className="exam-search">
                       <input
                         style={{ width: "20%", margin: "0" }}
                         type="text"
                         id="searchInput"
                         className="form-control"
-                        placeholder="Search Class..."
+                        placeholder="Search Exam..."
                       />
                     </div>
                   </div>
@@ -66,14 +64,16 @@ const Shift = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Shift Name</th>
+                        <th>Exam Type Name</th>
+                        <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td>01</td>
-                        <td>Day</td>
+                        <td style={{ textAlign: "center" }}>1st Semester</td>
+                        <td>Active</td>
                         <td>
                           <div id="action_btn">
                             <div id="menu-wrap">
@@ -114,7 +114,8 @@ const Shift = () => {
                       </tr>
                       <tr>
                         <td>02</td>
-                        <td>Morning</td>
+                        <td style={{ textAlign: "center" }}>2nd Semester</td>
+                        <td>Active</td>
                         <td>
                           <div id="action_btn">
                             <div id="menu-wrap">
@@ -184,9 +185,9 @@ const Shift = () => {
           <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
-          {/* <!-- Table End --> */}
+          {/* <!-- Table End -->
 
-          {/* <!-- Table Action Button Modal Start -->
+        <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
           <div id="confirmationModal" className="modal">
             <div className="modal-content">
@@ -209,34 +210,47 @@ const Shift = () => {
             </div>
           </div>
           {/* <!-- Edit Modal End -->
-        <!-- Quick View Modal Start --> */}
-          {/* <!-- <div id="quickViewModal" class="modal">
+        <!-- Quick View Modal Start -->
+        <!-- <div id="quickViewModal" class="modal">
           <div class="modal-content">
             <p>Quick View</p>
             <div class="modal-buttons">
               <button id="quickClose">X</button>
             </div>
           </div>
-        </div> --> */}
-          {/* <!-- Quick View Modal End -->
+        </div> -->
+        <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Shift Pop Up Modal Start --> */}
-          <div className="shift-modal">
-            <section id="createClassModal" className="modal migrateModal">
+        <!-- Exam Type Pop Up Modal Start --> */}
+          <div className="exam-type">
+            <section id="exmModal" className="modal">
               <div className="modal-content">
                 <div id="popup-modal">
                   <div className="form-container">
-                    <h3>Add Shift</h3>
+                    <h3>Add Exam Type</h3>
                     <form>
                       {/* <!-- Row 1 --> */}
                       <div className="form-row">
                         <div className="form-group">
-                          <label htmlFor="search-students">Shift Name *</label>
+                          <label htmlFor="search-students">
+                            Exam Type Name *
+                          </label>
                           <input
                             type="text"
                             id="search-students"
-                            placeholder="Shift Name"
+                            placeholder="Exam Type Name"
+                          />
+                        </div>
+                      </div>
+                      {/* <!-- Row 2 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="search-students">Exam Status *</label>
+                          <input
+                            type="text"
+                            id="search-students"
+                            placeholder="Exam Status"
                           />
                         </div>
                       </div>
@@ -245,7 +259,7 @@ const Shift = () => {
                       <div className="form-actions">
                         <button
                           type="button"
-                          id="classBtn"
+                          id="exmClose"
                           className="button close closeBtn"
                         >
                           Close
@@ -260,11 +274,11 @@ const Shift = () => {
               </div>
             </section>
           </div>
-          {/* <!-- Shift Pop Up Modal Start --> */}
+          {/* <!-- Create Class Pop Up Modal Start --> */}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
-export default Shift;
+export default ExamType;

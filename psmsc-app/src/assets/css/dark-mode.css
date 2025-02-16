@@ -4,24 +4,24 @@
   Reset Default CSS Start
   ==================== */
 
-  :root {
-    --primary-font: "Poppins", sans-serif;
-    --white: #ffffff;
-    --text-color: #1F4529;
-    --text-color2: #008aee;
-    --primary-color: #1F4529;
-    --secondary-color: #1F4529;
-    --stroke: #1F4529;
-    --btn-hover: #2e97a7;
-    --hover-color: #dbeffd;
-    --gray: #aaaaaa;
-    --box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 17%);
-    --dark-mode-bg: #1e1e1e;
-    --dark-mode-bg2: #121212;
-    --dark-mode-text: #c0c5cb;
-    --content-and-hover-bg: #414141;
-    --black: #000000;
-  }
+:root {
+  --primary-font: "Poppins", sans-serif;
+  --white: #ffffff;
+  --text-color: #1f4529;
+  --text-color2: #008aee;
+  --primary-color: #1f4529;
+  --secondary-color: #1f4529;
+  --stroke: #1f4529;
+  --btn-hover: #2e97a7;
+  --hover-color: #dbeffd;
+  --gray: #aaaaaa;
+  --box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 17%);
+  --dark-mode-bg: #1e1e1e;
+  --dark-mode-bg2: #121212;
+  --dark-mode-text: #c0c5cb;
+  --content-and-hover-bg: #414141;
+  --black: #000000;
+}
 
 * {
   margin: 0;
@@ -353,7 +353,7 @@ body[data-layout-mode="dark"] .form-group select {
   color: var(--white);
 }
 body[data-layout-mode="dark"] .form-group select option {
-  background: transparent ;
+  background: transparent;
   color: var(--text-color) !important;
 }
 
@@ -670,7 +670,6 @@ body[data-layout-mode="dark"] #myModal #signup {
   color: var(--white) !important;
 }
 
-
 body[data-layout-mode="dark"] #myModal .form-container {
   background: var(--dark-mode-bg);
   color: var(--white) !important;
@@ -755,7 +754,12 @@ body[data-layout-mode="dark"] .data-table .table td h4:nth-child(1) {
   color: var(--white);
 }
 
-body[data-layout-mode="dark"] .main-content .mark-entry-table tbody td input:focus {
+body[data-layout-mode="dark"]
+  .main-content
+  .mark-entry-table
+  tbody
+  td
+  input:focus {
   border-color: var(--white) !important;
 }
 
@@ -869,7 +873,7 @@ body[data-layout-mode="dark"] #quickViewModal .modal-content,
 body[data-layout-mode="dark"] #exmModal .form-container,
 body[data-layout-mode="dark"] #createClassModal .form-container,
 body[data-layout-mode="dark"] #migrateModal .form-container,
-body[data-layout-mode="dark"] #studentModal .form-container{
+body[data-layout-mode="dark"] #studentModal .form-container {
   background: var(--dark-mode-bg2);
 }
 
@@ -877,14 +881,13 @@ body[data-layout-mode="dark"] .main-content .result-sheet-form input,
 body[data-layout-mode="dark"] #exmModal .form-group input,
 body[data-layout-mode="dark"] #createClassModal .form-group input,
 body[data-layout-mode="dark"] #migrateModal .form-group input,
-body[data-layout-mode="dark"] #studentModal .form-group input{
+body[data-layout-mode="dark"] #studentModal .form-group input {
   background: transparent;
   color: var(--white);
 }
 
-body[data-layout-mode="dark"] .main-content .result-sheet-form{
+body[data-layout-mode="dark"] .main-content .result-sheet-form {
   border-color: var(--gray);
-
 }
 
 body[data-layout-mode="dark"] #quickViewModal .modal-content p,
@@ -907,7 +910,7 @@ body[data-layout-mode="dark"] .main-content .result-sheet-form input:focus,
 body[data-layout-mode="dark"] #exmModal .form-group input:focus,
 body[data-layout-mode="dark"] #createClassModal .form-group input:focus,
 body[data-layout-mode="dark"] #migrateModal .form-group input:focus,
-body[data-layout-mode="dark"] #studentModal .form-group input:focus{
+body[data-layout-mode="dark"] #studentModal .form-group input:focus {
   border-color: var(--white);
 }
 /*..........................Right bar SETTING Dark Mode All Color END ....................................*/
@@ -983,7 +986,7 @@ body[light-mode="dark"] .data-table input[type="text"]:focus {
   border-color: var(--white);
 }
 body[light-mode="dark"] .form-group select option {
-  background: transparent ;
+  background: transparent;
   color: var(--text-color) !important;
 }
 
@@ -1334,7 +1337,6 @@ body[light-mode="dark"] .data-table .card-body {
 body[light-mode="dark"] .data-table .heading input {
   background: transparent !important;
   color: var(--white);
-
 }
 
 body[light-mode="dark"] .data-table .heading input:focus {
@@ -1523,7 +1525,7 @@ body[light-mode="dark"] #quickViewModal .modal-content,
 body[light-mode="dark"] #exmModal .form-container,
 body[light-mode="dark"] #createClassModal .form-container,
 body[light-mode="dark"] #migrateModal .form-container,
-body[light-mode="dark"] #studentModal .form-container{
+body[light-mode="dark"] #studentModal .form-container {
   background: var(--dark-mode-bg2);
 }
 
@@ -1531,14 +1533,13 @@ body[light-mode="dark"] .main-content .result-sheet-form input,
 body[light-mode="dark"] #exmModal .form-group input,
 body[light-mode="dark"] #createClassModal .form-group input,
 body[light-mode="dark"] #migrateModal .form-group input,
-body[light-mode="dark"] #studentModal .form-group input{
+body[light-mode="dark"] #studentModal .form-group input {
   background: transparent;
   color: var(--white);
 }
 
-body[light-mode="dark"] .main-content .result-sheet-form{
+body[light-mode="dark"] .main-content .result-sheet-form {
   border-color: var(--gray);
-
 }
 
 body[light-mode="dark"] #quickViewModal .modal-content p,
@@ -1561,10 +1562,9 @@ body[light-mode="dark"] .main-content .result-sheet-form input:focus,
 body[light-mode="dark"] #exmModal .form-group input:focus,
 body[light-mode="dark"] #createClassModal .form-group input:focus,
 body[light-mode="dark"] #migrateModal .form-group input:focus,
-body[light-mode="dark"] #studentModal .form-group input:focus{
+body[light-mode="dark"] #studentModal .form-group input:focus {
   border-color: var(--white);
 }
-
 
 body[light-mode="dark"] #myModal .form-container {
   background: var(--dark-mode-bg);

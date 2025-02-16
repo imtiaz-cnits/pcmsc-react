@@ -82,9 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("quickViewModal");
   const quickButton = document.querySelectorAll(".quickButton");
-  const confirmButtons = [
-    document.getElementById("quickClose"),
-  ];
+  const confirmButtons = [document.getElementById("quickClose")];
 
   // Function to open modal
   const openModal = () => {
@@ -247,8 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 // Academic All page Pop Up Modal End.........
 
-
-
 // Exam Management All page Pop Up Modal Start.........
 document.addEventListener("DOMContentLoaded", () => {
   const exmModal = document.getElementById("exmModal");
@@ -286,5 +282,3 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 // Exam Management All page Pop Up Modal End.........
-
-

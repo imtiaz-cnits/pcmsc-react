@@ -277,9 +277,12 @@ body[data-topbar="hidden"] .isvertical-topbar {
 
 .right-bar {
   background: var(--white);
-  -webkit-box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.06),
+  -webkit-box-shadow:
+    0 0 24px 0 rgba(0, 0, 0, 0.06),
     0 1px 0 0 rgba(0, 0, 0, 0.02);
-  box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.06), 0 1px 0 0 rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 0 24px 0 rgba(0, 0, 0, 0.06),
+    0 1px 0 0 rgba(0, 0, 0, 0.02);
   display: block;
   position: fixed;
   transition: 0.5s;

@@ -2819,16 +2819,16 @@ input::-webkit-inner-spin-button {
 }
 
 .select-dropdown-items::-webkit-scrollbar {
-width: 8px;
-background-color: #e6e3e3e5;
-cursor: pointer;
+  width: 8px;
+  background-color: #e6e3e3e5;
+  cursor: pointer;
 }
 
 .select-dropdown-items::-webkit-scrollbar-thumb {
-background: #1f4529;
-width: 8px;
-border-radius: 5px;
-border-color: none !important;
+  background: #1f4529;
+  width: 8px;
+  border-radius: 5px;
+  border-color: none !important;
 }
 
 .select-dropdown-items .option {
@@ -2867,8 +2867,6 @@ border-color: none !important;
 /* =============================================================== */
 /* ------------ Filter Select Search Box Js End -------------- */
 /* ================================================================ */
-
-
 
 /* =============================================================== */
 /* ------------ Date-Picker CSS Start -------------- */

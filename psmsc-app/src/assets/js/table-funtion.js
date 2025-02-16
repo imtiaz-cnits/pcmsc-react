@@ -293,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     displayInfo.textContent = `Showing ${Math.min(
       entriesPerPage * currentPage,
-      totalEntries
+      totalEntries,
     )} of ${totalEntries} entries`;
   }
 
@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const startPage = Math.max(
       1,
-      currentPage - Math.floor(pageLinksToShow / 2)
+      currentPage - Math.floor(pageLinksToShow / 2),
     );
     const endPage = Math.min(totalPages, startPage + pageLinksToShow - 1);
 
@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".page-link").forEach((link) => {
       link.classList.toggle(
         "active",
-        parseInt(link.textContent) === currentPage
+        parseInt(link.textContent) === currentPage,
       );
     });
   }
@@ -479,7 +479,6 @@ function printAllExamSheet() {
 }
 
 // .................1st, 2nd, 3rd All Exam Sheet Print Function End...............//
-
 
 // .................Seat Plan Sheet Print Function Start...............//
 function printSeatPlan() {

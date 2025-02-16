@@ -1,6 +1,5 @@
-import "../../assets/css/all-modal.css";
-
-const Shift = () => {
+/* eslint-disable react/no-unknown-property */
+const Grade = () => {
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -9,23 +8,23 @@ const Shift = () => {
           <div className="data-table">
             <div className="card">
               <div className="card-body">
-                {/* <!-- Class heading Start --> */}
-                <div className="class-heading">
-                  <h3 className="heading">Shift List</h3>
-                  <button className="create-cls-btn" id="classModalBtn">
-                    Add Shift
+                {/* <!-- className heading Start --> */}
+                <div className="exam-heading">
+                  <h3 className="heading">Grade List</h3>
+                  <button className="create-cls-btn" id="exmModalBtn">
+                    Add Grade
                   </button>
                 </div>
-                {/* <!-- Class heading End --> */}
+                {/* <!-- className heading End --> */}
 
                 {/* <!-- Action Buttons --> */}
                 <div className="button-wrapper mb-3">
                   {/* <!-- Search and Filter --> */}
-                  <div className="input-group class-group">
+                  <div className="input-group exam-group">
                     {/* <!-- Entries per page --> */}
                     <div>
                       <div className="entries-page">
-                        <label htmlFor="entries" className="mr-2">
+                        <label for="entries" className="mr-2">
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
@@ -45,20 +44,20 @@ const Shift = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="class-search">
+                    <div className="exam-search">
                       <input
-                        style={{ width: "20%", margin: "0" }}
+                        style={{ width: "20%", margin: 0 }}
                         type="text"
                         id="searchInput"
                         className="form-control"
-                        placeholder="Search Class..."
+                        placeholder="Search Subject..."
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* <!-- Table --> */}
-                <div className="table-wrapper">
+                <div className="table-wrapper grade-table-wrapper">
                   <table
                     id="printTable"
                     className="table table-bordered table-hover"
@@ -66,14 +65,22 @@ const Shift = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Shift Name</th>
+                        <th>Grade Name</th>
+                        <th>Grade Point</th>
+                        <th>Total Sub Mark</th>
+                        <th>Mark Form</th>
+                        <th>Mark Up To</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td>01</td>
-                        <td>Day</td>
+                        <td>A+</td>
+                        <td>39</td>
+                        <td>100</td>
+                        <td>0</td>
+                        <td>30</td>
                         <td>
                           <div id="action_btn">
                             <div id="menu-wrap">
@@ -106,15 +113,19 @@ const Shift = () => {
                                 </div>
                               </div>
                             </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
+                            {/* <!-- <button className="quick-view quickButton">
+                            <i className="fa-regular fa-eye"></i>
                           </button> --> */}
                           </div>
                         </td>
                       </tr>
                       <tr>
                         <td>02</td>
-                        <td>Morning</td>
+                        <td>A+</td>
+                        <td>39</td>
+                        <td>80</td>
+                        <td>0</td>
+                        <td>30</td>
                         <td>
                           <div id="action_btn">
                             <div id="menu-wrap">
@@ -147,8 +158,8 @@ const Shift = () => {
                                 </div>
                               </div>
                             </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
+                            {/* <!-- <button className="quick-view quickButton">
+                            <i className="fa-regular fa-eye"></i>
                           </button> --> */}
                           </div>
                         </td>
@@ -184,20 +195,20 @@ const Shift = () => {
           <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
-          {/* <!-- Table End --> */}
+          {/* <!-- Table End -->
 
-          {/* <!-- Table Action Button Modal Start -->
-        <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
-              </div>
+        <!-- Table Action Button Modal Start -->
+        <!-- Confirmation Modal Start -->
+        <div id="confirmationModal" className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to delete this item?</p>
+            <div className="modal-buttons">
+              <button id="confirmYes">Yes</button>
+              <button id="confirmNo">No</button>
             </div>
           </div>
-          {/* <!-- Confirmation Modal End -->
+        </div>
+        <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
             <div className="modal-content">
@@ -209,35 +220,53 @@ const Shift = () => {
             </div>
           </div>
           {/* <!-- Edit Modal End -->
-        <!-- Quick View Modal Start --> */}
-          {/* <!-- <div id="quickViewModal" class="modal">
-          <div class="modal-content">
+        <!-- Quick View Modal Start -->
+        <!-- <div id="quickViewModal" className="modal">
+          <div className="modal-content">
             <p>Quick View</p>
-            <div class="modal-buttons">
+            <div className="modal-buttons">
               <button id="quickClose">X</button>
             </div>
           </div>
-        </div> --> */}
-          {/* <!-- Quick View Modal End -->
+        </div> -->
+        <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Shift Pop Up Modal Start --> */}
-          <div className="shift-modal">
-            <section id="createClassModal" className="modal migrateModal">
+        <!-- Grade Pop Up Modal Start --> */}
+          <div className="grade-modal">
+            <section id="exmModal" className="modal">
               <div className="modal-content">
                 <div id="popup-modal">
                   <div className="form-container">
-                    <h3>Add Shift</h3>
+                    <h3>Add Grade</h3>
                     <form>
                       {/* <!-- Row 1 --> */}
-                      <div className="form-row">
-                        <div className="form-group">
-                          <label htmlFor="search-students">Shift Name *</label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Shift Name"
-                          />
+                      <div className="form-row row">
+                        <div className="form-group col-lg-6">
+                          <label for="shift">Grade Name *</label>
+                          <input type="text" placeholder="Type Name" />
+                        </div>
+                        <div className="form-group col-lg-6">
+                          <label for="shift">Grade Point *</label>
+                          <input type="text" placeholder="Type Point" />
+                        </div>
+                      </div>
+                      {/* <!-- Row 2 --> */}
+                      <div className="form-row row">
+                        <div className="form-group col-lg-6">
+                          <label for="shift">Mark Form *</label>
+                          <input type="text" placeholder="Type Form mark" />
+                        </div>
+                        <div className="form-group col-lg-6">
+                          <label for="shift">Mark Up TO*</label>
+                          <input type="text" placeholder="Type Up To" />
+                        </div>
+                      </div>
+                      {/* <!-- Row 3 --> */}
+                      <div className="form-row row">
+                        <div className="form-group col-lg-6">
+                          <label for="shift">Total Subject Mark *</label>
+                          <input type="number" placeholder="Type Mark" />
                         </div>
                       </div>
 
@@ -245,7 +274,7 @@ const Shift = () => {
                       <div className="form-actions">
                         <button
                           type="button"
-                          id="classBtn"
+                          id="exmClose"
                           className="button close closeBtn"
                         >
                           Close
@@ -260,11 +289,12 @@ const Shift = () => {
               </div>
             </section>
           </div>
-          {/* <!-- Shift Pop Up Modal Start --> */}
+          {/* <!-- Grade Pop Up Modal Start --> */}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
-export default Shift;
+
+export default Grade;

@@ -1,17 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Class from "../Class/Class";
-import '../../assets/css/navbar-sidebar.css'
+import "../../assets/css/navbar-sidebar.css";
 
-const AcademicManagement = ()=>{
+const AcademicManagement = () => {
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+};
 
-    return(
-
-        <>
-
-       
-        <Outlet />
-        </>
-    )
-}
-
-export default AcademicManagement; 
+export default AcademicManagement;

@@ -7,11 +7,11 @@
 :root {
   --primary-font: "Poppins", sans-serif;
   --white: #ffffff;
-  --text-color: #1F4529;
+  --text-color: #1f4529;
   --text-color2: #008aee;
-  --primary-color: #1F4529;
-  --secondary-color: #1F4529;
-  --stroke: #1F4529;
+  --primary-color: #1f4529;
+  --secondary-color: #1f4529;
+  --stroke: #1f4529;
   --btn-hover: #2e97a7;
   --hover-color: #dbeffd;
   --gray: #aaaaaa;
@@ -29,7 +29,6 @@
   box-sizing: border-box;
   font-family: var(--primary-font);
   scroll-behavior: smooth;
-
 }
 
 h1,
@@ -96,7 +95,9 @@ Reset Default CSS End
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
   z-index: 9999;
 }
 
@@ -331,7 +332,6 @@ input::-webkit-inner-spin-button {
   #studentModal .form-group label {
     margin-top: 10px;
   }
-  
 }
 
 /* Add Students - Pop Up Modal End */
@@ -528,11 +528,11 @@ input::-webkit-inner-spin-button {
 }
 
 #quickViewModal .modal-content .item .profile-img img {
- width: 100%;
- height: 100%;
- background-size: cover;
- background-position: center;
- object-fit: cover;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: cover;
 }
 
 #quickViewModal .modal-content h3 {
@@ -617,7 +617,9 @@ input::-webkit-inner-spin-button {
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
   z-index: 9999;
 }
 
@@ -875,7 +877,9 @@ input::-webkit-inner-spin-button {
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
   z-index: 9999;
 }
 
@@ -1069,7 +1073,9 @@ input::-webkit-inner-spin-button {
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
   z-index: 9999;
 }
 

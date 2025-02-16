@@ -59,5 +59,5 @@ window.addEventListener(
       app.setAttribute("light-mode", "light");
     }
   },
-  false
+  false,
 );

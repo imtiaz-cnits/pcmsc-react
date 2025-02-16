@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-const StudentManagement = () => {
+const ExamManagement = () => {
   return (
     <>
       <Outlet />
@@ -8,4 +8,4 @@ const StudentManagement = () => {
   );
 };
 
-export default StudentManagement;
+export default ExamManagement;
