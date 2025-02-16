@@ -17,6 +17,7 @@ import Subject from "../pages/Subject/Subject";
 import ExamAssignToclassName from "../pages/ExamAssignToClass/ExamAssignToClass";
 import MarkEntry from "../pages/MarkEntry/MarkEntry";
 import Result from "../pages/Result/Result";
+import CombineResult from "../pages/CombineResult/CombineResult";
 
 export const router = createBrowserRouter([
   {
@@ -88,8 +89,12 @@ export const router = createBrowserRouter([
             element: <MarkEntry />,
           },
           {
-            path: 'result',
-            element: <Result />
+            path: "result",
+            element: <Result />,
+          },
+          {
+            path: 'combine-result',
+            element: <CombineResult />
           }
         ],
       },
