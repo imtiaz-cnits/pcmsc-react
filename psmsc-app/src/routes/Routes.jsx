@@ -20,6 +20,7 @@ import Result from "../pages/Result/Result";
 import CombineResult from "../pages/CombineResult/CombineResult";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import AdmitCard from "../pages/AdmitCard/AdmitCard";
+import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 
 export const router = createBrowserRouter([
   {
@@ -105,6 +106,10 @@ export const router = createBrowserRouter([
           {
             path: 'admit-card',
             element: <AdmitCard />
+          },
+          {
+            path: 'generated-admit-card',
+            element: <GeneratedAdmitCard />
           }
         ],
       },
