@@ -18,6 +18,7 @@ import ExamAssignToclassName from "../pages/ExamAssignToClass/ExamAssignToClass"
 import MarkEntry from "../pages/MarkEntry/MarkEntry";
 import Result from "../pages/Result/Result";
 import CombineResult from "../pages/CombineResult/CombineResult";
+import MarkSheet from "../pages/MarkSheet/MarkSheet";
 
 export const router = createBrowserRouter([
   {
@@ -95,6 +96,10 @@ export const router = createBrowserRouter([
           {
             path: 'combine-result',
             element: <CombineResult />
+          },
+          {
+            path: 'mark-sheet',
+            element: <MarkSheet />
           }
         ],
       },
