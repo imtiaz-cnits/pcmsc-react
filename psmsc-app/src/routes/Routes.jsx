@@ -24,6 +24,7 @@ import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
+import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
 
 export const router = createBrowserRouter([
   {
@@ -125,6 +126,10 @@ export const router = createBrowserRouter([
           {
             path: 'seat-plan',
             element: <SeatPlan />
+          },
+          {
+            path: 'generate-id-card',
+            element: <GenerateIDCard />
           }
         ],
       },
