@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../assets/css/all-modal.css';
 import '../../assets/css/bootstrap.min.css';
@@ -8,6 +9,22 @@ import '../../assets/css/table-funtion.css';
 import logo from '../../assets/img/logo.png';
 
 const Sidebar = () => {
+  // Responsive Sidebar Toggle
+  function toggleSidebar() {
+    const currentSize = document.body.getAttribute('data-sidebar-size');
+
+    document.body.classList.toggle('sidebar-enable');
+    if (window.innerWidth >= 992) {
+      document.body.setAttribute('data-sidebar-size', currentSize === 'sm' ? 'lg' : 'sm');
+    }
+  }
+
+  useEffect(() => {
+    document.querySelectorAll('.vertical-menu-btn').forEach((button) => {
+      button.addEventListener('click', toggleSidebar);
+    });
+  }, []);
+
   return (
     <>
       {/* <!-- Left Sidebar Start --> */}
