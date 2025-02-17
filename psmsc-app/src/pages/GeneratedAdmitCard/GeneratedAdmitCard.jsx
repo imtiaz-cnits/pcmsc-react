@@ -1,4 +1,32 @@
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/style.css';
+import logo from '../../assets/img/logo.png';
+import productMemberIMG from '../../assets/img/projuct-member-img-3.png';
+
+
 const GeneratedAdmitCard = () => {
+
+  const printMarkAdmit=()=>{
+
+    const admitcard = document.querySelector(".admit-container");
+
+  // Save the current visibility state of the body
+  const originalContent = document.body.innerHTML;
+
+  // Set the body to only contain the marksheet
+  document.body.innerHTML = admitcard.outerHTML;
+
+  // Trigger the print dialog
+  window.print();
+
+  // Restore the original content
+  document.body.innerHTML = originalContent;
+
+  // Reload the page to restore functionality
+  location.reload();
+  }
+
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -6,7 +34,7 @@ const GeneratedAdmitCard = () => {
         <div className="page-content">
           <div className="admit-card admit-container">
             <div className="admit-wrapper">
-              <button className="print-admit" onClick="printMarkAdmit()">
+              <button className="print-admit" onClick={printMarkAdmit}>
                 <span>
                   <svg
                     width="44"
@@ -54,7 +82,7 @@ const GeneratedAdmitCard = () => {
                   </h4>
                 </div>
                 <div className="logo">
-                  <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                  <img src={logo} alt="Education Board Logo" />
                 </div>
                 <div className="info">
                   <h1>Pabna Collectorate Model School And Collage</h1>
@@ -128,7 +156,7 @@ const GeneratedAdmitCard = () => {
                   </table>
                   <div className="profile">
                     <div className="image">
-                      <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                      <img src={productMemberIMG} alt="" />
                     </div>
                   </div>
                 </div>
@@ -140,7 +168,7 @@ const GeneratedAdmitCard = () => {
               </div>
             </div>
             <div className="admit-wrapper">
-              <button className="print-admit" onClick="printMarkAdmit()">
+              <button className="print-admit" onClick={printMarkAdmit}>
                 <span>
                   <svg
                     width="44"
@@ -188,7 +216,7 @@ const GeneratedAdmitCard = () => {
                   </h4>
                 </div>
                 <div className="logo">
-                  <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                  <img src={logo} alt="Education Board Logo" />
                 </div>
                 <div className="info">
                   <h1>Pabna Collectorate Model School And Collage</h1>
@@ -262,7 +290,7 @@ const GeneratedAdmitCard = () => {
                   </table>
                   <div className="profile">
                     <div className="image">
-                      <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                      <img src={productMemberIMG} alt="" />
                     </div>
                   </div>
                 </div>
@@ -274,7 +302,7 @@ const GeneratedAdmitCard = () => {
               </div>
             </div>
             <div className="admit-wrapper">
-              <button className="print-admit" onClick="printMarkAdmit()">
+              <button className="print-admit" onClick={printMarkAdmit}>
                 <span>
                   <svg
                     width="44"
@@ -322,7 +350,7 @@ const GeneratedAdmitCard = () => {
                   </h4>
                 </div>
                 <div className="logo">
-                  <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                  <img src={logo} alt="Education Board Logo" />
                 </div>
                 <div className="info">
                   <h1>Pabna Collectorate Model School And Collage</h1>
@@ -396,7 +424,7 @@ const GeneratedAdmitCard = () => {
                   </table>
                   <div className="profile">
                     <div className="image">
-                      <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                      <img src={productMemberIMG} alt="" />
                     </div>
                   </div>
                 </div>

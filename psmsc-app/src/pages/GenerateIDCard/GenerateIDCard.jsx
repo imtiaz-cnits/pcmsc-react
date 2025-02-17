@@ -1,5 +1,30 @@
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/style.css';
+import logo from '../../assets/img/logo.png';
+import productMemberIMG from '../../assets/img/projuct-member-img-3.png';
+
 const GenerateIDCard=()=>{
 
+
+ const printIdCard=()=>{
+
+  const printIdCard = document.querySelector(".generate-id-container");
+
+  // Save the current visibility state of the body
+  const originalContent = document.body.innerHTML;
+
+  // Set the body to only contain the printIdCard
+  document.body.innerHTML = printIdCard.outerHTML;
+
+  // Trigger the print dialog
+  window.print();
+
+  // Restore the original content
+  document.body.innerHTML = originalContent;
+
+  // Reload the page to restore functionality
+  location.reload();
+ }
 
     return(
 
@@ -9,7 +34,7 @@ const GenerateIDCard=()=>{
       <div className="page-content">
         <div className="generate-id-container">
           <div className="button">
-            <button className="print-icon" onClick="printIdCard()">
+            <button className="print-icon" onClick={printIdCard}>
               <span>
                 <svg
                   width="44"
@@ -57,7 +82,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -69,7 +94,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               
               <div className="details">
@@ -100,7 +125,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -112,7 +137,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               <div className="details">
               <h2 className="student-name">Khandaker Shanto</h2>
@@ -143,7 +168,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -155,7 +180,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               <div className="details">
               <h2 className="student-name">Khandaker Shanto</h2>
@@ -188,7 +213,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -200,7 +225,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               
               <div className="details">
@@ -231,7 +256,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -243,7 +268,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               <div className="details">
               <h2 className="student-name">Khandaker Shanto</h2>
@@ -274,7 +299,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -286,7 +311,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               <div className="details">
               <h2 className="student-name">Khandaker Shanto</h2>
@@ -319,7 +344,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -331,7 +356,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               
               <div className="details">
@@ -362,7 +387,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -374,7 +399,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               <div className="details">
               <h2 className="student-name">Khandaker Shanto</h2>
@@ -405,7 +430,7 @@ const GenerateIDCard=()=>{
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -417,7 +442,7 @@ const GenerateIDCard=()=>{
                 </div>
               </header>
               <div className="photo">
-                <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                <img src={productMemberIMG} alt="" />
               </div>
               <div className="details">
               <h2 className="student-name">Khandaker Shanto</h2>

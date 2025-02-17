@@ -1,6 +1,64 @@
-import productMemberPng from "../../assets/img/projuct-member-img-3.png";
+import { useEffect } from 'react';
+import '../../assets/css/style.css';
+import '../../assets/css/table-funtion.css';
+import productMemberPng from '../../assets/img/projuct-member-img-3.png';
 
 const StudentInformation = () => {
+
+
+  useEffect(()=>{
+
+    const studentModal = document.getElementById("studentModal");
+    const studentModalBtn = document.getElementById("studentModalBtn");
+    const closBtn = document.getElementById("closBtn");
+  
+
+    // Function to disable scrolling
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
+  
+    // Function to enable scrolling
+    const enableScroll = () => {
+      document.body.style.overflow = "";
+    };
+  
+    // Open the student modal and hide scroll
+    studentModalBtn.addEventListener("click", () => {
+      studentModal.classList.add("show");
+      disableScroll();
+    });
+  
+    // Close the student modal and show scroll
+    closBtn.addEventListener("click", () => {
+      studentModal.classList.remove("show");
+      enableScroll();
+    });
+  
+    // Close the modal by clicking outside it and show scroll
+    document.addEventListener("click", (e) => {
+      if (e.target === studentModal) {
+        studentModal.classList.remove("show");
+        enableScroll();
+      }
+    });
+  
+    // Close the modal when Esc key is pressed
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        studentModal.classList.remove("show");
+        enableScroll();
+      }
+    });
+
+
+    
+  
+
+
+  },[])
+
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -10,11 +68,7 @@ const StudentInformation = () => {
           <div className="bredcam">
             <div className="bredcam-title">
               <h1>Student Information</h1>
-              <button
-                id="studentModalBtn"
-                type="button"
-                className="create-invoice"
-              >
+              <button id="studentModalBtn" type="button" className="create-invoice">
                 + Add New Student
               </button>
             </div>
@@ -36,22 +90,17 @@ const StudentInformation = () => {
                       {/* <!-- Entries per page --> */}
                       <div
                         style={{
-                          display: "flex",
-                          alignItems: "center", // Using camelCase for CSS properties
-                          gap: "10px", // Adding the unit 'px'
-                          justifyContent: "center", // Using camelCase for CSS properties
-                        }}
-                      >
+                          display: 'flex',
+                          alignItems: 'center', // Using camelCase for CSS properties
+                          gap: '10px', // Adding the unit 'px'
+                          justifyContent: 'center', // Using camelCase for CSS properties
+                        }}>
                         <div className="entries-page">
                           <label htmlFor="entries" className="mr-2">
                             Entries:
                           </label>
                           <div className="select-container">
-                            <select
-                              id="entries"
-                              className="form-control"
-                              style={{ width: "auto" }}
-                            >
+                            <select id="entries" className="form-control" style={{ width: 'auto' }}>
                               <option value="5">5</option>
                               <option value="10">10</option>
                               <option value="25">25</option>
@@ -71,29 +120,10 @@ const StudentInformation = () => {
                                 height="32"
                                 viewBox="0 0 39 38"
                                 fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <rect
-                                  y="1"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <rect
-                                  y="11"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <rect
-                                  y="21"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect y="1" width="25" height="3" rx="1.5" fill="#192045" />
+                                <rect y="11" width="25" height="3" rx="1.5" fill="#192045" />
+                                <rect y="21" width="25" height="3" rx="1.5" fill="#192045" />
                                 <path
                                   d="M32 1C32 0.447715 31.5523 -2.41411e-08 31 0C30.4477 2.41411e-08 30 0.447715 30 1L32 1ZM30.2929 37.7071C30.6834 38.0976 31.3166 38.0976 31.7071 37.7071L38.0711 31.3431C38.4616 30.9526 38.4616 30.3195 38.0711 29.9289C37.6805 29.5384 37.0474 29.5384 36.6569 29.9289L31 35.5858L25.3431 29.9289C24.9526 29.5384 24.3195 29.5384 23.9289 29.9289C23.5384 30.3195 23.5384 30.9526 23.9289 31.3431L30.2929 37.7071ZM30 1L30 37L32 37L32 1L30 1Z"
                                   fill="#192045"
@@ -132,16 +162,8 @@ const StudentInformation = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             d="M33.3002 17.45H21.1502C19.659 17.45 18.4502 18.6588 18.4502 20.15V32.3C18.4502 33.7912 19.659 35 21.1502 35H33.3002C34.7914 35 36.0002 33.7912 36.0002 32.3V20.15C36.0002 18.6588 34.7914 17.45 33.3002 17.45Z"
                             stroke="#192045"
@@ -164,16 +186,8 @@ const StudentInformation = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             fillRule="evenodd"
                             clipRule="evenodd"
@@ -188,16 +202,8 @@ const StudentInformation = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             fillRule="evenodd"
                             clipRule="evenodd"
@@ -212,16 +218,8 @@ const StudentInformation = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             d="M29.817 17.0382H14.1692C13.8755 17.0382 13.5939 16.9216 13.3863 16.714C13.1787 16.5063 13.062 16.2247 13.062 15.9311V8.10716C13.062 7.81352 13.1787 7.53191 13.3863 7.32428C13.5939 7.11665 13.8755 7 14.1692 7H29.817C30.1107 7 30.3923 7.11665 30.5999 7.32428C30.8075 7.53191 30.9242 7.81352 30.9242 8.10716V15.9311C30.9242 16.2247 30.8075 16.5063 30.5999 16.714C30.3923 16.9216 30.1107 17.0382 29.817 17.0382ZM15.2763 14.8239H28.7099V9.21432H15.2763V14.8239Z"
                             fill="#192045"
@@ -258,16 +256,8 @@ const StudentInformation = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             d="M31.311 37.6837H12.689C11.4457 37.6821 10.2539 37.1874 9.37488 36.3082C8.49586 35.429 8.00142 34.2371 8 32.9938V10.689C8.00165 9.44591 8.4962 8.25421 9.3752 7.37521C10.2542 6.49621 11.4459 6.00166 12.689 6.00001H24.5811C25.1989 5.99879 25.8107 6.11998 26.3814 6.35658C26.9521 6.59318 27.4702 6.94051 27.9059 7.37849L34.6206 14.087C35.5011 14.9717 35.9968 16.1681 36 17.4162V32.9938C35.9986 34.2371 35.5041 35.429 34.6251 36.3082C33.7461 37.1874 32.5543 37.6821 31.311 37.6837ZM12.689 8.23201C12.0376 8.23272 11.413 8.49181 10.9524 8.95243C10.4918 9.41305 10.2327 10.0376 10.232 10.689V32.9938C10.2327 33.6453 10.4918 34.27 10.9524 34.7307C11.413 35.1915 12.0375 35.4508 12.689 35.4517H31.311C31.9625 35.4508 32.587 35.1915 33.0476 34.7307C33.5082 34.27 33.7673 33.6453 33.768 32.9938V17.4136C33.7664 16.7578 33.5059 16.1292 33.043 15.6646L26.3274 8.95518C26.0986 8.7252 25.8264 8.54287 25.5267 8.41874C25.2269 8.29461 24.9055 8.23114 24.5811 8.23201H12.689Z"
                             fill="#192045"
@@ -296,10 +286,7 @@ const StudentInformation = () => {
 
                 {/* <!-- Table --> */}
                 <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
+                  <table id="printTable" className="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Sl No:</th>
@@ -332,8 +319,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -341,8 +327,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -392,8 +377,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -401,8 +385,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -452,8 +435,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -461,8 +443,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -512,8 +493,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -521,8 +501,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -572,8 +551,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -581,8 +559,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -632,8 +609,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -641,8 +617,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -692,8 +667,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -701,8 +675,7 @@ const StudentInformation = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -903,9 +876,7 @@ const StudentInformation = () => {
                     {/* <!-- Row 1 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
-                        <label htmlFor="admission-number">
-                          Admission Number
-                        </label>
+                        <label htmlFor="admission-number">Admission Number</label>
                         <input
                           type="text"
                           id="admission-number"
@@ -913,9 +884,7 @@ const StudentInformation = () => {
                         />
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Admission Date *
-                        </label>
+                        <label htmlFor="vanilla-datepicker">Admission Date *</label>
                         <div className="input-datepicker-wrapper">
                           <input
                             type="text"
@@ -927,25 +896,15 @@ const StudentInformation = () => {
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="student-name">Student's Name *</label>
-                        <input
-                          type="text"
-                          id="student-name"
-                          placeholder="Enter student's name"
-                        />
+                        <input type="text" id="student-name" placeholder="Enter student's name" />
                       </div>
 
                       <div className="form-group col-lg-4">
                         <label htmlFor="name-bangla">Name in Bangla</label>
-                        <input
-                          type="text"
-                          id="name-bangla"
-                          placeholder="বাংলায় নাম লিখুন"
-                        />
+                        <input type="text" id="name-bangla" placeholder="বাংলায় নাম লিখুন" />
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="birth-certificate">
-                          Birth Certificate
-                        </label>
+                        <label htmlFor="birth-certificate">Birth Certificate</label>
                         <input
                           type="text"
                           id="birth-certificate"
@@ -982,11 +941,7 @@ const StudentInformation = () => {
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="religion">Religion</label>
-                        <input
-                          type="text"
-                          id="religion"
-                          placeholder="Enter religion"
-                        />
+                        <input type="text" id="religion" placeholder="Enter religion" />
                       </div>
                       <div className="form-group col-lg-8">
                         <label htmlFor="photo">Photo</label>
@@ -1000,8 +955,7 @@ const StudentInformation = () => {
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
                                 // eslint-disable-next-line react/no-unknown-property
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                              >
+                                xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <rect
                                   width="50"
                                   height="50"
@@ -1013,12 +967,8 @@ const StudentInformation = () => {
                                     id="pattern0_1204_6"
                                     patternContentUnits="objectBoundingBox"
                                     width="1"
-                                    height="1"
-                                  >
-                                    <use
-                                      xlinkHref="#image0_1204_6"
-                                      transform="scale(0.005)"
-                                    />
+                                    height="1">
+                                    <use xlinkHref="#image0_1204_6" transform="scale(0.005)" />
                                   </pattern>
                                   <image
                                     id="image0_1204_6"
@@ -1049,24 +999,14 @@ const StudentInformation = () => {
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="father-name">Father's Name *</label>
-                        <input
-                          type="text"
-                          id="father-name"
-                          placeholder="Enter father's name"
-                        />
+                        <input type="text" id="father-name" placeholder="Enter father's name" />
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="father-nid">Father's NID</label>
-                        <input
-                          type="text"
-                          id="father-nid"
-                          placeholder="Enter father's NID"
-                        />
+                        <input type="text" id="father-nid" placeholder="Enter father's NID" />
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="father-mobile">
-                          Father's Mobile No *
-                        </label>
+                        <label htmlFor="father-mobile">Father's Mobile No *</label>
                         <input
                           type="text"
                           id="father-mobile"
@@ -1079,24 +1019,14 @@ const StudentInformation = () => {
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="mother-name">Mother's Name *</label>
-                        <input
-                          type="text"
-                          id="mother-name"
-                          placeholder="Enter mother's name"
-                        />
+                        <input type="text" id="mother-name" placeholder="Enter mother's name" />
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="mother-nid">Mother's NID</label>
-                        <input
-                          type="text"
-                          id="mother-nid"
-                          placeholder="Enter mother's NID"
-                        />
+                        <input type="text" id="mother-nid" placeholder="Enter mother's NID" />
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="mother-mobile">
-                          Mother's Mobile No *
-                        </label>
+                        <label htmlFor="mother-mobile">Mother's Mobile No *</label>
                         <input
                           type="text"
                           id="mother-mobile"
@@ -1108,9 +1038,7 @@ const StudentInformation = () => {
                     {/* <!-- Row 6 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
-                        <label htmlFor="present-address">
-                          Present Address *
-                        </label>
+                        <label htmlFor="present-address">Present Address *</label>
                         <input
                           type="text"
                           id="present-address"
@@ -1118,9 +1046,7 @@ const StudentInformation = () => {
                         />
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="permanent-address">
-                          Permanent Address *
-                        </label>
+                        <label htmlFor="permanent-address">Permanent Address *</label>
                         <input
                           type="text"
                           id="permanent-address"
@@ -1128,23 +1054,15 @@ const StudentInformation = () => {
                         />
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="guardian">
-                          Guardian (In Absence of F/M)
-                        </label>
-                        <input
-                          type="text"
-                          id="guardian"
-                          placeholder="Enter guardian's name"
-                        />
+                        <label htmlFor="guardian">Guardian (In Absence of F/M)</label>
+                        <input type="text" id="guardian" placeholder="Enter guardian's name" />
                       </div>
                     </div>
 
                     {/* <!-- Row 7 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
-                        <label htmlFor="guardian-mobile">
-                          Guardian Mobile *
-                        </label>
+                        <label htmlFor="guardian-mobile">Guardian Mobile *</label>
                         <input
                           type="text"
                           id="guardian-mobile"
@@ -1153,9 +1071,7 @@ const StudentInformation = () => {
                       </div>
 
                       <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Date of Birth *
-                        </label>
+                        <label htmlFor="vanilla-datepicker">Date of Birth *</label>
                         <div className="input-datepicker-wrapper">
                           <input
                             type="text"
@@ -1192,11 +1108,7 @@ const StudentInformation = () => {
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="student-email">Student Email</label>
-                        <input
-                          type="email"
-                          id="student-email"
-                          placeholder="Enter student email"
-                        />
+                        <input type="email" id="student-email" placeholder="Enter student email" />
                       </div>
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">SMS Status</label>
@@ -1220,9 +1132,7 @@ const StudentInformation = () => {
                         </div>
                       </div>
                       <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Registration Date *
-                        </label>
+                        <label htmlFor="vanilla-datepicker">Registration Date *</label>
 
                         <div className="input-datepicker-wrapper">
                           <input
@@ -1260,29 +1170,17 @@ const StudentInformation = () => {
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="section">Section Name</label>
-                        <input
-                          type="text"
-                          id="section"
-                          placeholder="Enter section name"
-                        />
+                        <input type="text" id="section" placeholder="Enter section name" />
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="session">Session Name</label>
-                        <input
-                          type="text"
-                          id="session"
-                          placeholder="Enter session name"
-                        />
+                        <input type="text" id="session" placeholder="Enter session name" />
                       </div>
                     </div>
 
                     {/* <!-- Actions --> */}
                     <div className="form-actions">
-                      <button
-                        type="button"
-                        id="closBtn"
-                        className="button close"
-                      >
+                      <button type="button" id="closBtn" className="button close">
                         Close
                       </button>
                       <button type="reset" className="button reset">

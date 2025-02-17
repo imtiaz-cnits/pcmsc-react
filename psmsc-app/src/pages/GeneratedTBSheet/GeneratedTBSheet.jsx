@@ -1,4 +1,41 @@
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/style.css';
+import logo from '../../assets/img/logo.png';
+
 const GeneratedTBSheet=()=>{
+
+
+  const printTbSheet = ()=>{
+
+
+    const tabulation = document.querySelector(".tabulation");
+
+  // Save the current visibility state of the body
+  const originalContent = document.body.innerHTML;
+
+  // Add CSS for horizontal A4 page printing
+  const printStyle = `
+    <style>
+      @page {
+        size: A4 landscape;
+    margin: 0 !important;
+    padding: 30px;
+      }
+    </style>
+  `;
+
+  // Set the body to only contain the tabulation and the style
+  document.body.innerHTML = printStyle + tabulation.outerHTML;
+
+  // Trigger the print dialog
+  window.print();
+
+  // Restore the original content
+  document.body.innerHTML = originalContent;
+
+  // Reload the page to restore functionality
+  location.reload();
+  }
 
 
     return(
@@ -21,9 +58,9 @@ const GeneratedTBSheet=()=>{
               </div>
             </div>
             <div className="logo">
-              <img src="./assets/img/logo.png" alt="Education Board Logo" />
+              <img src={logo} alt="Education Board Logo" />
             </div>
-            <button className="print-icon" onClick="printTbSheet()">
+            <button className="print-icon" onClick={printTbSheet}>
               <span>
                 <svg
                   width="44"

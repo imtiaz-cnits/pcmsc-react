@@ -1,4 +1,31 @@
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/style.css';
+import logo from '../../assets/img/logo.png';
+
 const MarkSheet = () => {
+
+
+
+  const printMarksheet = ()=>{
+
+    const marksheet = document.querySelector(".marksheet-container");
+
+    // Save the current visibility state of the body
+    const originalContent = document.body.innerHTML;
+  
+    // Set the body to only contain the marksheet
+    document.body.innerHTML = marksheet.outerHTML;
+  
+    // Trigger the print dialog
+    window.print();
+  
+    // Restore the original content
+    document.body.innerHTML = originalContent;
+  
+    // Rebind any event listeners (if necessary)
+    location.reload(); // Reload the page to restore functionality
+  }
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -6,14 +33,14 @@ const MarkSheet = () => {
         <div className="page-content">
           <div className="marksheet-container marksheet-warermark-bg">
             <div className="watermark">
-              <img src="./assets/img/logo.png" alt="" />
+              <img src={logo} alt="" />
             </div>
             <div className="marksheet-container-wrap">
               <header>
                 <div className="info-wrapper">
                   <div className="logo">
                     <img
-                      src="./assets/img/logo.png"
+                      src={logo}
                       alt="Education Board Logo"
                     />
                   </div>
@@ -30,7 +57,7 @@ const MarkSheet = () => {
                       </h4>
                     </div>
                     <div className="button">
-                      <button className="print-icon" onClick="printMarksheet()">
+                      <button className="print-icon" onClick={printMarksheet}>
                         <span>
                           <svg
                             width="44"
