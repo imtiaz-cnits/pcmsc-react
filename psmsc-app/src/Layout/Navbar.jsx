@@ -1,19 +1,40 @@
-import logo from "../assets/img/logo.png";
-import "../assets/css/navbar-sidebar.css";
-import usjpg from "../assets/img/flags/us.jpg";
-import spainjpg from "../assets/img/flags/spain.jpg";
-import germanyjpg from "../assets/img/flags/germany.jpg";
-import italyjpg from "../assets/img/flags/italy.jpg";
-import russiajpg from "../assets/img/flags/russia.jpg";
-import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
-import "../assets/css/navbar-sidebar.css";
-import "../assets/css/table-funtion.css";
-import "../assets/css/style.css";
-import "../assets/css/dark-mode.css";
-import productMemberPng from "../assets/img/projuct-member-img-3.png";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import '../assets/css/dark-mode.css';
+import '../assets/css/navbar-sidebar.css';
+import '../assets/css/style.css';
+import '../assets/css/table-funtion.css';
+import logo from '../assets/img/logo.png';
+import navbparProfileImg from '../assets/img/navbar-profile-logo.png';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
+  const [lightMode, setLightMode] = useState(localStorage.lightMode || 'light');
+
+  const toggleLightMode = () => {
+    const newMode = lightMode === 'dark' ? 'light' : 'dark';
+    setLightMode(newMode);
+    localStorage.lightMode = newMode;
+  };
+
+  useEffect(() => {
+    const app = document.getElementsByTagName('BODY')[0];
+    app.setAttribute('light-mode', lightMode);
+
+    const handleStorageChange = () => {
+      if (localStorage.lightMode === 'dark') {
+        setLightMode('dark');
+      } else {
+        setLightMode('light');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [lightMode]);
+
   return (
     <>
       {/* <!-- Navbar Start --> */}
@@ -31,8 +52,7 @@ const Navbar = () => {
 
             <button
               type="button"
-              className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn"
-            >
+              className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn">
               <i className="fa-solid fa-bars-staggered"></i>
             </button>
 
@@ -45,8 +65,7 @@ const Navbar = () => {
                   height="22"
                   viewBox="0 0 27 27"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                  xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M19.2967 16.9811H18.0695L17.6449 16.5566C19.1578 14.8045 20.0686 12.5274 20.0686 10.0343C20.0686 4.49228 15.5763 0 10.0343 0C4.49228 0 0 4.49228 0 10.0343C0 15.5763 4.49228 20.0686 10.0343 20.0686C12.5274 20.0686 14.8045 19.1578 16.5566 17.6527L16.9811 18.0772V19.2967L24.6998 27L27 24.6998L19.2967 16.9811ZM10.0343 16.9811C6.19811 16.9811 3.08748 13.8705 3.08748 10.0343C3.08748 6.19811 6.19811 3.08748 10.0343 3.08748C13.8705 3.08748 16.9811 6.19811 16.9811 10.0343C16.9811 13.8705 13.8705 16.9811 10.0343 16.9811Z"
                     fill="#192045"
@@ -61,8 +80,8 @@ const Navbar = () => {
             <button
               className="light-mode-button"
               aria-label="Toggle Light Mode"
-              onClick="toggle_light_mode()"
-            >
+              // onClick="toggle_light_mode()"
+              onClick={toggleLightMode}>
               <span></span>
               <span></span>
             </button>
@@ -73,15 +92,13 @@ const Navbar = () => {
                 className="btn header-item search-icon"
                 data-bs-toggle="dropdown"
                 aria-haspopup="true"
-                aria-expanded="false"
-              >
+                aria-expanded="false">
                 <svg
                   width="25"
                   height="25"
                   viewBox="0 0 27 27"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                  xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M19.2967 16.9811H18.0695L17.6449 16.5566C19.1578 14.8045 20.0686 12.5274 20.0686 10.0343C20.0686 4.49228 15.5763 0 10.0343 0C4.49228 0 0 4.49228 0 10.0343C0 15.5763 4.49228 20.0686 10.0343 20.0686C12.5274 20.0686 14.8045 19.1578 16.5566 17.6527L16.9811 18.0772V19.2967L24.6998 27L27 24.6998L19.2967 16.9811ZM10.0343 16.9811C6.19811 16.9811 3.08748 13.8705 3.08748 10.0343C3.08748 6.19811 6.19811 3.08748 10.0343 3.08748C13.8705 3.08748 16.9811 6.19811 16.9811 10.0343C16.9811 13.8705 13.8705 16.9811 10.0343 16.9811Z"
                     fill="#192045"
@@ -107,16 +124,14 @@ const Navbar = () => {
               <button
                 className="js-toggle-fullscreen-btn toggle-fullscreen-btn"
                 aria-label="Enter fullscreen mode"
-                hidden
-              >
+                hidden>
                 <svg
                   width="27"
                   height="27"
                   className="toggle-fullscreen-svg"
                   viewBox="0 0 30 30"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                  xmlns="http://www.w3.org/2000/svg">
                   <g className="icon-fullscreen-enter">
                     <path
                       d="M2 7.5H0V3C0 2.20435 0.31607 1.44129 0.87868 0.87868C1.44129 0.31607 2.20435 0 3 0H7.5V2H2V7.5Z"
@@ -308,15 +323,13 @@ const Navbar = () => {
                 id="page-header-notifications-dropdown-v"
                 data-bs-toggle="dropdown"
                 aria-haspopup="true"
-                aria-expanded="false"
-              >
+                aria-expanded="false">
                 <svg
                   width="26"
                   height="26"
                   viewBox="0 0 26 26"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                  xmlns="http://www.w3.org/2000/svg">
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -329,27 +342,20 @@ const Navbar = () => {
               </button>
               <div
                 className="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 page-header-notifications-dropdown-v"
-                aria-labelledby="page-header-notifications-dropdown-v"
-              >
+                aria-labelledby="page-header-notifications-dropdown-v">
                 <div className="p-3">
                   <div className="row align-items-center">
                     <div className="col">
                       <h5 className="m-0 font-size-15">Notifications</h5>
                     </div>
                     <div className="col-auto">
-                      <Link
-                        to="#!"
-                        className="small fw-semibold text-decoration-underline"
-                      >
+                      <Link to="#!" className="small fw-semibold text-decoration-underline">
                         Mark all as read
                       </Link>
                     </div>
                   </div>
                 </div>
-                <div
-                  data-simplebar
-                  style={{ maxHeight: "250px", marginTop: "0px" }}
-                >
+                <div data-simplebar style={{ maxHeight: '250px', marginTop: '0px' }}>
                   <Link to="#!" className="text-reset notification-item">
                     <div className="d-flex">
                       <div className="flex-shrink-0 me-3">
@@ -360,14 +366,10 @@ const Navbar = () => {
                         />
                       </div>
                       <div className="flex-grow-1">
-                        <p className="text-muted font-size-13 mb-0 float-end">
-                          1 hour ago
-                        </p>
+                        <p className="text-muted font-size-13 mb-0 float-end">1 hour ago</p>
                         <h6 className="mb-1">James Lemire</h6>
                         <div>
-                          <p className="mb-0">
-                            It will seem like simplified English.
-                          </p>
+                          <p className="mb-0">It will seem like simplified English.</p>
                         </div>
                       </div>
                     </div>
@@ -380,14 +382,10 @@ const Navbar = () => {
                         </span>
                       </div>
                       <div className="flex-grow-1">
-                        <p className="text-muted font-size-13 mb-0 float-end">
-                          3 min ago
-                        </p>
+                        <p className="text-muted font-size-13 mb-0 float-end">3 min ago</p>
                         <h6 className="mb-1">Your order is placed</h6>
                         <div>
-                          <p className="mb-0">
-                            If several languages coalesce the grammar
-                          </p>
+                          <p className="mb-0">If several languages coalesce the grammar</p>
                         </div>
                       </div>
                     </div>
@@ -400,14 +398,10 @@ const Navbar = () => {
                         </span>
                       </div>
                       <div className="flex-grow-1">
-                        <p className="text-muted font-size-13 mb-0 float-end">
-                          8 min ago
-                        </p>
+                        <p className="text-muted font-size-13 mb-0 float-end">8 min ago</p>
                         <h6 className="mb-1">Your item is shipped</h6>
                         <div>
-                          <p className="mb-0">
-                            If several languages coalesce the grammar
-                          </p>
+                          <p className="mb-0">If several languages coalesce the grammar</p>
                         </div>
                       </div>
                     </div>
@@ -424,9 +418,7 @@ const Navbar = () => {
                         />
                       </div>
                       <div className="flex-grow-1">
-                        <p className="text-muted font-size-13 mb-0 float-end">
-                          1 hour ago
-                        </p>
+                        <p className="text-muted font-size-13 mb-0 float-end">1 hour ago</p>
                         <h6 className="mb-1">Salena Layfield</h6>
                         <div>
                           <p className="mb-1">
@@ -441,11 +433,10 @@ const Navbar = () => {
                   <Link
                     className="btn btn-link font-size-14 btn-block text-center"
                     style={{
-                      display: "inline-block",
-                      cursor: "pointer",
+                      display: 'inline-block',
+                      cursor: 'pointer',
                       zIndex: 1,
-                    }}
-                  >
+                    }}>
                     <i className="uil-arrow-circle-right me-1"></i>
                     <span>View More..</span>
                   </Link>
@@ -460,8 +451,7 @@ const Navbar = () => {
                 id="page-header-user-dropdown-v"
                 data-bs-toggle="dropdown"
                 aria-haspopup="true"
-                aria-expanded="false"
-              >
+                aria-expanded="false">
                 <img
                   className="rounded-circle header-profile-user"
                   // src="assets/img/navbar-profile-logo.png"
@@ -491,10 +481,7 @@ const Navbar = () => {
                   <span className="align-middle">Help</span>
                 </Link>
 
-                <Link
-                  className="dropdown-item d-flex align-items-center"
-                  to="#"
-                >
+                <Link className="dropdown-item d-flex align-items-center" to="#">
                   <i className="mdi mdi-cog-outline text-muted font-size-16 align-middle me-2"></i>
                   <span className="align-middle me-3">Settings</span>
                   <span className="badge badge-soft-success ms-auto">New</span>
@@ -651,8 +638,7 @@ const Navbar = () => {
       <div className="vertical-menu">
         <button
           type="button"
-          className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn vertical-menu-btn2"
-        >
+          className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn vertical-menu-btn2">
           <i className="fa-solid fa-angles-right"></i>
         </button>
         {/* <!-- LOGO Box --> */}
@@ -689,8 +675,7 @@ const Navbar = () => {
                         height="53"
                         viewBox="0 0 54 53"
                         fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                        xmlns="http://www.w3.org/2000/svg">
                         <rect
                           x="35.5"
                           y="34.5"
@@ -739,8 +724,7 @@ const Navbar = () => {
                         height="42"
                         viewBox="0 0 40 42"
                         fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                        xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
                           stroke="white"
@@ -783,8 +767,7 @@ const Navbar = () => {
                         height="42"
                         viewBox="0 0 40 42"
                         fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                        xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
                           stroke="white"
@@ -805,9 +788,7 @@ const Navbar = () => {
                       </li>
                       <li>
                         <Link to="./className-wise-student.html">
-                          <span className="text">
-                            className Wise Student List
-                          </span>
+                          <span className="text">className Wise Student List</span>
                         </Link>
                       </li>
                       <li>
@@ -824,8 +805,7 @@ const Navbar = () => {
                         height="42"
                         viewBox="0 0 40 42"
                         fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                        xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
                           stroke="white"
@@ -919,8 +899,7 @@ const Navbar = () => {
                         height="21"
                         viewBox="0 0 21 21"
                         fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                        xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M7.57692 15.25H1.54808C1.40272 15.25 1.26331 15.1874 1.16053 15.0761C1.05774 14.9647 1 14.8137 1 14.6562V8.125C1 6.23533 1.69292 4.42306 2.92634 3.08686C4.15975 1.75067 5.83261 1 7.57692 1C9.32123 1 10.9941 1.75067 12.2275 3.08686C13.4609 4.42306 14.1538 6.23533 14.1538 8.125C14.1538 10.0147 13.4609 11.8269 12.2275 13.1631C10.9941 14.4993 9.32123 15.25 7.57692 15.25Z"
                           stroke="#008AEE"
@@ -979,8 +958,7 @@ const Navbar = () => {
               height="27"
               viewBox="0 0 27 27"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M19.0556 2.76261H23.2222C24.7564 2.76261 26 3.96443 26 5.44695V6.78912M19.0556 24.2374H23.2222C24.7564 24.2374 26 23.0356 26 21.553V20.2108M2.97958 23.4691L11.3129 25.885C13.0951 26.4018 14.8889 25.1121 14.8889 23.3138V3.6861C14.8889 1.88797 13.0951 0.598274 11.3129 1.11497L2.97958 3.53088C1.80464 3.87151 1 4.91658 1 6.10201V20.8979C1 22.0834 1.80464 23.1285 2.97958 23.4691Z"
                 stroke="#008AEE"

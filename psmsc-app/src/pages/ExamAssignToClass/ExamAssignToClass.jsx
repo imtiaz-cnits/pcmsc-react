@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 const ExamAssignToclassName = () => {
   return (
     <>
@@ -24,15 +23,11 @@ const ExamAssignToclassName = () => {
                     {/* <!-- Entries per page --> */}
                     <div>
                       <div className="entries-page">
-                        <label for="entries" className="mr-2">
+                        <label htmlFor="entries" className="mr-2">
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
+                          <select id="entries" className="form-control" style={{ width: 'auto' }}>
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -46,7 +41,7 @@ const ExamAssignToclassName = () => {
                     </div>
                     <div className="exam-search">
                       <input
-                        style={{ width: "20%", margin: 0 }}
+                        style={{ width: '20%', margin: 0 }}
                         type="text"
                         id="searchInput"
                         className="form-control"
@@ -58,10 +53,7 @@ const ExamAssignToclassName = () => {
 
                 {/* <!-- Table --> */}
                 <div className="table-wrapper grade-table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
+                  <table id="printTable" className="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Sl No:</th>
@@ -95,8 +87,7 @@ const ExamAssignToclassName = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -104,8 +95,7 @@ const ExamAssignToclassName = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -140,8 +130,7 @@ const ExamAssignToclassName = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -149,8 +138,7 @@ const ExamAssignToclassName = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -243,7 +231,7 @@ const ExamAssignToclassName = () => {
                       {/* <!-- Row 1 --> */}
                       <div className="form-row row">
                         <div className="form-group select-input-box col-12">
-                          <label for="select-to">Session Name*</label>
+                          <label htmlFor="select-to">Session Name*</label>
                           <div className="select-box-dropdown">
                             <div className="select-dropdown-selected">
                               <span>Select Session</span>
@@ -264,7 +252,7 @@ const ExamAssignToclassName = () => {
                           </div>
                         </div>
                         <div className="form-group select-input-box col-12">
-                          <label for="select-to">Exam Name*</label>
+                          <label htmlFor="select-to">Exam Name*</label>
                           <div className="select-box-dropdown">
                             <div className="select-dropdown-selected">
                               <span>Select Name</span>
@@ -285,13 +273,11 @@ const ExamAssignToclassName = () => {
                           </div>
                         </div>
                         <div className="form-group col-12">
-                          <label for="shift">className Name*</label>
+                          <label htmlFor="shift">className Name*</label>
                           <input type="text" placeholder="Type Name" />
                         </div>
                         <div className="form-group col-12">
-                          <label for="vanilla-datepicker">
-                            Date of Birth *
-                          </label>
+                          <label htmlFor="vanilla-datepicker">Date of Birth *</label>
                           <div className="input-datepicker-wrapper">
                             <input
                               type="text"
@@ -302,18 +288,14 @@ const ExamAssignToclassName = () => {
                           </div>
                         </div>
                         <div className="form-group col-12">
-                          <label for="dob">Date of Birth</label>
+                          <label htmlFor="dob">Date of Birth</label>
                           <input type="datetime-local" id="dob" />
                         </div>
                       </div>
 
                       {/* <!-- Actions --> */}
                       <div className="form-actions">
-                        <button
-                          type="button"
-                          id="exmClose"
-                          className="button close closeBtn"
-                        >
+                        <button type="button" id="exmClose" className="button close closeBtn">
                           Close
                         </button>
                         <button type="button" className="button save">
