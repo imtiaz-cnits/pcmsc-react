@@ -1,11 +1,11 @@
 // .............Table action three dot toggle Start................ //
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   let currentOpenMenu = null; // Track the currently open menu
 
   // Function to close a specific menu
   function closeMenu(menuWrap) {
-    const toggler = menuWrap.querySelector(".toggler");
+    const toggler = menuWrap.querySelector('.toggler');
     if (toggler) {
       toggler.checked = false; // Uncheck the checkbox
     }
@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to initialize dropdown behavior for a specific menu
   function initDropdown(menuWrap) {
-    const toggler = menuWrap.querySelector(".toggler");
-    const links = menuWrap.querySelectorAll(".link"); // Select all dropdown links
+    const toggler = menuWrap.querySelector('.toggler');
+    const links = menuWrap.querySelectorAll('.link'); // Select all dropdown links
 
     // Event listener to detect clicks outside the menu
-    document.addEventListener("click", function (event) {
+    document.addEventListener('click', function (event) {
       if (!menuWrap.contains(event.target) && currentOpenMenu !== menuWrap) {
         if (currentOpenMenu) {
           closeMenu(currentOpenMenu);
@@ -26,20 +26,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Prevent closing the menu if the menu itself is clicked
-    menuWrap.addEventListener("click", function (event) {
+    menuWrap.addEventListener('click', function (event) {
       event.stopPropagation();
     });
 
     // Close menu when clicking on a dropdown link
     links.forEach((link) => {
-      link.addEventListener("click", function () {
+      link.addEventListener('click', function () {
         closeMenu(menuWrap);
         currentOpenMenu = null; // Reset the current open menu
       });
     });
 
     // Toggle menu open/close
-    toggler.addEventListener("change", function () {
+    toggler.addEventListener('change', function () {
       if (toggler.checked) {
         if (currentOpenMenu && currentOpenMenu !== menuWrap) {
           closeMenu(currentOpenMenu);
@@ -54,22 +54,22 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Initialize all dropdowns
-  const allMenus = document.querySelectorAll("#menu-wrap");
+  const allMenus = document.querySelectorAll('#menu-wrap');
   allMenus.forEach(initDropdown);
 });
 
 // .............Table action three dot toggle End................ //
 
 // .............Dashboard Table Search filter Start................ //
-document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.querySelector(".heading input");
-  const tableRows = document.querySelectorAll("#printTable tbody tr");
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.querySelector('.heading input');
+  const tableRows = document.querySelectorAll('#printTable tbody tr');
 
-  searchInput.addEventListener("input", () => {
+  searchInput.addEventListener('input', () => {
     const filter = searchInput.value.toLowerCase();
     tableRows.forEach((row) => {
       const rowText = row.textContent.toLowerCase();
-      row.style.display = rowText.includes(filter) ? "" : "none";
+      row.style.display = rowText.includes(filter) ? '' : 'none';
     });
   });
 });
@@ -78,13 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ..............Function Table searchbar filter Start.......................//
 
-const searchInput = document.querySelector("#searchInput");
-searchInput.addEventListener("input", function () {
+const searchInput = document.querySelector('#searchInput');
+searchInput.addEventListener('input', function () {
   const filter = searchInput.value.toLowerCase();
-  const rows = document.querySelectorAll("#printTable tbody tr");
+  const rows = document.querySelectorAll('#printTable tbody tr');
 
   rows.forEach((row) => {
-    const cells = row.querySelectorAll("td");
+    const cells = row.querySelectorAll('td');
     let isMatch = false;
 
     cells.forEach((cell) => {
@@ -93,7 +93,7 @@ searchInput.addEventListener("input", function () {
       }
     });
 
-    row.style.display = isMatch ? "" : "none";
+    row.style.display = isMatch ? '' : 'none';
   });
 
   // Update table and pagination after filtering
@@ -107,60 +107,60 @@ searchInput.addEventListener("input", function () {
 
 $(document).ready(function () {
   // Copy table to clipboard
-  $("#copyBtn").click(function () {
+  $('#copyBtn').click(function () {
     const range = document.createRange();
-    range.selectNode(document.querySelector("table"));
+    range.selectNode(document.querySelector('table'));
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(range);
-    document.execCommand("copy");
+    document.execCommand('copy');
     window.getSelection().removeAllRanges();
-    alert("Table copied to clipboard!");
+    alert('Table copied to clipboard!');
   });
 
   // Export table to CSV
-  $("#csvBtn").click(function () {
+  $('#csvBtn').click(function () {
     let csv = [];
-    const rows = document.querySelectorAll("table tr");
+    const rows = document.querySelectorAll('table tr');
 
     rows.forEach((row) => {
-      const cols = row.querySelectorAll("td, th");
+      const cols = row.querySelectorAll('td, th');
       let rowData = [];
       cols.forEach((col) => rowData.push(col.innerText));
-      csv.push(rowData.join(","));
+      csv.push(rowData.join(','));
     });
 
-    const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-    const downloadLink = document.createElement("a");
-    downloadLink.download = "data.csv";
+    const csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+    const downloadLink = document.createElement('a');
+    downloadLink.download = 'data.csv';
     downloadLink.href = window.URL.createObjectURL(csvFile);
     downloadLink.click();
   });
 
   // Export table to PDF
-  $("#pdfBtn").click(function () {
+  $('#pdfBtn').click(function () {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
     // Add the table content to the PDF
     doc.autoTable({
-      html: "table",
+      html: 'table',
       startY: 10,
     });
 
     // Save the PDF
-    doc.save("data.pdf");
+    doc.save('data.pdf');
   });
 
   // Export table to XLSX
-  $("#xlsxBtn").click(function () {
-    const wb = XLSX.utils.table_to_book(document.querySelector("table"));
-    XLSX.writeFile(wb, "data.xlsx");
+  $('#xlsxBtn').click(function () {
+    const wb = XLSX.utils.table_to_book(document.querySelector('table'));
+    XLSX.writeFile(wb, 'data.xlsx');
   });
 });
 
 // Print table
 function printTable() {
-  const tableElement = document.getElementById("printTable");
+  const tableElement = document.getElementById('printTable');
   const originalContent = document.body.innerHTML;
 
   // Replace the body's content with the table
@@ -175,47 +175,41 @@ function printTable() {
 // .............Table copy,csv,pdf,xlse,print all file End...............//
 
 // ...............Filter Dropdown functionality Start...................//
-document.addEventListener("click", function (event) {
-  const dropdownMenu = document.querySelector(".dropdown-menus");
-  const dropdownButton = document.querySelector(".dropdown-button");
+document.addEventListener('click', function (event) {
+  const dropdownMenu = document.querySelector('.dropdown-menus');
+  const dropdownButton = document.querySelector('.dropdown-button');
 
   // Check if the click is outside the dropdown menu and button
-  if (
-    !event.target.closest(".dropdown-custom") &&
-    !event.target.closest(".dropdown-button")
-  ) {
-    dropdownMenu.style.display = "none";
+  if (!event.target.closest('.dropdown-custom') && !event.target.closest('.dropdown-button')) {
+    dropdownMenu.style.display = 'none';
   }
 });
 
-document
-  .querySelector(".dropdown-button")
-  .addEventListener("click", function () {
-    const dropdownMenu = document.querySelector(".dropdown-menus");
-    dropdownMenu.style.display =
-      dropdownMenu.style.display === "block" ? "none" : "block";
-  });
+document.querySelector('.dropdown-button').addEventListener('click', function () {
+  const dropdownMenu = document.querySelector('.dropdown-menus');
+  dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+});
 
 // Add click event listeners to each dropdown link to close the menu
-document.querySelectorAll(".dropdown-menus a").forEach(function (link) {
-  link.addEventListener("click", function () {
-    const dropdownMenu = document.querySelector(".dropdown-menus");
-    dropdownMenu.style.display = "none";
+document.querySelectorAll('.dropdown-menus a').forEach(function (link) {
+  link.addEventListener('click', function () {
+    const dropdownMenu = document.querySelector('.dropdown-menus');
+    dropdownMenu.style.display = 'none';
   });
 });
 
 // ...............Filter Dropdown Daynamic functionality Start...................//
 
-document.addEventListener("DOMContentLoaded", function () {
-  const filterLinks = document.querySelectorAll(".dropdown-menus a");
-  const tableRows = document.querySelectorAll("#printTable tbody tr");
-  const displayInfo = document.getElementById("display-info");
+document.addEventListener('DOMContentLoaded', function () {
+  const filterLinks = document.querySelectorAll('.dropdown-menus a');
+  const tableRows = document.querySelectorAll('#printTable tbody tr');
+  const displayInfo = document.getElementById('display-info');
 
   function updateTable() {
     let visibleCount = 0;
 
     tableRows.forEach((row) => {
-      if (row.style.display !== "none") {
+      if (row.style.display !== 'none') {
         visibleCount++;
       }
     });
@@ -225,36 +219,36 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   filterLinks.forEach((link) => {
-    link.addEventListener("click", function (event) {
+    link.addEventListener('click', function (event) {
       event.preventDefault();
-      const filterValue = this.getAttribute("data-filter");
+      const filterValue = this.getAttribute('data-filter');
 
       tableRows.forEach((row) => {
-        const rowDate = new Date(row.getAttribute("data-date"));
+        const rowDate = new Date(row.getAttribute('data-date'));
         const today = new Date();
         let shouldShow = true;
 
         switch (filterValue) {
-          case "all":
+          case 'all':
             shouldShow = true;
             break;
-          case "today":
+          case 'today':
             shouldShow = rowDate.toDateString() === today.toDateString();
             break;
-          case "7":
+          case '7':
             shouldShow = (today - rowDate) / (1000 * 60 * 60 * 24) <= 7;
             break;
-          case "30":
+          case '30':
             shouldShow = (today - rowDate) / (1000 * 60 * 60 * 24) <= 30;
             break;
-          case "365":
+          case '365':
             shouldShow = (today - rowDate) / (1000 * 60 * 60 * 24) <= 365;
             break;
           default:
             shouldShow = true;
         }
 
-        row.style.display = shouldShow ? "" : "none";
+        row.style.display = shouldShow ? '' : 'none';
       });
 
       updateTable(); // Update the table view based on new filter
@@ -267,28 +261,27 @@ document.addEventListener("DOMContentLoaded", function () {
 // ...............Filter Dropdown functionality End...................//
 
 // ................ Entries and Pagination Start.....................//
-document.addEventListener("DOMContentLoaded", () => {
-  const table = document.querySelector("#printTable");
-  const entriesSelect = document.querySelector("#entries");
-  const displayInfo = document.querySelector("#display-info");
-  const prevBtn = document.querySelector("#prevBtn");
-  const nextBtn = document.querySelector("#nextBtn");
-  const paginationContainer = document.querySelector("#pagination");
+document.addEventListener('DOMContentLoaded', () => {
+  const table = document.querySelector('#printTable');
+  const entriesSelect = document.querySelector('#entries');
+  const displayInfo = document.querySelector('#display-info');
+  const prevBtn = document.querySelector('#prevBtn');
+  const nextBtn = document.querySelector('#nextBtn');
+  const paginationContainer = document.querySelector('#pagination');
 
   let currentPage = 1;
   let entriesPerPage = parseInt(entriesSelect.value);
-  let totalEntries = table.querySelectorAll("tbody tr").length;
+  let totalEntries = table.querySelectorAll('tbody tr').length;
   let totalPages = Math.ceil(totalEntries / entriesPerPage);
   const pageLinksToShow = 3;
 
   function updateTable() {
-    const rows = table.querySelectorAll("tbody tr");
+    const rows = table.querySelectorAll('tbody tr');
     rows.forEach((row, index) => {
       row.style.display =
-        index >= (currentPage - 1) * entriesPerPage &&
-        index < currentPage * entriesPerPage
-          ? ""
-          : "none";
+        index >= (currentPage - 1) * entriesPerPage && index < currentPage * entriesPerPage
+          ? ''
+          : 'none';
     });
 
     displayInfo.textContent = `Showing ${Math.min(
@@ -299,18 +292,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updatePagination() {
     totalPages = Math.ceil(totalEntries / entriesPerPage);
-    paginationContainer.innerHTML = "";
+    paginationContainer.innerHTML = '';
 
-    const startPage = Math.max(
-      1,
-      currentPage - Math.floor(pageLinksToShow / 2),
-    );
+    const startPage = Math.max(1, currentPage - Math.floor(pageLinksToShow / 2));
     const endPage = Math.min(totalPages, startPage + pageLinksToShow - 1);
 
     if (totalPages > 1) {
       if (currentPage > 1) {
-        paginationContainer.innerHTML +=
-          '<button id="prevBtn" class="btn">Prev</button>';
+        paginationContainer.innerHTML += '<button id="prevBtn" class="btn">Prev</button>';
       }
 
       for (let i = startPage; i <= endPage; i++) {
@@ -318,14 +307,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (currentPage < totalPages) {
-        paginationContainer.innerHTML +=
-          '<button id="nextBtn" class="btn">Next</button>';
+        paginationContainer.innerHTML += '<button id="nextBtn" class="btn">Next</button>';
       }
     }
 
     // Add event listeners for new pagination links
-    document.querySelectorAll(".page-link").forEach((link) => {
-      link.addEventListener("click", (e) => {
+    document.querySelectorAll('.page-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
         e.preventDefault();
         currentPage = parseInt(e.target.textContent);
         updateTable();
@@ -333,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    document.querySelector("#prevBtn")?.addEventListener("click", () => {
+    document.querySelector('#prevBtn')?.addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
         updateTable();
@@ -341,7 +329,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    document.querySelector("#nextBtn")?.addEventListener("click", () => {
+    document.querySelector('#nextBtn')?.addEventListener('click', () => {
       if (currentPage < totalPages) {
         currentPage++;
         updateTable();
@@ -350,17 +338,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Highlight active page link
-    document.querySelectorAll(".page-link").forEach((link) => {
-      link.classList.toggle(
-        "active",
-        parseInt(link.textContent) === currentPage,
-      );
+    document.querySelectorAll('.page-link').forEach((link) => {
+      link.classList.toggle('active', parseInt(link.textContent) === currentPage);
     });
   }
 
-  entriesSelect.addEventListener("change", (e) => {
+  entriesSelect.addEventListener('change', (e) => {
     entriesPerPage = parseInt(e.target.value);
-    totalEntries = table.querySelectorAll("tbody tr").length;
+    totalEntries = table.querySelectorAll('tbody tr').length;
     currentPage = 1; // Reset to the first page
     updateTable();
     updatePagination();
@@ -374,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ..................... Mark Sheet Print Function Start..............//
 function printMarksheet() {
-  const marksheet = document.querySelector(".marksheet-container");
+  const marksheet = document.querySelector('.marksheet-container');
 
   // Save the current visibility state of the body
   const originalContent = document.body.innerHTML;
@@ -395,7 +380,7 @@ function printMarksheet() {
 
 // ................Admit Card Print Function Start...............//
 function printMarkAdmit() {
-  const admitcard = document.querySelector(".admit-container");
+  const admitcard = document.querySelector('.admit-container');
 
   // Save the current visibility state of the body
   const originalContent = document.body.innerHTML;
@@ -416,7 +401,7 @@ function printMarkAdmit() {
 
 // ................Tabulation Sheet Print Function Start...............//
 function printTbSheet() {
-  const tabulation = document.querySelector(".tabulation");
+  const tabulation = document.querySelector('.tabulation');
 
   // Save the current visibility state of the body
   const originalContent = document.body.innerHTML;
@@ -449,7 +434,7 @@ function printTbSheet() {
 
 // ................1st, 2nd, 3rd All Exam Sheet Print Function Start...............//
 function printAllExamSheet() {
-  const allexammarksheet = document.querySelector(".allexammarksheet");
+  const allexammarksheet = document.querySelector('.allexammarksheet');
 
   // Save the current visibility state of the body
   const originalContent = document.body.innerHTML;
@@ -482,7 +467,7 @@ function printAllExamSheet() {
 
 // .................Seat Plan Sheet Print Function Start...............//
 function printSeatPlan() {
-  const printSeatPlan = document.querySelector(".seat-plan-container");
+  const printSeatPlan = document.querySelector('.seat-plan-container');
 
   // Save the current visibility state of the body
   const originalContent = document.body.innerHTML;
@@ -503,7 +488,7 @@ function printSeatPlan() {
 
 // .................Generate ID Card Print Function Start...............//
 function printIdCard() {
-  const printIdCard = document.querySelector(".generate-id-container");
+  const printIdCard = document.querySelector('.generate-id-container');
 
   // Save the current visibility state of the body
   const originalContent = document.body.innerHTML;

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../assets/css/dark-mode.css';
 import '../assets/css/navbar-sidebar.css';
@@ -5,10 +6,18 @@ import '../assets/css/style.css';
 import '../assets/css/table-funtion.css';
 import logo from '../assets/img/logo.png';
 import navbparProfileImg from '../assets/img/navbar-profile-logo.png';
-import { useEffect, useState } from 'react';
 
 const Navbar = () => {
   const [lightMode, setLightMode] = useState(localStorage.lightMode || 'light');
+
+  function toggleSidebar() {
+    const currentSize = document.body.getAttribute('data-sidebar-size');
+
+    document.body.classList.toggle('sidebar-enable');
+    if (window.innerWidth >= 992) {
+      document.body.setAttribute('data-sidebar-size', currentSize === 'sm' ? 'lg' : 'sm');
+    }
+  }
 
   const toggleLightMode = () => {
     const newMode = lightMode === 'dark' ? 'light' : 'dark';
@@ -29,6 +38,10 @@ const Navbar = () => {
     };
 
     window.addEventListener('storage', handleStorageChange);
+
+    document.querySelectorAll('.vertical-menu-btn').forEach((button) => {
+      button.addEventListener('click', toggleSidebar);
+    });
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);

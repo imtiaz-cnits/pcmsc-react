@@ -1,4 +1,4 @@
-import "../../assets/css/all-modal.css";
+import '../../assets/css/all-modal.css';
 
 const Shift = () => {
   return (
@@ -29,11 +29,7 @@ const Shift = () => {
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
+                          <select id="entries" className="form-control" style={{ width: 'auto' }}>
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -47,7 +43,7 @@ const Shift = () => {
                     </div>
                     <div className="class-search">
                       <input
-                        style={{ width: "20%", margin: "0" }}
+                        style={{ width: '20%', margin: '0' }}
                         type="text"
                         id="searchInput"
                         className="form-control"
@@ -59,10 +55,7 @@ const Shift = () => {
 
                 {/* <!-- Table --> */}
                 <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
+                  <table id="printTable" className="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Sl No:</th>
@@ -88,8 +81,7 @@ const Shift = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -97,8 +89,7 @@ const Shift = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -129,8 +120,7 @@ const Shift = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -138,8 +128,7 @@ const Shift = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -233,21 +222,13 @@ const Shift = () => {
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="search-students">Shift Name *</label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Shift Name"
-                          />
+                          <input type="text" id="search-students" placeholder="Shift Name" />
                         </div>
                       </div>
 
                       {/* <!-- Actions --> */}
                       <div className="form-actions">
-                        <button
-                          type="button"
-                          id="classBtn"
-                          className="button close closeBtn"
-                        >
+                        <button type="button" id="classBtn" className="button close closeBtn">
                           Close
                         </button>
                         <button type="button" className="button save">

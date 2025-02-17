@@ -112,8 +112,7 @@ function counterAnimation() {
 document.addEventListener("click", function (event) {
   const sidebar = document.querySelector(".vertical-menu");
   const toggleButton = document.querySelector(".vertical-menu-btn");
-  console.log('button clicked sidebar')
-
+  console.log("button clicked sidebar");
 
   if (!sidebar.contains(event.target) && !toggleButton.contains(event.target)) {
     document.body.classList.remove("sidebar-enable");

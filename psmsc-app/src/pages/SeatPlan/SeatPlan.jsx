@@ -13,8 +13,7 @@ const SeatPlan = () => {
                     height="44"
                     viewBox="0 0 44 44"
                     fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M29.817 17.0382H14.1692C13.8755 17.0382 13.5939 16.9216 13.3863 16.714C13.1787 16.5063 13.062 16.2247 13.062 15.9311V8.10716C13.062 7.81352 13.1787 7.53191 13.3863 7.32428C13.5939 7.11665 13.8755 7 14.1692 7H29.817C30.1107 7 30.3923 7.11665 30.5999 7.32428C30.8075 7.53191 30.9242 7.81352 30.9242 8.10716V15.9311C30.9242 16.2247 30.8075 16.5063 30.5999 16.714C30.3923 16.9216 30.1107 17.0382 29.817 17.0382ZM15.2763 14.8239H28.7099V9.21432H15.2763V14.8239Z"
                       fill="#192045"
@@ -53,20 +52,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -129,174 +122,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                  </div>
-                </header>
-
-                <div className="student-info-table">
-                  <table className="student-info">
-                    <tr>
-                      <td>
-                        <strong>Student Name:</strong>
-                      </td>
-                      <td>
-                        <strong>IMTIAZ AHMED SHANTO</strong>
-                      </td>
-                      <td>
-                        <strong>Session:</strong>
-                      </td>
-                      <td>
-                        <strong>2025</strong>
-                      </td>
-
-                      <td className="roll">
-                        <span>Roll</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Student ID:</strong>
-                      </td>
-                      <td>
-                        <strong>2252223</strong>
-                      </td>
-                      <td>
-                        <strong>Group:</strong>
-                      </td>
-                      <td>
-                        <strong>Boys</strong>
-                      </td>
-                      <td className="roll" rowSpan="5">
-                        <span className="roll-num">05</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Exam Name:</strong>
-                      </td>
-                      <td>
-                        <strong>Half Yearly</strong>
-                      </td>
-                      <td>
-                        <strong>className:</strong>
-                      </td>
-                      <td>
-                        <strong>Four</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div className="seat-wrapper">
-              <div className="seat-plan-container-wrap">
-                <header>
-                  <div className="info-wrapper">
-                    <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <h4>Exam Seat Plan</h4>
-                    </div>
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                  </div>
-                </header>
-
-                <div className="student-info-table">
-                  <table className="student-info">
-                    <tr>
-                      <td>
-                        <strong>Student Name:</strong>
-                      </td>
-                      <td>
-                        <strong>IMTIAZ AHMED SHANTO</strong>
-                      </td>
-                      <td>
-                        <strong>Session:</strong>
-                      </td>
-                      <td>
-                        <strong>2025</strong>
-                      </td>
-
-                      <td className="roll">
-                        <span>Roll</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Student ID:</strong>
-                      </td>
-                      <td>
-                        <strong>2252223</strong>
-                      </td>
-                      <td>
-                        <strong>Group:</strong>
-                      </td>
-                      <td>
-                        <strong>Boys</strong>
-                      </td>
-                      <td className="roll" rowSpan="5">
-                        <span className="roll-num">05</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Exam Name:</strong>
-                      </td>
-                      <td>
-                        <strong>Half Yearly</strong>
-                      </td>
-                      <td>
-                        <strong>className:</strong>
-                      </td>
-                      <td>
-                        <strong>Four</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <div className="seat-plan-container-wrap">
-                <header>
-                  <div className="info-wrapper">
-                    <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <h4>Exam Seat Plan</h4>
-                    </div>
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -361,20 +194,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -437,174 +264,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                  </div>
-                </header>
-
-                <div className="student-info-table">
-                  <table className="student-info">
-                    <tr>
-                      <td>
-                        <strong>Student Name:</strong>
-                      </td>
-                      <td>
-                        <strong>IMTIAZ AHMED SHANTO</strong>
-                      </td>
-                      <td>
-                        <strong>Session:</strong>
-                      </td>
-                      <td>
-                        <strong>2025</strong>
-                      </td>
-
-                      <td className="roll">
-                        <span>Roll</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Student ID:</strong>
-                      </td>
-                      <td>
-                        <strong>2252223</strong>
-                      </td>
-                      <td>
-                        <strong>Group:</strong>
-                      </td>
-                      <td>
-                        <strong>Boys</strong>
-                      </td>
-                      <td className="roll" rowSpan="5">
-                        <span className="roll-num">05</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Exam Name:</strong>
-                      </td>
-                      <td>
-                        <strong>Half Yearly</strong>
-                      </td>
-                      <td>
-                        <strong>className:</strong>
-                      </td>
-                      <td>
-                        <strong>Four</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div className="seat-wrapper">
-              <div className="seat-plan-container-wrap">
-                <header>
-                  <div className="info-wrapper">
-                    <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <h4>Exam Seat Plan</h4>
-                    </div>
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                  </div>
-                </header>
-
-                <div className="student-info-table">
-                  <table className="student-info">
-                    <tr>
-                      <td>
-                        <strong>Student Name:</strong>
-                      </td>
-                      <td>
-                        <strong>IMTIAZ AHMED SHANTO</strong>
-                      </td>
-                      <td>
-                        <strong>Session:</strong>
-                      </td>
-                      <td>
-                        <strong>2025</strong>
-                      </td>
-
-                      <td className="roll">
-                        <span>Roll</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Student ID:</strong>
-                      </td>
-                      <td>
-                        <strong>2252223</strong>
-                      </td>
-                      <td>
-                        <strong>Group:</strong>
-                      </td>
-                      <td>
-                        <strong>Boys</strong>
-                      </td>
-                      <td className="roll" rowSpan="5">
-                        <span className="roll-num">05</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Exam Name:</strong>
-                      </td>
-                      <td>
-                        <strong>Half Yearly</strong>
-                      </td>
-                      <td>
-                        <strong>className:</strong>
-                      </td>
-                      <td>
-                        <strong>Four</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <div className="seat-plan-container-wrap">
-                <header>
-                  <div className="info-wrapper">
-                    <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <h4>Exam Seat Plan</h4>
-                    </div>
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -669,20 +336,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -745,174 +406,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                  </div>
-                </header>
-
-                <div className="student-info-table">
-                  <table className="student-info">
-                    <tr>
-                      <td>
-                        <strong>Student Name:</strong>
-                      </td>
-                      <td>
-                        <strong>IMTIAZ AHMED SHANTO</strong>
-                      </td>
-                      <td>
-                        <strong>Session:</strong>
-                      </td>
-                      <td>
-                        <strong>2025</strong>
-                      </td>
-
-                      <td className="roll">
-                        <span>Roll</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Student ID:</strong>
-                      </td>
-                      <td>
-                        <strong>2252223</strong>
-                      </td>
-                      <td>
-                        <strong>Group:</strong>
-                      </td>
-                      <td>
-                        <strong>Boys</strong>
-                      </td>
-                      <td className="roll" rowSpan="5">
-                        <span className="roll-num">05</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Exam Name:</strong>
-                      </td>
-                      <td>
-                        <strong>Half Yearly</strong>
-                      </td>
-                      <td>
-                        <strong>className:</strong>
-                      </td>
-                      <td>
-                        <strong>Four</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div className="seat-wrapper">
-              <div className="seat-plan-container-wrap">
-                <header>
-                  <div className="info-wrapper">
-                    <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <h4>Exam Seat Plan</h4>
-                    </div>
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                  </div>
-                </header>
-
-                <div className="student-info-table">
-                  <table className="student-info">
-                    <tr>
-                      <td>
-                        <strong>Student Name:</strong>
-                      </td>
-                      <td>
-                        <strong>IMTIAZ AHMED SHANTO</strong>
-                      </td>
-                      <td>
-                        <strong>Session:</strong>
-                      </td>
-                      <td>
-                        <strong>2025</strong>
-                      </td>
-
-                      <td className="roll">
-                        <span>Roll</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Student ID:</strong>
-                      </td>
-                      <td>
-                        <strong>2252223</strong>
-                      </td>
-                      <td>
-                        <strong>Group:</strong>
-                      </td>
-                      <td>
-                        <strong>Boys</strong>
-                      </td>
-                      <td className="roll" rowSpan="5">
-                        <span className="roll-num">05</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Exam Name:</strong>
-                      </td>
-                      <td>
-                        <strong>Half Yearly</strong>
-                      </td>
-                      <td>
-                        <strong>className:</strong>
-                      </td>
-                      <td>
-                        <strong>Four</strong>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <div className="seat-plan-container-wrap">
-                <header>
-                  <div className="info-wrapper">
-                    <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <h4>Exam Seat Plan</h4>
-                    </div>
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -977,20 +478,14 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>
@@ -1053,20 +548,440 @@ const SeatPlan = () => {
                 <header>
                   <div className="info-wrapper">
                     <div className="student-profile">
-                      <img
-                        src="./assets/img/projuct-member-img-3.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
                       <h4>Exam Seat Plan</h4>
                     </div>
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                  </div>
+                </header>
+
+                <div className="student-info-table">
+                  <table className="student-info">
+                    <tr>
+                      <td>
+                        <strong>Student Name:</strong>
+                      </td>
+                      <td>
+                        <strong>IMTIAZ AHMED SHANTO</strong>
+                      </td>
+                      <td>
+                        <strong>Session:</strong>
+                      </td>
+                      <td>
+                        <strong>2025</strong>
+                      </td>
+
+                      <td className="roll">
+                        <span>Roll</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Student ID:</strong>
+                      </td>
+                      <td>
+                        <strong>2252223</strong>
+                      </td>
+                      <td>
+                        <strong>Group:</strong>
+                      </td>
+                      <td>
+                        <strong>Boys</strong>
+                      </td>
+                      <td className="roll" rowSpan="5">
+                        <span className="roll-num">05</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Exam Name:</strong>
+                      </td>
+                      <td>
+                        <strong>Half Yearly</strong>
+                      </td>
+                      <td>
+                        <strong>className:</strong>
+                      </td>
+                      <td>
+                        <strong>Four</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className="seat-wrapper">
+              <div className="seat-plan-container-wrap">
+                <header>
+                  <div className="info-wrapper">
+                    <div className="student-profile">
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <h4>Exam Seat Plan</h4>
+                    </div>
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                  </div>
+                </header>
+
+                <div className="student-info-table">
+                  <table className="student-info">
+                    <tr>
+                      <td>
+                        <strong>Student Name:</strong>
+                      </td>
+                      <td>
+                        <strong>IMTIAZ AHMED SHANTO</strong>
+                      </td>
+                      <td>
+                        <strong>Session:</strong>
+                      </td>
+                      <td>
+                        <strong>2025</strong>
+                      </td>
+
+                      <td className="roll">
+                        <span>Roll</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Student ID:</strong>
+                      </td>
+                      <td>
+                        <strong>2252223</strong>
+                      </td>
+                      <td>
+                        <strong>Group:</strong>
+                      </td>
+                      <td>
+                        <strong>Boys</strong>
+                      </td>
+                      <td className="roll" rowSpan="5">
+                        <span className="roll-num">05</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Exam Name:</strong>
+                      </td>
+                      <td>
+                        <strong>Half Yearly</strong>
+                      </td>
+                      <td>
+                        <strong>className:</strong>
+                      </td>
+                      <td>
+                        <strong>Four</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="seat-plan-container-wrap">
+                <header>
+                  <div className="info-wrapper">
+                    <div className="student-profile">
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <h4>Exam Seat Plan</h4>
+                    </div>
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                  </div>
+                </header>
+
+                <div className="student-info-table">
+                  <table className="student-info">
+                    <tr>
+                      <td>
+                        <strong>Student Name:</strong>
+                      </td>
+                      <td>
+                        <strong>IMTIAZ AHMED SHANTO</strong>
+                      </td>
+                      <td>
+                        <strong>Session:</strong>
+                      </td>
+                      <td>
+                        <strong>2025</strong>
+                      </td>
+
+                      <td className="roll">
+                        <span>Roll</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Student ID:</strong>
+                      </td>
+                      <td>
+                        <strong>2252223</strong>
+                      </td>
+                      <td>
+                        <strong>Group:</strong>
+                      </td>
+                      <td>
+                        <strong>Boys</strong>
+                      </td>
+                      <td className="roll" rowSpan="5">
+                        <span className="roll-num">05</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Exam Name:</strong>
+                      </td>
+                      <td>
+                        <strong>Half Yearly</strong>
+                      </td>
+                      <td>
+                        <strong>className:</strong>
+                      </td>
+                      <td>
+                        <strong>Four</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className="seat-wrapper">
+              <div className="seat-plan-container-wrap">
+                <header>
+                  <div className="info-wrapper">
+                    <div className="student-profile">
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <h4>Exam Seat Plan</h4>
+                    </div>
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                  </div>
+                </header>
+
+                <div className="student-info-table">
+                  <table className="student-info">
+                    <tr>
+                      <td>
+                        <strong>Student Name:</strong>
+                      </td>
+                      <td>
+                        <strong>IMTIAZ AHMED SHANTO</strong>
+                      </td>
+                      <td>
+                        <strong>Session:</strong>
+                      </td>
+                      <td>
+                        <strong>2025</strong>
+                      </td>
+
+                      <td className="roll">
+                        <span>Roll</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Student ID:</strong>
+                      </td>
+                      <td>
+                        <strong>2252223</strong>
+                      </td>
+                      <td>
+                        <strong>Group:</strong>
+                      </td>
+                      <td>
+                        <strong>Boys</strong>
+                      </td>
+                      <td className="roll" rowSpan="5">
+                        <span className="roll-num">05</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Exam Name:</strong>
+                      </td>
+                      <td>
+                        <strong>Half Yearly</strong>
+                      </td>
+                      <td>
+                        <strong>className:</strong>
+                      </td>
+                      <td>
+                        <strong>Four</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="seat-plan-container-wrap">
+                <header>
+                  <div className="info-wrapper">
+                    <div className="student-profile">
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <h4>Exam Seat Plan</h4>
+                    </div>
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                  </div>
+                </header>
+
+                <div className="student-info-table">
+                  <table className="student-info">
+                    <tr>
+                      <td>
+                        <strong>Student Name:</strong>
+                      </td>
+                      <td>
+                        <strong>IMTIAZ AHMED SHANTO</strong>
+                      </td>
+                      <td>
+                        <strong>Session:</strong>
+                      </td>
+                      <td>
+                        <strong>2025</strong>
+                      </td>
+
+                      <td className="roll">
+                        <span>Roll</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Student ID:</strong>
+                      </td>
+                      <td>
+                        <strong>2252223</strong>
+                      </td>
+                      <td>
+                        <strong>Group:</strong>
+                      </td>
+                      <td>
+                        <strong>Boys</strong>
+                      </td>
+                      <td className="roll" rowSpan="5">
+                        <span className="roll-num">05</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Exam Name:</strong>
+                      </td>
+                      <td>
+                        <strong>Half Yearly</strong>
+                      </td>
+                      <td>
+                        <strong>className:</strong>
+                      </td>
+                      <td>
+                        <strong>Four</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className="seat-wrapper">
+              <div className="seat-plan-container-wrap">
+                <header>
+                  <div className="info-wrapper">
+                    <div className="student-profile">
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <h4>Exam Seat Plan</h4>
+                    </div>
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                  </div>
+                </header>
+
+                <div className="student-info-table">
+                  <table className="student-info">
+                    <tr>
+                      <td>
+                        <strong>Student Name:</strong>
+                      </td>
+                      <td>
+                        <strong>IMTIAZ AHMED SHANTO</strong>
+                      </td>
+                      <td>
+                        <strong>Session:</strong>
+                      </td>
+                      <td>
+                        <strong>2025</strong>
+                      </td>
+
+                      <td className="roll">
+                        <span>Roll</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Student ID:</strong>
+                      </td>
+                      <td>
+                        <strong>2252223</strong>
+                      </td>
+                      <td>
+                        <strong>Group:</strong>
+                      </td>
+                      <td>
+                        <strong>Boys</strong>
+                      </td>
+                      <td className="roll" rowSpan="5">
+                        <span className="roll-num">05</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Exam Name:</strong>
+                      </td>
+                      <td>
+                        <strong>Half Yearly</strong>
+                      </td>
+                      <td>
+                        <strong>className:</strong>
+                      </td>
+                      <td>
+                        <strong>Four</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div className="seat-plan-container-wrap">
+                <header>
+                  <div className="info-wrapper">
+                    <div className="student-profile">
+                      <img src="./assets/img/projuct-member-img-3.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <h4>Exam Seat Plan</h4>
+                    </div>
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                   </div>
                 </header>

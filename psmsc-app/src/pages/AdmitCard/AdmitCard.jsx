@@ -17,10 +17,7 @@ const AdmitCard = () => {
               <!-- Form Start --> */}
                 <div className="className-wise-form mb-2">
                   <div className="mark-entry-form">
-                    <form
-                      className="form-wrapper row"
-                      style={{ width: "auto" }}
-                    >
+                    <form className="form-wrapper row" style={{ width: 'auto' }}>
                       <div className="form-row col-lg-6">
                         <div className="form-group select-input-box">
                           <label for="select-to">className*</label>

@@ -7,11 +7,7 @@ const Migration = () => {
           <div className="bredcam">
             <div className="bredcam-title">
               <h1>Student Migration</h1>
-              <button
-                id="migrateModalBtn"
-                type="button"
-                className="create-invoice"
-              >
+              <button id="migrateModalBtn" type="button" className="create-invoice">
                 + Migrate A Student
               </button>
             </div>
@@ -125,22 +121,17 @@ const Migration = () => {
                       {/* <!-- Entries per page --> */}
                       <div
                         style={{
-                          display: "flex",
-                          alignItems: "center", // use camelCase for 'align-items'
-                          gap: "10px", // add unit for the gap, e.g., '10px'
-                          justifyContent: "center", // use camelCase for 'justify-content'
-                        }}
-                      >
+                          display: 'flex',
+                          alignItems: 'center', // use camelCase for 'align-items'
+                          gap: '10px', // add unit for the gap, e.g., '10px'
+                          justifyContent: 'center', // use camelCase for 'justify-content'
+                        }}>
                         <div className="entries-page">
                           <label htmlFor="entries" className="mr-2">
                             Entries:
                           </label>
                           <div className="select-container">
-                            <select
-                              id="entries"
-                              className="form-control"
-                              style={{ width: "auto" }}
-                            >
+                            <select id="entries" className="form-control" style={{ width: 'auto' }}>
                               <option value="5">5</option>
                               <option value="10">10</option>
                               <option value="25">25</option>
@@ -160,29 +151,10 @@ const Migration = () => {
                                 height="32"
                                 viewBox="0 0 39 38"
                                 fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <rect
-                                  y="1"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <rect
-                                  y="11"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <rect
-                                  y="21"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect y="1" width="25" height="3" rx="1.5" fill="#192045" />
+                                <rect y="11" width="25" height="3" rx="1.5" fill="#192045" />
+                                <rect y="21" width="25" height="3" rx="1.5" fill="#192045" />
                                 <path
                                   d="M32 1C32 0.447715 31.5523 -2.41411e-08 31 0C30.4477 2.41411e-08 30 0.447715 30 1L32 1ZM30.2929 37.7071C30.6834 38.0976 31.3166 38.0976 31.7071 37.7071L38.0711 31.3431C38.4616 30.9526 38.4616 30.3195 38.0711 29.9289C37.6805 29.5384 37.0474 29.5384 36.6569 29.9289L31 35.5858L25.3431 29.9289C24.9526 29.5384 24.3195 29.5384 23.9289 29.9289C23.5384 30.3195 23.5384 30.9526 23.9289 31.3431L30.2929 37.7071ZM30 1L30 37L32 37L32 1L30 1Z"
                                   fill="#192045"
@@ -221,16 +193,8 @@ const Migration = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             d="M33.3002 17.45H21.1502C19.659 17.45 18.4502 18.6588 18.4502 20.15V32.3C18.4502 33.7912 19.659 35 21.1502 35H33.3002C34.7914 35 36.0002 33.7912 36.0002 32.3V20.15C36.0002 18.6588 34.7914 17.45 33.3002 17.45Z"
                             stroke="#192045"
@@ -253,16 +217,8 @@ const Migration = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             fillRule="evenodd"
                             clipRule="evenodd"
@@ -277,16 +233,8 @@ const Migration = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             fillRule="evenodd"
                             clipRule="evenodd"
@@ -301,16 +249,8 @@ const Migration = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             d="M29.817 17.0382H14.1692C13.8755 17.0382 13.5939 16.9216 13.3863 16.714C13.1787 16.5063 13.062 16.2247 13.062 15.9311V8.10716C13.062 7.81352 13.1787 7.53191 13.3863 7.32428C13.5939 7.11665 13.8755 7 14.1692 7H29.817C30.1107 7 30.3923 7.11665 30.5999 7.32428C30.8075 7.53191 30.9242 7.81352 30.9242 8.10716V15.9311C30.9242 16.2247 30.8075 16.5063 30.5999 16.714C30.3923 16.9216 30.1107 17.0382 29.817 17.0382ZM15.2763 14.8239H28.7099V9.21432H15.2763V14.8239Z"
                             fill="#192045"
@@ -347,16 +287,8 @@ const Migration = () => {
                           height="32"
                           viewBox="0 0 44 44"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
+                          xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="43" height="43" rx="5.5" stroke="#192045" />
                           <path
                             d="M31.311 37.6837H12.689C11.4457 37.6821 10.2539 37.1874 9.37488 36.3082C8.49586 35.429 8.00142 34.2371 8 32.9938V10.689C8.00165 9.44591 8.4962 8.25421 9.3752 7.37521C10.2542 6.49621 11.4459 6.00166 12.689 6.00001H24.5811C25.1989 5.99879 25.8107 6.11998 26.3814 6.35658C26.9521 6.59318 27.4702 6.94051 27.9059 7.37849L34.6206 14.087C35.5011 14.9717 35.9968 16.1681 36 17.4162V32.9938C35.9986 34.2371 35.5041 35.429 34.6251 36.3082C33.7461 37.1874 32.5543 37.6821 31.311 37.6837ZM12.689 8.23201C12.0376 8.23272 11.413 8.49181 10.9524 8.95243C10.4918 9.41305 10.2327 10.0376 10.232 10.689V32.9938C10.2327 33.6453 10.4918 34.27 10.9524 34.7307C11.413 35.1915 12.0375 35.4508 12.689 35.4517H31.311C31.9625 35.4508 32.587 35.1915 33.0476 34.7307C33.5082 34.27 33.7673 33.6453 33.768 32.9938V17.4136C33.7664 16.7578 33.5059 16.1292 33.043 15.6646L26.3274 8.95518C26.0986 8.7252 25.8264 8.54287 25.5267 8.41874C25.2269 8.29461 24.9055 8.23114 24.5811 8.23201H12.689Z"
                             fill="#192045"
@@ -385,10 +317,7 @@ const Migration = () => {
 
                 {/* <!-- Table --> */}
                 <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
+                  <table id="printTable" className="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Sl No:</th>
@@ -421,8 +350,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -430,8 +358,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -481,8 +408,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -490,8 +416,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -541,8 +466,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn migrateModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -550,8 +474,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -601,8 +524,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -610,8 +532,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -661,8 +582,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -670,8 +590,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -721,8 +640,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -730,8 +648,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -781,8 +698,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -790,8 +706,7 @@ const Migration = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -890,10 +805,7 @@ const Migration = () => {
                   <div className="col-6">
                     <div className="item">
                       <div className="profile-img">
-                        <img
-                          src="./assets/img/projuct-member-img-3.png"
-                          alt=""
-                        />
+                        <img src="./assets/img/projuct-member-img-3.png" alt="" />
                       </div>
                       <h3>
                         Student Name: <span>Shanto</span>
@@ -995,14 +907,8 @@ const Migration = () => {
                     {/* <!-- Row 1 --> */}
                     <div className="form-row">
                       <div className="form-group">
-                        <label htmlFor="search-students">
-                          Student's Search *
-                        </label>
-                        <input
-                          type="text"
-                          id="search-students"
-                          placeholder="Student Search..."
-                        />
+                        <label htmlFor="search-students">Student's Search *</label>
+                        <input type="text" id="search-students" placeholder="Student Search..." />
                       </div>
                     </div>
 
@@ -1010,43 +916,23 @@ const Migration = () => {
                     <div className="form-row">
                       <div className="form-group">
                         <label htmlFor="name">Student's Name *</label>
-                        <input
-                          type="text"
-                          id="name"
-                          placeholder="Enter Name..."
-                        />
+                        <input type="text" id="name" placeholder="Enter Name..." />
                       </div>
                       <div className="form-group">
-                        <label htmlFor="birth-certificate">
-                          Student's ID *
-                        </label>
-                        <input
-                          type="text"
-                          id="birth-certificate"
-                          placeholder="Enter ID"
-                        />
+                        <label htmlFor="birth-certificate">Student's ID *</label>
+                        <input type="text" id="birth-certificate" placeholder="Enter ID" />
                       </div>
                     </div>
 
                     {/* <!-- Row 3 --> */}
                     <div className="form-row">
                       <div className="form-group">
-                        <label htmlFor="Registration">
-                          Registration Date *
-                        </label>
-                        <input
-                          type="text"
-                          id="Registration"
-                          placeholder="Registration..."
-                        />
+                        <label htmlFor="Registration">Registration Date *</label>
+                        <input type="text" id="Registration" placeholder="Registration..." />
                       </div>
                       <div className="form-group">
                         <label htmlFor="Roll">Class Roll *</label>
-                        <input
-                          type="text"
-                          id="Roll"
-                          placeholder="Enter Class Roll"
-                        />
+                        <input type="text" id="Roll" placeholder="Enter Class Roll" />
                       </div>
                       <div className="form-group">
                         <label htmlFor="Class">Class Name*</label>
@@ -1088,11 +974,7 @@ const Migration = () => {
 
                     {/* <!-- Actions --> */}
                     <div className="form-actions">
-                      <button
-                        type="button"
-                        id="closeBtn"
-                        className="button close closeBtn"
-                      >
+                      <button type="button" id="closeBtn" className="button close closeBtn">
                         Close
                       </button>
                       <button type="reset" className="button reset">

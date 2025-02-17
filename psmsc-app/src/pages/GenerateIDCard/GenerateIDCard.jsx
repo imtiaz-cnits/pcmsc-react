@@ -13,8 +13,7 @@ const GenerateIDCard = () => {
                     height="44"
                     viewBox="0 0 44 44"
                     fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M29.817 17.0382H14.1692C13.8755 17.0382 13.5939 16.9216 13.3863 16.714C13.1787 16.5063 13.062 16.2247 13.062 15.9311V8.10716C13.062 7.81352 13.1787 7.53191 13.3863 7.32428C13.5939 7.11665 13.8755 7 14.1692 7H29.817C30.1107 7 30.3923 7.11665 30.5999 7.32428C30.8075 7.53191 30.9242 7.81352 30.9242 8.10716V15.9311C30.9242 16.2247 30.8075 16.5063 30.5999 16.714C30.3923 16.9216 30.1107 17.0382 29.817 17.0382ZM15.2763 14.8239H28.7099V9.21432H15.2763V14.8239Z"
                       fill="#192045"
@@ -53,10 +52,7 @@ const GenerateIDCard = () => {
                 <header className="header">
                   <div className="info-wrapper">
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
@@ -114,10 +110,7 @@ const GenerateIDCard = () => {
                 <header className="header">
                   <div className="info-wrapper">
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
@@ -175,195 +168,7 @@ const GenerateIDCard = () => {
                 <header className="header">
                   <div className="info-wrapper">
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <p>Zilla Para, Pabna</p>
-                      <h4>EllN : 138691</h4>
-                    </div>
-                  </div>
-                </header>
-                <div className="photo">
-                  <img src="./assets/img/projuct-member-img-3.png" alt="" />
-                </div>
-                <div className="details">
-                  <h2 className="student-name">Khandaker Shanto</h2>
-
-                  <table>
-                    <tr>
-                      <td>
-                        <span>Name</span>
-                      </td>
-                      <td>
-                        : <span>Khandaker Shanto</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>className</span>
-                      </td>
-                      <td>
-                        : <span>Eight</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Roll</span>
-                      </td>
-                      <td>
-                        : <span>11</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Session</span>
-                      </td>
-                      <td>
-                        : <span>2025</span>
-                      </td>
-                    </tr>
-                  </table>
-                  <p className="signature">
-                    <span>Vice Principal</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="id-card-wrap">
-              <div className="id-card">
-                <header className="header">
-                  <div className="info-wrapper">
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <p>Zilla Para, Pabna</p>
-                      <h4>EllN : 138691</h4>
-                    </div>
-                  </div>
-                </header>
-                <div className="photo">
-                  <img src="./assets/img/projuct-member-img-3.png" alt="" />
-                </div>
-
-                <div className="details">
-                  <h2 className="student-name">Khandaker Shanto</h2>
-                  <table>
-                    <tr>
-                      <td>
-                        <span>Name</span>
-                      </td>
-                      <td>
-                        : <span>Khandaker Shanto</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>className</span>
-                      </td>
-                      <td>
-                        : <span>Eight</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Roll</span>
-                      </td>
-                      <td>
-                        : <span>11</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Session</span>
-                      </td>
-                      <td>
-                        : <span>2025</span>
-                      </td>
-                    </tr>
-                  </table>
-                  <p className="signature">
-                    <span>Vice Principal</span>
-                  </p>
-                </div>
-              </div>
-              <div className="id-card">
-                <header className="header">
-                  <div className="info-wrapper">
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
-                    </div>
-                    <div className="board-info">
-                      <h2>Pabna Collectorate Model School And Collage</h2>
-                      <p>Zilla Para, Pabna</p>
-                      <h4>EllN : 138691</h4>
-                    </div>
-                  </div>
-                </header>
-                <div className="photo">
-                  <img src="./assets/img/projuct-member-img-3.png" alt="" />
-                </div>
-                <div className="details">
-                  <h2 className="student-name">Khandaker Shanto</h2>
-
-                  <table>
-                    <tr>
-                      <td>
-                        <span>Name</span>
-                      </td>
-                      <td>
-                        : <span>Khandaker Shanto</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>className</span>
-                      </td>
-                      <td>
-                        : <span>Eight</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Roll</span>
-                      </td>
-                      <td>
-                        : <span>11</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Session</span>
-                      </td>
-                      <td>
-                        : <span>2025</span>
-                      </td>
-                    </tr>
-                  </table>
-                  <p className="signature">
-                    <span>Vice Principal</span>
-                  </p>
-                </div>
-              </div>
-              <div className="id-card">
-                <header className="header">
-                  <div className="info-wrapper">
-                    <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
@@ -423,10 +228,7 @@ const GenerateIDCard = () => {
                 <header className="header">
                   <div className="info-wrapper">
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
@@ -484,10 +286,7 @@ const GenerateIDCard = () => {
                 <header className="header">
                   <div className="info-wrapper">
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>
@@ -545,10 +344,183 @@ const GenerateIDCard = () => {
                 <header className="header">
                   <div className="info-wrapper">
                     <div className="logo">
-                      <img
-                        src="./assets/img/logo.png"
-                        alt="Education Board Logo"
-                      />
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <p>Zilla Para, Pabna</p>
+                      <h4>EllN : 138691</h4>
+                    </div>
+                  </div>
+                </header>
+                <div className="photo">
+                  <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                </div>
+                <div className="details">
+                  <h2 className="student-name">Khandaker Shanto</h2>
+
+                  <table>
+                    <tr>
+                      <td>
+                        <span>Name</span>
+                      </td>
+                      <td>
+                        : <span>Khandaker Shanto</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>className</span>
+                      </td>
+                      <td>
+                        : <span>Eight</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>Roll</span>
+                      </td>
+                      <td>
+                        : <span>11</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>Session</span>
+                      </td>
+                      <td>
+                        : <span>2025</span>
+                      </td>
+                    </tr>
+                  </table>
+                  <p className="signature">
+                    <span>Vice Principal</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="id-card-wrap">
+              <div className="id-card">
+                <header className="header">
+                  <div className="info-wrapper">
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <p>Zilla Para, Pabna</p>
+                      <h4>EllN : 138691</h4>
+                    </div>
+                  </div>
+                </header>
+                <div className="photo">
+                  <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                </div>
+
+                <div className="details">
+                  <h2 className="student-name">Khandaker Shanto</h2>
+                  <table>
+                    <tr>
+                      <td>
+                        <span>Name</span>
+                      </td>
+                      <td>
+                        : <span>Khandaker Shanto</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>className</span>
+                      </td>
+                      <td>
+                        : <span>Eight</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>Roll</span>
+                      </td>
+                      <td>
+                        : <span>11</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>Session</span>
+                      </td>
+                      <td>
+                        : <span>2025</span>
+                      </td>
+                    </tr>
+                  </table>
+                  <p className="signature">
+                    <span>Vice Principal</span>
+                  </p>
+                </div>
+              </div>
+              <div className="id-card">
+                <header className="header">
+                  <div className="info-wrapper">
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
+                    </div>
+                    <div className="board-info">
+                      <h2>Pabna Collectorate Model School And Collage</h2>
+                      <p>Zilla Para, Pabna</p>
+                      <h4>EllN : 138691</h4>
+                    </div>
+                  </div>
+                </header>
+                <div className="photo">
+                  <img src="./assets/img/projuct-member-img-3.png" alt="" />
+                </div>
+                <div className="details">
+                  <h2 className="student-name">Khandaker Shanto</h2>
+
+                  <table>
+                    <tr>
+                      <td>
+                        <span>Name</span>
+                      </td>
+                      <td>
+                        : <span>Khandaker Shanto</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>className</span>
+                      </td>
+                      <td>
+                        : <span>Eight</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>Roll</span>
+                      </td>
+                      <td>
+                        : <span>11</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>Session</span>
+                      </td>
+                      <td>
+                        : <span>2025</span>
+                      </td>
+                    </tr>
+                  </table>
+                  <p className="signature">
+                    <span>Vice Principal</span>
+                  </p>
+                </div>
+              </div>
+              <div className="id-card">
+                <header className="header">
+                  <div className="info-wrapper">
+                    <div className="logo">
+                      <img src="./assets/img/logo.png" alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>

@@ -27,11 +27,7 @@ const ExamType = () => {
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
+                          <select id="entries" className="form-control" style={{ width: 'auto' }}>
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -45,7 +41,7 @@ const ExamType = () => {
                     </div>
                     <div className="exam-search">
                       <input
-                        style={{ width: "20%", margin: "0" }}
+                        style={{ width: '20%', margin: '0' }}
                         type="text"
                         id="searchInput"
                         className="form-control"
@@ -57,10 +53,7 @@ const ExamType = () => {
 
                 {/* <!-- Table --> */}
                 <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
+                  <table id="printTable" className="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Sl No:</th>
@@ -72,7 +65,7 @@ const ExamType = () => {
                     <tbody>
                       <tr>
                         <td>01</td>
-                        <td style={{ textAlign: "center" }}>1st Semester</td>
+                        <td style={{ textAlign: 'center' }}>1st Semester</td>
                         <td>Active</td>
                         <td>
                           <div id="action_btn">
@@ -88,8 +81,7 @@ const ExamType = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -97,8 +89,7 @@ const ExamType = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -114,7 +105,7 @@ const ExamType = () => {
                       </tr>
                       <tr>
                         <td>02</td>
-                        <td style={{ textAlign: "center" }}>2nd Semester</td>
+                        <td style={{ textAlign: 'center' }}>2nd Semester</td>
                         <td>Active</td>
                         <td>
                           <div id="action_btn">
@@ -130,8 +121,7 @@ const ExamType = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -139,8 +129,7 @@ const ExamType = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -233,35 +222,21 @@ const ExamType = () => {
                       {/* <!-- Row 1 --> */}
                       <div className="form-row">
                         <div className="form-group">
-                          <label htmlFor="search-students">
-                            Exam Type Name *
-                          </label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Exam Type Name"
-                          />
+                          <label htmlFor="search-students">Exam Type Name *</label>
+                          <input type="text" id="search-students" placeholder="Exam Type Name" />
                         </div>
                       </div>
                       {/* <!-- Row 2 --> */}
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="search-students">Exam Status *</label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Exam Status"
-                          />
+                          <input type="text" id="search-students" placeholder="Exam Status" />
                         </div>
                       </div>
 
                       {/* <!-- Actions --> */}
                       <div className="form-actions">
-                        <button
-                          type="button"
-                          id="exmClose"
-                          className="button close closeBtn"
-                        >
+                        <button type="button" id="exmClose" className="button close closeBtn">
                           Close
                         </button>
                         <button type="button" className="button save">

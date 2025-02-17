@@ -28,11 +28,7 @@ const Grade = () => {
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
+                          <select id="entries" className="form-control" style={{ width: 'auto' }}>
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -46,7 +42,7 @@ const Grade = () => {
                     </div>
                     <div className="exam-search">
                       <input
-                        style={{ width: "20%", margin: 0 }}
+                        style={{ width: '20%', margin: 0 }}
                         type="text"
                         id="searchInput"
                         className="form-control"
@@ -58,10 +54,7 @@ const Grade = () => {
 
                 {/* <!-- Table --> */}
                 <div className="table-wrapper grade-table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
+                  <table id="printTable" className="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Sl No:</th>
@@ -95,8 +88,7 @@ const Grade = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -104,8 +96,7 @@ const Grade = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -140,8 +131,7 @@ const Grade = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
+                                        data-modal="action-editmodal">
                                         Edit
                                       </a>
                                     </li>
@@ -149,8 +139,7 @@ const Grade = () => {
                                       <a
                                         href="#"
                                         className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
+                                        data-modal="action-deletemodal">
                                         Delete
                                       </a>
                                     </li>
@@ -272,11 +261,7 @@ const Grade = () => {
 
                       {/* <!-- Actions --> */}
                       <div className="form-actions">
-                        <button
-                          type="button"
-                          id="exmClose"
-                          className="button close closeBtn"
-                        >
+                        <button type="button" id="exmClose" className="button close closeBtn">
                           Close
                         </button>
                         <button type="button" className="button save">

@@ -1,7 +1,7 @@
-import "../../assets/css/style.css";
-import "../../assets/css/all-modal.css";
-import "../../assets/css/bootstrap.min.css";
-import "../../assets/css/table-funtion.css";
+import '../../assets/css/style.css';
+import '../../assets/css/all-modal.css';
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/table-funtion.css';
 
 const SMSManagement = () => {
   return (
@@ -29,11 +29,7 @@ const SMSManagement = () => {
                         {/* <!-- Font Awesome angle-down icon --> */}
                       </div>
                       <div className="select-dropdown-items">
-                        <input
-                          type="text"
-                          className="select-search-box"
-                          placeholder="Search..."
-                        />
+                        <input type="text" className="select-search-box" placeholder="Search..." />
                         <div className="option">SMS</div>
                         <div className="option">SMS</div>
                       </div>
@@ -50,11 +46,7 @@ const SMSManagement = () => {
                         {/* <!-- Font Awesome angle-down icon --> */}
                       </div>
                       <div className="select-dropdown-items">
-                        <input
-                          type="text"
-                          className="select-search-box"
-                          placeholder="Search..."
-                        />
+                        <input type="text" className="select-search-box" placeholder="Search..." />
                         <div className="option">One</div>
                         <div className="option">Two</div>
                       </div>
@@ -71,11 +63,7 @@ const SMSManagement = () => {
                         {/* <!-- Font Awesome angle-down icon --> */}
                       </div>
                       <div className="select-dropdown-items">
-                        <input
-                          type="text"
-                          className="select-search-box"
-                          placeholder="Search..."
-                        />
+                        <input type="text" className="select-search-box" placeholder="Search..." />
                         <div className="option">Science</div>
                         <div className="option">Commerce</div>
                       </div>
@@ -92,11 +80,7 @@ const SMSManagement = () => {
                         {/* <!-- Font Awesome angle-down icon --> */}
                       </div>
                       <div className="select-dropdown-items">
-                        <input
-                          type="text"
-                          className="select-search-box"
-                          placeholder="Search..."
-                        />
+                        <input type="text" className="select-search-box" placeholder="Search..." />
                         <div className="option">2024</div>
                         <div className="option">2025</div>
                       </div>
@@ -121,7 +105,7 @@ const SMSManagement = () => {
                 <div className="form-group">
                   <label htmlFor="number">SMS Sending Number:</label>
                   <textarea type="text" placeholder="Enter Number...">
-                    {" "}
+                    {' '}
                   </textarea>
                 </div>
               </div>
@@ -130,7 +114,7 @@ const SMSManagement = () => {
                 <div className="form-group">
                   <label htmlFor="number">Notice:</label>
                   <textarea type="text" placeholder="Enter Number...">
-                    {" "}
+                    {' '}
                   </textarea>
                 </div>
               </div>

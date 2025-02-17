@@ -7,7 +7,7 @@ const Result = () => {
         <div className="page-content">
           <div className="data-table">
             <div className="card mark-entry-wrap">
-              <div className="card-body" style={{ paddingBottom: "40px" }}>
+              <div className="card-body" style={{ paddingBottom: '40px' }}>
                 {/* <!-- className heading Start --> */}
                 <div className="exam-heading text-center d-block">
                   <h3 className="heading d-block">Search Result</h3>
