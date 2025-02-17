@@ -1,19 +1,58 @@
-import logo from "../assets/img/logo.png";
-import "../assets/css/navbar-sidebar.css";
-import usjpg from "../assets/img/flags/us.jpg";
-import spainjpg from "../assets/img/flags/spain.jpg";
-import germanyjpg from "../assets/img/flags/germany.jpg";
-import italyjpg from "../assets/img/flags/italy.jpg";
-import russiajpg from "../assets/img/flags/russia.jpg";
-import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
-import "../assets/css/navbar-sidebar.css";
-import "../assets/css/table-funtion.css";
-import "../assets/css/style.css";
-import "../assets/css/dark-mode.css";
-import productMemberPng from "../assets/img/projuct-member-img-3.png";
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
+import '../assets/css/all-modal.css';
+import "../assets/css/bootstrap.min.css";
+import "../assets/css/dark-mode.css";
+import "../assets/css/navbar-sidebar.css";
+import "../assets/css/style.css";
+import "../assets/css/table-funtion.css";
+import logo from "../assets/img/logo.png";
+import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
 
 const Navbar = () => {
+
+
+  const [lightMode, setLightMode] = useState(localStorage.lightMode || 'light');
+
+  function toggleSidebar() {
+    const currentSize = document.body.getAttribute('data-sidebar-size');
+
+    document.body.classList.toggle('sidebar-enable');
+    if (window.innerWidth >= 992) {
+      document.body.setAttribute('data-sidebar-size', currentSize === 'sm' ? 'lg' : 'sm');
+    }
+  }
+
+  const toggleLightMode = () => {
+    const newMode = lightMode === 'dark' ? 'light' : 'dark';
+    setLightMode(newMode);
+    localStorage.lightMode = newMode;
+  };
+
+  useEffect(() => {
+    const app = document.getElementsByTagName('BODY')[0];
+    app.setAttribute('light-mode', lightMode);
+
+    const handleStorageChange = () => {
+      if (localStorage.lightMode === 'dark') {
+        setLightMode('dark');
+      } else {
+        setLightMode('light');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    document.querySelectorAll('.vertical-menu-btn').forEach((button) => {
+      button.addEventListener('click', toggleSidebar);
+    });
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [lightMode]);
+
+
   return (
     <>
       {/* <!-- Navbar Start --> */}
@@ -61,7 +100,7 @@ const Navbar = () => {
             <button
               className="light-mode-button"
               aria-label="Toggle Light Mode"
-              onClick="toggle_light_mode()"
+              onClick={toggleLightMode}
             >
               <span></span>
               <span></span>
