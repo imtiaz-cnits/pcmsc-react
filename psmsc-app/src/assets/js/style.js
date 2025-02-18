@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-
-
 // Sidebar Start.................................
 $(".menu > ul > li").click(function (e) {
   // Store the active parent link in localStorage

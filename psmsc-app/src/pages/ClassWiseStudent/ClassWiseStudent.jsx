@@ -881,10 +881,7 @@ const ClassWiseStudent = () => {
                   <div className="col-6">
                     <div className="item">
                       <div className="profile-img">
-                        <img
-                          src={productMemberImg}
-                          alt=""
-                        />
+                        <img src={productMemberImg} alt="" />
                       </div>
                       <h3>
                         Student Name: <span>Shanto</span>

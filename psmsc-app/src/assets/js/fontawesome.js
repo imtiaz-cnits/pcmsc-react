@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-
 window.FontAwesomeKitConfig = {
   id: 40995253,
   version: "6.5.2",

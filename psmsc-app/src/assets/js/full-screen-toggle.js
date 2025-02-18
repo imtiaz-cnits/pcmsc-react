@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-
-
 if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
   const toggleBtn = document.querySelector(".js-toggle-fullscreen-btn");
 
