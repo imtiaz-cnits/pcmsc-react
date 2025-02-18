@@ -1,49 +1,44 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
 import Sidebar from "../../components/Sidebar/Sidebar";
 
 const Class = () => {
-
-
-  useEffect(()=>{
-
+  useEffect(() => {
     const createClassModal = document.getElementById("createClassModal");
-  const classModalBtn = document.getElementById("classModalBtn");
-  const classBtn = document.getElementById("classBtn");
+    const classModalBtn = document.getElementById("classModalBtn");
+    const classBtn = document.getElementById("classBtn");
 
-  // Function to disable scrolling
-  const disableScroll = () => {
-    document.body.style.overflow = "hidden";
-  };
+    // Function to disable scrolling
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
 
-  // Function to enable scrolling
-  const enableScroll = () => {
-    document.body.style.overflow = "";
-  };
+    // Function to enable scrolling
+    const enableScroll = () => {
+      document.body.style.overflow = "";
+    };
 
-  // Open the migrate modal and hide scroll
-  classModalBtn.addEventListener("click", () => {
-    createClassModal.classList.add("show");
-    disableScroll();
-  });
+    // Open the migrate modal and hide scroll
+    classModalBtn.addEventListener("click", () => {
+      createClassModal.classList.add("show");
+      disableScroll();
+    });
 
-  // Close the migrate modal and show scroll
-  classBtn.addEventListener("click", () => {
-    createClassModal.classList.remove("show");
-    enableScroll();
-  });
-
-  // Close the migrate modal by clicking outside it and show scroll
-  document.addEventListener("click", (e) => {
-    if (e.target === createClassModal) {
+    // Close the migrate modal and show scroll
+    classBtn.addEventListener("click", () => {
       createClassModal.classList.remove("show");
       enableScroll();
-    }
-  });
+    });
 
-  },[])
-
+    // Close the migrate modal by clicking outside it and show scroll
+    document.addEventListener("click", (e) => {
+      if (e.target === createClassModal) {
+        createClassModal.classList.remove("show");
+        enableScroll();
+      }
+    });
+  }, []);
 
   return (
     <>

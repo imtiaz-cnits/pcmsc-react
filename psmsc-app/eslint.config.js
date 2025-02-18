@@ -33,7 +33,7 @@ export default [
         "warn",
         { allowConstantExport: true },
       ],
-      "react/no-unescaped-entities": "off",  // Disables the rule
+      "react/no-unescaped-entities": "off", // Disables the rule
     },
   },
 ];

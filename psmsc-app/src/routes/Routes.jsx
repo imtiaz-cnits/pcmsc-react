@@ -116,21 +116,21 @@ export const router = createBrowserRouter([
             element: <GeneratedAdmitCard />,
           },
           {
-            path: 'tabulation-sheet',
-            element: <TabulationSheet />
+            path: "tabulation-sheet",
+            element: <TabulationSheet />,
           },
           {
-            path: 'generated-tb-sheet',
-            element: <GeneratedTBSheet />
+            path: "generated-tb-sheet",
+            element: <GeneratedTBSheet />,
           },
           {
-            path: 'seat-plan',
-            element: <SeatPlan />
+            path: "seat-plan",
+            element: <SeatPlan />,
           },
           {
-            path: 'generate-id-card',
-            element: <GenerateIDCard />
-          }
+            path: "generate-id-card",
+            element: <GenerateIDCard />,
+          },
         ],
       },
       {

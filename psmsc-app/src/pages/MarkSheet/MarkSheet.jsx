@@ -1,30 +1,26 @@
-import '../../assets/css/bootstrap.min.css';
-import '../../assets/css/style.css';
-import logo from '../../assets/img/logo.png';
+import "../../assets/css/bootstrap.min.css";
+import "../../assets/css/style.css";
+import logo from "../../assets/img/logo.png";
 
 const MarkSheet = () => {
-
-
-
-  const printMarksheet = ()=>{
-
+  const printMarksheet = () => {
     const marksheet = document.querySelector(".marksheet-container");
 
     // Save the current visibility state of the body
     const originalContent = document.body.innerHTML;
-  
+
     // Set the body to only contain the marksheet
     document.body.innerHTML = marksheet.outerHTML;
-  
+
     // Trigger the print dialog
     window.print();
-  
+
     // Restore the original content
     document.body.innerHTML = originalContent;
-  
+
     // Rebind any event listeners (if necessary)
     location.reload(); // Reload the page to restore functionality
-  }
+  };
 
   return (
     <>
@@ -39,10 +35,7 @@ const MarkSheet = () => {
               <header>
                 <div className="info-wrapper">
                   <div className="logo">
-                    <img
-                      src={logo}
-                      alt="Education Board Logo"
-                    />
+                    <img src={logo} alt="Education Board Logo" />
                   </div>
                   <div className="board-info">
                     <h2>Pabna Collectorate Model School And Collage</h2>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import '../assets/css/all-modal.css';
+import "../assets/css/all-modal.css";
 import "../assets/css/bootstrap.min.css";
 import "../assets/css/dark-mode.css";
 import "../assets/css/navbar-sidebar.css";
@@ -10,48 +10,48 @@ import logo from "../assets/img/logo.png";
 import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
 
 const Navbar = () => {
-
-
-  const [lightMode, setLightMode] = useState(localStorage.lightMode || 'light');
+  const [lightMode, setLightMode] = useState(localStorage.lightMode || "light");
 
   function toggleSidebar() {
-    const currentSize = document.body.getAttribute('data-sidebar-size');
+    const currentSize = document.body.getAttribute("data-sidebar-size");
 
-    document.body.classList.toggle('sidebar-enable');
+    document.body.classList.toggle("sidebar-enable");
     if (window.innerWidth >= 992) {
-      document.body.setAttribute('data-sidebar-size', currentSize === 'sm' ? 'lg' : 'sm');
+      document.body.setAttribute(
+        "data-sidebar-size",
+        currentSize === "sm" ? "lg" : "sm",
+      );
     }
   }
 
   const toggleLightMode = () => {
-    const newMode = lightMode === 'dark' ? 'light' : 'dark';
+    const newMode = lightMode === "dark" ? "light" : "dark";
     setLightMode(newMode);
     localStorage.lightMode = newMode;
   };
 
   useEffect(() => {
-    const app = document.getElementsByTagName('BODY')[0];
-    app.setAttribute('light-mode', lightMode);
+    const app = document.getElementsByTagName("BODY")[0];
+    app.setAttribute("light-mode", lightMode);
 
     const handleStorageChange = () => {
-      if (localStorage.lightMode === 'dark') {
-        setLightMode('dark');
+      if (localStorage.lightMode === "dark") {
+        setLightMode("dark");
       } else {
-        setLightMode('light');
+        setLightMode("light");
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
-    document.querySelectorAll('.vertical-menu-btn').forEach((button) => {
-      button.addEventListener('click', toggleSidebar);
+    document.querySelectorAll(".vertical-menu-btn").forEach((button) => {
+      button.addEventListener("click", toggleSidebar);
     });
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, [lightMode]);
-
 
   return (
     <>

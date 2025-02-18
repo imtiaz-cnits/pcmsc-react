@@ -1,31 +1,27 @@
-import '../../assets/css/bootstrap.min.css';
-import '../../assets/css/style.css';
-import logo from '../../assets/img/logo.png';
-import productMemberIMG from '../../assets/img/projuct-member-img-3.png';
-
+import "../../assets/css/bootstrap.min.css";
+import "../../assets/css/style.css";
+import logo from "../../assets/img/logo.png";
+import productMemberIMG from "../../assets/img/projuct-member-img-3.png";
 
 const GeneratedAdmitCard = () => {
-
-  const printMarkAdmit=()=>{
-
+  const printMarkAdmit = () => {
     const admitcard = document.querySelector(".admit-container");
 
-  // Save the current visibility state of the body
-  const originalContent = document.body.innerHTML;
+    // Save the current visibility state of the body
+    const originalContent = document.body.innerHTML;
 
-  // Set the body to only contain the marksheet
-  document.body.innerHTML = admitcard.outerHTML;
+    // Set the body to only contain the marksheet
+    document.body.innerHTML = admitcard.outerHTML;
 
-  // Trigger the print dialog
-  window.print();
+    // Trigger the print dialog
+    window.print();
 
-  // Restore the original content
-  document.body.innerHTML = originalContent;
+    // Restore the original content
+    document.body.innerHTML = originalContent;
 
-  // Reload the page to restore functionality
-  location.reload();
-  }
-
+    // Reload the page to restore functionality
+    location.reload();
+  };
 
   return (
     <>
