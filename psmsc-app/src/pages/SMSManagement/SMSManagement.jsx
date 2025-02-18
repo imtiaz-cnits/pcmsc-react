@@ -10,8 +10,6 @@ const SMSManagement = () => {
   const [ssection, setSsection] = useState("");
   const [session, setSession] = useState("");
 
- 
-
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -34,7 +32,9 @@ const SMSManagement = () => {
                       value={sms}
                       onChange={(e) => setSMS(e.target.value)}
                     >
-                      <option value="" disabled>Select SMS</option>
+                      <option value="" disabled>
+                        Select SMS
+                      </option>
                       <option value="SMS">SMS</option>
                       <option value="SMS">SMS</option>
                     </select>
@@ -46,7 +46,9 @@ const SMSManagement = () => {
                       value={sclass}
                       onChange={(e) => setSclass(e.target.value)}
                     >
-                      <option value=""  disabled>Select Class</option>
+                      <option value="" disabled>
+                        Select Class
+                      </option>
                       <option value="One">One</option>
                       <option value="Two">Two</option>
                     </select>
@@ -59,7 +61,9 @@ const SMSManagement = () => {
                       value={ssection}
                       onChange={(e) => setSsection(e.target.value)}
                     >
-                      <option value="" disabled>Select Section</option>
+                      <option value="" disabled>
+                        Select Section
+                      </option>
                       <option value="Science">Science</option>
                       <option value="Commerce">Commerce</option>
                     </select>
@@ -73,7 +77,9 @@ const SMSManagement = () => {
                       value={session}
                       onChange={(e) => setSession(e.target.value)}
                     >
-                      <option value="" disabled>Select Session</option>
+                      <option value="" disabled>
+                        Select Session
+                      </option>
                       <option className="option">2024</option>
                       <option className="option">2025</option>
                     </select>

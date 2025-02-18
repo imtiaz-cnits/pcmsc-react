@@ -444,7 +444,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -504,7 +504,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -564,7 +564,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -624,7 +624,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -684,7 +684,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -744,7 +744,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -804,7 +804,7 @@ const ClassWiseStudent = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src="./assets/img/projuct-member-img-3.png"
+                                src={productMemberImg}
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -882,7 +882,7 @@ const ClassWiseStudent = () => {
                     <div className="item">
                       <div className="profile-img">
                         <img
-                          src="./assets/img/projuct-member-img-3.png"
+                          src={productMemberImg}
                           alt=""
                         />
                       </div>

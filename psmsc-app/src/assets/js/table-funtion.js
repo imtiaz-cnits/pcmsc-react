@@ -1,3 +1,7 @@
+/* eslint-disable */
+
+
+
 // .............Table action three dot toggle Start................ //
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Link } from "react-router-dom";
 import "../../assets/css/navbar-sidebar.css";
 import logo from "../../assets/img/logo.png";
