@@ -1,126 +1,15 @@
-import { useEffect } from "react";
+import { useState } from 'react';
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
+import '../../assets/css/table-funtion.css';
 
 /* eslint-disable react/no-unknown-property */
 const AdmitCard = () => {
-  useEffect(() => {
-    const dropdowns = document.querySelectorAll(".select-box-dropdown");
-
-    dropdowns.forEach(function (dropdown) {
-      const dropdownSelected = dropdown.querySelector(
-        ".select-dropdown-selected",
-      );
-      const dropdownItems = dropdown.querySelector(".select-dropdown-items");
-      const searchBox = dropdown.querySelector(".select-search-box");
-      const icon = dropdown.querySelector(".icon i");
-
-      // Function to toggle visibility of search box based on number of items
-      function toggleSearchInput() {
-        const itemCount = dropdownItems.querySelectorAll("div").length;
-        if (itemCount >= 3) {
-          searchBox.style.display = "block";
-        } else {
-          searchBox.style.display = "none";
-        }
-      }
-
-      // Function to position the dropdown dynamically
-      function positionDropdown() {
-        const rect = dropdown.getBoundingClientRect(); // Get the position of the dropdown container
-        const dropdownHeight = dropdownItems.offsetHeight;
-        const spaceBelow = window.innerHeight - rect.bottom; // Available space below the dropdown
-        const spaceAbove = rect.top; // Available space above the dropdown
-
-        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-          // If there's not enough space below, show the dropdown above
-          dropdownItems.style.bottom = `${dropdownHeight + 10}px`; // Add some space between the dropdown and the container
-          dropdownItems.style.top = "auto";
-        } else {
-          // Otherwise, show the dropdown below
-          dropdownItems.style.top = "100%";
-          dropdownItems.style.bottom = "auto";
-        }
-      }
-
-      // Toggle dropdown visibility
-      dropdownSelected.addEventListener("click", function (e) {
-        e.stopPropagation();
-
-        // Close all other dropdowns
-        dropdowns.forEach(function (otherDropdown) {
-          if (otherDropdown !== dropdown) {
-            otherDropdown
-              .querySelector(".select-dropdown-items")
-              .classList.remove("show");
-            otherDropdown
-              .querySelector(".icon i")
-              .classList.remove("fa-angle-up");
-            otherDropdown
-              .querySelector(".icon i")
-              .classList.add("fa-angle-down");
-          }
-        });
-
-        // Toggle current dropdown visibility
-        dropdownItems.classList.toggle("show");
-
-        // Toggle icon rotation
-        if (dropdownItems.classList.contains("show")) {
-          icon.classList.remove("fa-angle-down");
-          icon.classList.add("fa-angle-up");
-        } else {
-          icon.classList.remove("fa-angle-up");
-          icon.classList.add("fa-angle-down");
-        }
-
-        // Call function to toggle search input visibility
-        toggleSearchInput();
-
-        // Position the dropdown based on available space
-        if (dropdownItems.classList.contains("show")) {
-          positionDropdown();
-        }
-      });
-
-      // Filter dropdown items based on search
-      searchBox.addEventListener("input", function () {
-        const filter = searchBox.value.toLowerCase();
-        const items = dropdownItems.querySelectorAll("div");
-
-        items.forEach(function (item) {
-          const text = item.textContent.toLowerCase();
-          if (text.includes(filter)) {
-            item.style.display = "block";
-          } else {
-            item.style.display = "none";
-          }
-        });
-      });
-
-      // Close the dropdown if clicked outside
-      document.addEventListener("click", function (e) {
-        if (!e.target.closest(".select-box-dropdown")) {
-          dropdownItems.classList.remove("show");
-          icon.classList.remove("fa-angle-up");
-          icon.classList.add("fa-angle-down");
-          searchBox.style.display = "none";
-        }
-      });
-
-      // Select dropdown item
-      dropdownItems.addEventListener("click", function (e) {
-        if (e.target.tagName === "DIV") {
-          dropdownSelected.querySelector("span").textContent =
-            e.target.textContent;
-          dropdownItems.classList.remove("show");
-          icon.classList.remove("fa-angle-up");
-          icon.classList.add("fa-angle-down");
-          searchBox.style.display = "none";
-        }
-      });
-    });
-  });
+ 
+  const [sclass, setSclass] = useState("");
+    const [session, setSession] = useState("");
+    const [ssection, setSsection] = useState("");
+    const [shift, setShift] = useState('');
 
   return (
     <>
@@ -143,89 +32,62 @@ const AdmitCard = () => {
                       <div class="form-row col-lg-6">
                         <div class="form-group select-input-box">
                           <label for="select-to">Class*</label>
-                          <div class="select-box-dropdown">
-                            <div class="select-dropdown-selected">
+                         
+                          <select
+                            value={sclass}
+                            onChange={(e) => setSclass(e.target.value)}
+                          >
+                            <option value="" disabled>
                               <span>Select Class</span>
-                              <span class="icon">
-                                <i class="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div class="select-dropdown-items">
-                              <input
-                                type="text"
-                                class="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div class="option">One</div>
-                              <div class="option">Two</div>
-                            </div>
-                          </div>
+                            </option>
+                            <option value="One">One</option>
+                            <option value="Two">Two</option>
+                          </select>
+
                         </div>
                         <div class="form-group select-input-box">
                           <label for="select-to">Session*</label>
-                          <div class="select-box-dropdown">
-                            <div class="select-dropdown-selected">
-                              <span>Select Session</span>
-                              <span class="icon">
-                                <i class="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div class="select-dropdown-items">
-                              <input
-                                type="text"
-                                class="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div class="option">2024</div>
-                              <div class="option">2025</div>
-                            </div>
-                          </div>
+                        
+                          <select
+                            name=""
+                            id=""
+                            onChange={(e) => setSession(e.target.value)}
+                            value={session}
+                          >
+                            <option value="" disabled deaf>
+                              Select Session
+                            </option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                          </select>
+
                         </div>
                       </div>
                       <div class="form-row col-lg-6">
                         <div class="form-group select-input-box">
                           <label for="select-to">Section*</label>
-                          <div class="select-box-dropdown">
-                            <div class="select-dropdown-selected">
-                              <span>Select Section</span>
-                              <span class="icon">
-                                <i class="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div class="select-dropdown-items">
-                              <input
-                                type="text"
-                                class="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div class="option">Science</div>
-                              <div class="option">Commerce</div>
-                            </div>
-                          </div>
+                          <select value={ssection} onChange={setSsection}>
+                            <option value="" disabled>
+                              Select Section
+                            </option>
+                            <option value="Science">Science</option>
+                            <option value="Commerce">Commerce</option>
+                            <option value="Arts">Arts</option>
+                          </select>
                         </div>
                         <div class="form-group select-input-box">
                           <label for="select-to">Shift*</label>
-                          <div class="select-box-dropdown">
-                            <div class="select-dropdown-selected">
-                              <span>Select Shift</span>
-                              <span class="icon">
-                                <i class="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div class="select-dropdown-items">
-                              <input
-                                type="text"
-                                class="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div class="option">Morning</div>
-                              <div class="option">Day</div>
-                            </div>
-                          </div>
+                          <select
+                            name=""
+                            id=""
+                            value={shift}
+                            onChange={setShift}
+                          >
+                         
+                            <option value="" disabled>Select Shift</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Day">Day</option>
+                          </select>
                         </div>
                       </div>
                     </form>

@@ -68,7 +68,7 @@ const TabulationSheet = () => {
                         <div className="form-group select-input-box">
                           <label for="select-to">Section*</label>
 
-                          <select value={ssection} onChange={setSsection}>
+                          <select value={ssection} onChange={(e)=> setSsection(e.target.value)}>
                             <option value="" disabled>
                               Select Section
                             </option>
@@ -83,7 +83,7 @@ const TabulationSheet = () => {
                           <select
                             name=""
                             id=""
-                            onChange={setShift}
+                            onChange={(e)=> setShift(e.target.value)}
                             value={shift}
                           >
                          
