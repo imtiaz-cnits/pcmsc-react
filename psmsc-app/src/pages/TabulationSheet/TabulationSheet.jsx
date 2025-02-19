@@ -96,7 +96,7 @@ const TabulationSheet = () => {
                       </div>
                     </form>
                   </div>
-                  <button className="search-btn">Search</button>
+                  <button className="search-btn">Search </button>
                 </div>
                 {/* <!-- Form Start --> */}
               </div>
