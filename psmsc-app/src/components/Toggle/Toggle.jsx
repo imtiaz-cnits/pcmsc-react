@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "../../assets/css/dark-mode.css";
 import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";

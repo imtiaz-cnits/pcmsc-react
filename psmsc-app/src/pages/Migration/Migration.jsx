@@ -120,7 +120,11 @@ const Migration = () => {
                     <div className="form-group ">
                       <label htmlFor="shift">Shift Name*</label>
 
-                      <select id="shift" value={shift} onChange={(e) => setShift(e.target.value)} >
+                      <select
+                        id="shift"
+                        value={shift}
+                        onChange={(e) => setShift(e.target.value)}
+                      >
                         <option value="" disabled>
                           Select Shift
                         </option>
@@ -1073,9 +1077,7 @@ const Migration = () => {
                       <div className="form-group">
                         <label htmlFor="Class">Class Name*</label>
                         <select id="shift">
-                          <option value="" >
-                            Select Class
-                          </option>
+                          <option value="">Select Class</option>
                           <option value="morning">One</option>
                           <option value="evening">Two</option>
                         </select>
@@ -1087,9 +1089,7 @@ const Migration = () => {
                       <div className="form-group">
                         <label htmlFor="shift">Shift Name*</label>
                         <select id="shift">
-                          <option value="" >
-                            Select Shift
-                          </option>
+                          <option value="">Select Shift</option>
                           <option value="morning">Morning</option>
                           <option value="evening">Evening</option>
                         </select>
@@ -1097,9 +1097,7 @@ const Migration = () => {
                       <div className="form-group">
                         <label htmlFor="shift">Section Name*</label>
                         <select id="shift">
-                          <option value="" >
-                            Select Section
-                          </option>
+                          <option value="">Select Section</option>
                           <option value="morning">Science</option>
                           <option value="evening">Commerce</option>
                         </select>
@@ -1107,9 +1105,7 @@ const Migration = () => {
                       <div className="form-group">
                         <label htmlFor="shift">Session*</label>
                         <select id="shift">
-                          <option value="" >
-                            Select Session
-                          </option>
+                          <option value="">Select Session</option>
                           <option value="morning">2024</option>
                           <option value="evening">2025</option>
                         </select>
