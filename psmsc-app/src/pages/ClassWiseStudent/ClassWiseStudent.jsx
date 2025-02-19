@@ -1,14 +1,13 @@
-import { useState } from 'react';
-import '../../assets/css/all-modal.css';
-import '../../assets/css/style.css';
+import { useState } from "react";
+import "../../assets/css/all-modal.css";
+import "../../assets/css/style.css";
 import productMemberImg from "../../assets/img/projuct-member-img-3.png";
 
-
 const ClassWiseStudent = () => {
-    const [sclass, setSclass] = useState("");
-    const [session, setSession] = useState("");
-    const [ssection, setSsection] = useState("");
-    const [shift, setShift] = useState("");
+  const [sclass, setSclass] = useState("");
+  const [session, setSession] = useState("");
+  const [ssection, setSsection] = useState("");
+  const [shift, setShift] = useState("");
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -24,17 +23,28 @@ const ClassWiseStudent = () => {
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Class*</label>
 
-                      <select id="shift" value={sclass} onChange={(e)=> setSclass(e.target.value)}>
-                        <option value="" disabled>Select Class</option>
+                      <select
+                        id="shift"
+                        value={sclass}
+                        onChange={(e) => setSclass(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Class
+                        </option>
                         <option value="morning">One</option>
                         <option value="evening">Two</option>
                       </select>
-                  
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Session*</label>
-                      <select id="" value={session} onChange={(e)=> setSession(e.target.value)}>
-                        <option value="" disabled>Select Session</option>
+                      <select
+                        id=""
+                        value={session}
+                        onChange={(e) => setSession(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Session
+                        </option>
                         <option value="morning">2024</option>
                         <option value="evening">2025</option>
                       </select>
@@ -42,20 +52,31 @@ const ClassWiseStudent = () => {
 
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Section*</label>
-                      <select id="" value={ssection} onChange={(e)=> setSsection(e.target.value)}>
-                        <option value="" disabled>Select Section</option>
+                      <select
+                        id=""
+                        value={ssection}
+                        onChange={(e) => setSsection(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Section
+                        </option>
                         <option value="morning">Science</option>
                         <option value="evening">Commerce</option>
                       </select>
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Shift*</label>
-                      <select id='' value={shift} onChange={(e)=> setShift(e.target.value)}>
-                        <option value="" disabled>Select Shift</option>
+                      <select
+                        id=""
+                        value={shift}
+                        onChange={(e) => setShift(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Shift
+                        </option>
                         <option value="morning">Morning</option>
                         <option value="evening">Evening</option>
                       </select>
-
                     </div>
                   </form>
                   <button className="search-btn">Search</button>

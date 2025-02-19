@@ -34,7 +34,7 @@ export default [
         { allowConstantExport: true },
       ],
       "react/no-unescaped-entities": "off", // Disables the rule
-      "no-undef": "warn" // warn/1 no-undef rule
+      "no-undef": "warn", // warn/1 no-undef rule
     },
   },
 ];
