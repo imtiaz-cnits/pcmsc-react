@@ -1,6 +1,6 @@
-import '../../assets/css/bootstrap.min.css';
-import '../../assets/css/style.css';
-import logo from '../../assets/img/logo.png';
+import "../../assets/css/bootstrap.min.css";
+import "../../assets/css/style.css";
+import logo from "../../assets/img/logo.png";
 
 const CombineResult = () => {
   return (
@@ -17,10 +17,7 @@ const CombineResult = () => {
                 <header>
                   <div className="info-wrapper info-wrapper2">
                     <div className="logo">
-                      <img
-                        src={logo}
-                        alt="Education Board Logo"
-                      />
+                      <img src={logo} alt="Education Board Logo" />
                     </div>
                     <div className="board-info">
                       <h2>Pabna Collectorate Model School And Collage</h2>

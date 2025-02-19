@@ -1,17 +1,13 @@
-import { useState } from 'react';
-import '../../assets/css/bootstrap.min.css';
-import '../../assets/css/style.css';
+import { useState } from "react";
+import "../../assets/css/bootstrap.min.css";
+import "../../assets/css/style.css";
 
 const Result = () => {
-
-   const [sclass, setSclass] = useState("");
-     const [session, setSession] = useState("");
-     const [ssection, setSsection] = useState("");
-     const [shift, setShift] = useState('');  
-     const [examination , setExamination] = useState(''); 
-
-
-
+  const [sclass, setSclass] = useState("");
+  const [session, setSession] = useState("");
+  const [ssection, setSsection] = useState("");
+  const [shift, setShift] = useState("");
+  const [examination, setExamination] = useState("");
 
   return (
     <>
@@ -58,7 +54,7 @@ const Result = () => {
                             onChange={(e) => setSession(e.target.value)}
                             value={session}
                           >
-                            <option value="" disabled >
+                            <option value="" disabled>
                               Select Session
                             </option>
                             <option value="2024">2024</option>
@@ -70,7 +66,10 @@ const Result = () => {
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Section*</label>
 
-                          <select value={ssection} onChange={(e)=> setSsection(e.target.value)}>
+                          <select
+                            value={ssection}
+                            onChange={(e) => setSsection(e.target.value)}
+                          >
                             <option value="" disabled>
                               Select Section
                             </option>
@@ -78,7 +77,6 @@ const Result = () => {
                             <option value="Commerce">Commerce</option>
                             <option value="Arts">Arts</option>
                           </select>
-                        
                         </div>
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Shift*</label>
@@ -86,10 +84,11 @@ const Result = () => {
                             name=""
                             id=""
                             value={shift}
-                            onChange={(e)=> setShift(e.target.value)}
+                            onChange={(e) => setShift(e.target.value)}
                           >
-                         
-                            <option value="" disabled>Select Shift</option>
+                            <option value="" disabled>
+                              Select Shift
+                            </option>
                             <option value="Morning">Morning</option>
                             <option value="Day">Day</option>
                           </select>
@@ -97,17 +96,18 @@ const Result = () => {
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Examination*</label>
 
-<select name="" id="" value={examination} onChange={(e)=> setExamination(e.target.value)}>
-
-
-<option value="" disabled>Select Examination</option>
-<option value="2024">2024</option>
-<option value="2025">2025</option>
-
-
-</select>
-
-                   
+                          <select
+                            name=""
+                            id=""
+                            value={examination}
+                            onChange={(e) => setExamination(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Examination
+                            </option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                          </select>
                         </div>
                       </div>
                     </div>

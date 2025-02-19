@@ -9,7 +9,7 @@ const TabulationSheet = () => {
   const [sclass, setSclass] = useState("");
   const [session, setSession] = useState("");
   const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState('');
+  const [shift, setShift] = useState("");
 
   return (
     <>
@@ -68,7 +68,10 @@ const TabulationSheet = () => {
                         <div className="form-group select-input-box">
                           <label for="select-to">Section*</label>
 
-                          <select value={ssection} onChange={(e)=> setSsection(e.target.value)}>
+                          <select
+                            value={ssection}
+                            onChange={(e) => setSsection(e.target.value)}
+                          >
                             <option value="" disabled>
                               Select Section
                             </option>
@@ -83,11 +86,12 @@ const TabulationSheet = () => {
                           <select
                             name=""
                             id=""
-                            onChange={(e)=> setShift(e.target.value)}
+                            onChange={(e) => setShift(e.target.value)}
                             value={shift}
                           >
-                         
-                            <option value="" disabled>Select Shift</option>
+                            <option value="" disabled>
+                              Select Shift
+                            </option>
                             <option value="Morning">Morning</option>
                             <option value="Day">Day</option>
                           </select>
