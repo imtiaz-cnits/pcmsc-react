@@ -1,4 +1,4 @@
-/* eslint-disable */
+ 
 
 // Initialize Vanilla Datepicker
 const vanillaInputs = document.querySelectorAll(".datepicker-input");

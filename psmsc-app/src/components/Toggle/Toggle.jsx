@@ -65,7 +65,7 @@ const Toggle = () => {
       </li>
       <li
         className="submenu-active"
-        onClick={(e) => setisStudentMenuOpen(!isStudentMenuOpen)}
+        onClick={() => setisStudentMenuOpen(!isStudentMenuOpen)}
       >
         <a>
           <svg
@@ -110,7 +110,7 @@ const Toggle = () => {
 
       <li
         className="submenu-active"
-        onClick={(e) => setisExamMenuOpen(!isExamMenuOpen)}
+        onClick={() => setisExamMenuOpen(!isExamMenuOpen)}
       >
         <a>
           <svg

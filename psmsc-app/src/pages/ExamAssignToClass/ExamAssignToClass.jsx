@@ -66,7 +66,7 @@ const ExamAssignToclassName = () => {
                     {/* <!-- Entries per page --> */}
                     <div>
                       <div className="entries-page">
-                        <label for="entries" className="mr-2">
+                        <label htmlFor="entries" className="mr-2">
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
@@ -285,7 +285,7 @@ const ExamAssignToclassName = () => {
                       {/* <!-- Row 1 --> */}
                       <div className="form-row row">
                         <div className="form-group select-input-box col-12">
-                          <label for="select-to">Session Name*</label>
+                          <label htmlFor="select-to">Session Name*</label>
 
                           <select
                             name=""
@@ -301,7 +301,7 @@ const ExamAssignToclassName = () => {
                           </select>
                         </div>
                         <div className="form-group select-input-box col-12">
-                          <label for="select-to">Exam Name*</label>
+                          <label htmlFor="select-to">Exam Name*</label>
 
                           <select
                             name=""
@@ -317,11 +317,11 @@ const ExamAssignToclassName = () => {
                           </select>
                         </div>
                         <div className="form-group col-12">
-                          <label for="shift">Class Name*</label>
+                          <label htmlFor="shift">Class Name*</label>
                           <input type="text" placeholder="Type Name" />
                         </div>
                         <div className="form-group col-12">
-                          <label for="vanilla-datepicker">
+                          <label htmlFor="vanilla-datepicker">
                             Date of Birth *
                           </label>
                           <div className="input-datepicker-wrapper">
@@ -334,7 +334,7 @@ const ExamAssignToclassName = () => {
                           </div>
                         </div>
                         <div className="form-group col-12">
-                          <label for="dob">Date of Birth</label>
+                          <label htmlFor="dob">Date of Birth</label>
                           <input type="datetime-local" id="dob" />
                         </div>
                       </div>

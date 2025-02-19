@@ -1,6 +1,14 @@
+import { useState } from 'react';
+import '../../assets/css/all-modal.css';
+import '../../assets/css/style.css';
 import productMemberImg from "../../assets/img/projuct-member-img-3.png";
 
+
 const ClassWiseStudent = () => {
+    const [sclass, setSclass] = useState("");
+    const [session, setSession] = useState("");
+    const [ssection, setSsection] = useState("");
+    const [shift, setShift] = useState("");
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -15,87 +23,39 @@ const ClassWiseStudent = () => {
                   <form className="form-wrapper">
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Class*</label>
-                      <div className="select-box-dropdown">
-                        <div className="select-dropdown-selected">
-                          <span>Select Class</span>
-                          <span className="icon">
-                            <i className="fas fa-angle-down"></i>
-                          </span>
-                          {/* <!-- Font Awesome angle-down icon --> */}
-                        </div>
-                        <div className="select-dropdown-items">
-                          <input
-                            type="text"
-                            className="select-search-box"
-                            placeholder="Search..."
-                          />
-                          <div className="option">One</div>
-                          <div className="option">Two</div>
-                        </div>
-                      </div>
+
+                      <select id="shift" value={sclass} onChange={(e)=> setSclass(e.target.value)}>
+                        <option value="" disabled>Select Class</option>
+                        <option value="morning">One</option>
+                        <option value="evening">Two</option>
+                      </select>
+                  
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Session*</label>
-                      <div className="select-box-dropdown">
-                        <div className="select-dropdown-selected">
-                          <span>Select Session</span>
-                          <span className="icon">
-                            <i className="fas fa-angle-down"></i>
-                          </span>
-                          {/* <!-- Font Awesome angle-down icon --> */}
-                        </div>
-                        <div className="select-dropdown-items">
-                          <input
-                            type="text"
-                            className="select-search-box"
-                            placeholder="Search..."
-                          />
-                          <div className="option">2024</div>
-                          <div className="option">2025</div>
-                        </div>
-                      </div>
+                      <select id="" value={session} onChange={(e)=> setSession(e.target.value)}>
+                        <option value="" disabled>Select Session</option>
+                        <option value="morning">2024</option>
+                        <option value="evening">2025</option>
+                      </select>
                     </div>
+
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Section*</label>
-                      <div className="select-box-dropdown">
-                        <div className="select-dropdown-selected">
-                          <span>Select Section</span>
-                          <span className="icon">
-                            <i className="fas fa-angle-down"></i>
-                          </span>
-                          {/* <!-- Font Awesome angle-down icon --> */}
-                        </div>
-                        <div className="select-dropdown-items">
-                          <input
-                            type="text"
-                            className="select-search-box"
-                            placeholder="Search..."
-                          />
-                          <div className="option">Science</div>
-                          <div className="option">Commerce</div>
-                        </div>
-                      </div>
+                      <select id="" value={ssection} onChange={(e)=> setSsection(e.target.value)}>
+                        <option value="" disabled>Select Section</option>
+                        <option value="morning">Science</option>
+                        <option value="evening">Commerce</option>
+                      </select>
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Shift*</label>
-                      <div className="select-box-dropdown">
-                        <div className="select-dropdown-selected">
-                          <span>Select Shift</span>
-                          <span className="icon">
-                            <i className="fas fa-angle-down"></i>
-                          </span>
-                          {/* <!-- Font Awesome angle-down icon --> */}
-                        </div>
-                        <div className="select-dropdown-items">
-                          <input
-                            type="text"
-                            className="select-search-box"
-                            placeholder="Search..."
-                          />
-                          <div className="option">Morning</div>
-                          <div className="option">Day</div>
-                        </div>
-                      </div>
+                      <select id='' value={shift} onChange={(e)=> setShift(e.target.value)}>
+                        <option value="" disabled>Select Shift</option>
+                        <option value="morning">Morning</option>
+                        <option value="evening">Evening</option>
+                      </select>
+
                     </div>
                   </form>
                   <button className="search-btn">Search</button>

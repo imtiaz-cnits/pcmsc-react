@@ -1,4 +1,4 @@
-/* eslint-disable */
+ 
 
 // Delate Confirmation Modal Start....................
 document.addEventListener("DOMContentLoaded", () => {

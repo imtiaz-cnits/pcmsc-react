@@ -70,7 +70,7 @@ const Subject = () => {
                     {/* <!-- Entries per page --> */}
                     <div>
                       <div className="entries-page">
-                        <label for="entries" className="mr-2">
+                        <label htmlFor="entries" className="mr-2">
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
@@ -298,7 +298,7 @@ const Subject = () => {
                       {/* <!-- Row 1 --> */}
                       <div className="form-row row">
                         <div className="form-group select-input-box col-lg-4">
-                          <label for="select-to">Class Name*</label>
+                          <label htmlFor="select-to">Class Name*</label>
 
                           <select
                             name=""
@@ -314,37 +314,37 @@ const Subject = () => {
                           </select>
                         </div>
                         <div className="form-group col-lg-4">
-                          <label for="shift">Subject Code*</label>
+                          <label htmlFor="shift">Subject Code*</label>
                           <input type="text" placeholder="Select Code" />
                         </div>
                         <div className="form-group col-lg-4">
-                          <label for="shift">Subject Name*</label>
+                          <label htmlFor="shift">Subject Name*</label>
                           <input type="text" placeholder="Select Name" />
                         </div>
                       </div>
                       {/* <!-- Row 2 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-4">
-                          <label for="shift">Total Mark *</label>
+                          <label htmlFor="shift">Total Mark *</label>
                           <input type="number" placeholder="Select Mark" />
                         </div>
                         <div className="form-group col-lg-4">
-                          <label for="shift">Writing Mark *</label>
+                          <label htmlFor="shift">Writing Mark *</label>
                           <input type="number" placeholder="Select Mark" />
                         </div>
                         <div className="form-group col-lg-4">
-                          <label for="shift">Oral Mark *</label>
+                          <label htmlFor="shift">Oral Mark *</label>
                           <input type="number" placeholder="Select Mark" />
                         </div>
                       </div>
                       {/* <!-- Row 3 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-4">
-                          <label for="shift">Total Mark *</label>
+                          <label htmlFor="shift">Total Mark *</label>
                           <input type="number" placeholder="Select Mark" />
                         </div>
                         <div className="form-group select-input-box col-lg-4">
-                          <label for="select-to">Status*</label>
+                          <label htmlFor="select-to">Status*</label>
 
                           <select
                             name=""

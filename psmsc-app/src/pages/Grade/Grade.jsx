@@ -67,7 +67,7 @@ const Grade = () => {
                     {/* <!-- Entries per page --> */}
                     <div>
                       <div className="entries-page">
-                        <label for="entries" className="mr-2">
+                        <label htmlFor="entries" className="mr-2">
                           Entries:
                         </label>
                         <div className="select-container dropdown-button">
@@ -286,29 +286,29 @@ const Grade = () => {
                       {/* <!-- Row 1 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-6">
-                          <label for="shift">Grade Name *</label>
+                          <label htmlFor="shift">Grade Name *</label>
                           <input type="text" placeholder="Type Name" />
                         </div>
                         <div className="form-group col-lg-6">
-                          <label for="shift">Grade Point *</label>
+                          <label htmlFor="shift">Grade Point *</label>
                           <input type="text" placeholder="Type Point" />
                         </div>
                       </div>
                       {/* <!-- Row 2 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-6">
-                          <label for="shift">Mark Form *</label>
+                          <label htmlFor="shift">Mark Form *</label>
                           <input type="text" placeholder="Type Form mark" />
                         </div>
                         <div className="form-group col-lg-6">
-                          <label for="shift">Mark Up TO*</label>
+                          <label htmlFor="shift">Mark Up TO*</label>
                           <input type="text" placeholder="Type Up To" />
                         </div>
                       </div>
                       {/* <!-- Row 3 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-6">
-                          <label for="shift">Total Subject Mark *</label>
+                          <label htmlFor="shift">Total Subject Mark *</label>
                           <input type="number" placeholder="Type Mark" />
                         </div>
                       </div>
