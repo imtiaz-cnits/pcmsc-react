@@ -19,6 +19,7 @@ const MarkEntry = () => {
       <div className="main-content">
         <div className="page-content">
           <div className="data-table">
+            
             <div className="card mark-entry-wrap">
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
