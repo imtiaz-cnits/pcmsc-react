@@ -4,16 +4,18 @@ import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";
 
 const Toggle = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAcademicMenuOpen, setisAcademicMenuOpen] = useState(false);
+  const [isStudentMenuOpen, setisStudentMenuOpen] = useState(false);
+  const [isExamMenuOpen, setisExamMenuOpen] = useState(false);
 
   const handleMenuOpen = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setisAcademicMenuOpen(!isAcademicMenuOpen);
     console.log("button");
   };
   return (
     <>
       <li
-        className={`submenu-active ${isMenuOpen ? "active" : ""}`}
+        className={`submenu-active ${isAcademicMenuOpen ? "active" : ""}`}
         onClick={handleMenuOpen}
       >
         <a>
@@ -36,7 +38,7 @@ const Toggle = () => {
           <span className="text">Academic Management</span>
           <i className="arrow fa-solid fa-angle-down"></i>
         </a>
-        {isMenuOpen && (
+        {isAcademicMenuOpen && (
           <ul className="sub-menu" style={{ display: "block" }}>
             <li>
               <a href="./Class.html">
@@ -61,7 +63,10 @@ const Toggle = () => {
           </ul>
         )}
       </li>
-      <li className="submenu-active">
+      <li
+        className="submenu-active"
+        onClick={(e) => setisStudentMenuOpen(!isStudentMenuOpen)}
+      >
         <a>
           <svg
             width="40"
@@ -82,25 +87,31 @@ const Toggle = () => {
           <span className="text">Student Management</span>
           <i className="arrow fa-solid fa-angle-down"></i>
         </a>
-        <ul className="sub-menu">
-          <li>
-            <a href="./student-list.html">
-              <span className="text">Student Information</span>
-            </a>
-          </li>
-          <li>
-            <a href="./class-wise-student.html">
-              <span className="text">Class Wise Student List</span>
-            </a>
-          </li>
-          <li>
-            <a href="./migration.html">
-              <span className="text">Migration</span>
-            </a>
-          </li>
-        </ul>
+        {isStudentMenuOpen && (
+          <ul className="sub-menu" style={{ display: "block" }}>
+            <li>
+              <a href="./student-list.html">
+                <span className="text">Student Information</span>
+              </a>
+            </li>
+            <li>
+              <a href="./class-wise-student.html">
+                <span className="text">Class Wise Student List</span>
+              </a>
+            </li>
+            <li>
+              <a href="./migration.html">
+                <span className="text">Migration</span>
+              </a>
+            </li>
+          </ul>
+        )}
       </li>
-      <li className="submenu-active">
+
+      <li
+        className="submenu-active"
+        onClick={(e) => setisExamMenuOpen(!isExamMenuOpen)}
+      >
         <a>
           <svg
             width="40"
@@ -121,78 +132,80 @@ const Toggle = () => {
           <span className="text">Exam Management</span>
           <i className="arrow fa-solid fa-angle-down"></i>
         </a>
-        <ul className="sub-menu">
-          <li>
-            <a href="./exam-type.html">
-              <span className="text">Exam Type</span>
-            </a>
-          </li>
-          <li>
-            <a href="./subject.html">
-              <span className="text">Subject</span>
-            </a>
-          </li>
-          <li>
-            <a href="./grade.html">
-              <span className="text">Grade</span>
-            </a>
-          </li>
-          <li>
-            <a href="./exam-assign.html">
-              <span className="text">Exam Assign To Class</span>
-            </a>
-          </li>
-          <li>
-            <a href="./mark-entry.html">
-              <span className="text">Mark Entry</span>
-            </a>
-          </li>
-          <li>
-            <a href="./result-sheet.html">
-              <span className="text">Result</span>
-            </a>
-          </li>
-          <li>
-            <a href="./combine-result.html">
-              <span className="text">Combine Result</span>
-            </a>
-          </li>
-          <li>
-            <a href="./mark-sheet.html">
-              <span className="text">Mark Sheet</span>
-            </a>
-          </li>
-          <li>
-            <a href="./admit-card.html">
-              <span className="text">Admit Card</span>
-            </a>
-          </li>
-          <li>
-            <a href="./generated-admit-card.html">
-              <span className="text">Generated Admit Card</span>
-            </a>
-          </li>
-          <li>
-            <a href="./tabulation-sheet.html">
-              <span className="text">Tabulation Sheet</span>
-            </a>
-          </li>
-          <li>
-            <a href="./generated-tb-sheet.html">
-              <span className="text">Generated TB Sheet</span>
-            </a>
-          </li>
-          <li>
-            <a href="./seat-plan.html">
-              <span className="text">Seat Plan</span>
-            </a>
-          </li>
-          <li>
-            <a href="./generate-id-card.html">
-              <span className="text">Generate ID Card</span>
-            </a>
-          </li>
-        </ul>
+        {isExamMenuOpen && (
+          <ul className="sub-menu" style={{ display: "block" }}>
+            <li>
+              <a href="./exam-type.html">
+                <span className="text">Exam Type</span>
+              </a>
+            </li>
+            <li>
+              <a href="./subject.html">
+                <span className="text">Subject</span>
+              </a>
+            </li>
+            <li>
+              <a href="./grade.html">
+                <span className="text">Grade</span>
+              </a>
+            </li>
+            <li>
+              <a href="./exam-assign.html">
+                <span className="text">Exam Assign To Class</span>
+              </a>
+            </li>
+            <li>
+              <a href="./mark-entry.html">
+                <span className="text">Mark Entry</span>
+              </a>
+            </li>
+            <li>
+              <a href="./result-sheet.html">
+                <span className="text">Result</span>
+              </a>
+            </li>
+            <li>
+              <a href="./combine-result.html">
+                <span className="text">Combine Result</span>
+              </a>
+            </li>
+            <li>
+              <a href="./mark-sheet.html">
+                <span className="text">Mark Sheet</span>
+              </a>
+            </li>
+            <li>
+              <a href="./admit-card.html">
+                <span className="text">Admit Card</span>
+              </a>
+            </li>
+            <li>
+              <a href="./generated-admit-card.html">
+                <span className="text">Generated Admit Card</span>
+              </a>
+            </li>
+            <li>
+              <a href="./tabulation-sheet.html">
+                <span className="text">Tabulation Sheet</span>
+              </a>
+            </li>
+            <li>
+              <a href="./generated-tb-sheet.html">
+                <span className="text">Generated TB Sheet</span>
+              </a>
+            </li>
+            <li>
+              <a href="./seat-plan.html">
+                <span className="text">Seat Plan</span>
+              </a>
+            </li>
+            <li>
+              <a href="./generate-id-card.html">
+                <span className="text">Generate ID Card</span>
+              </a>
+            </li>
+          </ul>
+        )}
       </li>
     </>
   );

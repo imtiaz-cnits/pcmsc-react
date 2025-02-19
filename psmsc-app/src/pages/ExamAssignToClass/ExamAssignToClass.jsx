@@ -1,5 +1,47 @@
-/* eslint-disable react/no-unknown-property */
+import { useEffect, useState } from "react";
+import "../../assets/css/all-modal.css";
+import "../../assets/css/bootstrap.min.css";
+
 const ExamAssignToclassName = () => {
+  const [session, setSession] = useState("");
+  const [semesterName, setSemesterName] = useState("");
+
+  useEffect(() => {
+    const exmModal = document.getElementById("exmModal");
+    const exmModalBtn = document.getElementById("exmModalBtn");
+    const exmClose = document.getElementById("exmClose");
+
+    // Function to disable scrolling
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
+
+    // Function to enable scrolling
+    const enableScroll = () => {
+      document.body.style.overflow = "";
+    };
+
+    // Open the migrate modal and hide scroll
+    exmModalBtn.addEventListener("click", () => {
+      exmModal.classList.add("show");
+      disableScroll();
+    });
+
+    // Close the migrate modal and show scroll
+    exmClose.addEventListener("click", () => {
+      exmModal.classList.remove("show");
+      enableScroll();
+    });
+
+    // Close the migrate modal by clicking outside it and show scroll
+    document.addEventListener("click", (e) => {
+      if (e.target === exmModal) {
+        exmModal.classList.remove("show");
+        enableScroll();
+      }
+    });
+  }, []);
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -244,48 +286,38 @@ const ExamAssignToclassName = () => {
                       <div className="form-row row">
                         <div className="form-group select-input-box col-12">
                           <label for="select-to">Session Name*</label>
-                          <div className="select-box-dropdown">
-                            <div className="select-dropdown-selected">
-                              <span>Select Session</span>
-                              <span className="icon">
-                                <i className="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div className="select-dropdown-items">
-                              <input
-                                type="text"
-                                className="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div className="option">2024</div>
-                              <div className="option">2025</div>
-                            </div>
-                          </div>
+
+                          <select
+                            name=""
+                            id=""
+                            value={session}
+                            onChange={(e) => setSession(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Session
+                            </option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                          </select>
                         </div>
                         <div className="form-group select-input-box col-12">
                           <label for="select-to">Exam Name*</label>
-                          <div className="select-box-dropdown">
-                            <div className="select-dropdown-selected">
-                              <span>Select Name</span>
-                              <span className="icon">
-                                <i className="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div className="select-dropdown-items">
-                              <input
-                                type="text"
-                                className="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div className="option">1st Semester</div>
-                              <div className="option">2nd Semester</div>
-                            </div>
-                          </div>
+
+                          <select
+                            name=""
+                            id=""
+                            value={semesterName}
+                            onChange={(e) => setSemesterName(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Name
+                            </option>
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                          </select>
                         </div>
                         <div className="form-group col-12">
-                          <label for="shift">className Name*</label>
+                          <label for="shift">Class Name*</label>
                           <input type="text" placeholder="Type Name" />
                         </div>
                         <div className="form-group col-12">
