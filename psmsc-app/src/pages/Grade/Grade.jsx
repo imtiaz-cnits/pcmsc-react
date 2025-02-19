@@ -1,5 +1,53 @@
-/* eslint-disable react/no-unknown-property */
+import '../../assets/css/all-modal.css';
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/dark-mode.css';
+import '../../assets/css/style.css';
+import '../../assets/css/table-funtion.css';
+
+import { useEffect } from 'react';
+
 const Grade = () => {
+
+  useEffect(()=>{
+
+    const exmModal = document.getElementById("exmModal");
+    const exmModalBtn = document.getElementById("exmModalBtn");
+    const exmClose = document.getElementById("exmClose");
+  
+    // Function to disable scrolling
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
+  
+    // Function to enable scrolling
+    const enableScroll = () => {
+      document.body.style.overflow = "";
+    };
+  
+    // Open the migrate modal and hide scroll
+    exmModalBtn.addEventListener("click", () => {
+      exmModal.classList.add("show");
+      disableScroll();
+    });
+  
+    // Close the migrate modal and show scroll
+    exmClose.addEventListener("click", () => {
+      exmModal.classList.remove("show");
+      enableScroll();
+    });
+  
+    // Close the migrate modal by clicking outside it and show scroll
+    document.addEventListener("click", (e) => {
+      if (e.target === exmModal) {
+        exmModal.classList.remove("show");
+        enableScroll();
+      }
+    });
+
+
+  }, [])
+
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
