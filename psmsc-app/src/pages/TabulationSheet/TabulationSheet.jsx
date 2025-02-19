@@ -9,7 +9,7 @@ const TabulationSheet = () => {
   const [sclass, setSclass] = useState("");
   const [session, setSession] = useState("");
   const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState();
+  const [shift, setShift] = useState('');
 
   return (
     <>
@@ -83,12 +83,11 @@ const TabulationSheet = () => {
                           <select
                             name=""
                             id=""
-                            value={shift}
                             onChange={setShift}
+                            value={shift}
                           >
-                            <option value="" disabled>
-                              <span>Select Shift</span>
-                            </option>
+                         
+                            <option value="" disabled>Select Shift</option>
                             <option value="Morning">Morning</option>
                             <option value="Day">Day</option>
                           </select>
@@ -96,7 +95,7 @@ const TabulationSheet = () => {
                       </div>
                     </form>
                   </div>
-                  <button className="search-btn">Search </button>
+                  <button className="search-btn">Search</button>
                 </div>
                 {/* <!-- Form Start --> */}
               </div>
