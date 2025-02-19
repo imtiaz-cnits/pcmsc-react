@@ -1,3 +1,7 @@
+import '../../assets/css/bootstrap.min.css';
+import '../../assets/css/style.css';
+import logo from '../../assets/img/logo.png';
+
 const CombineResult = () => {
   return (
     <>
@@ -7,14 +11,14 @@ const CombineResult = () => {
           <div className="marksheet-container allexammarksheet">
             <div className="all-session-exam">
               <div className="watermark2">
-                <img src="./assets/img/logo.png" alt="" />
+                <img src={logo} alt="" />
               </div>
               <div className="marksheet-container-wrap">
                 <header>
                   <div className="info-wrapper info-wrapper2">
                     <div className="logo">
                       <img
-                        src="./assets/img/logo.png"
+                        src={logo}
                         alt="Education Board Logo"
                       />
                     </div>
@@ -198,7 +202,7 @@ const CombineResult = () => {
                       </tr>
                       <tr>
                         <td>
-                          <span>className:</span>
+                          <span>Class:</span>
                         </td>
                         <td>
                           <span>6/Six</span>
@@ -1353,7 +1357,7 @@ const CombineResult = () => {
                 <span>Guardian</span>
               </div>
               <div className="className-teacher">
-                <span>className Teacher</span>
+                <span>Class Teacher</span>
               </div>
               <div className="vice-principal">
                 <span>Vice Principal</span>

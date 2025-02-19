@@ -54,7 +54,7 @@ const AdmitCard = () => {
                             onChange={(e) => setSession(e.target.value)}
                             value={session}
                           >
-                            <option value="" disabled deaf>
+                            <option value="" disabled >
                               Select Session
                             </option>
                             <option value="2024">2024</option>

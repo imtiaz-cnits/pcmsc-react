@@ -963,7 +963,7 @@ const MarkSheet = () => {
                 <span>Guardian</span>
               </div>
               <div className="className-teacher">
-                <span>className Teacher</span>
+                <span>Class Teacher</span>
               </div>
               <div className="vice-principal">
                 <span>Vice Principal</span>

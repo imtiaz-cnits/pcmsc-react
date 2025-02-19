@@ -158,7 +158,7 @@ const GeneratedAdmitCard = () => {
                 </div>
               </div>
               <div className="footer">
-                <p>className Teacher</p>
+                <p>Class Teacher</p>
                 <span>Powered by : CodeNext IT</span>
                 <p>Vice Principal</p>
               </div>
@@ -292,7 +292,7 @@ const GeneratedAdmitCard = () => {
                 </div>
               </div>
               <div className="footer">
-                <p>className Teacher</p>
+                <p>Class Teacher</p>
                 <span>Powered by : CodeNext IT</span>
                 <p>Vice Principal</p>
               </div>
@@ -426,7 +426,7 @@ const GeneratedAdmitCard = () => {
                 </div>
               </div>
               <div className="footer">
-                <p>className Teacher</p>
+                <p>Class Teacher</p>
                 <span>Powered by : CodeNext IT</span>
                 <p>Vice Principal</p>
               </div>
