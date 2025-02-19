@@ -109,7 +109,7 @@ const ExamAssignToclassName = () => {
                         <th>Sl No:</th>
                         <th>Session</th>
                         <th>Exam Name</th>
-                        <th>className Name</th>
+                        <th>Class Name</th>
                         <th>Exam Date</th>
                         <th>Result Date & Time</th>
                         <th>Action</th>

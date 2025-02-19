@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
             element: <StudentInformation />,
           },
           {
-            path: "class-wise-student-list",
+            path: "class-wise-student",
             element: <ClassWiseStudent />,
           },
           {
@@ -94,7 +94,7 @@ export const router = createBrowserRouter([
             element: <Grade />,
           },
           {
-            path: "exam-assign-to-class",
+            path: "exam-assign",
             element: <ExamAssignToclassName />,
           },
           {
@@ -102,7 +102,7 @@ export const router = createBrowserRouter([
             element: <MarkEntry />,
           },
           {
-            path: "result",
+            path: "result-sheet",
             element: <Result />,
           },
           {

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import "../../assets/css/all-modal.css";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/dark-mode.css";
@@ -6,6 +7,7 @@ import "../../assets/css/style.css";
 import "../../assets/css/table-funtion.css";
 import logo from "../../assets/img/logo.png";
 import Toggle from "../Toggle/Toggle";
+
 
 const Sidebar = () => {
   return (
@@ -20,7 +22,7 @@ const Sidebar = () => {
         </button>
         {/* <!-- LOGO Box --> */}
         <div className="navbar-brand-box">
-          <a href="index.html" className="logo logo-dark">
+          <Link to="/" className="logo logo-dark">
             <span className="logo-sm">
               <img src={logo} alt="" width="38" height="38" />
             </span>
@@ -34,7 +36,7 @@ const Sidebar = () => {
                 PCMSC <span>Pabna</span>
               </span>
             </span>
-          </a>
+          </Link>
         </div>
         {/* <!-- Logo Box End --> */}
 
@@ -46,7 +48,7 @@ const Sidebar = () => {
               <div className="menu">
                 <ul>
                   <li className="active-link">
-                    <a href="./index.html">
+                    <Link to="/">
                       <svg
                         width="54"
                         height="53"
@@ -93,13 +95,13 @@ const Sidebar = () => {
                       </svg>
 
                       <span className="text">Dashboard</span>
-                    </a>
+                    </Link>
                   </li>
 
                   <Toggle />
 
                   <li className="active-link">
-                    <a href="./sms-management.html">
+                    <Link to="/sms-management">
                       <svg
                         width="21"
                         height="21"
@@ -150,7 +152,7 @@ const Sidebar = () => {
                         />
                       </svg>
                       <span className="text">SMS Management</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -159,7 +161,7 @@ const Sidebar = () => {
           {/* <!-- Sidebar --> */}
         </div>
         <li className="log-out">
-          <a href="./index.html">
+          <Link href="/">
             <svg
               width="27"
               height="27"
@@ -191,7 +193,7 @@ const Sidebar = () => {
             </svg>
 
             <span className="text">Log Out</span>
-          </a>
+          </Link>
         </li>
       </div>
       {/* <!-- Left Sidebar End --> */}

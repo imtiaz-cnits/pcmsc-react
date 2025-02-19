@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 import "../../assets/css/dark-mode.css";
 import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";
@@ -41,24 +42,24 @@ const Toggle = () => {
         {isAcademicMenuOpen && (
           <ul className="sub-menu" style={{ display: "block" }}>
             <li>
-              <a href="./Class.html">
+              <Link to="/academic-management/class">
                 <span className="text">Class</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./shift.html">
+              <Link to="/academic-management/shift">
                 <span className="text">Shift</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./section.html">
+              <Link to="/academic-management/section">
                 <span className="text">Section</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./session.html">
+              <Link to="/academic-management/session">
                 <span className="text">Session</span>
-              </a>
+              </Link>
             </li>
           </ul>
         )}
@@ -90,19 +91,19 @@ const Toggle = () => {
         {isStudentMenuOpen && (
           <ul className="sub-menu" style={{ display: "block" }}>
             <li>
-              <a href="./student-list.html">
+              <Link to="/student-management/student-information">
                 <span className="text">Student Information</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./class-wise-student.html">
+              <Link to="/student-management/class-wise-student">
                 <span className="text">Class Wise Student List</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./migration.html">
+              <Link to="/student-management/migration">
                 <span className="text">Migration</span>
-              </a>
+              </Link>
             </li>
           </ul>
         )}
@@ -135,74 +136,74 @@ const Toggle = () => {
         {isExamMenuOpen && (
           <ul className="sub-menu" style={{ display: "block" }}>
             <li>
-              <a href="./exam-type.html">
+              <Link to="/exam-management/exam-type">
                 <span className="text">Exam Type</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./subject.html">
+              <Link to="/exam-management/subject">
                 <span className="text">Subject</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./grade.html">
+              <Link to="/exam-management/grade">
                 <span className="text">Grade</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./exam-assign.html">
+              <Link to="/exam-management/exam-assign">
                 <span className="text">Exam Assign To Class</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./mark-entry.html">
+              <Link to="/exam-management/mark-entry">
                 <span className="text">Mark Entry</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./result-sheet.html">
+              <Link to="/exam-management/result-sheet">
                 <span className="text">Result</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./combine-result.html">
+              <Link to="/exam-management/combine-result">
                 <span className="text">Combine Result</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./mark-sheet.html">
+              <Link to="/exam-management/mark-sheet">
                 <span className="text">Mark Sheet</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./admit-card.html">
+              <Link to="/exam-management/admit-card">
                 <span className="text">Admit Card</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./generated-admit-card.html">
+              <Link to="/exam-management/generated-admit-card">
                 <span className="text">Generated Admit Card</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./tabulation-sheet.html">
+              <Link to="/exam-management/tabulation-sheet">
                 <span className="text">Tabulation Sheet</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./generated-tb-sheet.html">
+              <Link to="/exam-management/generated-tb-sheet">
                 <span className="text">Generated TB Sheet</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./seat-plan.html">
+              <Link to="/exam-management/seat-plan">
                 <span className="text">Seat Plan</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="./generate-id-card.html">
+              <Link to="/exam-management/generate-id-card">
                 <span className="text">Generate ID Card</span>
-              </a>
+              </Link>
             </li>
           </ul>
         )}
