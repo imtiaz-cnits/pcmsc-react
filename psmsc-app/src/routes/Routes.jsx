@@ -90,8 +90,8 @@ export const router = createBrowserRouter([
             element: <Subject />,
           },
           {
-            path: 'grade',
-            element: <Grade />
+            path: "grade",
+            element: <Grade />,
           },
           {
             path: "exam-assign-to-class",

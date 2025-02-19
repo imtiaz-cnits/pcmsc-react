@@ -1,5 +1,51 @@
-/* eslint-disable react/no-unknown-property */
+import "../../assets/css/all-modal.css";
+import "../../assets/css/bootstrap.min.css";
+import "../../assets/css/dark-mode.css";
+import "../../assets/css/style.css";
+import "../../assets/css/table-funtion.css";
+
+import { useEffect, useState } from "react";
+
 const Subject = () => {
+  const [sclass, setSclass] = useState("");
+  const [selectStatus, setSelectStatus] = useState("");
+
+  useEffect(() => {
+    const exmModal = document.getElementById("exmModal");
+    const exmModalBtn = document.getElementById("exmModalBtn");
+    const exmClose = document.getElementById("exmClose");
+
+    // Function to disable scrolling
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
+
+    // Function to enable scrolling
+    const enableScroll = () => {
+      document.body.style.overflow = "";
+    };
+
+    // Open the migrate modal and hide scroll
+    exmModalBtn.addEventListener("click", () => {
+      exmModal.classList.add("show");
+      disableScroll();
+    });
+
+    // Close the migrate modal and show scroll
+    exmClose.addEventListener("click", () => {
+      exmModal.classList.remove("show");
+      enableScroll();
+    });
+
+    // Close the migrate modal by clicking outside it and show scroll
+    document.addEventListener("click", (e) => {
+      if (e.target === exmModal) {
+        exmModal.classList.remove("show");
+        enableScroll();
+      }
+    });
+  }, []);
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -65,7 +111,7 @@ const Subject = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>className Name</th>
+                        <th>Class Name</th>
                         <th>Subject Code</th>
                         <th>Subject Name</th>
                         <th>Total Mark</th>
@@ -252,25 +298,20 @@ const Subject = () => {
                       {/* <!-- Row 1 --> */}
                       <div className="form-row row">
                         <div className="form-group select-input-box col-lg-4">
-                          <label for="select-to">className Name*</label>
-                          <div className="select-box-dropdown">
-                            <div className="select-dropdown-selected">
-                              <span>Select className</span>
-                              <span className="icon">
-                                <i className="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div className="select-dropdown-items">
-                              <input
-                                type="text"
-                                className="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div className="option">One</div>
-                              <div className="option">Two</div>
-                            </div>
-                          </div>
+                          <label for="select-to">Class Name*</label>
+
+                          <select
+                            name=""
+                            id=""
+                            value={sclass}
+                            onChange={(e) => setSclass(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Class
+                            </option>
+                            <option value="One">One</option>
+                            <option value="Two">Two</option>
+                          </select>
                         </div>
                         <div className="form-group col-lg-4">
                           <label for="shift">Subject Code*</label>
@@ -304,24 +345,19 @@ const Subject = () => {
                         </div>
                         <div className="form-group select-input-box col-lg-4">
                           <label for="select-to">Status*</label>
-                          <div className="select-box-dropdown">
-                            <div className="select-dropdown-selected">
-                              <span>Select Status</span>
-                              <span className="icon">
-                                <i className="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div className="select-dropdown-items">
-                              <input
-                                type="text"
-                                className="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div className="option">Active</div>
-                              <div className="option">Two</div>
-                            </div>
-                          </div>
+
+                          <select
+                            name=""
+                            id=""
+                            value={selectStatus}
+                            onChange={(e) => setSelectStatus(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select Status
+                            </option>
+                            <option value="Active">Active</option>
+                            <option value="Two">Two</option>
+                          </select>
                         </div>
                       </div>
 
