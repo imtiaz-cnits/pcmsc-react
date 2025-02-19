@@ -1,16 +1,20 @@
 /* eslint-disable */
 
 import { useState } from "react";
+import { useLocation } from 'react-router-dom';
 import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";
 
 const Test = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation(); 
 
   const handleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
     console.log("button");
   };
+
+  console.log(location.pathname); 
 
   return (
     <>
@@ -380,6 +384,8 @@ const Test = () => {
         </li>
       </div>
       {/* <!-- Left Sidebar End --> */}
+
+lljdfsdfllf
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 import "../../assets/css/dark-mode.css";
 import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";
@@ -9,6 +9,8 @@ const Toggle = () => {
   const [isStudentMenuOpen, setisStudentMenuOpen] = useState(false);
   const [isExamMenuOpen, setisExamMenuOpen] = useState(false);
 
+  const location = useLocation(); 
+
   const handleMenuOpen = () => {
     setisAcademicMenuOpen(!isAcademicMenuOpen);
     console.log("button");
@@ -16,7 +18,7 @@ const Toggle = () => {
   return (
     <>
       <li
-        className={`submenu-active ${isAcademicMenuOpen ? "active" : ""}`}
+        className="submenu-active active"
         onClick={handleMenuOpen}
       >
         <a>
