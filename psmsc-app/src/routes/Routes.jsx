@@ -1,30 +1,31 @@
 import { createBrowserRouter } from "react-router-dom";
-import Dahsboard from "../pages/Dashboard/Dashboard";
 import Main from "../Layout/Main";
-import AcademicManagement from "../pages/AcademicManagement/academicManagement";
+import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
+import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import Class from "../pages/Class/Class";
-import Shift from "../pages/Shift/Shift";
+import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
+import CombineResult from "../pages/CombineResult/CombineResult";
+import Dahsboard from "../pages/Dashboard/Dashboard";
+import ExamManagement from "../pages/Exam Management/ExamManagement";
+import ExamAssignToclassName from "../pages/ExamAssignToClass/ExamAssignToClass";
+import ExamType from "../pages/ExamType/ExamType";
+import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
+import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
+import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
+import MarkEntry from "../pages/MarkEntry/MarkEntry";
+import MarkSheet from "../pages/MarkSheet/MarkSheet";
+import Migration from "../pages/Migration/Migration";
+import Result from "../pages/Result/Result";
+import SeatPlan from "../pages/SeatPlan/SeatPlan";
 import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
-import StudentManagement from "../pages/StudentManagement/StudentManagement";
-import StudentInformation from "../pages/StudentInformation/StudentInformation";
+import Shift from "../pages/Shift/Shift";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
-import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
-import Migration from "../pages/Migration/Migration";
-import ExamType from "../pages/ExamType/ExamType";
-import ExamManagement from "../pages/Exam Management/ExamManagement";
+import StudentInformation from "../pages/StudentInformation/StudentInformation";
+import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
-import ExamAssignToclassName from "../pages/ExamAssignToClass/ExamAssignToClass";
-import MarkEntry from "../pages/MarkEntry/MarkEntry";
-import Result from "../pages/Result/Result";
-import CombineResult from "../pages/CombineResult/CombineResult";
-import MarkSheet from "../pages/MarkSheet/MarkSheet";
-import AdmitCard from "../pages/AdmitCard/AdmitCard";
-import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
-import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
-import SeatPlan from "../pages/SeatPlan/SeatPlan";
-import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
+import Test from "../pages/Test/Test";
 
 export const router = createBrowserRouter([
   {
@@ -138,5 +139,9 @@ export const router = createBrowserRouter([
         element: <SMSManagement />,
       },
     ],
+  },
+  {
+    path: "test",
+    element: <Test />,
   },
 ]);
