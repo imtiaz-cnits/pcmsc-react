@@ -66,7 +66,7 @@ const AdmitCard = () => {
                       <div class="form-row col-lg-6">
                         <div class="form-group select-input-box">
                           <label for="select-to">Section*</label>
-                          <select value={ssection} onChange={setSsection}>
+                          <select value={ssection} onChange={(e)=> setSsection(e.target.value)}>
                             <option value="" disabled>
                               Select Section
                             </option>
@@ -81,7 +81,7 @@ const AdmitCard = () => {
                             name=""
                             id=""
                             value={shift}
-                            onChange={setShift}
+                            onChange={(e)=> setShift(e.target.value)}
                           >
                          
                             <option value="" disabled>Select Shift</option>
