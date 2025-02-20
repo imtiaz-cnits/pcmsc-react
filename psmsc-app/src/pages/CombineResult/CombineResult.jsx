@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import "../../assets/css/all-modal.css";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
@@ -10,6 +11,20 @@ const CombineResult = () => {
     // Save the current visibility state of the body
     const originalContent = document.body.innerHTML;
 
+=======
+
+import logo from "../../assets/img/logo.png";
+
+const CombineResult = () => {
+
+
+  const printAllExamSheet = ()=> {
+    const allexammarksheet = document.querySelector(".allexammarksheet");
+  
+    // Save the current visibility state of the body
+    const originalContent = document.body.innerHTML;
+  
+>>>>>>> branch-6
     // Add CSS for horizontal A4 page printing
     const printStyle = `
       <style>
@@ -20,6 +35,7 @@ const CombineResult = () => {
         }
       </style>
     `;
+<<<<<<< HEAD
 
     // Set the body to only contain the tabulation and the style
     document.body.innerHTML = printStyle + allexammarksheet.outerHTML;
@@ -33,6 +49,23 @@ const CombineResult = () => {
     // Reload the page to restore functionality
     location.reload();
   };
+=======
+  
+    // Set the body to only contain the tabulation and the style
+    document.body.innerHTML = printStyle + allexammarksheet.outerHTML;
+  
+    // Trigger the print dialog
+    window.print();
+  
+    // Restore the original content
+    document.body.innerHTML = originalContent;
+  
+    // Reload the page to restore functionality
+    location.reload();
+  }
+  
+
+>>>>>>> branch-6
 
   return (
     <>

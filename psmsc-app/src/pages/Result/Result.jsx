@@ -1,6 +1,5 @@
 import { useState } from "react";
-import "../../assets/css/bootstrap.min.css";
-import "../../assets/css/style.css";
+
 
 const Result = () => {
   const [sclass, setSclass] = useState("");

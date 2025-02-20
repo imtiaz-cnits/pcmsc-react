@@ -1,9 +1,12 @@
-import { useEffect } from "react";
-import "../../assets/css/style.css";
-import "../../assets/css/table-funtion.css";
+import { useEffect,useState} from "react";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 
 const StudentInformation = () => {
+
+
+  const [bloodGroup , setBloodGroup] = useState('')
+  const [gender , setGender] = useState('')
+
   useEffect(() => {
     const studentModal = document.getElementById("studentModal");
     const studentModalBtn = document.getElementById("studentModalBtn");
@@ -47,6 +50,128 @@ const StudentInformation = () => {
       }
     });
   }, []);
+
+
+  useEffect(()=>{
+
+    // Initialize Vanilla Datepicker
+const vanillaInputs = document.querySelectorAll(".datepicker-input");
+
+vanillaInputs.forEach((input) => {
+  // Initialize each datepicker instance
+  const picker = new Datepicker(input, {
+    format: "dd/mm/yyyy",
+    autohide: true,
+  });
+
+  // Open the picker when the input field is clicked
+  input.addEventListener("click", function () {
+    picker.show();
+  });
+
+  // Open the picker when the calendar icon is clicked
+  input.nextElementSibling.addEventListener("click", function () {
+    picker.show();
+  });
+
+  // Insert slashes automatically as the user types
+  input.addEventListener("input", function (event) {
+    let value = input.value.replace(/\D/g, "").substring(0, 8); // Remove non-numeric characters and limit to 8 digits (DDMMYYYY)
+
+    // Clear the entire input (numeric and non-numeric) if backspace is pressed
+    if (event.inputType === "deleteContentBackward") {
+      value = ""; // Remove everything when backspace is pressed
+      picker.setDate(new Date()); // Set to today's date
+      picker.show(); // Show the picker again
+    }
+
+    // Insert slashes after every 2 digits
+    if (value.length >= 2) {
+      value = value.slice(0, 2) + "/" + value.slice(2);
+    }
+    if (value.length >= 5) {
+      value = value.slice(0, 5) + "/" + value.slice(5);
+    }
+
+    // Update the input field with the formatted value
+    input.value = value;
+  });
+}); 
+
+  },[])
+
+
+  useEffect(()=>{
+
+    $(document).ready(function () {
+      // Copy table to clipboard
+      $("#copyBtn").click(function () {
+        const range = document.createRange();
+        range.selectNode(document.querySelector("table"));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+        alert("Table copied to clipboard!");
+      });
+    
+      // Export table to CSV
+      $("#csvBtn").click(function () {
+        let csv = [];
+        const rows = document.querySelectorAll("table tr");
+    
+        rows.forEach((row) => {
+          const cols = row.querySelectorAll("td, th");
+          let rowData = [];
+          cols.forEach((col) => rowData.push(col.innerText));
+          csv.push(rowData.join(","));
+        });
+    
+        const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+        const downloadLink = document.createElement("a");
+        downloadLink.download = "data.csv";
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.click();
+      });
+    
+      // Export table to PDF
+      $("#pdfBtn").click(function () {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+    
+        // Add the table content to the PDF
+        doc.autoTable({
+          html: "table",
+          startY: 10,
+        });
+    
+        // Save the PDF
+        doc.save("data.pdf");
+      });
+    
+      // Export table to XLSX
+      $("#xlsxBtn").click(function () {
+        const wb = XLSX.utils.table_to_book(document.querySelector("table"));
+        XLSX.writeFile(wb, "data.xlsx");
+      });
+    });
+
+  },[])
+
+
+  const printTable=()=> {
+    const tableElement = document.getElementById("printTable");
+    const originalContent = document.body.innerHTML;
+  
+    // Replace the body's content with the table
+    document.body.innerHTML = tableElement.outerHTML;
+  
+    // Trigger the print dialog
+    window.print();
+  
+    // Restore the original content
+    document.body.innerHTML = originalContent;
+  }
 
   return (
     <>
@@ -253,7 +378,7 @@ const StudentInformation = () => {
                           />
                         </svg>
                       </button>
-                      <button id="printBtn" onClick="printTable()">
+                      <button id="printBtn" onClick={printTable}>
                         <svg
                           width="32"
                           height="32"
@@ -1001,28 +1126,22 @@ const StudentInformation = () => {
                       </div>
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Blood Group</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Blood Group</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">A</div>
-                            <div className="option">B</div>
-                            <div className="option">AB</div>
-                            <div className="option">B+</div>
-                            <div className="option">O+</div>
-                            <div className="option">AB-</div>
-                          </div>
-                        </div>
+
+            <select name="" id="" value={bloodGroup} onChange={(e)=> setBloodGroup(e.target.value)}>
+
+            <option value="" disabled>Select Blood Group</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+                            <option value="AB">AB</option>
+                            <option value="B+">B+</option>
+                            <option value="O+">O+</option>
+                            <option value="AB-">AB-</option>
+
+            </select>
+
+                       
+
+
                       </div>
                     </div>
                     {/* <!-- Row 3 --> */}
