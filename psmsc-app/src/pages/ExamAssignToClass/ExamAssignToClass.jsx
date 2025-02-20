@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import "../../assets/css/all-modal.css";
-import "../../assets/css/bootstrap.min.css";
 
 const ExamAssignToclassName = () => {
   const [session, setSession] = useState("");
@@ -40,6 +38,56 @@ const ExamAssignToclassName = () => {
         enableScroll();
       }
     });
+  }, []);
+
+  useEffect(() => {
+    // Initialize Vanilla Datepicker on specific elements
+    const vanillaInputs = document.querySelectorAll(".datepicker-input");
+
+    vanillaInputs.forEach((input) => {
+      const picker = new Datepicker(input, {
+        format: "dd/mm/yyyy",
+        autohide: true,
+      });
+
+      // Open the picker when the input field is clicked
+      input.addEventListener("click", function () {
+        picker.show();
+      });
+
+      // Open the picker when the calendar icon is clicked
+      input.nextElementSibling?.addEventListener("click", function () {
+        picker.show();
+      });
+
+      // Insert slashes automatically as the user types
+      input.addEventListener("input", function (event) {
+        let value = input.value.replace(/\D/g, "").substring(0, 8); // Remove non-numeric characters and limit to 8 digits (DDMMYYYY)
+
+        if (event.inputType === "deleteContentBackward") {
+          value = "";
+          picker.setDate(new Date()); // Reset to today's date
+          picker.show();
+        }
+
+        if (value.length >= 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2);
+        }
+        if (value.length >= 5) {
+          value = value.slice(0, 5) + "/" + value.slice(5);
+        }
+
+        input.value = value;
+      });
+    });
+
+    // Cleanup: Remove event listeners when component unmounts
+    return () => {
+      vanillaInputs.forEach((input) => {
+        input.removeEventListener("click", () => {});
+        input.removeEventListener("input", () => {});
+      });
+    };
   }, []);
 
   return (
