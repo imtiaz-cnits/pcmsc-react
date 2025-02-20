@@ -1,9 +1,5 @@
 import { useState } from "react";
-import "../../assets/css/all-modal.css";
-import "../../assets/css/bootstrap.min.css";
-import "../../assets/css/dark-mode.css";
-import "../../assets/css/style.css";
-import "../../assets/css/table-funtion.css";
+
 
 const MarkEntry = () => {
   const [sclass, setSclass] = useState("");
