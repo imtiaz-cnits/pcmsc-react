@@ -4,11 +4,10 @@ import "../../assets/css/dark-mode.css";
 import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";
 
-const Toggle = () => {
+const Toggle = ({activeMenu ,handleToggle}) => {
   const [isAcademicMenuOpen, setisAcademicMenuOpen] = useState(false);
   const [isStudentMenuOpen, setisStudentMenuOpen] = useState(false);
   const [isExamMenuOpen, setisExamMenuOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(null);
 
   const location = useLocation();
 
@@ -17,10 +16,7 @@ const Toggle = () => {
     console.log("button");
   };
 
-  const handleToggle = (menu) => {
-    setActiveMenu((prev) => (prev === menu ? null : menu));
-    console.log(`${menu} menu clicked`);
-  };
+  
 
   return (
     <>

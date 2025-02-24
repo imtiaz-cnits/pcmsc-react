@@ -8,10 +8,21 @@ import "../../assets/css/table-funtion.css";
 import logo from "../../assets/img/logo.png";
 import Toggle from "../Toggle/Toggle";
 
+import { useState} from "react";
+
 const Sidebar = () => {
+
+  const [activeMenu, setActiveMenu] = useState(null);
+
+
   const location = useLocation();
 
   console.log(location.pathname);
+
+  const handleToggle = (menu) => {
+    setActiveMenu((prev) => (prev === menu ? null : menu));
+    console.log(`${menu} menu clicked`);
+  };
 
   return (
     <>
@@ -52,6 +63,7 @@ const Sidebar = () => {
                 <ul>
                   <li
                     className={`active-link ${location.pathname === "/" ? "active" : ""}`}
+                    onClick={(e)=> handleToggle('dashboard')}
                   >
                     <Link to="/">
                       <svg
@@ -103,10 +115,11 @@ const Sidebar = () => {
                     </Link>
                   </li>
 
-                  <Toggle />
+                  <Toggle activeMenu={activeMenu} handleToggle={handleToggle} />
 
                   <li
                     className={`active-link ${location.pathname === "/sms-management" ? "active" : ""}`}
+                    onClick={(e)=> handleToggle('sms')}
                   >
                     <Link to="/sms-management">
                       <svg
