@@ -1,15 +1,12 @@
-
 import logo from "../../assets/img/logo.png";
 
 const CombineResult = () => {
-
-
-  const printAllExamSheet = ()=> {
+  const printAllExamSheet = () => {
     const allexammarksheet = document.querySelector(".allexammarksheet");
-  
+
     // Save the current visibility state of the body
     const originalContent = document.body.innerHTML;
-  
+
     // Add CSS for horizontal A4 page printing
     const printStyle = `
       <style>
@@ -20,21 +17,19 @@ const CombineResult = () => {
         }
       </style>
     `;
-  
+
     // Set the body to only contain the tabulation and the style
     document.body.innerHTML = printStyle + allexammarksheet.outerHTML;
-  
+
     // Trigger the print dialog
     window.print();
-  
+
     // Restore the original content
     document.body.innerHTML = originalContent;
-  
+
     // Reload the page to restore functionality
     location.reload();
-  }
-  
-
+  };
 
   return (
     <>

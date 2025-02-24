@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import productMemeberIMG from '../../assets/img/projuct-member-img-3.png'
+import productMemeberIMG from "../../assets/img/projuct-member-img-3.png";
 
 const Migration = () => {
   const [sclass, setSclass] = useState("");
@@ -52,8 +52,7 @@ const Migration = () => {
     });
   }, []);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     $(document).ready(function () {
       // Copy table to clipboard
       $("#copyBtn").click(function () {
@@ -65,68 +64,65 @@ const Migration = () => {
         window.getSelection().removeAllRanges();
         alert("Table copied to clipboard!");
       });
-    
+
       // Export table to CSV
       $("#csvBtn").click(function () {
         let csv = [];
         const rows = document.querySelectorAll("table tr");
-    
+
         rows.forEach((row) => {
           const cols = row.querySelectorAll("td, th");
           let rowData = [];
           cols.forEach((col) => rowData.push(col.innerText));
           csv.push(rowData.join(","));
         });
-    
+
         const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
         const downloadLink = document.createElement("a");
         downloadLink.download = "data.csv";
         downloadLink.href = window.URL.createObjectURL(csvFile);
         downloadLink.click();
       });
-    
+
       // Export table to PDF
       $("#pdfBtn").click(function () {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-    
+
         // Add the table content to the PDF
         doc.autoTable({
           html: "table",
           startY: 10,
         });
-    
+
         // Save the PDF
         doc.save("data.pdf");
       });
-    
+
       // Export table to XLSX
       $("#xlsxBtn").click(function () {
         const wb = XLSX.utils.table_to_book(document.querySelector("table"));
         XLSX.writeFile(wb, "data.xlsx");
       });
     });
+  }, []);
 
-  },[])
-
-
-  const printTable=()=> {
+  const printTable = () => {
     const tableElement = document.getElementById("printTable");
     const originalContent = document.body.innerHTML;
-  
+
     // Replace the body's content with the table
     document.body.innerHTML = tableElement.outerHTML;
-  
+
     // Trigger the print dialog
     window.print();
-  
+
     // Restore the original content
     document.body.innerHTML = originalContent;
 
     // Reload the page to restore functionality
     location.reload();
-  }
-
+  };
 
   return (
     <>
@@ -992,10 +988,7 @@ const Migration = () => {
                   <div className="col-6">
                     <div className="item">
                       <div className="profile-img">
-                        <img
-                          src={productMemeberIMG}
-                          alt=""
-                        />
+                        <img src={productMemeberIMG} alt="" />
                       </div>
                       <h3>
                         Student Name: <span>Shanto</span>

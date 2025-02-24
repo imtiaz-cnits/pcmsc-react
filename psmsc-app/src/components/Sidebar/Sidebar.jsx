@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/dark-mode.css";
@@ -8,12 +8,10 @@ import "../../assets/css/table-funtion.css";
 import logo from "../../assets/img/logo.png";
 import Toggle from "../Toggle/Toggle";
 
-
 const Sidebar = () => {
+  const location = useLocation();
 
-  const location = useLocation(); 
-
-  console.log(location.pathname)
+  console.log(location.pathname);
 
   return (
     <>
@@ -52,7 +50,9 @@ const Sidebar = () => {
             <div className="nav">
               <div className="menu">
                 <ul>
-                  <li className={`active-link ${location.pathname === '/' ? "active" : ''}`}>
+                  <li
+                    className={`active-link ${location.pathname === "/" ? "active" : ""}`}
+                  >
                     <Link to="/">
                       <svg
                         width="54"
@@ -105,7 +105,9 @@ const Sidebar = () => {
 
                   <Toggle />
 
-                  <li className={`active-link ${location.pathname === '/sms-management' ? "active" : ''}`} >
+                  <li
+                    className={`active-link ${location.pathname === "/sms-management" ? "active" : ""}`}
+                  >
                     <Link to="/sms-management">
                       <svg
                         width="21"

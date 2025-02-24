@@ -588,7 +588,6 @@ body[data-sidebar-size='sm'] .vertical-menu .submenu-active.active .sub-menu {
   transform: rotate(180deg);
 }
 .vertical-menu .menu .sub-menu {
-  display: none;
   margin-left: 30px !important;
   border-left: 1px solid #dbeffd;
   z-index: 9;

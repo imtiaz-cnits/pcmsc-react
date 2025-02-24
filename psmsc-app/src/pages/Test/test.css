@@ -1,9 +1,0 @@
-.sub-menu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-}
-
-.sub-menu.active {
-  max-height: 2000px; /* Adjust according to your content */
-}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 import "../../assets/css/dark-mode.css";
 import "../../assets/css/navbar-sidebar.css";
 import "../../assets/css/style.css";
@@ -8,19 +8,32 @@ const Toggle = () => {
   const [isAcademicMenuOpen, setisAcademicMenuOpen] = useState(false);
   const [isStudentMenuOpen, setisStudentMenuOpen] = useState(false);
   const [isExamMenuOpen, setisExamMenuOpen] = useState(false);
+  const [activeMenu , setActiveMenu] = useState(null)
 
-  const location = useLocation(); 
+  const location = useLocation();
 
   const handleMenuOpen = () => {
     setisAcademicMenuOpen(!isAcademicMenuOpen);
     console.log("button");
   };
+
+  const handleToggle = (menu) => {
+    setActiveMenu(prev => (prev === menu ? null : menu));
+    console.log(`${menu} menu clicked`);
+  };
+  
+
   return (
     <>
-      <li
-        className="submenu-active active"
-        onClick={handleMenuOpen}
-      >
+      <li className="submenu-active" onClick={()=> handleToggle('academic')}
+        
+        style={{
+          maxHeight: activeMenu === 'academic' ? '800px' : '42px', // Transitions between 0 and 800px
+          transformOrigin: 'top',
+          overflow: 'hidden', // Hide overflow when collapsed
+          transition: 'max-height 0.8s ease-in-out, opacity 0.8s ease-in-out', // Smooth transitions for max-height and opacity
+        }}
+        >
         <a>
           <svg
             width="40"
@@ -39,36 +52,54 @@ const Toggle = () => {
           </svg>
 
           <span className="text">Academic Management</span>
-          <i className="arrow fa-solid fa-angle-down"></i>
+          <i 
+          
+          
+          className="arrow fa-solid fa-angle-down"
+          style={{
+            transform: activeMenu === 'academic' ? 'rotate(180deg)' : 'rotate(0deg)', // Rotate the arrow based on activeMenu
+            transition: 'transform 0.5s ease-in-out', // Smooth transition for the rotation
+            transitionDelay: activeMenu === 'academic' ? '0s' : '0.3s', // Delay rotation when closing
+          }}
+          
+          ></i>
         </a>
-        {isAcademicMenuOpen && (
+        
           <ul className="sub-menu" style={{ display: "block" }}>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/academic-management/class">
                 <span className="text">Class</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e) => { e.stopPropagation(); }}>
               <Link to="/academic-management/shift">
                 <span className="text">Shift</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/academic-management/section">
                 <span className="text">Section</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/academic-management/session">
                 <span className="text">Session</span>
               </Link>
             </li>
           </ul>
-        )}
+    
       </li>
       <li
         className="submenu-active"
-        onClick={() => setisStudentMenuOpen(!isStudentMenuOpen)}
+        onClick={()=> handleToggle('studentM')}
+        
+        style={{
+          maxHeight: activeMenu === 'studentM' ? '800px' : '42px', // Transitions between 0 and 800px
+          transformOrigin: 'top',
+          overflow: 'hidden', // Hide overflow when collapsed
+          transition: 'max-height 0.8s ease-in-out, opacity 0.8s ease-in-out', // Smooth transitions for max-height and opacity
+        }}
+
       >
         <a>
           <svg
@@ -88,32 +119,46 @@ const Toggle = () => {
           </svg>
 
           <span className="text">Student Management</span>
-          <i className="arrow fa-solid fa-angle-down"></i>
+          <i    className="arrow fa-solid fa-angle-down"
+                      style={{
+                        transform: activeMenu === 'studentM' ? 'rotate(180deg)' : 'rotate(0deg)', // Rotate the arrow based on activeMenu
+                        transition: 'transform 0.5s ease-in-out', // Smooth transition for the rotation
+                        transitionDelay: activeMenu === 'studentM' ? '0s' : '0.3s', // Delay rotation when closing
+                      }}
+                      
+                      ></i>
         </a>
-        {isStudentMenuOpen && (
+        
           <ul className="sub-menu" style={{ display: "block" }}>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/student-management/student-information">
                 <span className="text">Student Information</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/student-management/class-wise-student">
                 <span className="text">Class Wise Student List</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/student-management/migration">
                 <span className="text">Migration</span>
               </Link>
             </li>
           </ul>
-        )}
       </li>
 
       <li
         className="submenu-active"
-        onClick={() => setisExamMenuOpen(!isExamMenuOpen)}
+        onClick={()=> handleToggle('examM')}
+
+                
+        style={{
+          maxHeight: activeMenu === 'examM' ? '800px' : '42px', // Transitions between 0 and 800px
+          transformOrigin: 'top',
+          overflow: 'hidden', // Hide overflow when collapsed
+          transition: 'max-height 0.8s ease-in-out, opacity 0.8s ease-in-out', // Smooth transitions for max-height and opacity
+        }}
       >
         <a>
           <svg
@@ -133,82 +178,85 @@ const Toggle = () => {
           </svg>
 
           <span className="text">Exam Management</span>
-          <i className="arrow fa-solid fa-angle-down"></i>
+          <i  className="arrow fa-solid fa-angle-down"
+                      style={{
+                        transform: activeMenu === 'examM' ? 'rotate(180deg)' : 'rotate(0deg)', // Rotate the arrow based on activeMenu
+                        transition: 'transform 0.5s ease-in-out', // Smooth transition for the rotation
+                        transitionDelay: activeMenu === 'examM' ? '0s' : '0.3s', // Delay rotation when closing
+                      }}></i>
         </a>
-        {isExamMenuOpen && (
           <ul className="sub-menu" style={{ display: "block" }}>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/exam-type">
                 <span className="text">Exam Type</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/subject">
                 <span className="text">Subject</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/grade">
                 <span className="text">Grade</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/exam-assign">
                 <span className="text">Exam Assign To Class</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/mark-entry">
                 <span className="text">Mark Entry</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/result-sheet">
                 <span className="text">Result</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/combine-result">
                 <span className="text">Combine Result</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/mark-sheet">
                 <span className="text">Mark Sheet</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/admit-card">
                 <span className="text">Admit Card</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/generated-admit-card">
                 <span className="text">Generated Admit Card</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/tabulation-sheet">
                 <span className="text">Tabulation Sheet</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/generated-tb-sheet">
                 <span className="text">Generated TB Sheet</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/seat-plan">
                 <span className="text">Seat Plan</span>
               </Link>
             </li>
-            <li>
+            <li onClick={(e)=> {e.stopPropagation();}}>
               <Link to="/exam-management/generate-id-card">
                 <span className="text">Generate ID Card</span>
               </Link>
             </li>
           </ul>
-        )}
       </li>
     </>
   );
