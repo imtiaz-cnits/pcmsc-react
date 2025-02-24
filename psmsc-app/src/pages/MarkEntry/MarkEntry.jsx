@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 const MarkEntry = () => {
   const [sclass, setSclass] = useState("");
   const [session, setSession] = useState("");

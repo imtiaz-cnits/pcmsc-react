@@ -46,7 +46,6 @@ const Class = () => {
 
       {/* Sidebar */}
 
-
       <div className="main-content">
         <div className="page-content">
           <div className="data-table">

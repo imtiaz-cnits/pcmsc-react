@@ -1,525 +1,1266 @@
-import { useEffect,useState} from "react";
+import { useEffect, useState } from "react";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 
 const StudentInformation = () => {
+  const [activeMenu, setActiveMenu] = useState(null); // Tracks the active menu
 
-
-  const [bloodGroup , setBloodGroup] = useState('')
-  const [gender , setGender] = useState('')
-  const [sms , setSMS] = useState('')
-  const [shift , setShift] = useState('')
-
-  const [isMenuOpen , setIsMenuOpen] = useState([{
-    gender : false,
-    sms : false,
-    shift : false
-  }])
-
-
-  useEffect(()=>{
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const dropdowns = document.querySelectorAll(".select-box-dropdown");
-    
-      dropdowns.forEach(function (dropdown) {
-        const dropdownSelected = dropdown.querySelector(".select-dropdown-selected");
-        const dropdownItems = dropdown.querySelector(".select-dropdown-items");
-        const searchBox = dropdown.querySelector(".select-search-box");
-        const icon = dropdown.querySelector(".icon i");
-    
-        // Function to toggle visibility of search box based on number of items
-        function toggleSearchInput() {
-          const itemCount = dropdownItems.querySelectorAll("div").length;
-          if (itemCount >= 3) {
-            searchBox.style.display = 'block';
-          } else {
-            searchBox.style.display = 'none';
-          }
-        }
-    
-        // Function to position the dropdown dynamically
-        function positionDropdown() {
-          const rect = dropdown.getBoundingClientRect(); // Get the position of the dropdown container
-          const dropdownHeight = dropdownItems.offsetHeight;
-          const spaceBelow = window.innerHeight - rect.bottom; // Available space below the dropdown
-          const spaceAbove = rect.top; // Available space above the dropdown
-    
-          if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-            // If there's not enough space below, show the dropdown above
-            dropdownItems.style.bottom = `${dropdownHeight + 10}px`; // Add some space between the dropdown and the container
-            dropdownItems.style.top = 'auto';
-          } else {
-            // Otherwise, show the dropdown below
-            dropdownItems.style.top = '100%';
-            dropdownItems.style.bottom = 'auto';
-          }
-        }
-    
-        // Toggle dropdown visibility
-        dropdownSelected.addEventListener("click", function (e) {
-          e.stopPropagation();
-          
-          // Close all other dropdowns
-          dropdowns.forEach(function (otherDropdown) {
-            if (otherDropdown !== dropdown) {
-              otherDropdown.querySelector(".select-dropdown-items").classList.remove("show");
-              otherDropdown.querySelector(".icon i").classList.remove("fa-angle-up");
-              otherDropdown.querySelector(".icon i").classList.add("fa-angle-down");
-            }
-          });
-    
-          // Toggle current dropdown visibility
-          dropdownItems.classList.toggle("show");
-    
-          // Toggle icon rotation
-          if (dropdownItems.classList.contains("show")) {
-            icon.classList.remove("fa-angle-down");
-            icon.classList.add("fa-angle-up");
-          } else {
-            icon.classList.remove("fa-angle-up");
-            icon.classList.add("fa-angle-down");
-          }
-    
-          // Call function to toggle search input visibility
-          toggleSearchInput();
-    
-          // Position the dropdown based on available space
-          if (dropdownItems.classList.contains("show")) {
-            positionDropdown();
-          }
-        });
-    
-        // Filter dropdown items based on search
-        searchBox.addEventListener("input", function () {
-          const filter = searchBox.value.toLowerCase();
-          const items = dropdownItems.querySelectorAll("div");
-    
-          items.forEach(function (item) {
-            const text = item.textContent.toLowerCase();
-            if (text.includes(filter)) {
-              item.style.display = "block";
-            } else {
-              item.style.display = "none";
-            }
-          });
-        });
-    
-        // Close the dropdown if clicked outside
-        document.addEventListener("click", function (e) {
-          if (!e.target.closest(".select-box-dropdown")) {
-            dropdownItems.classList.remove("show");
-            icon.classList.remove("fa-angle-up");
-            icon.classList.add("fa-angle-down");
-            searchBox.style.display = 'none';
-          }
-        });
-    
-        // Select dropdown item
-        dropdownItems.addEventListener("click", function (e) {
-          if (e.target.tagName === "DIV") {
-            dropdownSelected.querySelector("span").textContent = e.target.textContent;
-            dropdownItems.classList.remove("show");
-            icon.classList.remove("fa-angle-up");
-            icon.classList.add("fa-angle-down");
-            searchBox.style.display = 'none';
-          }
-        });
-      });
-    });
-  },[])
-
-  useEffect(() => {
-    const studentModal = document.getElementById("studentModal");
-    const studentModalBtn = document.getElementById("studentModalBtn");
-    const closBtn = document.getElementById("closBtn");
-
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
-    };
-
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
-
-    // Open the student modal and hide scroll
-    studentModalBtn.addEventListener("click", () => {
-      studentModal.classList.add("show");
-      disableScroll();
-    });
-
-    // Close the student modal and show scroll
-    closBtn.addEventListener("click", () => {
-      studentModal.classList.remove("show");
-      enableScroll();
-    });
-
-    // Close the modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === studentModal) {
-        studentModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-
-    // Close the modal when Esc key is pressed
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        studentModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-  }, []);
-
-
-  useEffect(()=>{
-
-    // Initialize Vanilla Datepicker
-const vanillaInputs = document.querySelectorAll(".datepicker-input");
-
-vanillaInputs.forEach((input) => {
-  // Initialize each datepicker instance
-  const picker = new Datepicker(input, {
-    format: "dd/mm/yyyy",
-    autohide: true,
-  });
-
-  // Open the picker when the input field is clicked
-  input.addEventListener("click", function () {
-    picker.show();
-  });
-
-  // Open the picker when the calendar icon is clicked
-  input.nextElementSibling.addEventListener("click", function () {
-    picker.show();
-  });
-
-  // Insert slashes automatically as the user types
-  input.addEventListener("input", function (event) {
-    let value = input.value.replace(/\D/g, "").substring(0, 8); // Remove non-numeric characters and limit to 8 digits (DDMMYYYY)
-
-    // Clear the entire input (numeric and non-numeric) if backspace is pressed
-    if (event.inputType === "deleteContentBackward") {
-      value = ""; // Remove everything when backspace is pressed
-      picker.setDate(new Date()); // Set to today's date
-      picker.show(); // Show the picker again
-    }
-
-    // Insert slashes after every 2 digits
-    if (value.length >= 2) {
-      value = value.slice(0, 2) + "/" + value.slice(2);
-    }
-    if (value.length >= 5) {
-      value = value.slice(0, 5) + "/" + value.slice(5);
-    }
-
-    // Update the input field with the formatted value
-    input.value = value;
-  });
-}); 
-
-  },[])
-
-
-  const handleToggle =(value)=>{
-    setIsMenuOpen((prev)=>({
-        ...prev,
-        [value] : !prev[value]
-    }))
-  }
+  const handleToggle = (menu) => {
+    setActiveMenu((prev) => (prev === menu ? null : menu));
+    console.log(`${menu} menu clicked`);
+  };
 
   return (
     <>
-      {/* <!-- Hero Main Content Start --> */}
-      <div className="main-content">
-        <div className="page-content">
-          {/* <!-- Table Start --> */}
-          <div className="bredcam">
-            <div className="bredcam-title">
-              <h1>Student Information</h1>
-              <button
-                id="studentModalBtn"
-                type="button"
-                className="create-invoice"
-              >
-                + Add New Student
+      <nav id="page-topbar" className="isvertical-topbar">
+        <div className="navbar-header">
+          <div className="d-flex">
+            {/* <!-- LOGO --> */}
+            <div className="navbar-brand-box">
+              <a href="index.html" className="logo logo-dark">
+                <span className="logo-sm">
+                  <img
+                    src="assets/icons/logo.png"
+                    alt=""
+                    width="38"
+                    height="38"
+                  />
+                </span>
+              </a>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn"
+            >
+              <i className="fa-solid fa-bars-staggered"></i>
+            </button>
+
+            {/* <!-- navbar searchbar --> */}
+            <div className="search-bar-box d-flex align-items-center">
+              <input type="text" placeholder="Search..." />
+              <button className="nav-src-btn">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 27 27"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19.2967 16.9811H18.0695L17.6449 16.5566C19.1578 14.8045 20.0686 12.5274 20.0686 10.0343C20.0686 4.49228 15.5763 0 10.0343 0C4.49228 0 0 4.49228 0 10.0343C0 15.5763 4.49228 20.0686 10.0343 20.0686C12.5274 20.0686 14.8045 19.1578 16.5566 17.6527L16.9811 18.0772V19.2967L24.6998 27L27 24.6998L19.2967 16.9811ZM10.0343 16.9811C6.19811 16.9811 3.08748 13.8705 3.08748 10.0343C3.08748 6.19811 6.19811 3.08748 10.0343 3.08748C13.8705 3.08748 16.9811 6.19811 16.9811 10.0343C16.9811 13.8705 13.8705 16.9811 10.0343 16.9811Z"
+                    fill="#192045"
+                  />
+                </svg>
               </button>
             </div>
+            {/* <!-- end navbar searchbar --> */}
           </div>
-          <div className="data-table">
-            <div className="card">
-              <div className="card-body">
-                {/* <!-- Action Buttons --> */}
-                <div className="button-wrapper mb-3">
-                  {/* <!-- Search and Filter --> */}
-                  <div className="d-flex">
-                    <div className="input-group">
+
+          <div className="d-flex align-items-center">
+            <button
+              className="light-mode-button"
+              aria-label="Toggle Light Mode"
+              onclick="toggle_light_mode()"
+            >
+              <span></span>
+              <span></span>
+            </button>
+
+            <div className="dropdown d-inline-block">
+              <button
+                type="button"
+                className="btn header-item search-icon"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <svg
+                  width="25"
+                  height="25"
+                  viewBox="0 0 27 27"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19.2967 16.9811H18.0695L17.6449 16.5566C19.1578 14.8045 20.0686 12.5274 20.0686 10.0343C20.0686 4.49228 15.5763 0 10.0343 0C4.49228 0 0 4.49228 0 10.0343C0 15.5763 4.49228 20.0686 10.0343 20.0686C12.5274 20.0686 14.8045 19.1578 16.5566 17.6527L16.9811 18.0772V19.2967L24.6998 27L27 24.6998L19.2967 16.9811ZM10.0343 16.9811C6.19811 16.9811 3.08748 13.8705 3.08748 10.0343C3.08748 6.19811 6.19811 3.08748 10.0343 3.08748C13.8705 3.08748 16.9811 6.19811 16.9811 10.0343C16.9811 13.8705 13.8705 16.9811 10.0343 16.9811Z"
+                    fill="#192045"
+                  />
+                </svg>
+              </button>
+              <div className="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0">
+                <form className="p-2">
+                  <div className="search-box">
+                    <div className="position-relative">
                       <input
                         type="text"
-                        id="searchInput"
-                        className="form-control"
-                        placeholder="Search Student..."
+                        className="form-control rounded border-0"
+                        placeholder="Search..."
                       />
-                      {/* <!-- Entries per page --> */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center", // Using camelCase for CSS properties
-                          gap: "10px", // Adding the unit 'px'
-                          justifyContent: "center", // Using camelCase for CSS properties
-                        }}
-                      >
-                        <div className="entries-page">
-                          <label htmlFor="entries" className="mr-2">
-                            Entries:
-                          </label>
-                          <div className="select-container">
-                            <select
-                              id="entries"
-                              className="form-control"
-                              style={{ width: "auto" }}
-                            >
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="25">25</option>
-                              <option value="50">50</option>
-                              <option value="100">100</option>
-                            </select>
-                            <span className="dropdown-icon">&#9662;</span>
-                            {/* <!-- Dropdown icon --> */}
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
 
-                        <div className="input-group-append">
-                          <div className="dropdown-custom">
-                            <button className="dropdown-button">
-                              <svg
-                                width="32"
-                                height="32"
-                                viewBox="0 0 39 38"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <rect
-                                  y="1"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <rect
-                                  y="11"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <rect
-                                  y="21"
-                                  width="25"
-                                  height="3"
-                                  rx="1.5"
-                                  fill="#192045"
-                                />
-                                <path
-                                  d="M32 1C32 0.447715 31.5523 -2.41411e-08 31 0C30.4477 2.41411e-08 30 0.447715 30 1L32 1ZM30.2929 37.7071C30.6834 38.0976 31.3166 38.0976 31.7071 37.7071L38.0711 31.3431C38.4616 30.9526 38.4616 30.3195 38.0711 29.9289C37.6805 29.5384 37.0474 29.5384 36.6569 29.9289L31 35.5858L25.3431 29.9289C24.9526 29.5384 24.3195 29.5384 23.9289 29.9289C23.5384 30.3195 23.5384 30.9526 23.9289 31.3431L30.2929 37.7071ZM30 1L30 37L32 37L32 1L30 1Z"
-                                  fill="#192045"
-                                />
-                              </svg>
-                              <span>Filter</span>
-                            </button>
-                            <div className="dropdown-menus">
-                              <a href="#" data-filter="all">
-                                All time
-                              </a>
-                              <a href="#" data-filter="today">
-                                Today
-                              </a>
-                              <a href="#" data-filter="7">
-                                Last 7 Days
-                              </a>
-                              <a href="#" data-filter="30">
-                                Last Month
-                              </a>
-                              <a href="#" data-filter="365">
-                                Last Year
-                              </a>
-                            </div>
-                          </div>
+            <div className="d-flex align-items-center toggle-full-screen">
+              <button
+                className="js-toggle-fullscreen-btn toggle-fullscreen-btn"
+                aria-label="Enter fullscreen mode"
+                hidden
+              >
+                <svg
+                  width="27"
+                  height="27"
+                  className="toggle-fullscreen-svg"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g className="icon-fullscreen-enter">
+                    <path
+                      d="M2 7.5H0V3C0 2.20435 0.31607 1.44129 0.87868 0.87868C1.44129 0.31607 2.20435 0 3 0H7.5V2H2V7.5Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M30 7.5H28V2H22.5V0H27C27.7956 0 28.5587 0.31607 29.1213 0.87868C29.6839 1.44129 30 2.20435 30 3V7.5Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M7.5 30H3C2.20435 30 1.44129 29.6839 0.87868 29.1213C0.31607 28.5587 0 27.7956 0 27V22.5H2V28H7.5V30Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M27 30H22.5V28H28V22.5H30V27C30 27.7956 29.6839 28.5587 29.1213 29.1213C28.5587 29.6839 27.7956 30 27 30Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M9.00052 10.5C8.80311 10.5011 8.60742 10.4633 8.42466 10.3887C8.24191 10.314 8.07568 10.204 7.93552 10.065L6.43552 8.565C6.15307 8.28255 5.99438 7.89946 5.99438 7.5C5.99438 7.10055 6.15307 6.71746 6.43552 6.435C6.71798 6.15255 7.10107 5.99387 7.50052 5.99387C7.89998 5.99387 8.28307 6.15255 8.56552 6.435L10.0655 7.935C10.2061 8.07445 10.3177 8.24035 10.3939 8.42314C10.47 8.60593 10.5092 8.80199 10.5092 9C10.5092 9.19802 10.47 9.39408 10.3939 9.57687C10.3177 9.75966 10.2061 9.92556 10.0655 10.065C9.92536 10.204 9.75914 10.314 9.57638 10.3887C9.39363 10.4633 9.19793 10.5011 9.00052 10.5Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M20.9995 10.5C20.8021 10.5011 20.6064 10.4633 20.4237 10.3887C20.2409 10.314 20.0747 10.204 19.9345 10.065C19.7939 9.92556 19.6824 9.75966 19.6062 9.57687C19.5301 9.39408 19.4908 9.19802 19.4908 9C19.4908 8.80199 19.5301 8.60593 19.6062 8.42314C19.6824 8.24035 19.7939 8.07445 19.9345 7.935L21.4345 6.435C21.717 6.15255 22.1001 5.99387 22.4995 5.99387C22.899 5.99387 23.2821 6.15255 23.5645 6.435C23.847 6.71746 24.0057 7.10055 24.0057 7.5C24.0057 7.89946 23.847 8.28255 23.5645 8.565L22.0645 10.065C21.9244 10.204 21.7582 10.314 21.5754 10.3887C21.3926 10.4633 21.197 10.5011 20.9995 10.5Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M7.49991 24C7.3025 24.0011 7.10681 23.9633 6.92405 23.8887C6.74129 23.814 6.57507 23.704 6.43491 23.565C6.29432 23.4256 6.18272 23.2597 6.10657 23.0769C6.03042 22.8941 5.99121 22.698 5.99121 22.5C5.99121 22.302 6.03042 22.1059 6.10657 21.9231C6.18272 21.7403 6.29432 21.5744 6.43491 21.435L7.93491 19.935C8.21736 19.6525 8.60046 19.4939 8.99991 19.4939C9.39936 19.4939 9.78245 19.6525 10.0649 19.935C10.3474 20.2175 10.506 20.6006 10.506 21C10.506 21.3995 10.3474 21.7825 10.0649 22.065L8.56491 23.565C8.42475 23.704 8.25852 23.814 8.07577 23.8887C7.89301 23.9633 7.69732 24.0011 7.49991 24Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M22.5 24C22.3026 24.0011 22.1069 23.9633 21.9242 23.8887C21.7414 23.814 21.5752 23.704 21.435 23.565L19.935 22.065C19.6526 21.7825 19.4939 21.3995 19.4939 21C19.4939 20.8022 19.5329 20.6064 19.6085 20.4236C19.6842 20.2409 19.7952 20.0749 19.935 19.935C20.0749 19.7951 20.2409 19.6842 20.4237 19.6085C20.6064 19.5328 20.8022 19.4939 21 19.4939C21.3995 19.4939 21.7826 19.6525 22.065 19.935L23.565 21.435C23.7056 21.5744 23.8172 21.7403 23.8934 21.9231C23.9695 22.1059 24.0087 22.302 24.0087 22.5C24.0087 22.698 23.9695 22.8941 23.8934 23.0769C23.8172 23.2597 23.7056 23.4256 23.565 23.565C23.4249 23.704 23.2587 23.814 23.0759 23.8887C22.8931 23.9633 22.6974 24.0011 22.5 24Z"
+                      fill="#192045"
+                    />
+                  </g>
+                  <g className="icon-fullscreen-leave">
+                    <path
+                      d="M9.00052 10.5C8.80311 10.5011 8.60742 10.4633 8.42466 10.3887C8.24191 10.314 8.07568 10.204 7.93552 10.065L6.43552 8.565C6.15307 8.28255 5.99438 7.89946 5.99438 7.5C5.99438 7.10055 6.15307 6.71746 6.43552 6.435C6.71798 6.15255 7.10107 5.99387 7.50052 5.99387C7.89998 5.99387 8.28307 6.15255 8.56552 6.435L10.0655 7.935C10.2061 8.07445 10.3177 8.24035 10.3939 8.42314C10.47 8.60593 10.5092 8.80199 10.5092 9C10.5092 9.19802 10.47 9.39408 10.3939 9.57687C10.3177 9.75966 10.2061 9.92556 10.0655 10.065C9.92536 10.204 9.75914 10.314 9.57638 10.3887C9.39363 10.4633 9.19793 10.5011 9.00052 10.5Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M20.9995 10.5C20.8021 10.5011 20.6064 10.4633 20.4237 10.3887C20.2409 10.314 20.0747 10.204 19.9345 10.065C19.7939 9.92556 19.6824 9.75966 19.6062 9.57687C19.5301 9.39408 19.4908 9.19802 19.4908 9C19.4908 8.80199 19.5301 8.60593 19.6062 8.42314C19.6824 8.24035 19.7939 8.07445 19.9345 7.935L21.4345 6.435C21.717 6.15255 22.1001 5.99387 22.4995 5.99387C22.899 5.99387 23.2821 6.15255 23.5645 6.435C23.847 6.71746 24.0057 7.10055 24.0057 7.5C24.0057 7.89946 23.847 8.28255 23.5645 8.565L22.0645 10.065C21.9244 10.204 21.7582 10.314 21.5754 10.3887C21.3926 10.4633 21.197 10.5011 20.9995 10.5Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M7.49991 24C7.3025 24.0011 7.10681 23.9633 6.92405 23.8887C6.74129 23.814 6.57507 23.704 6.43491 23.565C6.29432 23.4256 6.18272 23.2597 6.10657 23.0769C6.03042 22.8941 5.99121 22.698 5.99121 22.5C5.99121 22.302 6.03042 22.1059 6.10657 21.9231C6.18272 21.7403 6.29432 21.5744 6.43491 21.435L7.93491 19.935C8.21736 19.6525 8.60046 19.4939 8.99991 19.4939C9.39936 19.4939 9.78245 19.6525 10.0649 19.935C10.3474 20.2175 10.506 20.6006 10.506 21C10.506 21.3995 10.3474 21.7825 10.0649 22.065L8.56491 23.565C8.42475 23.704 8.25852 23.814 8.07577 23.8887C7.89301 23.9633 7.69732 24.0011 7.49991 24Z"
+                      fill="#192045"
+                    />
+                    <path
+                      d="M22.5 24C22.3026 24.0011 22.1069 23.9633 21.9242 23.8887C21.7414 23.814 21.5752 23.704 21.435 23.565L19.935 22.065C19.6526 21.7825 19.4939 21.3995 19.4939 21C19.4939 20.8022 19.5329 20.6064 19.6085 20.4236C19.6842 20.2409 19.7952 20.0749 19.935 19.935C20.0749 19.7951 20.2409 19.6842 20.4237 19.6085C20.6064 19.5328 20.8022 19.4939 21 19.4939C21.3995 19.4939 21.7826 19.6525 22.065 19.935L23.565 21.435C23.7056 21.5744 23.8172 21.7403 23.8934 21.9231C23.9695 22.1059 24.0087 22.302 24.0087 22.5C24.0087 22.698 23.9695 22.8941 23.8934 23.0769C23.8172 23.2597 23.7056 23.4256 23.565 23.565C23.4249 23.704 23.2587 23.814 23.0759 23.8887C22.8931 23.9633 22.6974 24.0011 22.5 24Z"
+                      fill="#192045"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+
+            {/* <!-- <div className="dropdown d-inline-block">
+            <button
+              type="button"
+              className="btn header-item noti-icon right-bar-toggle notification-icon"
+              id="right-bar-toggle-v"
+            >
+              <svg
+                className="topbar-setting"
+                width="30"
+                height="30"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.9998 20.6154C18.7551 20.6154 20.9888 18.549 20.9888 16C20.9888 13.451 18.7551 11.3846 15.9998 11.3846C13.2444 11.3846 11.0108 13.451 11.0108 16C11.0108 18.549 13.2444 20.6154 15.9998 20.6154Z"
+                  stroke="#192045"
+                  stroke-width="1.5"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M30.6649 9.49923L29.4176 7.50077C28.7291 6.39654 27.2037 6.01923 26.0101 6.65615L25.3541 7.00692C22.8596 8.33846 19.7415 6.67346 19.7415 4.00923V3.30769C19.7415 2.03269 18.6252 1 17.247 1H14.7525C13.3743 1 12.258 2.03269 12.258 3.30769V4.00923C12.258 6.67346 9.13986 8.33962 6.64537 7.00692L5.98931 6.65615C4.7957 6.01923 3.27031 6.39654 2.58183 7.50077L1.33459 9.49923C0.646106 10.6035 1.05396 12.0146 2.24757 12.6515L2.90362 13.0023C5.39812 14.335 5.39812 17.665 2.90362 18.9977L2.24757 19.3485C1.05396 19.9854 0.646106 21.3965 1.33459 22.5008L2.58183 24.4992C3.27031 25.6035 4.7957 25.9808 5.98931 25.3438L6.64537 24.9931C9.13986 23.6604 12.258 25.3265 12.258 27.9908V28.6923C12.258 29.9673 13.3743 31 14.7525 31H17.247C18.6252 31 19.7415 29.9673 19.7415 28.6923V27.9908C19.7415 25.3265 22.8596 23.6604 25.3541 24.9931L26.0101 25.3438C27.2037 25.9808 28.7291 25.6035 29.4176 24.4992L30.6649 22.5008C31.3533 21.3965 30.9455 19.9854 29.7519 19.3485L29.0958 18.9977C26.6013 17.665 26.6013 14.335 29.0958 13.0023L29.7519 12.6515C30.9455 12.0146 31.3546 10.6035 30.6649 9.49923Z"
+                  stroke="#192045"
+                  stroke-width="1.5"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div> --> */}
+
+            {/* <!-- <div className="dropdown d-inline-block language-switch">
+            <button
+              type="button"
+              className="btn header-item language-switch-icon"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15 0C6.72937 0 0 6.72937 0 15C0 23.2706 6.72937 30 15 30C23.2706 30 30 23.2706 30 15C30 6.72937 23.2706 0 15 0ZM16.25 1.30938V2.86625L14.1163 5H13.3837L10.4206 2.03687C11.8538 1.52875 13.3944 1.25 15 1.25C15.4219 1.25 15.8381 1.27188 16.25 1.30938ZM1.25 15C1.25 11.9625 2.24187 9.15312 3.91625 6.875H9.11625L10.625 8.38375V10.9913L8.49125 13.125L10.3663 15L9.11625 16.25H4.7025L6.4525 20.625H11.875V24.1162L8.75 27.2412C4.3025 24.9612 1.25 20.3319 1.25 15ZM15 28.75C13.2238 28.75 11.5269 28.4075 9.96688 27.7919L13.125 24.6338V19.375H7.29813L6.54813 17.5H9.63438L12.1344 15L10.2594 13.125L11.8756 11.5087V7.86625L9.63375 5.625H4.95438C6.14437 4.35063 7.5725 3.3025 9.16813 2.55188L12.8663 6.25H14.6337L17.5 3.38375V1.48188C19.1644 1.78875 20.7256 2.39313 22.1231 3.2425L17.5 7.86625V13.125H20.625V20.2588L24.8969 24.5306C22.3944 27.1287 18.8838 28.75 15 28.75ZM25.7244 23.5906L21.875 19.7412V11.875H18.75V8.38375L23.1787 3.955C26.5569 6.4625 28.75 10.4794 28.75 15C28.75 18.2488 27.615 21.235 25.7244 23.5906Z"
+                  fill="#192045"
+                />
+              </svg>
+            </button>
+            <div className="dropdown-menu dropdown-menu-end">
+              <a
+                href="javascript:void(0);"
+                className="dropdown-item notify-item language"
+                data-lang="eng"
+              >
+                <img
+                  src="./assets/img/flags/us.jpg"
+                  alt="user-image"
+                  className="me-1"
+                  height="12"
+                />
+                <span className="align-middle">English</span>
+              </a>
+
+              <a
+                href="javascript:void(0);"
+                className="dropdown-item notify-item language"
+                data-lang="sp"
+              >
+                <img
+                  src="assets/img/flags/spain.jpg"
+                  alt="user-image"
+                  className="me-1"
+                  height="12"
+                />
+                <span className="align-middle">Spanish</span>
+              </a>
+
+              <a
+                href="javascript:void(0);"
+                className="dropdown-item notify-item language"
+                data-lang="gr"
+              >
+                <img
+                  src="assets/img/flags/germany.jpg"
+                  alt="user-image"
+                  className="me-1"
+                  height="12"
+                />
+                <span className="align-middle">German</span>
+              </a>
+
+              <a
+                href="javascript:void(0);"
+                className="dropdown-item notify-item language"
+                data-lang="it"
+              >
+                <img
+                  src="assets//img/flags/italy.jpg"
+                  alt="user-image"
+                  className="me-1"
+                  height="12"
+                />
+                <span className="align-middle">Italian</span>
+              </a>
+
+              <a
+                href="javascript:void(0);"
+                className="dropdown-item notify-item language"
+                data-lang="ru"
+              >
+                <img
+                  src="assets/img/flags/russia.jpg"
+                  alt="user-image"
+                  className="me-1"
+                  height="12"
+                />
+                <span className="align-middle">Russian</span>
+              </a>
+            </div>
+          </div> --> */}
+
+            <div className="dropdown d-inline-block">
+              <button
+                type="button"
+                className="btn header-item noti-icon"
+                id="page-header-notifications-dropdown-v"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 26 26"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M9.45455 3.4881C6.04947 4.61889 3.63669 7.33014 3.63653 10.5164V16.7253L0.375499 19.3629C0.144442 19.5409 0 19.7945 0 20.0759V20.2035C0 21.2802 1.05824 22.153 2.36364 22.153H8.30287C8.56913 24.0982 10.5705 25.6098 13 25.6098C15.4295 25.6098 17.4309 24.0982 17.6971 22.153H23.6364C24.9418 22.153 26 21.2802 26 20.2035V20.0761C26.0001 19.7947 25.8557 19.541 25.6245 19.3629L22.3638 16.7256V10.5167C22.3637 7.33036 19.9507 4.61872 16.5455 3.48799V2.43688C16.5455 1.16681 15.3593 0.540947 14.8932 0.348687C14.2864 0.0983808 13.6138 0 13 0C12.3862 0 11.7136 0.0983808 11.1068 0.348687C10.6407 0.540947 9.45455 1.16681 9.45455 2.43688V3.4881ZM14.0955 2.92425C14.0894 2.94107 14.083 2.95765 14.0764 2.97398C13.723 2.94113 13.364 2.92425 13.0001 2.92425C12.6362 2.92425 12.2771 2.94114 11.9237 2.97401C11.917 2.95767 11.9106 2.94108 11.9045 2.92425H11.8182V2.43688C11.8182 2.16773 12.3468 1.9495 13 1.9495C13.6532 1.9495 14.1818 2.16773 14.1818 2.43688V2.92425H14.0955ZM15.3025 22.153H10.6975C10.9403 23.0167 11.879 23.6603 13 23.6603C14.121 23.6603 15.0597 23.0167 15.3025 22.153ZM6.00016 10.5164C6.00035 7.41792 9.11241 4.87375 13.0001 4.87375C16.8879 4.87375 20 7.41792 20.0001 10.5164H6.00016ZM6.00016 10.5164H20.0001V16.7256C20.0001 17.2493 20.2555 17.7509 20.7089 18.1175L23.288 20.2035H2.71208L5.6376 17.8373C5.86065 17.6605 6.00016 17.4119 6.00016 17.1347V10.5164Z"
+                    fill="#192045"
+                  />
+                </svg>
+
+                <span className="noti-dot"></span>
+              </button>
+              <div
+                className="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 page-header-notifications-dropdown-v"
+                aria-labelledby="page-header-notifications-dropdown-v"
+              >
+                <div className="p-3">
+                  <div className="row align-items-center">
+                    <div className="col">
+                      <h5 className="m-0 font-size-15">Notifications</h5>
+                    </div>
+                    <div className="col-auto">
+                      <a
+                        href="#!"
+                        className="small fw-semibold text-decoration-underline"
+                      >
+                        Mark all as read
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  data-simplebar
+                  style={{ maxHeight: "250px", marginTop: "0px" }}
+                >
+                  <a href="#!" className="text-reset notification-item">
+                    <div className="d-flex">
+                      <div className="flex-shrink-0 me-3">
+                        <img
+                          src="assets/img/navbar-profile-logo.png"
+                          className="rounded-circle avatar-sm"
+                          alt="user-pic"
+                        />
+                      </div>
+                      <div className="flex-grow-1">
+                        <p className="text-muted font-size-13 mb-0 float-end">
+                          1 hour ago
+                        </p>
+                        <h6 className="mb-1">James Lemire</h6>
+                        <div>
+                          <p className="mb-0">
+                            It will seem like simplified English.
+                          </p>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </a>
+                  <a href="#!" className="text-reset notification-item">
+                    <div className="d-flex">
+                      <div className="flex-shrink-0 avatar-sm me-3">
+                        <span className="avatar-title bg-primary rounded-circle font-size-18">
+                          <i className="fa-regular fa-user"></i>
+                        </span>
+                      </div>
+                      <div className="flex-grow-1">
+                        <p className="text-muted font-size-13 mb-0 float-end">
+                          3 min ago
+                        </p>
+                        <h6 className="mb-1">Your order is placed</h6>
+                        <div>
+                          <p className="mb-0">
+                            If several languages coalesce the grammar
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="#!" className="text-reset notification-item">
+                    <div className="d-flex">
+                      <div className="flex-shrink-0 avatar-sm me-3">
+                        <span className="avatar-title bg-success rounded-circle font-size-18">
+                          <i className="fa-regular fa-user"></i>
+                        </span>
+                      </div>
+                      <div className="flex-grow-1">
+                        <p className="text-muted font-size-13 mb-0 float-end">
+                          8 min ago
+                        </p>
+                        <h6 className="mb-1">Your item is shipped</h6>
+                        <div>
+                          <p className="mb-0">
+                            If several languages coalesce the grammar
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
 
-                  <div className="button-item">
-                    <div className="icon-buttons">
-                      <button id="copyBtn">
+                  <a href="#!" className="text-reset notification-item">
+                    <div className="d-flex">
+                      <div className="flex-shrink-0 me-3">
+                        <img
+                          src="assets/img/navbar-profile-logo.png"
+                          className="rounded-circle avatar-sm"
+                          alt="user-pic"
+                        />
+                      </div>
+                      <div className="flex-grow-1">
+                        <p className="text-muted font-size-13 mb-0 float-end">
+                          1 hour ago
+                        </p>
+                        <h6 className="mb-1">Salena Layfield</h6>
+                        <div>
+                          <p className="mb-1">
+                            As a skeptical Cambridge friend of mine occidental.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div className="p-2 border-top d-grid">
+                  <a
+                    className="btn btn-link font-size-14 btn-block text-center"
+                    style={{
+                      display: "inline-block",
+                      cursor: "pointer",
+                      zIndex: 1,
+                    }}
+                  >
+                    <i className="uil-arrow-circle-right me-1"></i>
+                    <span>View More..</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="dropdown d-inline-block">
+              <button
+                type="button"
+                className="btn header-item user text-start d-flex align-items-center"
+                id="page-header-user-dropdown-v"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img
+                  className="rounded-circle header-profile-user"
+                  src="assets/img/navbar-profile-logo.png"
+                  alt="Header Avatar"
+                />
+              </button>
+              <div className="dropdown-menu dropdown-menu-end pt-0 profile-dropdown">
+                <div className="p-3 border-bottom">
+                  <h6 className="mb-0">Martin Gurley</h6>
+                  <a href="# " className="mb-0 font-size-11 text-muted">
+                    martin.gurley@email.com
+                  </a>
+                </div>
+                <a className="dropdown-item" href="contacts-profile.html">
+                  <i className="mdi mdi-account-circle text-muted font-size-16 align-middle me-2"></i>
+                  <span className="align-middle">Profile</span>
+                </a>
+                <a className="dropdown-item" href="apps-chat.html">
+                  <i className="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-2"></i>
+                  <span className="align-middle">Messages</span>
+                </a>
+                <a className="dropdown-item" href="pages-faqs.html">
+                  <i className="mdi mdi-lifebuoy text-muted font-size-16 align-middle me-2"></i>
+                  <span className="align-middle">Help</span>
+                </a>
+                <a className="dropdown-item d-flex align-items-center" href="#">
+                  <i className="mdi mdi-cog-outline text-muted font-size-16 align-middle me-2"></i>
+                  <span className="align-middle me-3">Settings</span>
+                  <span className="badge badge-soft-success ms-auto">New</span>
+                </a>
+                <a className="dropdown-item" href="auth-lock-screen.html">
+                  <i className="mdi mdi-lock text-muted font-size-16 align-middle me-2"></i>
+                  <span className="align-middle">Lock screen</span>
+                </a>
+                <div className="dropdown-divider"></div>
+                <a className="dropdown-item" href="auth-logout.html">
+                  <i className="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i>
+                  <span className="align-middle">Logout</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      {/* <!-- Right Sidebar setting Start --> */}
+      {/* <!-- <div className="right-bar">
+      <div data-simplebar className="h-100">
+        <div className="rightbar-title d-flex align-items-center bg-dark p-3">
+          <h5 className="m-0 me-2 text-white">Theme Customizer</h5>
+
+          <a href="javascript:void(0);" className="right-bar-toggle-close ms-auto">
+            <i className="fa-solid fa-x"></i>
+          </a>
+        </div>
+        <hr className="m-0" />
+
+        <div className="p-4">
+          <h6 className="mt-4 mb-3">Layout Mode</h6>
+
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="layout-mode"
+              id="layout-mode-light"
+              value="light"
+            />
+            <label className="form-check-label" for="layout-mode-light"
+              >Light</label
+            >
+          </div>
+
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="layout-mode"
+              id="layout-mode-dark"
+              value="dark"
+            />
+            <label className="form-check-label" for="layout-mode-dark">Dark</label>
+          </div>
+
+          <h6 className="mt-4 mb-3">Topbar Type</h6>
+
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="topbar-color"
+              id="topbar-color-light"
+              value="light"
+              onchange="document.body.setAttribute('data-topbar', 'light')"
+            />
+            <label className="form-check-label" for="topbar-color-light"
+              >Light</label
+            >
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="topbar-color"
+              id="topbar-color-dark"
+              value="dark"
+              onchange="document.body.setAttribute('data-topbar', 'dark')"
+            />
+            <label className="form-check-label" for="topbar-color-dark">Dark</label>
+          </div>
+
+          <div id="sidebar-setting">
+            <h6 className="mt-4 mb-3 sidebar-setting">Sidebar Size</h6>
+
+            <div className="form-check sidebar-setting mt-2">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="sidebar-size"
+                id="sidebar-size-default"
+                value="default"
+                onchange="document.body.setAttribute('data-sidebar-size', 'lg')"
+              />
+              <label className="form-check-label" for="sidebar-size-default"
+                >Default</label
+              >
+            </div>
+            <div className="form-check sidebar-setting mt-2">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="sidebar-size"
+                id="sidebar-size-small"
+                value="small"
+                onchange="document.body.setAttribute('data-sidebar-size', 'sm')"
+              />
+              <label className="form-check-label" for="sidebar-size-small"
+                >Small (Icon View)</label
+              >
+            </div>
+
+            <h6 className="mt-4 mb-3 sidebar-setting">Sidebar Color</h6>
+
+            <div className="form-check sidebar-setting mt-2">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="sidebar-color"
+                id="sidebar-color-light"
+                value="light"
+                onchange="document.body.setAttribute('data-sidebar', 'light')"
+              />
+              <label className="form-check-label" for="sidebar-color-light"
+                >Light</label
+              >
+            </div>
+            <div className="form-check sidebar-setting mt-2">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="sidebar-color"
+                id="sidebar-color-dark"
+                value="dark"
+                onchange="document.body.setAttribute('data-sidebar', 'dark')"
+              />
+              <label className="form-check-label" for="sidebar-color-dark"
+                >Dark</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> --> */}
+      {/* <!-- Right Sidebar bar overlay--> */}
+      <div className="rightbar-overlay"></div>
+      {/* <!-- Navbar End -->
+
+    <!-- Left Sidebar Start --> */}
+      <div className="vertical-menu">
+        <button
+          type="button"
+          className="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn vertical-menu-btn2"
+        >
+          <i className="fa-solid fa-angles-right"></i>
+        </button>
+        {/* <!-- LOGO Box --> */}
+        <div className="navbar-brand-box">
+          <a href="index.html" className="logo logo-dark">
+            <span className="logo-sm">
+              <img src="assets/icons/logo.png" alt="" width="38" height="38" />
+            </span>
+            <span className="logo-sm2">
+              <img src="assets/icons/logo.png" alt="" width="38" height="38" />
+            </span>
+            <span className="logo-lg">
+              <img src="assets/icons/logo.png" alt="" width="38" height="38" />
+
+              <span className="brand-name">
+                PCMSC <span>Pabna</span>
+              </span>
+            </span>
+          </a>
+        </div>
+        {/* <!-- Logo Box End -->
+
+      <!--- Side Menu --> */}
+        <div data-simplebar className="sidebar-menu-scroll">
+          <div id="sidebar-menu">
+            {/* <!-- Left Menu Start --> */}
+            <div className="nav">
+              <div className="menu">
+                <ul>
+                  <li className="active-link">
+                    <a href="/test">
+                      <svg
+                        width="54"
+                        height="53"
+                        viewBox="0 0 54 53"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          x="35.5"
+                          y="34.5"
+                          width="17"
+                          height="17"
+                          rx="1.5"
+                          stroke="#2E97A7"
+                          stroke-width="3"
+                        />
+                        <rect
+                          x="35.5"
+                          y="8.5"
+                          width="17"
+                          height="17"
+                          rx="1.5"
+                          stroke="#2E97A7"
+                          stroke-width="3"
+                        />
+                        <rect
+                          x="1.5"
+                          y="1.5"
+                          width="25"
+                          height="24"
+                          rx="1.5"
+                          stroke="#2E97A7"
+                          stroke-width="3"
+                        />
+                        <rect
+                          x="9.5"
+                          y="34.5"
+                          width="17"
+                          height="17"
+                          rx="1.5"
+                          stroke="#2E97A7"
+                          stroke-width="3"
+                        />
+                      </svg>
+
+                      <span className="text">Dashboard</span>
+                    </a>
+                  </li>
+                  <li
+                    className="submenu-active"
+                    onClick={() => handleToggle("academic")}
+                    style={{
+                      maxHeight: activeMenu === "academic" ? "800px" : "42px", // Transitions between 0 and 800px
+                      transformOrigin: "top",
+                      overflow: "hidden", // Hide overflow when collapsed
+                      transition:
+                        "max-height 0.8s ease-in-out, opacity 0.8s ease-in-out", // Smooth transitions for max-height and opacity
+                    }}
+                  >
+                    <a>
+                      <svg
+                        width="40"
+                        height="42"
+                        viewBox="0 0 40 42"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                      <span className="text">Academic Management</span>
+                      <i
+                        // className={`arrow fa-solid ${activeMenu === 'academic' ? 'fa-angle-up'  : 'fa-angle-down' } `}
+
+                        className="arrow fa-solid fa-angle-down"
+                        style={{
+                          transform:
+                            activeMenu === "academic"
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)", // Rotate the arrow based on activeMenu
+                          transition: "transform 0.5s ease-in-out", // Smooth transition for the rotation
+                          transitionDelay:
+                            activeMenu === "academic" ? "0s" : "0.3s", // Delay rotation when closing
+                        }}
+                      ></i>
+                    </a>
+                    <ul
+                      className="sub-menu"
+                      style={{
+                        display: "block",
+                      }}
+                    >
+                      <li>
+                        <a href="./Class.html">
+                          <span className="text">Class</span>
+                        </a>
+                      </li>
+                      <li
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <a href="/test">
+                          <span className="text">Shift</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./section.html">
+                          <span className="text">Section</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./session.html">
+                          <span className="text">Session</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li
+                    className="submenu-active"
+                    onClick={() => handleToggle("studentM")}
+                    style={{
+                      maxHeight: activeMenu === "studentM" ? "800px" : "42px", // Transitions between 0 and 800px
+                      transformOrigin: "top",
+                      overflow: "hidden", // Hide overflow when collapsed
+                      transition:
+                        "max-height 0.8s ease-in-out, opacity 0.8s ease-in-out", // Smooth transitions for max-height and opacity
+                    }}
+                  >
+                    <a>
+                      <svg
+                        width="40"
+                        height="42"
+                        viewBox="0 0 40 42"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                      <span className="text">Student Management</span>
+                      <i
+                        className="arrow fa-solid fa-angle-down"
+                        style={{
+                          transform:
+                            activeMenu === "studentM"
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)", // Rotate the arrow based on activeMenu
+                          transition: "transform 0.5s ease-in-out", // Smooth transition for the rotation
+                          transitionDelay:
+                            activeMenu === "academic" ? "0s" : "0.3s", // Delay rotation when closing
+                        }}
+                      ></i>
+                    </a>
+                    <ul
+                      className="sub-menu"
+                      style={{
+                        display: "block",
+                      }}
+                    >
+                      <li>
+                        <a href="./student-list.html">
+                          <span className="text">Student Information</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./class-wise-student.html">
+                          <span className="text">Class Wise Student List</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./migration.html">
+                          <span className="text">Migration</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li
+                    className="submenu-active"
+                    onClick={() => handleToggle("examM")}
+                    style={{
+                      maxHeight: activeMenu === "examM" ? "800px" : "42px", // Transitions between 0 and 800px
+                      transformOrigin: "top",
+                      overflow: "hidden", // Hide overflow when collapsed
+                      transition:
+                        "max-height 0.8s ease-in-out, opacity 0.8s ease-in-out", // Smooth transitions for max-height and opacity
+                    }}
+                  >
+                    <a>
+                      <svg
+                        width="40"
+                        height="42"
+                        viewBox="0 0 40 42"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M22.1865 26.6287C25.4944 28.2748 27.349 28.1711 30.657 26.6287M22.1865 26.6287C20.6173 24.4579 19.9264 23.1265 19.2748 20.4012M22.1865 26.6287C21.1843 26.9349 20.3069 27.2684 19.5395 27.6329M30.657 26.6287C32.6303 27.2892 34.0415 28.1237 35.0671 29.1444M30.657 26.6287C32.4213 24.4979 33.178 23.1693 33.8334 20.4012C37.7093 19.976 38.0686 15.8503 33.8978 15.8503M17.1572 29.1444C19.0175 30.4198 20.6592 31.3769 22.1865 32.0082M17.1572 29.1444C16.4532 29.7539 15.9194 30.4292 15.5182 31.1796M17.1572 29.1444C17.8 28.5879 18.5845 28.0864 19.5395 27.6329M35.0671 29.1444C37.7171 31.7819 38.4588 35.6632 39 41H30.657M35.0671 29.1444C33.3687 30.4293 31.849 31.3816 30.4102 32.0082M22.1865 32.0082V41M22.1865 32.0082C25.1031 33.2137 27.6024 33.231 30.4102 32.0082M22.1865 41H14.5102C14.4785 40.3354 14.45 39.6971 14.4293 39.0838M22.1865 41H30.657M30.4102 32.0082L30.657 41M19.2748 20.4012C17.6222 20.296 16.6927 19.2506 16.661 18.2455M19.2748 20.4012C18.3089 23.1661 17.6931 24.5958 15.8337 25.9102M19.2748 16.3293V17.7665C19.1171 15.5991 19.0201 13.8702 19.194 12.497M19.2748 16.3293C20.121 14.6747 20.6946 14.024 22.1865 14.1737C24.7447 14.6554 26.0558 14.9477 28.2747 13.8216C31.1657 14.3317 32.2233 14.7831 33.8334 17.0479C33.8587 16.63 33.8806 16.2312 33.8978 15.8503M19.2748 16.3293C17.448 16.3293 16.6302 17.2684 16.661 18.2455M21.9218 8.66467V7.46707M21.9218 8.66467V11.2994C25.5747 11.9857 27.6601 11.998 31.4511 11.2994V8.66467M21.9218 8.66467C20.1642 9.42592 19.4298 10.6343 19.194 12.497M21.9218 7.46707L26.9511 9.14371L31.4511 7.27286M21.9218 7.46707L20.5983 6.86826M35.951 5.40201L36.7451 5.07186L26.9511 1L19.2748 4.02779M35.951 5.40201V12.018M35.951 5.40201L31.4511 7.27286M31.4511 7.27286V8.66467M31.4511 8.66467C33.7472 9.8151 34.0802 11.8291 33.8978 15.8503M14.4293 39.0838C14.3179 35.7811 14.4344 33.2066 15.5182 31.1796M14.4293 39.0838H9.02553M9.48086 25.9102C7.95868 26.4779 6.74174 27.1074 5.77503 27.8652M9.48086 25.9102C12.1115 27.1115 13.4854 26.9747 15.8337 25.9102M9.48086 25.9102C7.3115 23.3547 6.58089 21.5836 6.56913 17.5269H9.48086L10.5397 15.3713L12.3926 18.2455H16.661M5.77503 27.8652C6.92932 29.0532 7.9508 29.8996 9.02553 30.4611M5.77503 27.8652C5.49993 28.0809 5.24509 28.3069 5.00925 28.5449M15.5182 31.1796C12.6738 31.5346 10.7788 31.377 9.02553 30.4611M9.02553 30.4611V39.0838M9.02553 39.0838H1.00056C0.962584 33.8323 2.87417 30.6995 5.00925 28.5449M19.5395 27.6329C18.3292 26.709 17.5671 26.2794 15.8337 25.9102M5.00925 28.5449C2.08911 20.2875 3.05902 16.4766 8.42204 10.8204M8.42204 10.8204V8.18563M8.42204 10.8204C12.1778 12.254 14.2113 12.3052 17.6866 10.8204M8.42204 8.18563L3.39272 5.79042L13.1867 1.95808L19.2748 4.02779M8.42204 8.18563L13.1867 9.86228L17.6866 8.04448M19.2748 4.02779L16.6278 5.07186L20.5983 6.86826M20.5983 6.86826L17.6866 8.04448M17.6866 10.8204V8.04448M17.6866 10.8204C18.4777 11.2684 18.7519 11.6925 19.194 12.497"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                      <span className="text">Exam Management</span>
+                      <i
+                        className="arrow fa-solid fa-angle-down"
+                        style={{
+                          transform:
+                            activeMenu === "academic"
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)", // Rotate the arrow based on activeMenu
+                          transition: "transform 0.5s ease-in-out", // Smooth transition for the rotation
+                          transitionDelay:
+                            activeMenu === "academic" ? "0s" : "0.3s", // Delay rotation when closing
+                        }}
+                      ></i>
+                    </a>
+                    <ul
+                      className="sub-menu"
+                      style={{
+                        display: "block",
+                      }}
+                    >
+                      <li>
+                        <a href="./exam-type.html">
+                          <span className="text">Exam Type</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./subject.html">
+                          <span className="text">Subject</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./grade.html">
+                          <span className="text">Grade</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./exam-assign.html">
+                          <span className="text">Exam Assign To Class</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./mark-entry.html">
+                          <span className="text">Mark Entry</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./result-sheet.html">
+                          <span className="text">Result</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./combine-result.html">
+                          <span className="text">Combine Result</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./mark-sheet.html">
+                          <span className="text">Mark Sheet</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./admit-card.html">
+                          <span className="text">Admit Card</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./generated-admit-card.html">
+                          <span className="text">Generated Admit Card</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./tabulation-sheet.html">
+                          <span className="text">Tabulation Sheet</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./generated-tb-sheet.html">
+                          <span className="text">Generated TB Sheet</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./seat-plan.html">
+                          <span className="text">Seat Plan</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="./generate-id-card.html">
+                          <span className="text">Generate ID Card</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+
+                  <li className="active-link">
+                    <a href="/test">
+                      <svg
+                        width="21"
+                        height="21"
+                        viewBox="0 0 21 21"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.57692 15.25H1.54808C1.40272 15.25 1.26331 15.1874 1.16053 15.0761C1.05774 14.9647 1 14.8137 1 14.6562V8.125C1 6.23533 1.69292 4.42306 2.92634 3.08686C4.15975 1.75067 5.83261 1 7.57692 1C9.32123 1 10.9941 1.75067 12.2275 3.08686C13.4609 4.42306 14.1538 6.23533 14.1538 8.125C14.1538 10.0147 13.4609 11.8269 12.2275 13.1631C10.9941 14.4993 9.32123 15.25 7.57692 15.25Z"
+                          stroke="#008AEE"
+                          stroke-width="1.44471"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M7.2207 15.25C7.67415 16.6394 8.51414 17.8424 9.62496 18.6931C10.7358 19.5438 12.0628 20.0004 13.4231 20H19.4519C19.5973 20 19.7367 19.9375 19.8395 19.8261C19.9423 19.7148 20 19.5637 20 19.4063V12.875C20.0024 11.0514 19.3583 9.29634 18.2007 7.9723C17.0431 6.64826 15.4604 5.8563 13.7794 5.75992"
+                          stroke="#008AEE"
+                          stroke-width="1.44471"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <rect
+                          x="4.42004"
+                          y="7.45999"
+                          width="0.76"
+                          height="0.76"
+                          fill="#AF2222"
+                          stroke="#008AEE"
+                          stroke-width="0.76"
+                        />
+                        <rect
+                          x="7.46008"
+                          y="7.45999"
+                          width="0.76"
+                          height="0.76"
+                          fill="#AF2222"
+                          stroke="#008AEE"
+                          stroke-width="0.76"
+                        />
+                        <rect
+                          x="10.5001"
+                          y="7.45999"
+                          width="0.76"
+                          height="0.76"
+                          fill="#AF2222"
+                          stroke="#008AEE"
+                          stroke-width="0.76"
+                        />
+                      </svg>
+                      <span className="text">SMS Management</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {/* <!-- Sidebar --> */}
+        </div>
+        <li className="log-out">
+          <a href="./index.html">
+            <svg
+              width="27"
+              height="27"
+              viewBox="0 0 27 27"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19.0556 2.76261H23.2222C24.7564 2.76261 26 3.96443 26 5.44695V6.78912M19.0556 24.2374H23.2222C24.7564 24.2374 26 23.0356 26 21.553V20.2108M2.97958 23.4691L11.3129 25.885C13.0951 26.4018 14.8889 25.1121 14.8889 23.3138V3.6861C14.8889 1.88797 13.0951 0.598274 11.3129 1.11497L2.97958 3.53088C1.80464 3.87151 1 4.91658 1 6.10201V20.8979C1 22.0834 1.80464 23.1285 2.97958 23.4691Z"
+                stroke="#008AEE"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.33431 13.5H9.33331"
+                stroke="#008AEE"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M19.0555 13.5H26M26 13.5L23.2222 10.8156M26 13.5L23.2222 16.1843"
+                stroke="#008AEE"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span className="text">Log Out</span>
+          </a>
+        </li>
+      </div>
+      {/* <!-- Left Sidebar End -->
+
+    <!-- Hero Main Content Start --> */}
+      <div className="main-content">
+        <div className="page-content">
+          {/* <!-- Cards Start --> */}
+          <section id="cards">
+            <div className="row">
+              <div className="col-xl col-sm-6 align-item-stretch">
+                <div className="card-item">
+                  <div className="card-body">
+                    <div className="align-items-center">
+                      <div className="card-icon">
                         <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 44 44"
+                          width="127"
+                          height="80"
+                          viewBox="0 0 127 80"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
+                          <path
+                            d="M0.338553 42.3648L47.213 0.813393L109.929 11.8521L63.0199 57.1222L0.338553 42.3648Z"
+                            fill="#053B50"
+                            fill-opacity="0.33"
                           />
                           <path
-                            d="M33.3002 17.45H21.1502C19.659 17.45 18.4502 18.6588 18.4502 20.15V32.3C18.4502 33.7912 19.659 35 21.1502 35H33.3002C34.7914 35 36.0002 33.7912 36.0002 32.3V20.15C36.0002 18.6588 34.7914 17.45 33.3002 17.45Z"
-                            stroke="#192045"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                            d="M108.96 14.1066C108.716 13.2228 107.801 12.7043 106.916 12.9485C106.032 13.1927 105.512 14.107 105.756 14.9908L110.921 33.701C111.164 34.5848 112.079 35.1033 112.964 34.8592C113.849 34.615 114.368 33.7006 114.124 32.8169L108.96 14.1066Z"
+                            fill="#053B50"
+                            fill-opacity="0.33"
                           />
                           <path
-                            d="M13.05 25.55H11.7C10.9839 25.55 10.2972 25.2655 9.79081 24.7592C9.28446 24.2528 9 23.5661 9 22.85V10.7C9 9.98392 9.28446 9.29716 9.79081 8.79081C10.2972 8.28446 10.9839 8 11.7 8H23.85C24.5661 8 25.2528 8.28446 25.7592 8.79081C26.2655 9.29716 26.55 9.98392 26.55 10.7V12.05"
-                            stroke="#192045"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                            d="M115.438 43.5818C118.126 42.8399 119.704 40.0616 118.963 37.3763C118.221 34.691 115.442 33.1155 112.754 33.8574C110.066 34.5993 108.488 37.3775 109.229 40.0629C109.97 42.7482 112.75 44.3236 115.438 43.5818Z"
+                            fill="#053B50"
+                            fill-opacity="0.33"
+                          />
+                          <path
+                            d="M113.663 48.443C114.693 48.8468 115.826 48.9059 116.892 48.6116C117.959 48.3173 118.901 47.6854 119.578 46.8107C121.894 54.5629 124.21 62.3135 126.526 70.0624L119.133 72.1029C117.31 64.2163 115.487 56.3297 113.663 48.443Z"
+                            fill="#053B50"
+                            fill-opacity="0.33"
+                          />
+                          <path
+                            d="M29.7881 54.902L63.9972 62.9594L89.6688 38.3744L94.4253 55.6075C93.5349 57.6469 86.4608 73.1115 68.5492 78.1162C50.4897 83.1617 36.3284 73.4099 34.5445 72.1351L29.7881 54.902Z"
+                            fill="#053B50"
+                            fill-opacity="0.33"
                           />
                         </svg>
-                      </button>
-                      <button id="csvBtn">
-                        <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 44 44"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M36 14.7144V33.1114C36 34.1386 35.5936 35.1238 34.8703 35.8501C34.1469 36.5765 33.1658 36.9845 32.1429 36.9845H30.2143V35.048H32.1429C32.6543 35.048 33.1449 34.8439 33.5066 34.4808C33.8682 34.1176 34.0714 33.625 34.0714 33.1114V14.7144H30.2143C29.4471 14.7144 28.7112 14.4084 28.1687 13.8636C27.6262 13.3188 27.3214 12.58 27.3214 11.8096V7.93653H16.7143C16.2028 7.93653 15.7123 8.14056 15.3506 8.50373C14.9889 8.8669 14.7857 9.35946 14.7857 9.87306V27.3018H12.8571V9.87306C12.8571 8.84586 13.2635 7.86073 13.9869 7.13439C14.7102 6.40805 15.6913 6 16.7143 6H27.3214L36 14.7144ZM15.7828 34.7401C15.7938 35.0452 15.8683 35.3446 16.0015 35.6191C16.1347 35.8936 16.3236 36.1371 16.5561 36.3338C16.8069 36.543 17.1135 36.7056 17.478 36.8218C17.8444 36.94 18.2706 36.9981 18.7605 36.9981C19.4124 36.9981 19.9639 36.8954 20.4171 36.6921C20.8723 36.4888 21.2194 36.2041 21.4566 35.84C21.6977 35.474 21.8173 35.0499 21.8173 34.5697C21.8173 34.1359 21.7305 33.7757 21.5589 33.4852C21.3823 33.195 21.1329 32.9566 20.8356 32.7939C20.494 32.6043 20.1261 32.4673 19.7441 32.3872L18.5464 32.1083C18.2641 32.0562 17.9975 31.9396 17.7673 31.7675C17.6793 31.6994 17.6084 31.6115 17.5602 31.511C17.5119 31.4105 17.4878 31.3 17.4896 31.1885C17.4896 30.8864 17.6091 30.6385 17.8464 30.4448C18.0874 30.2493 18.4172 30.1505 18.8338 30.1505C19.1096 30.1505 19.3468 30.195 19.5474 30.2822C19.732 30.3577 19.895 30.4782 20.0218 30.6327C20.1405 30.7764 20.2202 30.9485 20.2532 31.1323H21.6996C21.6756 30.7379 21.5419 30.3582 21.3139 30.0362C21.0702 29.6886 20.7368 29.4142 20.3496 29.2423C19.8761 29.0336 19.3623 28.9331 18.8454 28.9479C18.2803 28.9479 17.7827 29.0447 17.3488 29.2384C16.9149 29.4301 16.5774 29.7031 16.3324 30.0537C16.0875 30.4061 15.966 30.8186 15.966 31.2911C15.966 31.6803 16.0431 32.0192 16.2013 32.3058C16.3594 32.5944 16.587 32.8287 16.8801 33.0166C17.1733 33.2005 17.5204 33.34 17.9196 33.429L19.1115 33.7079C19.5107 33.8028 19.8077 33.9267 20.0044 34.0816C20.1005 34.1552 20.1774 34.2511 20.2285 34.361C20.2795 34.471 20.3033 34.5918 20.2976 34.713C20.3013 34.9126 20.2441 35.1085 20.1336 35.2745C20.0095 35.4446 19.8385 35.5745 19.6419 35.6483C19.4278 35.7393 19.1616 35.7839 18.8454 35.7839C18.6197 35.7839 18.4153 35.7587 18.2282 35.7064C18.0577 35.659 17.8961 35.5837 17.7499 35.4837C17.6215 35.4003 17.5116 35.2912 17.427 35.1632C17.3424 35.0353 17.2849 34.8913 17.2581 34.7401H15.7828ZM10.5544 32.5169C10.5544 32.0367 10.62 31.6261 10.7511 31.2911C10.8655 30.9817 11.0681 30.713 11.3336 30.5184C11.6042 30.3368 11.9243 30.2441 12.2496 30.2531C12.5389 30.2531 12.7954 30.3151 13.0172 30.441C13.2346 30.5576 13.416 30.7317 13.5418 30.9445C13.6762 31.1685 13.7555 31.4214 13.7732 31.6823H15.2486V31.5429C15.2358 31.1861 15.1493 30.836 14.9946 30.5146C14.8399 30.1933 14.6203 29.9077 14.3499 29.676C14.0728 29.4403 13.7524 29.2613 13.4068 29.1493C13.0305 29.0214 12.6354 28.9579 12.2381 28.9615C11.5515 28.9615 10.9652 29.1048 10.4811 29.3933C9.999 29.6799 9.63257 30.0885 9.378 30.6172C9.12729 31.1478 9 31.7791 9 32.5131V33.4774C9 34.2114 9.12343 34.8408 9.37221 35.3675C9.62486 35.8923 9.99321 36.297 10.4754 36.5798C10.9575 36.8606 11.5438 37 12.2381 37C12.8031 37 13.3065 36.8935 13.752 36.6824C14.1956 36.4694 14.5504 36.1789 14.8127 35.8032C15.0788 35.4187 15.23 34.9659 15.2486 34.498V34.3508H13.7751C13.757 34.6002 13.6789 34.8414 13.5476 35.0538C13.419 35.2594 13.2379 35.4266 13.023 35.5379C12.7822 35.6549 12.5171 35.7127 12.2496 35.7064C11.9238 35.7157 11.6027 35.6266 11.3278 35.4508C11.0637 35.262 10.8627 34.9973 10.7511 34.6917C10.6101 34.3029 10.5434 33.891 10.5544 33.4774V32.5189V32.5169ZM26.4439 36.8509H24.606L22.0256 29.1067H23.7941L25.5221 35.1835H25.5954L27.3079 29.1067H29.0031L26.4439 36.8528V36.8509Z"
-                            fill="#192045"
-                          />
-                        </svg>
-                      </button>
-                      <button id="pdfBtn">
-                        <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 44 44"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M36 15V34C36 35.0609 35.5936 36.0783 34.8703 36.8284C34.1469 37.5786 33.1658 38 32.1429 38H30.2143V36H32.1429C32.6543 36 33.1449 35.7893 33.5066 35.4142C33.8682 35.0391 34.0714 34.5304 34.0714 34V15H30.2143C29.4471 15 28.7112 14.6839 28.1687 14.1213C27.6262 13.5587 27.3214 12.7956 27.3214 12V8H16.7143C16.2028 8 15.7123 8.21071 15.3506 8.58579C14.9889 8.96086 14.7857 9.46957 14.7857 10V28H12.8571V10C12.8571 8.93913 13.2635 7.92172 13.9869 7.17157C14.7102 6.42143 15.6913 6 16.7143 6H27.3214L36 15ZM12.0857 29.7H9V37.698H10.5255V35.014H12.0741C12.6276 35.014 13.0982 34.9 13.4859 34.668C13.8774 34.434 14.1763 34.118 14.3788 33.72C14.589 33.3024 14.6957 32.8371 14.6893 32.366C14.6893 31.866 14.5871 31.414 14.3846 31.012C14.1832 30.6124 13.8752 30.2812 13.4974 30.058C13.1117 29.818 12.6431 29.7 12.0857 29.7ZM13.1368 32.366C13.1437 32.6295 13.0874 32.8907 12.9729 33.126C12.8701 33.3309 12.7101 33.4989 12.5139 33.608C12.2893 33.7232 12.041 33.7795 11.7906 33.772H10.5197V30.96H11.7926C12.213 30.96 12.5428 31.08 12.78 31.322C13.0172 31.566 13.1368 31.914 13.1368 32.366ZM15.4839 29.7V37.698H18.2996C19.0729 37.698 19.7151 37.538 20.2243 37.224C20.7395 36.9043 21.1419 36.4212 21.3718 35.846C21.6225 35.246 21.7498 34.522 21.7498 33.678C21.7498 32.838 21.6244 32.122 21.3718 31.528C21.1446 30.9594 20.7461 30.4824 20.2359 30.168C19.7267 29.856 19.0806 29.7 18.2976 29.7H15.4839ZM17.0094 30.99H18.0951C18.5734 30.99 18.963 31.09 19.2696 31.294C19.5879 31.5099 19.8281 31.8293 19.9524 32.202C20.1047 32.604 20.1799 33.106 20.1799 33.708C20.1859 34.1069 20.1418 34.5049 20.0488 34.892C19.9801 35.1973 19.8514 35.4846 19.6708 35.736C19.503 35.9603 19.2807 36.1342 19.0266 36.24C18.729 36.3555 18.4129 36.4111 18.0951 36.404H17.0094V30.99ZM24.228 34.516V37.698H22.7044V29.7H27.6184V31.006H24.228V33.24H27.3253V34.516H24.228Z"
-                            fill="#192045"
-                          />
-                        </svg>
-                      </button>
-                      <button id="printBtn" onClick="printTable()">
-                        <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 44 44"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
-                          <path
-                            d="M29.817 17.0382H14.1692C13.8755 17.0382 13.5939 16.9216 13.3863 16.714C13.1787 16.5063 13.062 16.2247 13.062 15.9311V8.10716C13.062 7.81352 13.1787 7.53191 13.3863 7.32428C13.5939 7.11665 13.8755 7 14.1692 7H29.817C30.1107 7 30.3923 7.11665 30.5999 7.32428C30.8075 7.53191 30.9242 7.81352 30.9242 8.10716V15.9311C30.9242 16.2247 30.8075 16.5063 30.5999 16.714C30.3923 16.9216 30.1107 17.0382 29.817 17.0382ZM15.2763 14.8239H28.7099V9.21432H15.2763V14.8239Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M29.817 36.6719H14.1692C13.8755 36.6719 13.5939 36.5552 13.3863 36.3476C13.1787 36.14 13.062 35.8584 13.062 35.5647V23.5402C13.062 23.2466 13.1787 22.965 13.3863 22.7573C13.5939 22.5497 13.8755 22.4331 14.1692 22.4331H29.817C30.1107 22.4331 30.3923 22.5497 30.5999 22.7573C30.8075 22.965 30.9242 23.2466 30.9242 23.5402V35.5647C30.9242 35.8584 30.8075 36.14 30.5999 36.3476C30.3923 36.5552 30.1107 36.6719 29.817 36.6719ZM15.2763 34.4576H28.7099V24.6474H15.2763V34.4576Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M33.3784 31.4313H29.8171C29.5234 31.4313 29.2418 31.3147 29.0342 31.107C28.8266 30.8994 28.7099 30.6178 28.7099 30.3242C28.7099 30.0305 28.8266 29.7489 29.0342 29.5413C29.2418 29.3337 29.5234 29.217 29.8171 29.217H33.3784C33.7479 29.2166 34.1021 29.0697 34.3634 28.8084C34.6247 28.5472 34.7716 28.1929 34.772 27.8235V18.4325C34.7718 18.0629 34.6249 17.7085 34.3637 17.4471C34.1024 17.1857 33.748 17.0386 33.3784 17.0382H10.6079C10.2383 17.0386 9.88393 17.1857 9.62265 17.4471C9.36137 17.7085 9.21451 18.0629 9.21432 18.4325V27.8235C9.21471 28.1929 9.36165 28.5472 9.62291 28.8084C9.88417 29.0697 10.2384 29.2166 10.6079 29.217H14.1692C14.4629 29.217 14.7445 29.3337 14.9521 29.5413C15.1597 29.7489 15.2764 30.0305 15.2764 30.3242C15.2764 30.6178 15.1597 30.8994 14.9521 31.107C14.7445 31.3147 14.4629 31.4313 14.1692 31.4313H10.6079C9.65136 31.4302 8.73437 31.0497 8.05801 30.3733C7.38166 29.697 7.00117 28.78 7 27.8235V18.4325C7.00098 17.4759 7.38138 16.5587 8.05775 15.8822C8.73413 15.2057 9.65123 14.8251 10.6079 14.8239H33.3784C34.3351 14.8251 35.2522 15.2057 35.9286 15.8822C36.6049 16.5587 36.9853 17.4759 36.9863 18.4325V27.8235C36.9851 28.78 36.6046 29.697 35.9283 30.3733C35.2519 31.0497 34.335 31.4302 33.3784 31.4313Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M12.9884 20.8764C12.9519 20.8765 12.9155 20.8748 12.8792 20.8712C12.8437 20.8675 12.8054 20.8616 12.7721 20.855C12.7389 20.8484 12.6983 20.8388 12.6666 20.8284C12.6349 20.8181 12.598 20.8055 12.5647 20.7915C12.5315 20.7775 12.499 20.762 12.4673 20.745C12.435 20.7284 12.4037 20.7099 12.3736 20.6897C12.344 20.6697 12.3145 20.6483 12.2865 20.6254C12.2584 20.6026 12.2311 20.5775 12.2053 20.5516C12.1794 20.5258 12.1551 20.4985 12.1315 20.4704C12.1086 20.4425 12.0872 20.4135 12.0673 20.3833C12.0471 20.3528 12.0286 20.3218 12.0119 20.2903C11.9949 20.2586 11.9794 20.2254 11.9654 20.1922C11.9514 20.159 11.9396 20.1243 11.9285 20.0903C11.9174 20.0564 11.9093 20.0165 11.9019 19.9848C11.8945 19.953 11.8894 19.911 11.8857 19.8777C11.8786 19.8041 11.8786 19.73 11.8857 19.6563C11.8894 19.6209 11.8953 19.5825 11.9019 19.5493C11.9086 19.5161 11.9182 19.4755 11.9285 19.4437C11.9388 19.412 11.9514 19.3751 11.9654 19.3419C11.9794 19.3087 11.9949 19.2754 12.0119 19.2437C12.0289 19.212 12.0473 19.181 12.0673 19.1507C12.0872 19.1206 12.1086 19.0915 12.1315 19.0636C12.1543 19.0356 12.1794 19.0083 12.2053 18.9824C12.2311 18.9566 12.2584 18.9322 12.2865 18.9086C12.3145 18.885 12.344 18.8643 12.3736 18.8444C12.4037 18.8241 12.435 18.8056 12.4673 18.789C12.4993 18.7723 12.5318 18.7568 12.5647 18.7425C12.598 18.7285 12.6326 18.7167 12.6666 18.7056C12.7005 18.6946 12.7404 18.6864 12.7721 18.6791C12.8039 18.6717 12.846 18.6665 12.8792 18.6628C12.9516 18.6562 13.0245 18.6562 13.0969 18.6628C13.1331 18.6665 13.1707 18.6724 13.2047 18.6791C13.2386 18.6857 13.2785 18.6953 13.3095 18.7056C13.3405 18.716 13.3789 18.7285 13.4121 18.7425C13.4453 18.7566 13.4778 18.7721 13.5095 18.789C13.5417 18.8058 13.573 18.8243 13.6033 18.8444C13.6328 18.8643 13.6623 18.8857 13.6903 18.9086C13.7184 18.9315 13.7457 18.9566 13.7715 18.9824C13.7974 19.0083 13.821 19.0356 13.8454 19.0636C13.8697 19.0917 13.8896 19.1212 13.9096 19.1507C13.9295 19.1802 13.9479 19.212 13.9649 19.2437C13.9819 19.2754 13.9974 19.3087 14.0114 19.3419C14.0254 19.3751 14.0373 19.4098 14.0483 19.4437C14.0594 19.4777 14.0675 19.5175 14.0749 19.5493C14.0823 19.581 14.0875 19.6231 14.0911 19.6563C14.0982 19.73 14.0982 19.8041 14.0911 19.8777C14.0875 19.9132 14.0815 19.9516 14.0749 19.9848C14.0683 20.018 14.0587 20.0586 14.0483 20.0903C14.038 20.1221 14.0254 20.159 14.0114 20.1922C13.9974 20.2254 13.9819 20.2586 13.9649 20.2903C13.9479 20.3221 13.9295 20.3531 13.9096 20.3833C13.8896 20.4136 13.8675 20.4424 13.8454 20.4704C13.8232 20.4985 13.7974 20.5258 13.7715 20.5516C13.7457 20.5775 13.7184 20.6018 13.6903 20.6254C13.6623 20.6491 13.6328 20.6697 13.6033 20.6897C13.573 20.7098 13.5417 20.7283 13.5095 20.745C13.4775 20.7617 13.4451 20.7772 13.4121 20.7915C13.3789 20.8055 13.3442 20.8174 13.3095 20.8284C13.2748 20.8395 13.2401 20.8476 13.2047 20.855C13.1692 20.8624 13.1309 20.8675 13.0969 20.8712C13.0609 20.8748 13.0246 20.8765 12.9884 20.8764Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M16.236 20.8764C16.1998 20.8764 16.1622 20.8764 16.1267 20.8712C16.0913 20.8661 16.0529 20.8616 16.0197 20.855C15.9865 20.8484 15.9459 20.8388 15.9142 20.8284C15.8824 20.8181 15.8455 20.8055 15.8123 20.7915C15.7791 20.7775 15.7459 20.762 15.7141 20.745C15.6824 20.728 15.6514 20.7096 15.6211 20.6897C15.591 20.6698 15.5619 20.6483 15.534 20.6254C15.506 20.6026 15.4787 20.5775 15.4528 20.5516C15.427 20.5258 15.4026 20.4985 15.379 20.4704C15.3554 20.4424 15.3347 20.4129 15.3148 20.3833C15.2946 20.3531 15.2758 20.3218 15.2587 20.2896C15.2425 20.2579 15.227 20.2254 15.213 20.1922C15.1989 20.159 15.1871 20.1243 15.176 20.0903C15.165 20.0564 15.1569 20.0165 15.1495 19.9848C15.1421 19.953 15.1369 19.911 15.1332 19.8777C15.1262 19.8041 15.1262 19.7299 15.1332 19.6563C15.1369 19.6209 15.1428 19.5825 15.1495 19.5493C15.1561 19.5161 15.1657 19.4755 15.176 19.4437C15.1864 19.412 15.1989 19.3751 15.213 19.3419C15.227 19.3087 15.2425 19.2762 15.2587 19.2444C15.2758 19.2123 15.2946 19.181 15.3148 19.1507C15.3347 19.1212 15.3561 19.0917 15.379 19.0636C15.4019 19.0356 15.427 19.0083 15.4528 18.9824C15.4787 18.9566 15.506 18.9322 15.534 18.9086C15.5619 18.8857 15.591 18.8643 15.6211 18.8444C15.6516 18.8242 15.6826 18.8058 15.7141 18.789C15.7459 18.7721 15.7791 18.7566 15.8123 18.7425C15.8455 18.7285 15.8802 18.7167 15.9142 18.7056C15.9481 18.6946 15.988 18.6864 16.0197 18.6791C16.0514 18.6717 16.0935 18.6665 16.1267 18.6628C16.2004 18.656 16.2745 18.656 16.3482 18.6628C16.3836 18.6665 16.422 18.6724 16.4552 18.6791C16.4884 18.6857 16.529 18.6953 16.5607 18.7056C16.5925 18.716 16.6294 18.7285 16.6626 18.7425C16.6958 18.7566 16.7283 18.7721 16.76 18.789C16.7918 18.806 16.8235 18.8245 16.8538 18.8444C16.884 18.8643 16.9128 18.8857 16.9409 18.9086C16.9689 18.9315 16.9962 18.9566 17.0221 18.9824C17.0479 19.0083 17.0715 19.0356 17.0959 19.0636C17.1202 19.0917 17.1401 19.1212 17.1601 19.1507C17.1801 19.181 17.1986 19.2123 17.2154 19.2444C17.2322 19.2764 17.2477 19.3089 17.2619 19.3419C17.276 19.3751 17.2878 19.4098 17.2988 19.4437C17.3099 19.4777 17.318 19.5175 17.3254 19.5493C17.3328 19.581 17.338 19.6231 17.3417 19.6563C17.3487 19.7299 17.3487 19.8041 17.3417 19.8777C17.338 19.9132 17.3321 19.9516 17.3254 19.9848C17.3188 20.018 17.3092 20.0586 17.2988 20.0903C17.2885 20.1221 17.276 20.159 17.2619 20.1922C17.2479 20.2254 17.2324 20.2579 17.2154 20.2896C17.1986 20.3218 17.1801 20.3531 17.1601 20.3833C17.1401 20.4129 17.118 20.4424 17.0959 20.4704C17.0737 20.4985 17.0479 20.5258 17.0221 20.5516C16.9962 20.5775 16.9689 20.6018 16.9409 20.6254C16.9128 20.6491 16.8833 20.6697 16.8538 20.6897C16.8242 20.7096 16.7918 20.728 16.76 20.745C16.7283 20.762 16.6958 20.7775 16.6626 20.7915C16.6294 20.8055 16.5947 20.8174 16.5607 20.8284C16.5268 20.8395 16.4869 20.8476 16.4552 20.855C16.4234 20.8624 16.3814 20.8675 16.3482 20.8712C16.3149 20.8749 16.2721 20.8764 16.236 20.8764Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M26.3481 28.8479H17.6384C17.3448 28.8479 17.0632 28.7313 16.8555 28.5237C16.6479 28.316 16.5312 28.0344 16.5312 27.7408C16.5312 27.4472 16.6479 27.1655 16.8555 26.9579C17.0632 26.7503 17.3448 26.6336 17.6384 26.6336H26.3481C26.6417 26.6336 26.9233 26.7503 27.1309 26.9579C27.3386 27.1655 27.4552 27.4472 27.4552 27.7408C27.4552 28.0344 27.3386 28.316 27.1309 28.5237C26.9233 28.7313 26.6417 28.8479 26.3481 28.8479Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M26.3481 32.7599H17.6384C17.3448 32.7599 17.0632 32.6433 16.8555 32.4356C16.6479 32.228 16.5312 31.9464 16.5312 31.6528C16.5312 31.3591 16.6479 31.0775 16.8555 30.8699C17.0632 30.6622 17.3448 30.5456 17.6384 30.5456H26.3481C26.6417 30.5456 26.9233 30.6622 27.1309 30.8699C27.3386 31.0775 27.4552 31.3591 27.4552 31.6528C27.4552 31.9464 27.3386 32.228 27.1309 32.4356C26.9233 32.6433 26.6417 32.7599 26.3481 32.7599Z"
-                            fill="#192045"
-                          />
-                        </svg>
-                      </button>
-                      <button id="xlsxBtn">
-                        <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 44 44"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="43"
-                            height="43"
-                            rx="5.5"
-                            stroke="#192045"
-                          />
-                          <path
-                            d="M31.311 37.6837H12.689C11.4457 37.6821 10.2539 37.1874 9.37488 36.3082C8.49586 35.429 8.00142 34.2371 8 32.9938V10.689C8.00165 9.44591 8.4962 8.25421 9.3752 7.37521C10.2542 6.49621 11.4459 6.00166 12.689 6.00001H24.5811C25.1989 5.99879 25.8107 6.11998 26.3814 6.35658C26.9521 6.59318 27.4702 6.94051 27.9059 7.37849L34.6206 14.087C35.5011 14.9717 35.9968 16.1681 36 17.4162V32.9938C35.9986 34.2371 35.5041 35.429 34.6251 36.3082C33.7461 37.1874 32.5543 37.6821 31.311 37.6837ZM12.689 8.23201C12.0376 8.23272 11.413 8.49181 10.9524 8.95243C10.4918 9.41305 10.2327 10.0376 10.232 10.689V32.9938C10.2327 33.6453 10.4918 34.27 10.9524 34.7307C11.413 35.1915 12.0375 35.4508 12.689 35.4517H31.311C31.9625 35.4508 32.587 35.1915 33.0476 34.7307C33.5082 34.27 33.7673 33.6453 33.768 32.9938V17.4136C33.7664 16.7578 33.5059 16.1292 33.043 15.6646L26.3274 8.95518C26.0986 8.7252 25.8264 8.54287 25.5267 8.41874C25.2269 8.29461 24.9055 8.23114 24.5811 8.23201H12.689Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M33.8932 17.1279H29.7363C28.4971 17.1267 27.309 16.6339 26.4327 15.7576C25.5565 14.8814 25.0637 13.6933 25.0625 12.4541V7.11958H27.2945V12.4541C27.2952 13.1014 27.5527 13.7221 28.0105 14.1799C28.4682 14.6377 29.0889 14.8952 29.7363 14.8959H33.8932V17.1279Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M30.0858 31.4564H13.9136V16.7431H30.0858V31.4564ZM16.1456 29.2244H27.8538V18.9751H16.1456V29.2244Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M28.6242 25.2157H15.4643C15.1792 25.1996 14.9111 25.075 14.715 24.8675C14.5189 24.66 14.4097 24.3853 14.4097 24.0997C14.4097 23.8142 14.5189 23.5395 14.715 23.332C14.9111 23.1245 15.1792 22.9999 15.4643 22.9837H28.6242C28.9092 22.9999 29.1773 23.1245 29.3734 23.332C29.5695 23.5395 29.6788 23.8142 29.6788 24.0997C29.6788 24.3853 29.5695 24.66 29.3734 24.8675C29.1773 25.075 28.9092 25.1996 28.6242 25.2157Z"
-                            fill="#192045"
-                          />
-                          <path
-                            d="M20.2146 31.2511C19.8916 31.2209 19.5934 31.0648 19.3846 30.8165C19.1757 30.5683 19.073 30.2478 19.0986 29.9244V18.2751C19.073 17.9517 19.1757 17.6312 19.3846 17.383C19.5934 17.1347 19.8916 16.9786 20.2146 16.9484C20.5376 16.9786 20.8357 17.1347 21.0446 17.383C21.2534 17.6312 21.3561 17.9517 21.3306 18.2751V29.9244C21.3561 30.2478 21.2534 30.5683 21.0446 30.8165C20.8357 31.0648 20.5376 31.2209 20.2146 31.2511Z"
-                            fill="#192045"
-                          />
-                        </svg>
-                      </button>
+                      </div>
+                      <div>
+                        <h4>Students</h4>
+                        <h5>4,000</h5>
+                      </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div className="col-xl col-sm-6 align-item-stretch">
+                <div className="card-item">
+                  <div className="card-body">
+                    <div className="align-items-center">
+                      <div className="card-icon">
+                        <svg
+                          width="120"
+                          height="75"
+                          viewBox="0 0 120 75"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M60.0195 43.0643C67.9357 43.0643 73.6646 32.2456 73.6646 24.9366C73.6646 17.4349 67.5292 11.3408 60.0195 11.3408C52.4904 11.3408 46.3744 17.4349 46.3744 24.9366C46.3744 32.2456 52.1033 43.0643 60.0195 43.0643ZM60.0195 15.1978C65.4002 15.1978 69.7937 19.5755 69.7937 24.9366C69.7937 30.9149 64.8582 39.2074 60.0195 39.2074C55.1614 39.2074 50.2453 30.9149 50.2453 24.9366C50.2453 19.5755 54.6195 15.1978 60.0195 15.1978Z"
+                            fill="#053B50"
+                            fill-opacity="0.4"
+                          />
+                          <path
+                            d="M120 44.2407C120 37.6067 114.6 32.2263 107.923 32.2263H104.013L97.4709 44.665C97.4323 44.7614 97.3162 44.7614 97.2774 44.665L90.7355 32.2263H86.8258C80.1677 32.2263 74.7871 37.5875 74.7678 44.2214C73.4516 43.7972 72.0388 43.5658 70.5678 43.5658H65.4775L60 53.9603L54.5419 43.5658H49.4516C48 43.5658 46.5871 43.7972 45.2516 44.2214C45.2323 37.5875 39.8323 32.2263 33.1742 32.2263H29.2645L22.7226 44.665C22.6839 44.7614 22.5678 44.7614 22.5291 44.665L15.9871 32.2263H12.0774C5.40008 32.2263 0 37.6067 0 44.2407L0 59.8036H35.4581V75H84.5807V59.8036H120V44.2407ZM80.7097 71.143H39.329V57.5086C39.329 51.8579 44.0235 47.4227 49.4516 47.4227H52.2001C52.3003 47.6157 59.1311 60.7619 58.7033 59.9386L61.4129 59.8808C61.5123 59.6874 68.2438 46.5976 67.8194 47.4227H70.5678C76.1194 47.4227 80.7097 51.9606 80.7097 57.5086V71.143Z"
+                            fill="#053B50"
+                            fill-opacity="0.4"
+                          />
+                          <path
+                            d="M108.094 11.6658C108.094 14.6593 106.861 18.5242 104.828 21.6389C102.772 24.7889 100.107 26.873 97.3864 26.873C94.6655 26.873 92.0007 24.7889 89.9449 21.6389C87.9122 18.5241 86.6783 14.6592 86.6783 11.6656C86.6783 5.77863 91.4691 1 97.3864 1C103.304 1 108.094 5.77884 108.094 11.6658Z"
+                            stroke="#053B50"
+                            stroke-opacity="0.4"
+                            stroke-width="2"
+                          />
+                          <path
+                            d="M33.34 11.6658C33.34 14.6593 32.1061 18.5242 30.0734 21.6389C28.0176 24.7889 25.3528 26.873 22.6319 26.873C19.9104 26.873 17.2456 24.7878 15.1899 21.637C13.1573 18.5215 11.9238 14.6565 11.9238 11.6656C11.9238 5.77845 16.7148 1 22.6319 1C28.6423 1 33.34 5.91338 33.34 11.6658Z"
+                            stroke="#053B50"
+                            stroke-opacity="0.4"
+                            stroke-width="2"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4>Teacher’s</h4>
+                        <h5>21</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-xl col-sm-6 align-item-stretch">
+                <div className="card-item">
+                  <div className="card-body">
+                    <div className="align-items-center">
+                      <div className="card-icon">
+                        <svg
+                          width="110"
+                          height="111"
+                          viewBox="0 0 110 111"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M94.882 72.4935C91.3573 73.438 81.9923 75.9473 78.6006 76.8561L77.2094 71.6638C84.3862 65.2165 87.8373 55.5061 85.3186 46.1062L84.598 43.417L86.9239 42.7938C90.7714 41.7628 93.1224 38.016 92.1647 34.4416C91.2069 30.8671 87.2975 28.7977 83.45 29.8287L83.1474 29.9098C82.8458 26.6307 80.0595 24.0173 76.4877 23.809C71.1098 14.4941 59.4685 9.95528 48.1921 12.9768C36.8184 16.0244 29.0092 25.8483 29.1043 36.6836C26.1985 38.5758 25.032 42.133 26.3795 45.1207L25.3023 45.4093C21.4548 46.4402 19.1038 50.187 20.0616 53.7615C21.0194 57.336 24.9288 59.4053 28.7763 58.3744L31.1022 57.7511L31.8228 60.4403C34.3415 69.8402 42.1855 76.5244 51.6244 78.5193L53.0157 83.7116C49.6201 84.6214 40.2267 87.1384 36.7343 88.0741C26.4743 90.8233 20.205 100.815 22.7591 110.347L29.1281 134.116C29.4478 135.309 30.7484 135.998 32.033 135.654C38.3894 133.95 118.219 112.56 122.743 111.348C124.028 111.004 124.81 109.757 124.49 108.564L118.121 84.7945C115.567 75.2626 105.142 69.7444 94.882 72.4935ZM56.0286 87.5362L67.1161 88.7834C67.7679 88.8566 68.4177 88.673 68.9255 88.2986L77.904 81.6747L82.0845 80.5546L84.4005 89.1979L54.1638 97.2999L51.8478 88.6565L56.0286 87.5362ZM93.7041 86.705L89.0523 87.9515L86.7363 79.3081L91.3882 78.0617L93.7041 86.705ZM32.0664 45.3362C32.0218 45.2627 32.2422 45.623 30.9373 43.4929C30.2007 42.2901 30.77 40.7352 32.1275 40.1364C33.48 39.6519 50.4728 31.0314 74.618 28.4093L75.5234 28.3109C77.2789 28.1199 78.6753 29.5524 78.3269 31.1808L77.9106 33.1261C61.9765 34.6102 46.5573 38.7175 32.0664 45.3362ZM87.5128 35.688C87.8321 36.8795 87.0484 38.1284 85.7659 38.4721L83.44 39.0953L82.3547 35.0446L82.4204 34.7365L84.6079 34.1504C85.8904 33.8067 87.1936 34.4965 87.5128 35.688ZM49.3501 17.2985C57.7443 15.0493 66.3889 17.9726 71.1104 24.3183C53.5573 26.6269 40.2241 31.7573 33.9949 34.423C34.8366 26.4938 40.8703 19.5706 49.3501 17.2985ZM27.6183 54.0527C26.3358 54.3963 25.0327 53.7065 24.7134 52.5151C24.3942 51.3236 25.1778 50.0746 26.4603 49.731L28.7862 49.1078L29.9442 53.4295L27.6183 54.0527ZM36.4746 59.1939L33.8627 49.4461C47.8318 43.0429 62.6974 39.0655 78.0584 37.618L80.6668 47.3526C83.6997 58.6718 76.255 70.5366 64.0712 73.8013C51.8874 77.0659 39.5076 70.513 36.4746 59.1939ZM73.0542 74.7636L74.1438 78.8301L66.8587 84.2047L57.8624 83.1927L56.7728 79.1262C62.4755 79.2821 68.1927 77.7506 73.0542 74.7636ZM47.196 89.9029L49.5119 98.5463L44.8601 99.7928L42.5442 91.1494L47.196 89.9029ZM27.4109 109.1C25.4953 101.951 30.1973 94.4577 37.8923 92.3958L40.3076 101.41C37.8389 103.027 36.5387 105.951 37.2935 108.768L42.5045 128.216L33.2009 130.709L27.4109 109.1ZM60.8791 123.292L57.9263 112.272L90.4889 103.547L93.4418 114.567L60.8791 123.292ZM119.259 107.649L109.956 110.142L104.745 90.6947C103.99 87.8776 101.402 85.9953 98.4552 85.829L96.04 76.8152C103.735 74.7533 111.554 78.892 113.469 86.0409L119.259 107.649Z"
+                            fill="#053B50"
+                            fill-opacity="0.4"
+                          />
+                          <path
+                            d="M52.1759 53.5971L51.5969 51.4363C51.2771 50.2428 49.9766 49.5544 48.692 49.8986C47.4074 50.2428 46.6253 51.4893 46.9451 52.6827L47.5241 54.8436C47.8439 56.037 49.1444 56.7254 50.429 56.3812C51.7136 56.037 52.4957 54.7905 52.1759 53.5971Z"
+                            fill="#053B50"
+                            fill-opacity="0.4"
+                          />
+                          <path
+                            d="M66.7105 52.0186C67.9951 51.6744 68.7772 50.4279 68.4574 49.2345L67.8784 47.0737C67.5586 45.8802 66.2581 45.1918 64.9735 45.536C63.6889 45.8802 62.9068 47.1267 63.2266 48.3201L63.8056 50.4809C64.1254 51.6744 65.4259 52.3628 66.7105 52.0186Z"
+                            fill="#053B50"
+                            fill-opacity="0.4"
+                          />
+                          <path
+                            d="M66.1938 57.4674C65.0595 56.8671 63.5867 57.2618 62.9043 58.3488C61.6589 60.3336 58.9609 61.0565 56.8902 59.9603C55.7559 59.36 54.2831 59.7547 53.6007 60.8417C52.9185 61.9289 53.2851 63.2971 54.4195 63.8978C58.7559 66.1927 64.4044 64.6796 67.0127 60.5235C67.695 59.436 67.3284 58.0677 66.1938 57.4674Z"
+                            fill="#053B50"
+                            fill-opacity="0.4"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4>Staff’s</h4>
+                        <h5>00</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-xl col-sm-6 align-item-stretch">
+                <div className="card-item">
+                  <div className="card-body">
+                    <div className="align-items-center">
+                      <div className="card-icon">
+                        <svg
+                          width="80"
+                          height="80"
+                          viewBox="0 0 80 80"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M75.531 35.7434C76.2483 41.5171 75.5406 47.3784 73.4696 52.8149C71.3985 58.2514 68.0274 63.0975 63.6507 66.9296C59.2741 70.7617 54.0253 73.4631 48.3632 74.7976C42.701 76.1322 36.798 76.0592 31.1702 74.585C25.5424 73.1109 20.3611 70.2805 16.0793 66.3414C11.7975 62.4022 8.54565 57.4742 6.60798 51.9881C4.6703 46.5021 4.10582 40.625 4.96388 34.8709C5.82194 29.1167 8.07643 23.6605 11.5302 18.9794M71.0396 22.3371C68.7009 18.2862 65.5872 14.7356 61.8766 11.8879C58.1659 9.04024 53.9308 6.9513 49.4132 5.74036C44.8955 4.52942 40.1837 4.2202 35.5469 4.83036C30.91 5.44051 26.4388 6.95809 22.3887 9.29645L40.1982 40.1434L71.0396 22.3371Z"
+                            stroke="#053B50"
+                            stroke-opacity="0.4"
+                            stroke-width="7.24254"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4>Students Attendance</h4>
+                        <h5>80%</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          {/* <!-- Cards End -->
+
+        <!-- Dashboard Table Start --> */}
+          <div className="data-table">
+            <div className="card">
+              <div className="card-body">
+                <div className="heading">
+                  <h1 className="title">Students Info</h1>
+                  <input type="text" placeholder="Search Student..." />
                 </div>
 
                 {/* <!-- Table --> */}
@@ -578,9 +1319,9 @@ vanillaInputs.forEach((input) => {
                                 </div>
                               </div>
                             </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
+                            {/* <!-- <button className="quick-view">
+                            <i className="fa-regular fa-eye"></i>
+                          </button> --> */}
                           </div>
                         </td>
                         <td>222101</td>
@@ -592,7 +1333,7 @@ vanillaInputs.forEach((input) => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -638,9 +1379,9 @@ vanillaInputs.forEach((input) => {
                                 </div>
                               </div>
                             </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
+                            {/* <!-- <button className="quick-view">
+                            <i className="fa-regular fa-eye"></i>
+                          </button> --> */}
                           </div>
                         </td>
                         <td>222102</td>
@@ -652,7 +1393,7 @@ vanillaInputs.forEach((input) => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -698,9 +1439,9 @@ vanillaInputs.forEach((input) => {
                                 </div>
                               </div>
                             </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
+                            {/* <!-- <button className="quick-view">
+                            <i className="fa-regular fa-eye"></i>
+                          </button> --> */}
                           </div>
                         </td>
                         <td>222103</td>
@@ -712,7 +1453,7 @@ vanillaInputs.forEach((input) => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -758,9 +1499,9 @@ vanillaInputs.forEach((input) => {
                                 </div>
                               </div>
                             </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
+                            {/* <!-- <button className="quick-view">
+                            <i className="fa-regular fa-eye"></i>
+                          </button> --> */}
                           </div>
                         </td>
                         <td>222104</td>
@@ -772,7 +1513,7 @@ vanillaInputs.forEach((input) => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -818,9 +1559,9 @@ vanillaInputs.forEach((input) => {
                                 </div>
                               </div>
                             </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
+                            {/* <!-- <button className="quick-view">
+                            <i className="fa-regular fa-eye"></i>
+                          </button> --> */}
                           </div>
                         </td>
                         <td>222105</td>
@@ -832,7 +1573,7 @@ vanillaInputs.forEach((input) => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -843,126 +1584,6 @@ vanillaInputs.forEach((input) => {
                         <td>One</td>
                         <td>Science</td>
                         <td>5</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>06</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222106</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>6</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>07</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222107</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>7</td>
                       </tr>
                     </tbody>
                   </table>
@@ -992,13 +1613,8 @@ vanillaInputs.forEach((input) => {
               </div>
             </div>
           </div>
-          <div className="copyright">
-            <p>&copy; 2023. All Rights Reserved.</p>
-          </div>
-          {/* <!-- Table End -->
 
-        <!-- Table Action Button Modal Start -->
-        <!-- Confirmation Modal Start --> */}
+          {/* <!-- Confirmation Modal Start --> */}
           <div id="confirmationModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -1008,527 +1624,13 @@ vanillaInputs.forEach((input) => {
               </div>
             </div>
           </div>
-          {/* <!-- Confirmation Modal End -->
-        <!-- Edit Modal Start --> */}
-          <div id="editModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="editYes">Yes</button>
-                <button id="editNo">No</button>
-              </div>
-            </div>
+
+          <div className="copyright">
+            <p>&copy; 2024. All Rights Reserved.</p>
           </div>
-          {/* <!-- Edit Modal End -->
-        <!-- Quick View Modal Start --> */}
-          <div id="quickViewModal" className="modal">
-            <div className="modal-content">
-              <p>Quick View</p>
-              <div className="items">
-                <div className="row">
-                  <div className="col-6">
-                    <div className="item">
-                      <div className="profile-img">
-                        <img src={productMemberPng} alt="" />
-                      </div>
-                      <h3>
-                        Student Name: <span>Shanto</span>
-                      </h3>
-                      <h3>
-                        Student ID: <span>121777</span>
-                      </h3>
-                      <h3>
-                        Blood Group: <span>A+</span>
-                      </h3>
-                      <h3>
-                        Birth Certificate: <span>3453453435445</span>
-                      </h3>
-                      <h3>
-                        Father Name: <span>Jahangir</span>
-                      </h3>
-                      <h3>
-                        Father NID: <span>12132323424</span>
-                      </h3>
-                      <h3>
-                        Father Mobile: <span>01713223424</span>
-                      </h3>
-                      <h3>
-                        Mother Name: <span>shithi</span>
-                      </h3>
-                      <h3>
-                        Mother NID: <span>12132323424</span>
-                      </h3>
-                      <h3>
-                        Mother Mobile: <span>01732323424</span>
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="item">
-                      <h3>
-                        Admission Number: <span>232434545</span>
-                      </h3>
-                      <h3>
-                        Admission Date: <span>2024-11-22</span>
-                      </h3>
-                      <h3>
-                        Present Address: <span>Pabna</span>
-                      </h3>
-                      <h3>
-                        Permanent Address: <span>Pabna</span>
-                      </h3>
-                      <h3>
-                        Guardian (In Absence of F/M): <span>Riyad</span>
-                      </h3>
-                      <h3>
-                        Guardian Mobile: <span>01832424343</span>
-                      </h3>
-                      <h3>
-                        Date of Birth: <span>2024-12-1</span>
-                      </h3>
-                      <h3>
-                        Student Email: <span>info@gmail.com</span>
-                      </h3>
-                      <h3>
-                        SMS Status: <span>Active</span>
-                      </h3>
-                      <h3>
-                        Registration Date: <span>2023-12-22</span>
-                      </h3>
-                      <h3>
-                        Shift Name: <span>Day</span>
-                      </h3>
-                      <h3>
-                        Session Name: <span>1st Semester</span>
-                      </h3>
-                      <h3>
-                        Student Gender: <span>Male</span>
-                      </h3>
-                      <h3>
-                        Section Name: <span>Science</span>
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-buttons">
-                <button id="quickClose">
-                  <i className="fa-solid fa-x"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          {/* <!-- Quick View Modal End -->
-        <!-- Table Action Button Modal Start -->
-
-        <!-- Add Students - Pop Up Modal Start --> */}
-          <section id="studentModal" className="modal studentModal">
-            <div className="modal-content">
-              <div id="popup-modal">
-                <div className="form-container">
-                  <h3>New Student Admission</h3>
-                  <form>
-                    {/* <!-- Row 1 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="admission-number">
-                          Admission Number
-                        </label>
-                        <input
-                          type="text"
-                          id="admission-number"
-                          placeholder="Enter admission number"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Admission Date *
-                        </label>
-                        <div className="input-datepicker-wrapper">
-                          <input
-                            type="text"
-                            className="datepicker-input"
-                            placeholder="dd/mm/yyyy"
-                          />
-                          <i className="fas fa-calendar-alt icon"></i>
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="student-name">Student's Name *</label>
-                        <input
-                          type="text"
-                          id="student-name"
-                          placeholder="Enter student's name"
-                        />
-                      </div>
-
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="name-bangla">Name in Bangla</label>
-                        <input
-                          type="text"
-                          id="name-bangla"
-                          placeholder="বাংলায় নাম লিখুন"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="birth-certificate">
-                          Birth Certificate
-                        </label>
-                        <input
-                          type="text"
-                          id="birth-certificate"
-                          placeholder="Enter birth certificate number"
-                        />
-                      </div>
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Blood Group</label>
-
-            <select name="" id="" value={bloodGroup} onChange={(e)=> setBloodGroup(e.target.value)}>
-
-            <option value="" disabled>Select Blood Group</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-                            <option value="AB">AB</option>
-                            <option value="B+">B+</option>
-                            <option value="O+">O+</option>
-                            <option value="AB-">AB-</option>
-
-            </select>
-
-                       
-
-
-                      </div>
-                    </div>
-                    {/* <!-- Row 3 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="religion">Religion</label>
-                        <input
-                          type="text"
-                          id="religion"
-                          placeholder="Enter religion"
-                        />
-                      </div>
-                      <div className="form-group col-lg-8">
-                        <label htmlFor="photo">Photo</label>
-                        <div className="upload-profile">
-                          <div className="item">
-                            <div className="img-box">
-                              <svg
-                                width="32"
-                                height="32"
-                                viewBox="0 0 50 50"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                // eslint-disable-next-line react/no-unknown-property
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                              >
-                                <rect
-                                  width="50"
-                                  height="50"
-                                  fill="url(#pattern0_1204_6)"
-                                  fillOpacity="0.5"
-                                />
-                                <defs>
-                                  <pattern
-                                    id="pattern0_1204_6"
-                                    patternContentUnits="objectBoundingBox"
-                                    width="1"
-                                    height="1"
-                                  >
-                                    <use
-                                      xlinkHref="#image0_1204_6"
-                                      transform="scale(0.005)"
-                                    />
-                                  </pattern>
-                                  <image
-                                    id="image0_1204_6"
-                                    width="200"
-                                    height="200"
-                                    xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAMsklEQVR4Ae2daYwtRRmG34uAIF5RDMTlYkABvSJuP1BccMHgRtyiqNG4EI1bcCOBaDCaKEYMYlwIEBRRf7j9UHFBRBJQEgyIIJtKLmiAXGVRUAT35bzDNH40M13Vc/qcqT71VHLS1dN9znQ99T1dvVR3SSQIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCECgCAIbJD1G0islHSHpg5I+wmdUDFxnrrtDJe0ryXVKmpLAQZK+JOnmiRT/5bNQDG6SdJqkZ04ZI1V+/WBJFyHEQgnRtYO7UJJ3hqQEgZ0lfQUxqhGjLY2PFjYmYqTaxXtL2oIc1crRyPIrSXtWa8EqBd8s6QbkqF6ORpKtkrzDJEl6kKRrkQM5WjHwG0m71m7INpLOboFp9iJMuXJ3Ru2Xg9+6BjlundwP+aWky/mMioHrzHXXd8f3hlpbkfv2uL/xJ0kflfToWmEtULl9w/fYyU3D2zJl+f1k/R0XqPzZRfFd1Zy9iQ/BfJ5CWiwCmyT9ODMGDl+soueVxk1uSpDTJW2X93OsNUIC95Z0ZkYcXDrCsk21yftlQLlakg/DSItN4P6Srs+Ih30WG8PdS/fODCDu1Eaqg8DrM+LBF3SqSacmgPim4b2qoUFBt5d0SyImTqoJ07kJGO6PRaqLgM83u85Jf1gTjksSMPysB6kuAscnYuKCmnCkrmAdXRMMyrpEwDvFrhbkspo4ucdmFwwEqSka7ixrShD3nKgmIUg1VZ1dUAQJqBAkwCC7RABBQiAgSIBBFkHaMYAgbSLM04KEGECQAIPsEgEECYGAIAEGWQRpxwCCtIkwTwsSYgBBAgyySwQQJAQCggQYZBGkHQMI0ibCPC1IiIExCbKbpGdIetny50BeRxNqcrgsggSWpQvy4Mm2fmj57Smr9Rm7QtIHJFkg0vQEECQwLFUQPyN9jKS/JTpTRmnumKzrV/v7oR/S2gkgSGBXoiC7S7q4hxhREuf9vMJDQhnJ9iOAIIFXaYLsIem6KeRoZPHrMh8aykk2nwCCBFYlCeI3p6Qe4GoEyJn6ackdQlnJ5hFAkMCpJEFOHKDlaIvziVBWsnkEECRwKkUQv8r03zMQ5J+ToeMeHspLNk0AQQKjUgT53AzkaFqTT4fykk0TQJDAqARB/EpTvxS7CeihpzfW/ur+UN85WQQJlEoQ5IAZytHI9rhQZrLdBBAk8ClBkDfPQZDXhDKT7SaAIIFPCYL41ULNnn5W0/eGMpPtJoAggU8Jgrh7yKzEaH73yFBmst0EECTwKUGQd81BEB/GkfIIIEjgVIIgz5+DIO4mT8ojgCCBUwmCeOCWf81Qkr/XOrZeqOc+WQQJtEoQxJvjV+o35wtDT78ZyjumrLv87y3paZKeN+ml/AJJz5LkS9YPmGFBECTALUWQF81QkOeE8pac3VXS6yR9YbnTZqrrjUed/Z4kX4DwiLVDJQQJJEsRZIOk82YgyVmhrCVmt5H0EklnDHCY6bq0LA+csqAIEgCWIog36VGS/jKgJLcW3FHRO4RXTz6/HrC8zaHp7ZI+PsVhGIIUKog3y3vTIU7Y3YvXV8dKTD4cOn8GYjSCNNObJb1xDQAQJEArqQVpNstvLfnrFAHkVuiQ5scKm75Hkq+qNUE8j+m3e7YmCBKCpkRBvHmPXeNz6RdK2hzKV0rWTzZ+dc5iRPmulOQ3xOQkBAmUShXEm+jhpz1ud84LHCyGOyT6pLe0tFHSOesoRyPKVZI2ZcBBkACpZEHCZi7dD3iTJD9C+0VJp0k6TtJhBZ+Ie/t3ntP5RiNBanqNJN+Y7UoIEuiMRZCwyaPJ7jI5F/pZAS1HWxpfLexKCBLoIEiAMWDWN/1+UaAclgVBelQ0gvSAlbmqT4Z9Utzec5cyjyCZFenVEKQHrIxVfRLsk+FSZFhpOxAkoyKbVRCkITH91G+F9EnwSkFZ0t8QpEddI0gPWB2r7jW5onbtCOSwqAjSUZHtRQjSJtJ/3jcmt45EDgTpWb8I0hNYa/X9JN0wIjkQpFWBqVkESRFaffkTJLlDYEnnFznbwiHW6nV6jyVjEmQnSQdJ8it8PiXp1MkQB6dMHqc9VpJfyuCAnVdXkydJumWEctCC3EOB7j+ULoifm/Cjpt/KHG3KhzufkfTI7mJPtdSPwP55pHIgSM+qL1mQp0v6+RoD8T+SvtyjB2sutmcP/FBXziHR0OtwiJVb24XeKNx2uVOig3za4PjDpMvHS3vw6FrVD2BN85zKtGUZ6vspQTwgatf/cv+yalJpLYhHmTozUUFdlbfSMot21JQ1+uJ1eNBppbIM8beUIM9N8D9hSpaj+npJgsy6a/iH11gzL5fkR3iHCM4SfiMliM/7frJKeT1MxZ5r5DjKr5UiiLuGX7RKpQwZVL7i1ScdumBymGVKEPNxfXy3VR9bJD25D7xFWLcEQXaTdGmrMoaUov1bx2dW3KsGeoFE+/+v93yOIA0iv7jOh5cWw094VpfWWxCPZz7kyLa5wffZxKhTfiXPEG9Xyd2eea7XR5DqhGgXeD0FeZgkN9vzDI74v05eRRI/276ocrj8CNK2oGN+vQTxyLO/XUc5GlG+HgLGz2q/f0aj7Tb/r4QpgnQI0V60HoLsI+n6AuSIwbpIV6liuVbKI0jbgo75eQuyr6TfFSbHSkG0yH9DkA4h2ovmKYg7E96EHOt2ztVIjyBtCzrm5yXI/pL+iBzrLoclQZAOIdqL5iHIUyX5DmyzB2O6viwQpG1Bx/ysBfGISEMOaYBc08uFIB1CtBfNUhB3eruDlqO4lhNB2hZ0zM9KEA+pNu/X/NO65LUuCNIhRHvRLAR5xeSG2z9oOYprOZodSB9Bdlw+qZ92WLd23I1mfmhBXrvg3TSaIBvzNEcQj7D7ydYhskcirqqruy0eUhAPT5AamXXMgbUo254jyDdWOQJwDwi/mLuaNJQg75A0xCOyixKEJZcjJchTVpGjKdPHqrFjoBbkiATQBizTvJPoWXNKCfK+RH3+FEH+X5FHJ2C44+GsK5TfH5ZxShAG0AlBP+0hloc0JoDHxQBBggCpLIKMK7iH2BkhSMqKsBxBECSEw1KWQ6xABEEQJIQDgrRhIAiCtGOCFiQQQRAECeGwlEWQQARBECSEA4K0YSAIgrRjghYkEEEQBAnhsJRFkEAEQRAkhAOCtGEgCIK0Y4IWJBBBEAQJ4bCURZBABEEQJIQDgrRhIAiCtGOCFiQQQRAECeGwlEWQQGRaQTbT3X103f33CvW/UhZBApVpBblP5vjlQ3TT5jemb+1ul7R9qP+VsggSqEwriH/qFFqR0bQiHlkrlRAkEBpCkI2S/Jwye/iyGXjk2p1C3a+WRZBAJjU+YOqZ9Oan3GwfLulsSZdJupxPEQxcF2dJepuk7ZrKSkxTgvg3q0mXJPb8x1RDgoI2BPzCuK6jgQuaFWuYnpOA8bUaIFDGuxH4TiIm/IbFatLnEzBulLRtNTQoqF85mhrL5cSaMPm8oas59TKPGU6qg8BhGfHwljpQ3FlKD6qZEsTDNd+vJiiVlnUXSVsz4iF1o3Hh8F2RAeX7GTeYFg5MRQXaQdKPMuLg4oqY3FXUd2eAcStzrqRNd32LzKIQ2EPS+Zkx8PZFKXSfcvjmkU/GU4daXn6bpOMkPV7Shj7/hHWLIuC6e+LyGCDufpJT9z78cktTZfLYHjmQ4joGu2X5DfG+I89nHAyulpQrRaxvD45UbfIe5QdrkCQCJN9/JzMWZqdXa0YouEcOugZJerekYwnytW7nVZJ8hYskyZfwci71rRU23xtXK3NdjeMSpvYEvqpxJS1J9S2JOyXungqWWpf7ylaqGwqtwbhag9z68liTJ0vyw3CkBIEDJZ1Ha1JNa+J7XR7Ek9STwAGSTpLkYYBz90SsNw5WPs84QdL+PWOC1Vch8AhJhyw/hHOUJD9UxWc8DI5crrsXcgK+SoTzZwhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIrAeB/wGvKkLooomNCAAAAABJRU5ErkJggg=="
-                                  />
-                                </defs>
-                              </svg>
-                            </div>
-
-                            <div className="profile-wrapper">
-                              <label className="custom-file-input-wrapper m-0">
-                                <input
-                                  type="file"
-                                  className="custom-file-input"
-                                  aria-label="Upload Photo"
-                                />
-                              </label>
-                              <p>PNG,JPEG or GIF (up to 1 MB)</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 4 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="father-name">Father's Name *</label>
-                        <input
-                          type="text"
-                          id="father-name"
-                          placeholder="Enter father's name"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="father-nid">Father's NID</label>
-                        <input
-                          type="text"
-                          id="father-nid"
-                          placeholder="Enter father's NID"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="father-mobile">
-                          Father's Mobile No *
-                        </label>
-                        <input
-                          type="text"
-                          id="father-mobile"
-                          placeholder="Enter father's mobile number"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 5 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="mother-name">Mother's Name *</label>
-                        <input
-                          type="text"
-                          id="mother-name"
-                          placeholder="Enter mother's name"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="mother-nid">Mother's NID</label>
-                        <input
-                          type="text"
-                          id="mother-nid"
-                          placeholder="Enter mother's NID"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="mother-mobile">
-                          Mother's Mobile No *
-                        </label>
-                        <input
-                          type="text"
-                          id="mother-mobile"
-                          placeholder="Enter mother's mobile number"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 6 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="present-address">
-                          Present Address *
-                        </label>
-                        <input
-                          type="text"
-                          id="present-address"
-                          placeholder="Enter present address"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="permanent-address">
-                          Permanent Address *
-                        </label>
-                        <input
-                          type="text"
-                          id="permanent-address"
-                          placeholder="Enter permanent address"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="guardian">
-                          Guardian (In Absence of F/M)
-                        </label>
-                        <input
-                          type="text"
-                          id="guardian"
-                          placeholder="Enter guardian's name"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 7 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="guardian-mobile">
-                          Guardian Mobile *
-                        </label>
-                        <input
-                          type="text"
-                          id="guardian-mobile"
-                          placeholder="Enter guardian's mobile number"
-                        />
-                      </div>
-
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Date of Birth *
-                        </label>
-                        <div className="input-datepicker-wrapper">
-                          <input
-                            type="text"
-                            className="datepicker-input"
-                            placeholder="dd/mm/yyyy"
-                          />
-                          <i className="fas fa-calendar-alt icon"></i>
-                        </div>
-                      </div>
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Student Gender</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected"
-                          
-                          onClick={()=> handleToggle('gender')}
-
-                          >
-                            <span>{gender || 'Select Gender'}</span>
-                            <span className="icon">
-                              <i className={`fas ${isMenuOpen.gender ? 'fa-angle-up' : 'fa-angle-down'}`}></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <select className= 'select-dropdown-items'
-                          
-                          
-                          value={gender} onChange={(e)=> setGender(e.target.value)}>
-                            
-                            <option className="Male">Male</option>
-                            <option className="Female">Female</option>
-                          </select>
-                        </div>
-                      </div>
-
-
-
-                    </div>
-
-                    {/* <!-- Row 8 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="student-email">Student Email</label>
-                        <input
-                          type="email"
-                          id="student-email"
-                          placeholder="Enter student email"
-                        />
-                      </div>
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">SMS Status</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Status</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">Active</div>
-                            <div className="option">Inactive</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Registration Date *
-                        </label>
-
-                        <div className="input-datepicker-wrapper">
-                          <input
-                            type="text"
-                            className="datepicker-input"
-                            placeholder="dd/mm/yyyy"
-                          />
-                          <i className="fas fa-calendar-alt icon"></i>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 9 --> */}
-                    <div className="form-row row">
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Shift Name</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Shift</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">Morning</div>
-                            <div className="option">Evening</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="section">Section Name</label>
-                        <input
-                          type="text"
-                          id="section"
-                          placeholder="Enter section name"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="session">Session Name</label>
-                        <input
-                          type="text"
-                          id="session"
-                          placeholder="Enter session name"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Actions --> */}
-                    <div className="form-actions">
-                      <button
-                        type="button"
-                        id="closBtn"
-                        className="button close"
-                      >
-                        Close
-                      </button>
-                      <button type="reset" className="button reset">
-                        Reset
-                      </button>
-                      <button type="submit" className="button save">
-                        Save
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </section>
-          {/* <!-- Add Students - Pop Up Modal Start --> */}
+          {/* <!-- Dashboard Table End --> */}
         </div>
       </div>
-      {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
