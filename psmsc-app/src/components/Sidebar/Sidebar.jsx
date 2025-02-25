@@ -8,20 +8,62 @@ import "../../assets/css/table-funtion.css";
 import logo from "../../assets/img/logo.png";
 import Toggle from "../Toggle/Toggle";
 
-import { useState} from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Sidebar = () => {
-
   const [activeMenu, setActiveMenu] = useState(null);
-
+  const academicRef = useRef(null);
+  const studentRef = useRef(null);
+  const examRef = useRef(null);
+  const dashboardRef = useRef(null);
+  const smsRef = useRef(null);
 
   const location = useLocation();
 
-  console.log(location.pathname);
+  useEffect(() => {
+    localStorage.setItem("isActive", "active");
+  }, []);
+
+  useEffect(() => {
+    console.log("test value", activeMenu);
+    if (activeMenu === "academic") {
+      academicRef.current.classList.add("active");
+      studentRef.current.classList.remove("active");
+      examRef.current.classList.remove("active");
+      dashboardRef.current.classList.remove("active");
+      smsRef.current.classList.remove("active");
+      console.log(academicRef.current);
+    } else if (activeMenu === "studentM") {
+      studentRef.current.classList.add("active");
+      academicRef.current.classList.remove("active");
+      examRef.current.classList.remove("active");
+      dashboardRef.current.classList.remove("active");
+      smsRef.current.classList.remove("active");
+    } else if (activeMenu === "examM") {
+      examRef.current.classList.add("active");
+      academicRef.current.classList.remove("active");
+      studentRef.current.classList.remove("active");
+      dashboardRef.current.classList.remove("active");
+      smsRef.current.classList.remove("active");
+    } else {
+      academicRef.current.classList.remove("active");
+      studentRef.current.classList.remove("active");
+      examRef.current.classList.remove("active");
+
+      console.log(academicRef.current);
+    }
+  }, [activeMenu]);
 
   const handleToggle = (menu) => {
-    setActiveMenu((prev) => (prev === menu ? null : menu));
+    // setActiveMenu((prev) => (prev === menu ? null : menu));
+    if (activeMenu === menu) {
+      setActiveMenu(null);
+    } else {
+      setActiveMenu(menu);
+    }
     console.log(`${menu} menu clicked`);
+    console.log(activeMenu);
+    console.log("active value", activeValue);
   };
 
   return (
@@ -63,7 +105,8 @@ const Sidebar = () => {
                 <ul>
                   <li
                     className={`active-link ${location.pathname === "/" ? "active" : ""}`}
-                    onClick={(e)=> handleToggle('dashboard')}
+                    ref={dashboardRef}
+                    onClick={() => handleToggle("dashboard")}
                   >
                     <Link to="/">
                       <svg
@@ -115,11 +158,18 @@ const Sidebar = () => {
                     </Link>
                   </li>
 
-                  <Toggle activeMenu={activeMenu} handleToggle={handleToggle} />
+                  <Toggle
+                    activeMenu={activeMenu}
+                    handleToggle={handleToggle}
+                    academicRef={academicRef}
+                    studentRef={studentRef}
+                    examRef={examRef}
+                  />
 
                   <li
                     className={`active-link ${location.pathname === "/sms-management" ? "active" : ""}`}
-                    onClick={(e)=> handleToggle('sms')}
+                    ref={smsRef}
+                    onClick={() => handleToggle("sms")}
                   >
                     <Link to="/sms-management">
                       <svg

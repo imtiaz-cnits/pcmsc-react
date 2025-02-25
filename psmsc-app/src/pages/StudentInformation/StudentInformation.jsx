@@ -3,7 +3,6 @@ import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 
 const StudentInformation = () => {
   const [bloodGroup, setBloodGroup] = useState("");
-  const [gender, setGender] = useState("");
 
   useEffect(() => {
     const studentModal = document.getElementById("studentModal");

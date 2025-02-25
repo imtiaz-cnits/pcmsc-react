@@ -1,27 +1,19 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "../../assets/css/dark-mode.css";
-import "../../assets/css/navbar-sidebar.css";
-import "../../assets/css/style.css";
 
-const Toggle = ({activeMenu ,handleToggle}) => {
-  const [isAcademicMenuOpen, setisAcademicMenuOpen] = useState(false);
-  const [isStudentMenuOpen, setisStudentMenuOpen] = useState(false);
-  const [isExamMenuOpen, setisExamMenuOpen] = useState(false);
-
+const Toggle = ({
+  activeMenu,
+  handleToggle,
+  academicRef,
+  studentRef,
+  examRef,
+}) => {
   const location = useLocation();
-
-  const handleMenuOpen = () => {
-    setisAcademicMenuOpen(!isAcademicMenuOpen);
-    console.log("button");
-  };
-
-  
 
   return (
     <>
       <li
         className="submenu-active"
+        ref={academicRef}
         onClick={() => handleToggle("academic")}
         style={{
           maxHeight: activeMenu === "academic" ? "800px" : "42px", // Transitions between 0 and 800px
@@ -61,6 +53,9 @@ const Toggle = ({activeMenu ,handleToggle}) => {
 
         <ul className="sub-menu" style={{ display: "block" }}>
           <li
+            className={
+              location.pathname === "/academic-management/class" ? "active" : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -70,6 +65,9 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/academic-management/shift" ? "active" : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -79,6 +77,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/academic-management/section"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -88,6 +91,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/academic-management/session"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -100,6 +108,7 @@ const Toggle = ({activeMenu ,handleToggle}) => {
       </li>
       <li
         className="submenu-active"
+        ref={studentRef}
         onClick={() => handleToggle("studentM")}
         style={{
           maxHeight: activeMenu === "studentM" ? "800px" : "42px", // Transitions between 0 and 800px
@@ -139,6 +148,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
 
         <ul className="sub-menu" style={{ display: "block" }}>
           <li
+            className={
+              location.pathname === "/student-management/student-information"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -148,6 +162,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/student-management/class-wise-student"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -157,6 +176,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/student-management/migration"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -170,6 +194,7 @@ const Toggle = ({activeMenu ,handleToggle}) => {
 
       <li
         className="submenu-active"
+        ref={examRef}
         onClick={() => handleToggle("examM")}
         style={{
           maxHeight: activeMenu === "examM" ? "800px" : "42px", // Transitions between 0 and 800px
@@ -208,6 +233,9 @@ const Toggle = ({activeMenu ,handleToggle}) => {
         </a>
         <ul className="sub-menu" style={{ display: "block" }}>
           <li
+            className={
+              location.pathname === "/exam-management/exam-type" ? "active" : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -217,6 +245,9 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/subject" ? "active" : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -226,6 +257,9 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/grade" ? "active" : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -235,6 +269,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/exam-assign"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -244,6 +283,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/mark-entry"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -253,6 +297,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/result-sheet"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -262,6 +311,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/combine-result"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -271,6 +325,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/mark-sheet"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -280,6 +339,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/admit-card"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -289,6 +353,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/generated-admit-card"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -298,6 +367,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/tabulation-sheet"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -307,6 +381,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/generated-tb-sheet"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -316,6 +395,9 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/seat-plan" ? "active" : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -325,6 +407,11 @@ const Toggle = ({activeMenu ,handleToggle}) => {
             </Link>
           </li>
           <li
+            className={
+              location.pathname === "/exam-management/generate-id-card"
+                ? "active"
+                : ""
+            }
             onClick={(e) => {
               e.stopPropagation();
             }}

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
-import Sidebar from "../../components/Sidebar/Sidebar";
 
 const Class = () => {
   useEffect(() => {
