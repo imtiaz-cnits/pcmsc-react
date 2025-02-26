@@ -27,6 +27,9 @@ import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
+import SignUp from "../pages/Auth/Signup/Signup";
+import SignIn from "../pages/Auth/Signin/Signin";
+import Admin from "../pages/Auth/Admin/Admin";
 
 export const router = createBrowserRouter([
   {
@@ -144,6 +147,21 @@ export const router = createBrowserRouter([
         element: <SMSManagement />,
       },
     ],
+  },
+  {
+    path: 'admin-panel',
+    element: <Admin />,
+    children: [
+      {
+        path: 'sign-up',
+        element: <SignUp />
+      },
+      {
+        path: 'sign-in',
+        element: <SignIn />
+      }
+    ]
+
   },
   {
     path: "test",
