@@ -51,7 +51,7 @@ const Toggle = ({
           ></i>
         </a>
 
-        <ul className="sub-menu" style={{ display: "block" }}>
+        <ul className="sub-menu">
           <li
             className={
               location.pathname === "/academic-management/class" ? "active" : ""
@@ -146,7 +146,7 @@ const Toggle = ({
           ></i>
         </a>
 
-        <ul className="sub-menu" style={{ display: "block" }}>
+        <ul className="sub-menu">
           <li
             className={
               location.pathname === "/student-management/student-information"
@@ -231,7 +231,7 @@ const Toggle = ({
             }}
           ></i>
         </a>
-        <ul className="sub-menu" style={{ display: "block" }}>
+        <ul className="sub-menu">
           <li
             className={
               location.pathname === "/exam-management/exam-type" ? "active" : ""
