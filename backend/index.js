@@ -1,12 +1,12 @@
-require("dotenv").config();
-const app = require("./app");
+require('dotenv').config();
+const app = require('./app');
+
 const port = process.env.PORT || 4000;
 
-//basic route
-
-app.get("/", (req, res) => {
+// basic route
+app.get('/', (req, res) => {
   res.status(200).json({
-    msg: "ok",
+    msg: 'ok',
   });
 });
 

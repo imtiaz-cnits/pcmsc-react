@@ -1,20 +1,18 @@
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/database/db');
 
 // express app intializtion
 const app = express();
 
-//middleware
+// middleware
 app.use(cors());
 
 // database connection with mongoose
 
-mongoose
-  .connect(process.env.DB_URL)
-  .then(() => console.log("database connection successful"))
-  .catch((error) => console.log(error));
+connectDB();
 
 // application routes
 
+// exports
 module.exports = app;
