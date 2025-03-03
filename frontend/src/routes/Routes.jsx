@@ -2,6 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
 import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
 import AdmitCard from "../pages/AdmitCard/AdmitCard";
+import Admin from "../pages/Auth/Admin/Admin";
+import SignIn from "../pages/Auth/SignIn/SignIn";
+import SignUp from "../pages/Auth/SignUp/SignUp";
 import Class from "../pages/Class/Class";
 import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
 import CombineResult from "../pages/CombineResult/CombineResult";
@@ -27,9 +30,6 @@ import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
-import SignUp from "../pages/Auth/Signup/Signup";
-import SignIn from "../pages/Auth/Signin/Signin";
-import Admin from "../pages/Auth/Admin/Admin";
 
 export const router = createBrowserRouter([
   {
