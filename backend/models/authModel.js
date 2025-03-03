@@ -16,6 +16,7 @@ const authSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
       trim: true,
     },
 
@@ -35,8 +36,9 @@ const authSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      trim: true,
     },
-    img_url: {
+    imgURL: {
       type: String,
       default: 'default_image_url',
     },
