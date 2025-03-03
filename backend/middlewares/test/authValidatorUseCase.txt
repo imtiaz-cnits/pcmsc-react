@@ -1,0 +1,126 @@
+
+
+
+✅ Bangladesh Mobile Number Validation Test Cases
+📌 Rules for a Valid Bangladesh Mobile Number:
+Must be 11 digits long.
+Must start with a valid operator prefix (e.g., 013, 014, 015, 016, 017, 018, 019).
+Should only contain numeric characters (no letters or special characters).
+Can have an optional +88 country code.
+✅ Test Case 1: Valid Mobile Number Without Country Code
+Test Case ID: TC_Mobile_001
+Test Case Description: Ensure that a valid 11-digit Bangladeshi mobile number is accepted.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 01712345678 in the mobile number field.
+Submit the form.
+Expected Result:
+The number is accepted, and the form proceeds to the next step.
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: Ensure that the number matches valid operator prefixes.
+✅ Test Case 2: Valid Mobile Number With Country Code
+Test Case ID: TC_Mobile_002
+Test Case Description: Ensure that a valid Bangladeshi mobile number with the country code is accepted.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter +8801712345678 in the mobile number field.
+Submit the form.
+Expected Result:
+The number is accepted, and the form proceeds to the next step.
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: Ensure the system handles the +88 prefix correctly.
+❌ Test Case 3: Number With Less Than 11 Digits (Invalid)
+Test Case ID: TC_Mobile_003
+Test Case Description: Ensure that a number shorter than 11 digits is rejected.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 017123456 (only 9 digits).
+Submit the form.
+Expected Result:
+An error message appears: "Invalid mobile number. Must be 11 digits long."
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: Ensure the form enforces the 11-digit length requirement.
+❌ Test Case 4: Number With More Than 11 Digits (Invalid)
+Test Case ID: TC_Mobile_004
+Test Case Description: Ensure that a number longer than 11 digits is rejected.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 017123456789 (12 digits).
+Submit the form.
+Expected Result:
+An error message appears: "Invalid mobile number. Must be 11 digits long."
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: Ensure the input field restricts numbers longer than 11 digits.
+❌ Test Case 5: Number With Invalid Operator Prefix (Invalid)
+Test Case ID: TC_Mobile_005
+Test Case Description: Ensure that a number with an invalid operator prefix is rejected.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 01234567890 (Invalid prefix 012).
+Submit the form.
+Expected Result:
+An error message appears: "Invalid operator prefix. Use a valid prefix like 013, 014, 015, 016, 017, 018, or 019."
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: Ensure only valid operator prefixes are allowed.
+❌ Test Case 6: Number Containing Letters (Invalid)
+Test Case ID: TC_Mobile_006
+Test Case Description: Ensure that a mobile number containing letters is rejected.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 01712ABCD34.
+Submit the form.
+Expected Result:
+An error message appears: "Mobile number must contain only numeric digits."
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: Only numeric input should be accepted.
+❌ Test Case 7: Number Containing Special Characters (Invalid)
+Test Case ID: TC_Mobile_007
+Test Case Description: Ensure that a mobile number with special characters is rejected.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 017-123-45678.
+Submit the form.
+Expected Result:
+An error message appears: "Mobile number must contain only numeric digits."
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: The input field should not allow dashes or other special characters.
+❌ Test Case 8: Empty Mobile Number Field (Invalid)
+Test Case ID: TC_Mobile_008
+Test Case Description: Ensure that the mobile number field cannot be left empty.
+Preconditions: User is on the signup page.
+Test Steps:
+Leave the mobile number field empty.
+Submit the form.
+Expected Result:
+An error message appears: "Mobile number is required."
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: High
+Comments: The mobile number should be a mandatory field.
+✅ Test Case 9: Valid Mobile Number With Space Between Digits (Trim Input)
+Test Case ID: TC_Mobile_009
+Test Case Description: Ensure that spaces in the mobile number are trimmed before validation.
+Preconditions: User is on the signup page.
+Test Steps:
+Enter 01712 345 678.
+Submit the form.
+Expected Result:
+The system should automatically remove spaces and accept the number as valid.
+Actual Result: (To be filled during testing)
+Status: Pass/Fail
+Priority: Medium
+Comments: The system should handle and normalize minor formatting issues.
