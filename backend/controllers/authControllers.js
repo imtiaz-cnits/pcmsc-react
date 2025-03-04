@@ -1,11 +1,11 @@
 // 🔗 External imports
-const bcrypt = require('bcrypt');
-
+// const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 // 📦 Internal imports (if any)
 const Auth = require('../models/authModel');
 
 // 📝 Signup function
-const SignUP = async (req, res) => {
+const SignUp = async (req, res) => {
   try {
     const {
       name,
@@ -19,48 +19,13 @@ const SignUP = async (req, res) => {
       OTP,
     } = req.body;
 
-    // 🔍 Check if user already exists
-    // const existingUser = await Auth.findOne({ email });
-    // if (existingUser) {
-    //   return res.status(400).json({
-    //     status: 'error',
-    //     message: 'Email already in use',
-    //   });
-    // }
-
-    // check username is already exists
-
-    // 📧 Email validation
-    // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-    // if (!emailRegex.test(email)) {
-    //   return res
-    //     .status(400)
-    //     .json({ status: 'error', message: 'Invalid email format' });
-    // }
-
-    // 🔐 Password validation
-    // const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-    // if (!passwordRegex.test(password)) {
-    //   return res.status(400).json({
-    //     status: 'error',
-    //     message:
-    //       'Password must be at least 8 characters long and contain at least one uppercase letter and one digit',
-    //   });
-    // }
-
-    // 🔒 Hash the password
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     // 👤 Create new user object
     const newUser = new Auth({
       name,
       username,
       email,
       mobile,
-      password: hashedPassword,
+      password,
       imgURL,
       status,
       role,
@@ -76,10 +41,82 @@ const SignUP = async (req, res) => {
     });
   } catch (error) {
     console.error('🚨 Signup error:', error);
-    return res
-      .status(500)
-      .json({ status: 'error', message: 'Internal Server Error' });
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal Server Error: Something went wrong !',
+    });
   }
 };
 
-module.exports = { SignUP };
+const Login = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const token = await jwt.sign(
+      {
+        username,
+        userId: 4578445,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
+    );
+
+    return res.status(200).json({
+      access_token: token,
+      message: 'Login successful!',
+    });
+
+    // 🔍 find user by email
+
+    /*
+    const user = await Auth.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email',
+      });
+    }
+
+    if (user) {
+      const isValidPassword = await bcrypt.compare(password, user.password);
+
+      if (isValidPassword) {
+        // jwt token generate
+
+        const token = await jwt.sign(
+          {
+            username,
+            userId: user._id,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: '1h' },
+        );
+
+        return res.status(200).json({
+          access_token: token,
+          message: 'Login successful!',
+        });
+      }
+      res.status(401).json({
+        status: false,
+        error: 'Authentication failed!',
+      });
+    }
+
+
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+    });
+
+    */
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({
+      error: 'Authentication failed !',
+    });
+  }
+};
+
+module.exports = { SignUp, Login };

@@ -3,7 +3,7 @@ import Main from "../Layout/Main";
 import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
 import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import Admin from "../pages/Auth/Admin/Admin";
-import SignIn from "../pages/Auth/SignIn/SignIn";
+import Login from "../pages/Auth/Login/Login";
 import SignUp from "../pages/Auth/SignUp/SignUp";
 import Class from "../pages/Class/Class";
 import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
@@ -158,7 +158,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'sign-in',
-        element: <SignIn />
+        element: <Login />
       }
     ]
 

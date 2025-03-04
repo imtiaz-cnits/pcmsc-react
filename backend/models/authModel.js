@@ -1,10 +1,9 @@
-// external imports
-
+// 📦 External Imports
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
-// internal imports
-
-const authSchema = mongoose.Schema(
+// 🏷️ define schema for authentication
+const authSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -36,7 +35,6 @@ const authSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
-      trim: true,
     },
     imgURL: {
       type: String,
@@ -61,7 +59,44 @@ const authSchema = mongoose.Schema(
   },
 );
 
+// ⚡ Middleware: Check for Existing Email Before Saving
+authSchema.pre('save', async function validateUniqueEmail(next) {
+  try {
+    const existingUser = await mongoose
+      .model('Auth')
+      .findOne({ email: this.email });
+
+    if (existingUser) {
+      const error = new Error('Email already exists');
+      error.status = 409;
+      return next(error);
+    }
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+// 🔑 Middleware: Hash Password Before Saving
+
+authSchema.pre('save', async function hashPassword(next) {
+  try {
+    // Check if the password is already hashed (to prevent re-hashing)
+    if (!this.isModified('password')) {
+      return next();
+    }
+
+    // Hash the password
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(this.password, saltRounds);
+    this.password = hashedPassword;
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
 const AuthModel = mongoose.model('Auth', authSchema);
 
-// internal exports
+// 🚀 Export Model for External Usage
 module.exports = AuthModel;
