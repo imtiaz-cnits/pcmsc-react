@@ -1,11 +1,13 @@
 // 🔗 External imports
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const createError = require('http-errors');
+
 // 📦 Internal imports (if any)
 const Auth = require('../models/authModel');
 
-// 📝 Signup function
-const SignUp = async (req, res) => {
+// 📝 do Signup
+const SignUp = async (req, res, next) => {
   try {
     const {
       name,
@@ -13,11 +15,25 @@ const SignUp = async (req, res) => {
       email,
       mobile,
       password,
-      imgURL,
+      avatar,
       status,
       role,
       OTP,
     } = req.body;
+
+    // 📧 Check if email/mobile already exists
+
+    const existingUser = await Auth.findOne({ $or: [{ email }, { mobile }] });
+
+    if (existingUser && existingUser._id) {
+      const field = existingUser.email === email ? 'email' : 'mobile';
+      return next(createError(409, `${field} already exists`));
+    }
+
+    // 🔑 hash password
+
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // 👤 Create new user object
     const newUser = new Auth({
@@ -25,98 +41,74 @@ const SignUp = async (req, res) => {
       username,
       email,
       mobile,
-      password,
-      imgURL,
+      password: hashedPassword,
+      avatar,
       status,
       role,
       OTP,
     });
 
     console.log(newUser);
+
     // 💾 Save the user to the database
-    // newUser.save();
+    // await newUser.save();
     return res.status(201).json({
       status: 'success',
       message: 'User created successfully',
     });
   } catch (error) {
     console.error('🚨 Signup error:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal Server Error: Something went wrong !',
-    });
+    return next(error);
   }
 };
 
-const Login = async (req, res) => {
+// 📝 do login
+async function Login(req, res, next) {
   try {
-    const { username } = req.body;
+    const { mobile, email, password } = req.body;
 
-    const token = await jwt.sign(
-      {
-        username,
-        userId: 4578445,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' },
-    );
-
-    return res.status(200).json({
-      access_token: token,
-      message: 'Login successful!',
-    });
-
-    // 🔍 find user by email
-
-    /*
-    const user = await Auth.findOne({ email });
+    // 🔍 Check if email/mobile is exists
+    const user = await Auth.findOne({ $or: [{ email }, { mobile }] });
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email',
-      });
+      return next(createError(404, 'User not found'));
     }
 
-    if (user) {
+    if (user && user._id) {
+      // decrypt password
       const isValidPassword = await bcrypt.compare(password, user.password);
 
+      if (!isValidPassword) {
+        return next(createError(401, 'Invalid Credentials!'));
+      }
       if (isValidPassword) {
-        // jwt token generate
+        // ✅  prepare the user object to generate token
+        const userObject = {
+          userid: user._id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          mobile: user.mobile,
+          avatar: user.avatar || 'default_image_url',
+        };
 
-        const token = await jwt.sign(
-          {
-            username,
-            userId: user._id,
-          },
-          process.env.JWT_SECRET,
-          { expiresIn: '1h' },
-        );
+        // ✅ generate token
+        const token = await jwt.sign(userObject, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRY,
+        });
 
+        // ✅ Send the response with the token
         return res.status(200).json({
+          success: true,
           access_token: token,
           message: 'Login successful!',
         });
       }
-      res.status(401).json({
-        status: false,
-        error: 'Authentication failed!',
-      });
     }
-
-
-    return res.status(200).json({
-      success: true,
-      message: 'Login successful',
-    });
-
-    */
   } catch (error) {
     console.log(error);
-    return res.status(401).json({
-      error: 'Authentication failed !',
-    });
+    return next(error);
   }
-};
+}
 
 module.exports = { SignUp, Login };

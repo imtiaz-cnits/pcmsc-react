@@ -1,4 +1,4 @@
-!signUp validator e -> imgURL validation need to be re-checking 
+!signUp validator e -> avatar validation need to be re-checking 
 
 test case : 
 
@@ -8,7 +8,7 @@ test case :
   "email": "john.doe@example.com",
   "mobile": "+8801312345678",
   "password": "John@1234",
-  "imgURL": "example.com/image.jpg",
+  "avatar": "example.com/image.jpg",
   "status": "active",
   "role": "user",
   "OTP": "123456"
@@ -32,7 +32,7 @@ output :
 
 Explanation:
 
-Edge Case: The imgURL should be a valid URL, but this one is not (it lacks the protocol part like http:// or https://).
+Edge Case: The avatar should be a valid URL, but this one is not (it lacks the protocol part like http:// or https://).
 
 
 

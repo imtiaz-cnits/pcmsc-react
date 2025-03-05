@@ -63,7 +63,7 @@ const signupValidator = [
       return true;
     }),
 
-  check('imgURL').optional().isURL().withMessage('Invalid image URL format'),
+  check('avatar').optional().isURL().withMessage('Invalid image URL format'),
 
   check('status')
     .optional()
