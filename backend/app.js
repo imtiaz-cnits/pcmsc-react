@@ -14,13 +14,28 @@ const {
 // express app intializtion
 const app = express();
 
+
+
+
 // 🛡️ global middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow Authorization header
+    credentials: true, // Allow cookies (if needed)
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 🔌 database connection with mongoose
 connectDB();
+
+// Root route for basic check
+app.get('/', (req, res) => {
+  res.send('Welcome to the API!');
+});
 
 // basic routing
 app.use('/api/v1', testRouter);

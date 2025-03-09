@@ -21,6 +21,7 @@ const SignUp = async (req, res, next) => {
       OTP,
     } = req.body;
 
+    console.log('signup form data : ' ,req.body)
     // 📧 Check if email/mobile already exists
 
     const existingUser = await Auth.findOne({ $or: [{ email }, { mobile }] });
