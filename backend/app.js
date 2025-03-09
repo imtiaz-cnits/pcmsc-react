@@ -1,42 +1,53 @@
+// 🚀 Importing Required Modules
 const express = require('express');
 const cors = require('cors');
 
-// internal imports
+// 🔗 internal imports
 const connectDB = require('./config/database/db');
 const authRouter = require('./routes/authRouter');
 const testRouter = require('./routes/testRouter');
+const {
+  notFoundHandler,
+  errorHandler,
+} = require('./middlewares/common/errorHandler');
 
 // express app intializtion
 const app = express();
 
-// middleware
-app.use(cors());
+
+
+
+// 🛡️ global middlewares
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow Authorization header
+    credentials: true, // Allow cookies (if needed)
+  })
+);
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// database connection with mongoose
-
+// 🔌 database connection with mongoose
 connectDB();
+
+// Root route for basic check
+app.get('/', (req, res) => {
+  res.send('Welcome to the API!');
+});
 
 // basic routing
 app.use('/api/v1', testRouter);
 
-// routing setup
+// application routes
 app.use('/api/v1/auth', authRouter);
 
-// 🚀 Default error handler middleware
-const errorHandler = (err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
+// 404 not found handler
+app.use(notFoundHandler);
 
-  return res.status(500).json({
-    status: 'error',
-    message: err.message || 'Internal Server Error',
-  });
-};
-
-// middlewar
+// 🛡️  common custom error handler middleware
 app.use(errorHandler);
 
-// exports
+// Export Express App
 module.exports = app;

@@ -49,7 +49,6 @@ const signupValidator = [
   check('password')
     .notEmpty()
     .withMessage('Password is required.')
-    .trim()
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     )
@@ -64,7 +63,7 @@ const signupValidator = [
       return true;
     }),
 
-  check('imgURL').optional().isURL().withMessage('Invalid image URL format'),
+  check('avatar').optional().isURL().withMessage('Invalid image URL format'),
 
   check('status')
     .optional()
@@ -79,4 +78,23 @@ const signupValidator = [
   check('OTP').optional().isString().withMessage('OTP should be a string'),
 ];
 
-module.exports = { signupValidator };
+const loginValidator = [
+  check('username')
+    .notEmpty()
+    .withMessage('Username required')
+    .isString()
+    .withMessage('Username should be a string')
+    .trim(),
+
+  check('email')
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email should be a valid email address')
+    .trim(),
+
+  check('password').notEmpty().withMessage('Password is required'),
+];
+
+// 🚀 Export Model for External Usage
+module.exports = { signupValidator, loginValidator };
