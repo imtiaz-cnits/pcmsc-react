@@ -4,7 +4,7 @@ import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
 import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
-import SignUp from "../pages/Auth/SignUp/SignUp";
+import Signup from "../pages/Auth/Signup/Signup";
 import Class from "../pages/Class/Class";
 import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
 import CombineResult from "../pages/CombineResult/CombineResult";
@@ -154,7 +154,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: 'sign-up',
-        element: <SignUp />
+        element: <Signup />
       },
       {
         path: 'sign-in',
