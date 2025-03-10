@@ -149,19 +149,18 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: 'admin-panel',
+    path: "admin-panel",
     element: <Admin />,
     children: [
       {
-        path: 'sign-up',
-        element: <Signup />
+        path: "sign-up",
+        element: <Signup />,
       },
       {
-        path: 'sign-in',
-        element: <Login />
-      }
-    ]
-
+        path: "sign-in",
+        element: <Login />,
+      },
+    ],
   },
   {
     path: "test",

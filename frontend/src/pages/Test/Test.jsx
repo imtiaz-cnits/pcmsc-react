@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import productMemberPng from "../../assets/img/projuct-member-img-3.png";
+import { useState } from "react";
 
 const StudentInformation = () => {
   const [activeMenu, setActiveMenu] = useState(null); // Tracks the active menu

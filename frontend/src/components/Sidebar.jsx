@@ -1,14 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import "../../assets/css/all-modal.css";
-import "../../assets/css/bootstrap.min.css";
-import "../../assets/css/dark-mode.css";
-import "../../assets/css/navbar-sidebar.css";
-import "../../assets/css/style.css";
-import "../../assets/css/table-funtion.css";
-import logo from "../../assets/img/logo.png";
-import Toggle from "../Toggle/Toggle";
+import logo from "../assets/img/logo.png";
+import Toggle from './Toggle';
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Sidebar = () => {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -63,7 +57,6 @@ const Sidebar = () => {
     }
     console.log(`${menu} menu clicked`);
     console.log(activeMenu);
-    console.log("active value", activeValue);
   };
 
   return (

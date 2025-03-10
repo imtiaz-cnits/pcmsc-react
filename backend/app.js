@@ -14,17 +14,14 @@ const {
 // express app intializtion
 const app = express();
 
-
-
-
 // 🛡️ global middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow Authorization header
+    origin: 'http://localhost:5173', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow Authorization header
     credentials: true, // Allow cookies (if needed)
-  })
+  }),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

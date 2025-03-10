@@ -8,7 +8,7 @@ import "../assets/css/style.css";
 import "../assets/css/table-funtion.css";
 import logo from "../assets/img/logo.png";
 import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
-import Sidebar from "../components/Sidebar/Sidebar";
+import Sidebar from "../components/Sidebar";
 
 const Navbar = () => {
   const [lightMode, setLightMode] = useState(localStorage.lightMode || "light");

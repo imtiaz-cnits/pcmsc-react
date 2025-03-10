@@ -1,73 +1,121 @@
-import { useState } from 'react';
-import axiosPublic from '../../../components/axiosPublic';
-import axios from 'axios';
+import { useState } from "react";
+import axiosPublic from "../../../components/axiosPublic";
 
-const SignUp=()=>{
+const SignUp = () => {
+  const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [username , setUsername]=useState('')
 
-   const [name , setName] = useState('')
-   const [username , setUsername] = useState('')
-   const [mobile , setMobile] = useState('')
-   const [email , setEmail] = useState('')
-   const [password , setPassword] = useState('')
-   const [error , setError] = useState('')
-   const [loading , setLoading]=useState(false)
 
-   const handleSubmit = async (e)=>{
-    e.preventDefault(); 
-    setLoading(true)
-    setError('')
-    const formData = {name ,username,mobile,email,password}
+
+   // to reset the form fields 
+
+   function resetForm(){
+    setName("");
+    setUsername('')
+    setPassword("");
+    setMobile("");
+    setEmail("");
+  }
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true);
+    setError("");  // clear previous errors
+    const formData = { name,username,  email, mobile, password };
 
     try {
-        
-        const res = await axios.post('http://localhost:3000/api/v1/auth/sign-up',formData)
-        console.log(res.data)
+      const res = await axiosPublic.post(
+        "/auth/sign-up",
+        formData,
+      );
+      console.log(res.data);
 
-        setLoading(false)
-
+      // reset the form fields
+      resetForm()
+      
     } catch (error) {
-        setLoading(true)
-        setError('error')
-        console.log(error)
+      const errorMessage = error.response?.data?.message || 'An error occured!'
+      setError(errorMessage);
+      console.error(error);
+    }finally{
+      setLoader(false)
     }
 
-    // clear form 
-    setName('')
-    setUsername('')
-    setPassword('')
-    setMobile('')
-    setEmail('')
-    setPassword('')
+    console.log(formData);
+
+    
+  };
 
 
-    console.log(formData)
-   }
+ 
+ 
 
 
-   if(loading){
-    return <>awaitinggggg .............</>
-   }
+  return (
+    <>
+      <form action="" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          value={name}
+          placeholder="name"
+          required
+          onChange={(e) => setName(e.target.value)}
+        />
 
-    return(
+        <br /> <br />
 
-        <>
-       
-    <form action="" onSubmit={handleSubmit}>
 
-        <input type="text" name="name" placeholder='name' onChange={(e)=> setName(e.target.value)} />
-        
-        <input type="text" name='username' placeholder='username' onChange={(e)=> setUsername(e.target.value)} />
-        <input type="email" name='email' placeholder='email' onChange={(e)=> setEmail(e.target.value)} />
+    <input type="text" name="username"  placeholder="username" value={username} onChange={(e)=> setUsername(e.target.value)}/>
 
-        <input type="password" name="password" placeholder='password' onChange={(e)=> setPassword(e.target.value)} />
+    <br /> <br />
 
+        <input
+          type="text"
+          name="mobile"
+          placeholder="mobile"
+          value={mobile}
+          required
+          onChange={(e) => setMobile(e.target.value)}
+        />
+
+        <br /> <br />
+        <input
+          type="email"
+          name="email"
+          placeholder="email"
+          value={email}
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <br /> <br />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="password"
+          value={password}
+          required
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <br /> <br />
 
         <input type="submit" value="submit" />
+      </form>
 
-    </form>
-     
-        </>
-    )
-}
+     {/* 🚀 Better error display */}
+     {loader && <span style={{ color: "blue" }} aria-live="polite">🔄 Loading...</span>}
+      {error && <span style={{ color: "red" }} aria-live="assertive">❌ {error}</span>}
+    </>
+  );
+};
 
 export default SignUp;

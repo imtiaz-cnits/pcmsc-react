@@ -15,10 +15,10 @@ const { Login } = require('../controllers/authControllers');
 // internal imports
 
 // signup
-router.post('/sign-up', signupValidator, sanitization, SignUp);
+router.post('/sign-up', ...signupValidator, sanitization, SignUp);
 
 // login
-router.post('/login', loginValidator, sanitization, Login);
+router.post('/login', ...loginValidator, sanitization, Login);
 
 // exports
 module.exports = router;

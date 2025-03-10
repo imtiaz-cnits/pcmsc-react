@@ -1,11 +1,12 @@
-import axios from 'axios'
+import axios from "axios";
+
+const API_URL = 'http://localhost:3000/api/v1';
 
 
-// create instance 
+// create instance
 const axiosPublic = axios.create({
+  baseURL: API_URL,
+  timeout: 5000,
+});
 
-    baseURL : ' http://localhost:4000/api',
-    timeout : 5000 , 
-})
-
-export default axiosPublic; 
+export default axiosPublic;

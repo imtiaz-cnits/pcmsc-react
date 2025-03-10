@@ -82,10 +82,12 @@ authSchema.pre('save', async function validateUniqueEmail(next) {
 // 🔑 Edge Case: Hash Password if Not Already Hashed
 authSchema.pre('save', async function hashPassword(next) {
   // ⚠️ prevent re-hashing
-  if (!this.isModified('password')) return next();
+  console.log('check in auth model for passowrd ', this.isModified('password'));
+  if (this.isModified('password')) return next();
 
   try {
     // Hash the password
+    console.log('this portion inside model try running ');
     const saltRounds = 12;
     this.password = await bcrypt.hash(this.password, saltRounds);
     return next();

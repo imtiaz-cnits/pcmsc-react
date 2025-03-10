@@ -21,17 +21,39 @@ const signupValidator = [
     .notEmpty()
     .withMessage('Username is required')
     .isString()
-    .withMessage('Username must be a String')
     .trim()
-    .isLength({ min: 3 })
-    .withMessage('Username must be at least 3 characters long')
-    .isLength({ max: 31 })
-    .withMessage('Username must not be more than 31 characters long')
-    .matches(/^[a-zA-Z0-9]+$/)
-    .withMessage('Username must contain only letters and numbers')
+    .isLength({ min: 6, max: 30 })
+    .withMessage(
+      'Sorry, your username must be between 6 and 30 characters long.',
+    )
+    .matches(
+      /^(?![0-9]+$)[a-zA-Z0-9_](?:[a-zA-Z0-9_]*(?:\.[a-zA-Z0-9_]+)?){0,28}$/,
+    ) // Only letters, numbers, and periods are allowed
+    .withMessage(
+      'Sorry,only letters(a-z), numbers(0-9), and periods(.)are allowed.',
+    )
     .not()
     .contains(' ')
-    .withMessage('Username should not contain spaces'),
+    .withMessage('Username should not contain spaces.')
+    .custom((value) => {
+      if (
+        value.startsWith('.') ||
+        value.endsWith('.') ||
+        value.includes('..')
+      ) {
+        throw new Error(
+          'Username cannot start or end with a period, and cannot contain consecutive periods.',
+        );
+      }
+
+      if (value.length >= 8 && !/[a-zA-Z]/.test(value)) {
+        throw new Error(
+          'Sorry, username with 8 or more characters must include at least one alphabetical character (a-z).',
+        );
+      }
+
+      return true;
+    }),
 
   check('email')
     .notEmpty()
@@ -79,21 +101,12 @@ const signupValidator = [
 ];
 
 const loginValidator = [
-  check('username')
+  check('userIdentifier')
     .notEmpty()
-    .withMessage('Username required')
-    .isString()
-    .withMessage('Username should be a string')
+    .withMessage('Enter an email or phone number')
     .trim(),
 
-  check('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Email should be a valid email address')
-    .trim(),
-
-  check('password').notEmpty().withMessage('Password is required'),
+  check('password').notEmpty().withMessage('Enter a password'),
 ];
 
 // 🚀 Export Model for External Usage
