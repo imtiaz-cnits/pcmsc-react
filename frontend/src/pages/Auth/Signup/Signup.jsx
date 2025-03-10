@@ -111,8 +111,8 @@ const SignUp = () => {
         <input type="submit" value="submit" />
       </form>
 
-     {/* 🚀 Better error display */}
-     {loader && <span style={{ color: "blue" }} aria-live="polite">🔄 Loading...</span>}
+    {/* 🚀 Better error display */}
+    {loader && <span style={{ color: "blue" }} aria-live="polite">🔄 Loading...</span>}
       {error && <span style={{ color: "red" }} aria-live="assertive">❌ {error}</span>}
     </>
   );
