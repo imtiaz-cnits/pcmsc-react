@@ -13,15 +13,19 @@ import "./assets/css/dark-mode.css";
 import "./assets/css/navbar-sidebar.css";
 import "./assets/css/style.css";
 import "./assets/css/table-funtion.css";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { AuthProvider } from "./contexts/AuthContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     {/* <App /> */}
-    <AuthProvider>
+   <ErrorBoundary>
+   <AuthProvider>
 
-    <RouterProvider router={router} />
+<RouterProvider router={router} />
 
-    </AuthProvider>
+</AuthProvider>
+
+   </ErrorBoundary>
   </StrictMode>,
 );

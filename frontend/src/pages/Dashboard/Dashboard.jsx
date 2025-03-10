@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
-import { useAuth } from "../../contexts/AuthContext";
-import { useEffect } from "react";
 
 const Dahsboard = () => {
   

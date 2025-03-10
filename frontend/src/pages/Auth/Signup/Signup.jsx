@@ -1,76 +1,74 @@
-import { useEffect, useState } from "react";
-import axiosPublic from "../../../components/axiosPublic";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useContext, useRef, useState } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loader, setLoader] = useState(false);
   const [username , setUsername]=useState('')
-  const {setUser, user,setIsAuthenticated,isAuthenticated} = useAuth(); 
+  const {signup , loader,error } = useContext(AuthContext)
+  const signupRef = useRef()
+  // const {setUser, user,setIsAuthenticated,isAuthenticated} = useAuth(); 
 
 
-  useEffect(()=>{
-    console.log('user value',user)
-    localStorage.setItem('user',JSON.stringify(user))
-    localStorage.setItem('isAuthenticated',JSON.stringify(isAuthenticated))
-  },[setUser , setIsAuthenticated,user ,isAuthenticated])
+  // useEffect(()=>{
+  //   console.log('user value',user)
+  //   localStorage.setItem('user',JSON.stringify(user))
+  //   localStorage.setItem('isAuthenticated',JSON.stringify(isAuthenticated))
+  // },[setUser , setIsAuthenticated,user ,isAuthenticated])
 
 
 
-  useEffect(()=>{
+  // useEffect(()=>{
 
-    console.log('user of value',user)
-    console.log('authenticated value',isAuthenticated)
-  },[])
+  //   console.log('user of value',user)
+  //   console.log('authenticated value',isAuthenticated)
+  // },[])
 
    // to reset the form fields 
 
-   function resetForm(){
-    setName("");
-    setUsername('')
-    setPassword("");
-    setMobile("");
-    setEmail("");
-  }
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoader(true);
-    setError("");  // clear previous errors
-    const formData = { name,username,  email, mobile, password };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoader(true);
+  //   setError("");  // clear previous errors
+  //   const formData = { name,username,  email, mobile, password };
 
-    try {
-      const res = await axiosPublic.post(
-        "/auth/sign-up",
-        formData,
-      );
-      console.log("✅ Response received:", res.data);
+  //   try {
+  //     const res = await axiosPublic.post(
+  //       "/auth/sign-up",
+  //       formData,
+  //     );
+  //     console.log("✅ Response received:", res.data);
       
-      setUser(res.data?.data)
-      setIsAuthenticated(true)
-      // reset the form fields
-      resetForm()
-      setLoader(false)
-    } catch (error) {
-      setLoader(false)
-      const errorMessage = error.response?.data?.message || 'An error occured!'
-      setError(errorMessage);
-      console.error(error);
-    }
-    console.log(formData);
+  //     // setUser(res.data?.data)
+  //     // setIsAuthenticated(true)
+  //     // reset the form fields
+  //     resetForm()
+  //     setLoader(false)
+  //   } catch (error) {
+  //     setLoader(false)
+  //     const errorMessage = error.response?.data?.message || 'An error occured!'
+  //     setError(errorMessage);
+  //     console.error(error);
+  //   }
+  //   console.log(formData);
 
     
-  };
+  // };
 
+  const handleSubmit = async (e)=>{
+    const formData = { name,username,  email, mobile, password };
+
+    e.preventDefault(); 
+    await signup(formData)
+  }
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} ref={signupRef}>
         <input
           type="text"
           name="name"
@@ -119,7 +117,7 @@ const SignUp = () => {
 
         <br /> <br />
 
-        <button type="submit" >Submit</button>
+        <input type="submit" value="submit"/>
       </form>
 
     {/* 🚀 Better error display */}

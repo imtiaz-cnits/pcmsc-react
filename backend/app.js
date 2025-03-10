@@ -10,6 +10,7 @@ const {
   notFoundHandler,
   errorHandler,
 } = require('./middlewares/common/errorHandler');
+const userRouter = require('./controllers/userController');
 
 // express app intializtion
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/v1', testRouter);
 
 // application routes
 app.use('/api/v1/auth', authRouter);
+// app.use('/api/v1/users', userRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
