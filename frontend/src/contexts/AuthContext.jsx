@@ -1,85 +1,66 @@
-import { createContext, useContext, useState } from 'react';
-import axiosPublic from '../components/axiosPublic';
+import { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+import {useNavigate} from 'react-router-dom'
 
-// create context 
-const AuthContext = createContext(); 
+// 1. Create Context for Authentication 🤝
+const AuthContext = createContext();
 
-//custom hook for using the auth context
-export function useAuth(){
+// 2. Custom Hook to use AuthContext 🔑
+export const useAuth=()=> useContext(AuthContext)
 
-    return useContext(AuthContext)
-}
+// 3. Auth Provider 💼
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Authenticated state ✅
+  const [loader, setLoader] = useState(false); 
+  const [error, setError] = useState(''); 
+  const [token, setToken] = useState(localStorage.getItem('access_token') || null);
+  
 
-
-// create provider 
-
-export const AuthProvider = ({children})=>{
-
-    const [user , setUser] = useState(null); 
-    const [isAuthenticated , setIsAuthenticated] = useState(false)
-    const [loader , setLoader] = useState(false)
-    const [error , setError] = useState('')
-
-   
-    // sign-up
-
-    const signup =async (credentials,resetForm)=>{
-
-        console.log('clicked 2')
-        console.log('reset form function : ' , resetForm)
-        setLoader(true)
-        setError('') //clear previous errors
-
-        try {
-            const res = await axiosPublic.post( "/auth/sign-up",credentials)
-            console.log("✅ Response received:", res.data);
-            setUser(res.data)
-            setIsAuthenticated(true); 
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || "⚠️ An error occurred!";
-            setError(errorMessage)
-            console.error("❌ Error:", error);
-
-        }finally{
-            setLoader(false)
-        }
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers['Authorization'] = `Bearer ${token}`; 
+      setIsAuthenticated(true); 
     }
-
-    const login = async (credentials)=>{
-
-        setLoader(true); 
-        setError('')
-        try {
-             const res = await axiosPublic.post('/auth/login', credentials)
-                 console.log("✅ Response received:", res.data);
-            setUser(res.data)
-            setIsAuthenticated(true); 
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || "⚠️ An error occurred!";
-      setError(errorMessage)
-      
-      console.error("❌ Error:", error);
-        }finally{
-            setLoader(false)
-        }
-    }
-
-    
+  }, [token]);
 
 
-    // provider value 
-   const  authState = {
-            user,
-            login,
-            signup,
-            loader,
-            error,
-            isAuthenticated
-    }
-    return(
+  const setAuthToken = (newToken) => {
+    setToken(newToken); 
+    localStorage.setItem('access_token', newToken); 
+    axios.defaults.headers['Authorization'] = `Bearer ${newToken}`; 
+  };
 
-        <AuthContext.Provider value={authState}>
-                {!loader && children}
-        </AuthContext.Provider>
-    )
-}
+  // 5. Clear token and user data on logout 🚪
+  const clearAuthToken = () => {
+    setToken(null);
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('access_token');
+    delete axios.defaults.headers['Authorization']; 
+
+  };
+
+
+  
+  const authState = {
+    user,
+    setUser,
+    isAuthenticated,
+    setIsAuthenticated,
+    loader,
+    setLoader,
+    error,
+    setError,
+    token,
+    setAuthToken, 
+    clearAuthToken, 
+  };
+
+ 
+  return (
+    <AuthContext.Provider value={authState}>
+      {!loader && children} {/* Avoid showing the children components when loading ⏳ */}
+    </AuthContext.Provider>
+  );
+};

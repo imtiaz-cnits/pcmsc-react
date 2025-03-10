@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axiosPublic from '../../../components/axiosPublic';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const Login = () => {
 
@@ -7,6 +8,7 @@ const Login = () => {
   const [password , setPassword] = useState('')
   const [loader , setLoader] = useState(false)
   const [error , setError] = useState('')
+  const { setAuthToken, setIsAuthenticated } = useAuth();
 
   // 🔄  to reset the fields
   function resetForm(){
@@ -28,9 +30,13 @@ const Login = () => {
 
       const res = await axiosPublic.post('/auth/login', formData)
       console.log("✅ Response received:", res.data);
+      setAuthToken(res.data?.access_token)
+      setIsAuthenticated(true)
+    
 
       // reset fields 
       resetForm(); 
+      setLoader(false)
 
     } catch (error) {
       const errorMessage = error.response?.data?.message || "⚠️ An error occurred!";
@@ -45,16 +51,19 @@ const Login = () => {
 
 
 
+
   return(
 
     <>
-    <form action="" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
 
     <input type="text" placeholder='phone or username or email' required value={userIdentifier}  onChange={(e)=> setuserIdentifier(e.target.value)} /> <br /> <br />
 
     <input type="password" placeholder='password' value={password} required onChange={(e) => setPassword(e.target.value)} /> <br /> <br />
 
-    <input type="submit" value="submit"/>
+    <button type='submit'>
+      {loader ? 'siginggg....' : 'sign up'}
+    </button>
 
     </form>
 

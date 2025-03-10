@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axiosPublic from "../../../components/axiosPublic";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -9,8 +10,22 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
   const [username , setUsername]=useState('')
+  const {setUser, user,setIsAuthenticated,isAuthenticated} = useAuth(); 
 
 
+  useEffect(()=>{
+    console.log('user value',user)
+    localStorage.setItem('user',JSON.stringify(user))
+    localStorage.setItem('isAuthenticated',JSON.stringify(isAuthenticated))
+  },[setUser , setIsAuthenticated,user ,isAuthenticated])
+
+
+
+  useEffect(()=>{
+
+    console.log('user of value',user)
+    console.log('authenticated value',isAuthenticated)
+  },[])
 
    // to reset the form fields 
 
@@ -34,32 +49,28 @@ const SignUp = () => {
         "/auth/sign-up",
         formData,
       );
-      console.log(res.data);
-
+      console.log("✅ Response received:", res.data);
+      
+      setUser(res.data?.data)
+      setIsAuthenticated(true)
       // reset the form fields
       resetForm()
-      
+      setLoader(false)
     } catch (error) {
+      setLoader(false)
       const errorMessage = error.response?.data?.message || 'An error occured!'
       setError(errorMessage);
       console.error(error);
-    }finally{
-      setLoader(false)
     }
-
     console.log(formData);
 
     
   };
 
 
- 
- 
-
-
   return (
     <>
-      <form action="" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
@@ -108,7 +119,7 @@ const SignUp = () => {
 
         <br /> <br />
 
-        <input type="submit" value="submit" />
+        <button type="submit" >Submit</button>
       </form>
 
     {/* 🚀 Better error display */}
