@@ -1,130 +1,86 @@
-import { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosPublic from '../../../utils/axiosPublic';
 
-const SignUp = () => {
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username , setUsername]=useState('')
-  const {signup , loader,error } = useContext(AuthContext)
-  const signupRef = useRef()
-  // const {setUser, user,setIsAuthenticated,isAuthenticated} = useAuth(); 
+const SignUpPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    mobile : '',
+    password: '',
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  // useEffect(()=>{
-  //   console.log('user value',user)
-  //   localStorage.setItem('user',JSON.stringify(user))
-  //   localStorage.setItem('isAuthenticated',JSON.stringify(isAuthenticated))
-  // },[setUser , setIsAuthenticated,user ,isAuthenticated])
-
-
-
-  // useEffect(()=>{
-
-  //   console.log('user of value',user)
-  //   console.log('authenticated value',isAuthenticated)
-  // },[])
-
-   // to reset the form fields 
-
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoader(true);
-  //   setError("");  // clear previous errors
-  //   const formData = { name,username,  email, mobile, password };
-
-  //   try {
-  //     const res = await axiosPublic.post(
-  //       "/auth/sign-up",
-  //       formData,
-  //     );
-  //     console.log("✅ Response received:", res.data);
-      
-  //     // setUser(res.data?.data)
-  //     // setIsAuthenticated(true)
-  //     // reset the form fields
-  //     resetForm()
-  //     setLoader(false)
-  //   } catch (error) {
-  //     setLoader(false)
-  //     const errorMessage = error.response?.data?.message || 'An error occured!'
-  //     setError(errorMessage);
-  //     console.error(error);
-  //   }
-  //   console.log(formData);
-
-    
-  // };
-
-  const handleSubmit = async (e)=>{
-    const formData = { name,username,  email, mobile, password };
-
-    e.preventDefault(); 
-    await signup(formData)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosPublic.post('/auth/sign-up', formData);
+      console.log(response.data)
+      navigate('/admin-panel/sign-in');
+    } catch (err) {
+      console.error(err)
+      setError('Sign-up failed. Please try again.');
+    }
+  };
 
   return (
-    <>
-      <form onSubmit={handleSubmit} ref={signupRef}>
+    <div>
+      <h2>Sign Up</h2>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
-          value={name}
-          placeholder="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Name"
           required
-          onChange={(e) => setName(e.target.value)}
         />
-
-        <br /> <br />
-
-
-    <input type="text" name="username"  placeholder="username" value={username} onChange={(e)=> setUsername(e.target.value)}/>
-
-    <br /> <br />
-
         <input
           type="text"
-          name="mobile"
-          placeholder="mobile"
-          value={mobile}
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Username"
           required
-          onChange={(e) => setMobile(e.target.value)}
         />
-
-        <br /> <br />
         <input
           type="email"
           name="email"
-          placeholder="email"
-          value={email}
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Email"
           required
-          onChange={(e) => setEmail(e.target.value)}
         />
 
-        <br /> <br />
+        <input 
+        type="text"
+        name="mobile"
+        value={formData.mobile}
+        onChange={handleChange}
+        placeholder='mobile !!!'
+        required
+        
+        />
 
         <input
           type="password"
           name="password"
-          placeholder="password"
-          value={password}
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Password"
           required
-          onChange={(e) => setPassword(e.target.value)}
         />
-
-        <br /> <br />
-
-        <input type="submit" value="submit"/>
+        <button type="submit">Sign Up</button>
       </form>
-
-    {/* 🚀 Better error display */}
-    {loader && <span style={{ color: "blue" }} aria-live="polite">🔄 Loading...</span>}
-      {error && <span style={{ color: "red" }} aria-live="assertive">❌ {error}</span>}
-    </>
+      {error && <p>{error}</p>}
+    </div>
   );
 };
 
-export default SignUp;
+export default SignUpPage;

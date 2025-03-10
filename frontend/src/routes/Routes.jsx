@@ -30,6 +30,7 @@ import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
+import ProtectedRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -164,6 +165,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "test",
-    element: <Test />,
+    element: <ProtectedRoute><Test /></ProtectedRoute>,
   },
 ]);

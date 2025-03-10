@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const StudentInformation = () => {
   const [activeMenu, setActiveMenu] = useState(null); // Tracks the active menu
+  const {user ,logout , isAuthenticated} = useContext(AuthContext)
 
   const handleToggle = (menu) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
     console.log(`${menu} menu clicked`);
   };
+
+  useEffect(()=>{
+
+    console.log(user)
+  },[user])
 
   return (
     <>
@@ -1626,6 +1633,8 @@ const StudentInformation = () => {
 
           <div className="copyright">
             <p>&copy; 2024. All Rights Reserved.</p>
+            <span>user token : {user?.token}</span> <br />
+ <br /> <br /><br />            <span>isAuthenticated : {isAuthenticated}</span>
           </div>
           {/* <!-- Dashboard Table End --> */}
         </div>
