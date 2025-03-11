@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Dahsboard />,
+        element: <ProtectedRoute><Dahsboard /></ProtectedRoute>,
       },
       {
         path: "/academic-management",

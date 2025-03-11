@@ -22,7 +22,7 @@ const SignUpPage = () => {
     try {
       const response = await axiosPublic.post('/auth/sign-up', formData);
       console.log(response.data)
-      navigate('/admin-panel/sign-in');
+      navigate('/admin-panel/sign-in' , {replace : true});
     } catch (err) {
       console.error(err)
       setError('Sign-up failed. Please try again.');
