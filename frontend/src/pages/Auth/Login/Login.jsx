@@ -2,13 +2,16 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthContext';
 import axiosPublic from '../../../utils/axiosPublic';
+import { Link } from 'react-router-dom';
+import useAuth from '../../../hook/useAuth';
+import { setToken } from '../../../utils/token';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ userIdentifier: '', password: '' });
   const navigate = useNavigate();
   const [loader , setLoader] = useState(false)
   const [error, setError] = useState('');
-  const {setIsAuthenticated} = useContext(AuthContext)
+  const {setIsAuthenticated} = useAuth()
 
 
   const handleChange = (e) => {
@@ -22,12 +25,12 @@ const LoginPage = () => {
 
     try {
       const response = await axiosPublic.post('/auth/login', formData);
-      localStorage.setItem('access_token', response.data.access_token);
+      setToken(response.data.access_token)
       setIsAuthenticated(true)
       console.log(response.data); 
-      navigate('/test' , {replace : true});
+      navigate('/' , {replace : true});
     } catch (error) {
-      console.error(error)
+      console.error(error.response?.data)
       setError('Login failed. Please check your credentials.');
     } finally {
       setLoader(false);
@@ -56,6 +59,7 @@ const LoginPage = () => {
         />
         <button type="submit">Login</button>
       </form>
+      <Link to='/admin-panel/sign-up'>Sign up</Link>
       {error && <p>{error}</p>}
     </div>
   );

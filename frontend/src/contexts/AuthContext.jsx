@@ -2,36 +2,39 @@ import { createContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
 
+
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authState , setAuthState]=useState({isAuthenticated : false})
   const [loading, setLoading] = useState(true);
 
   // Check if the user is authenticated on component mount (via localStorage)
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      setIsAuthenticated(true);
-      setUser({ token });
-      setIsAuthenticated(true); 
-    } else {
+    setLoading(true)
+    try {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        setUser({ token }); 
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error('Error accessing localStorage', error);
+      setUser(null);
       setIsAuthenticated(false);
-      setUser(null)
+    } finally {
+      setLoading(false);
     }
-    setLoading(false)
   }, []);
 
-  // Logout function
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    setUser(null);
-    setIsAuthenticated(false);
-    window.location.href='/admin-panel/sign-in'  // Redirect to login after logout
-  };
+
+
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, setIsAuthenticated ,authState , setAuthState, loading, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated , loading  }}>
       {children}
     </AuthContext.Provider>
   );

@@ -13,7 +13,8 @@ const ProtectedRoute = ({ children }) => {
     }
   }, [isAuthenticated, loading, navigate]);
 
-  if (loading) return <p>Loading...</p>; // Prevents flashing
+  console.log('loading value ',loading)
+  if (loading) return <p>Loadisdfsdfsfsfsdfsfsdfsdfdfsng...</p>; // Prevents flashing
 
   return isAuthenticated ? children : null;
 };
