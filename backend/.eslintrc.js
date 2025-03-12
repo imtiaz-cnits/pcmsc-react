@@ -16,9 +16,10 @@ module.exports = {
 
   rules: {
     'prettier/prettier': ['error', { endOfLine: 'auto' }], // Ensures consistent line endings
-    'no-console': 'off', // Allows usage of console.log in your backend code (common in Express apps)
+    'no-console': 'warn', // Allows usage of console.log in your backend code (common in Express apps)
     'react/react-in-jsx-scope': 'off', // Next.js me React import zaroori nahi hota
     'import/prefer-default-export': 'off', // Default exports ko force nahi karega
     'no-underscore-dangle': 'off', // turn off the warning about the trailing underscore in _id or any other variable that has a _ as the first character.
+    "import/no-commonjs": "off" // will stop ESLint from enforcing the use of ES modules
   },
 };
