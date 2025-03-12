@@ -21,9 +21,8 @@ const SignUp = async (req, res, next) => {
       OTP,
     } = req.body;
 
-    console.log('signup form data : ' ,req.body)
+    console.log('signup form data : ', req.body);
     // 📧 Check if email/mobile already exists
-
     const existingUser = await Auth.findOne({ $or: [{ email }, { mobile }] });
 
     if (existingUser && existingUser._id) {
@@ -35,6 +34,8 @@ const SignUp = async (req, res, next) => {
 
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    console.log('hashedpassword inside controller : ', hashedPassword);
 
     // 👤 Create new user object
     const newUser = new Auth({
@@ -52,10 +53,11 @@ const SignUp = async (req, res, next) => {
     console.log(newUser);
 
     // 💾 Save the user to the database
-    // await newUser.save();
+    await newUser.save();
     return res.status(201).json({
       status: 'success',
       message: 'User created successfully',
+      data: newUser,
     });
   } catch (error) {
     console.error('🚨 Signup error:', error);
@@ -66,10 +68,17 @@ const SignUp = async (req, res, next) => {
 // 📝 do login
 async function Login(req, res, next) {
   try {
-    const { mobile, email, password } = req.body;
+    console.log('frontend value ', req.body);
+    const { userIdentifier, password } = req.body;
 
     // 🔍 Check if email/mobile is exists
-    const user = await Auth.findOne({ $or: [{ email }, { mobile }] });
+    const user = await Auth.findOne({
+      $or: [
+        { email: userIdentifier },
+        { mobile: userIdentifier },
+        { username: userIdentifier },
+      ],
+    });
 
     if (!user) {
       return next(createError(404, 'User not found'));
@@ -78,6 +87,7 @@ async function Login(req, res, next) {
     if (user && user._id) {
       // decrypt password
       const isValidPassword = await bcrypt.compare(password, user.password);
+      console.log('is valid password : ', isValidPassword);
 
       if (!isValidPassword) {
         return next(createError(401, 'Invalid Credentials!'));

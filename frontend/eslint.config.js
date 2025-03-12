@@ -35,7 +35,7 @@ export default [
       ],
       "react/no-unescaped-entities": "off", // Disables the rule
       "no-undef": "warn", // warn/1 no-undef rule
-      "react/prop-types": "warn", // Disable the rule completely
+      "react/prop-types": "off", // Disable the rule completely
     },
   },
 ];

@@ -1,73 +1,88 @@
 import { useState } from 'react';
-import axiosPublic from '../../../components/axiosPublic';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import axiosPublic from '../../../utils/axiosPublic';
+import { Link } from 'react-router-dom';
 
-const SignUp=()=>{
+const SignUpPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    mobile : '',
+    password: '',
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-   const [name , setName] = useState('')
-   const [username , setUsername] = useState('')
-   const [mobile , setMobile] = useState('')
-   const [email , setEmail] = useState('')
-   const [password , setPassword] = useState('')
-   const [error , setError] = useState('')
-   const [loading , setLoading]=useState(false)
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-   const handleSubmit = async (e)=>{
-    e.preventDefault(); 
-    setLoading(true)
-    setError('')
-    const formData = {name ,username,mobile,email,password}
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-        
-        const res = await axios.post('http://localhost:3000/api/v1/auth/sign-up',formData)
-        console.log(res.data)
-
-        setLoading(false)
-
+      const response = await axiosPublic.post('/auth/sign-up', formData);
+      console.log(response.data)
+      navigate('/admin-panel/sign-in' , {replace : true});
     } catch (error) {
-        setLoading(true)
-        setError('error')
-        console.log(error)
+      console.error(error.response?.data)
+      setError('Sign-up failed. Please try again.');
     }
+  };
 
-    // clear form 
-    setName('')
-    setUsername('')
-    setPassword('')
-    setMobile('')
-    setEmail('')
-    setPassword('')
+  return (
+    <div>
+      <h2>Sign Up</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Name"
+          required
+        />
+        <input
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Username"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Email"
+          required
+        />
 
-
-    console.log(formData)
-   }
-
-
-   if(loading){
-    return <>awaitinggggg .............</>
-   }
-
-    return(
-
-        <>
-       
-    <form action="" onSubmit={handleSubmit}>
-
-        <input type="text" name="name" placeholder='name' onChange={(e)=> setName(e.target.value)} />
+        <input 
+        type="text"
+        name="mobile"
+        value={formData.mobile}
+        onChange={handleChange}
+        placeholder='mobile !!!'
+        required
         
-        <input type="text" name='username' placeholder='username' onChange={(e)=> setUsername(e.target.value)} />
-        <input type="email" name='email' placeholder='email' onChange={(e)=> setEmail(e.target.value)} />
+        />
 
-        <input type="password" name="password" placeholder='password' onChange={(e)=> setPassword(e.target.value)} />
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Sign Up</button>
+      </form>
+      <Link to='/admin-panel/sign-in' >Login</Link  >
+      {error && <p>{error}</p>}
+    </div>
+  );
+};
 
-
-        <input type="submit" value="submit" />
-
-    </form>
-     
-        </>
-    )
-}
-
-export default SignUp;
+export default SignUpPage;

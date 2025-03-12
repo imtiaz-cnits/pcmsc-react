@@ -4,7 +4,7 @@ import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
 import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
-import SignUp from "../pages/Auth/SignUp/SignUp";
+import Signup from "../pages/Auth/Signup/Signup";
 import Class from "../pages/Class/Class";
 import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
 import CombineResult from "../pages/CombineResult/CombineResult";
@@ -30,6 +30,7 @@ import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
+import ProtectedRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Dahsboard />,
+        element: <ProtectedRoute><Dahsboard /></ProtectedRoute>,
       },
       {
         path: "/academic-management",
@@ -149,22 +150,21 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: 'admin-panel',
+    path: "admin-panel",
     element: <Admin />,
     children: [
       {
-        path: 'sign-up',
-        element: <SignUp />
+        path: "sign-up",
+        element: <Signup />,
       },
       {
-        path: 'sign-in',
-        element: <Login />
-      }
-    ]
-
+        path: "sign-in",
+        element: <Login />,
+      },
+    ],
   },
   {
     path: "test",
-    element: <Test />,
+    element: <ProtectedRoute><Test /></ProtectedRoute>,
   },
 ]);

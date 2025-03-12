@@ -68,10 +68,6 @@ const upload = multer({
   },
 });
 
-
-
-
-
 // // 🛠️ basic route check
 // app.post('/', upload.array('avatar', 2), (req, res) => {
 //     console.log('is : ', req.files); // multer uploaded files access

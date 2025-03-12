@@ -1,14 +1,11 @@
 import { Outlet } from "react-router-dom";
 
-const Admin = ()=>{
+const Admin = () => {
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+};
 
-
-    return(
-
-        <>
-        <Outlet />
-        </>
-    )
-}
-
-export default Admin; 
+export default Admin;
