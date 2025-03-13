@@ -1,40 +1,55 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
-
-
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isToken, setIsToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null); 
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check if the user is authenticated on component mount (via localStorage)
   useEffect(() => {
-    setLoading(true)
-    try {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        setUser({ token }); 
-        setIsAuthenticated(true);
-      } else {
-        setUser(null);
+    // setIsLoading(true)
+    // const token = localStorage.getItem("access_token");
+
+    // if (token) {
+    //   setIsToken(token);
+    //   setIsAuthenticated(true);
+    //   setIsLoading(true); 
+    // } else {
+    //   setIsToken(null);
+    //   setIsAuthenticated(false);
+    //   setIsLoading(false)
+    // }
+    // setIsLoading(false)
+      
+
+    const fetchAuthStatus = () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+          setIsToken(token);
+          setIsAuthenticated(true);
+        } else {
+          setIsToken(null);
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Error accessing localStorage", error);
+        setIsToken(null);
         setIsAuthenticated(false);
+      }finally{
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error('Error accessing localStorage', error);
-      setUser(null);
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchAuthStatus();
   }, []);
 
-
-
-
+  // if(isLoading) return <></>
   return (
-    <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated , loading  }}>
+    <AuthContext.Provider
+      value={{ isToken, setIsToken, isAuthenticated, setIsAuthenticated, isLoading, setIsLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

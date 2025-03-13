@@ -8,18 +8,21 @@ import { removeToken } from "../utils/token";
 export const useLogout = ()=>{
 
     const navigate = useNavigate()
-    const {setIsAuthenticated, setUser} = useAuth()
+    const {setIsAuthenticated, setIsToken , setIsLoading} = useAuth()
 
     const logout = ()=>{
 
         try {
-            removeToken(); 
+          setIsLoading(true)
+          removeToken(); 
+          setIsToken(null); 
             setIsAuthenticated(false);
-            setUser(null); 
       
             navigate('/admin-panel/sign-in');
           } catch (error) {
             console.error('Error logging out', error);
+          }finally{
+            setIsLoading(false)
           }
 
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../assets/css/all-modal.css";
 import "../assets/css/bootstrap.min.css";
 import "../assets/css/dark-mode.css";
@@ -9,9 +9,13 @@ import "../assets/css/table-funtion.css";
 import logo from "../assets/img/logo.png";
 import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
 import Sidebar from "../components/Sidebar";
+import useAuth from "../hook/useAuth";
+import { removeToken, setToken } from "../utils/token";
 
 const Navbar = () => {
   const [lightMode, setLightMode] = useState(localStorage.lightMode || "light");
+  const {setIsToken ,setIsAuthenticated} = useAuth();
+  const navigate = useNavigate();  
 
   function toggleSidebar() {
     const currentSize = document.body.getAttribute("data-sidebar-size");
@@ -53,6 +57,17 @@ const Navbar = () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, [lightMode]);
+
+
+  const handleLogout = (e)=>{
+
+    e.preventDefault(); 
+    setIsAuthenticated(false)
+    removeToken()
+    setIsToken(null)
+    navigate('/admin-panel/sign-in')
+  }
+
 
   return (
     <>
@@ -546,7 +561,7 @@ const Navbar = () => {
                 </Link>
 
                 <div className="dropdown-divider"></div>
-                <Link className="dropdown-item" to="auth-logout.html">
+                <Link className="dropdown-item" onClick={handleLogout}>
                   <i className="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i>
                   <span className="align-middle">Logout</span>
                 </Link>
