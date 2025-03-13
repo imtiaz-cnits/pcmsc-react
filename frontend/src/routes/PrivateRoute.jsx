@@ -1,22 +1,20 @@
-import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useContext(AuthContext);
 
-  console.log('isauthenticated value ' , isAuthenticated)
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      navigate("/admin-panel/sign-in", { replace: true });
-    }
-  }, [isAuthenticated, loading, navigate]);
+  console.log('isAuthenticated value:', isAuthenticated);
+  console.log('isLoading value:', isLoading);
 
-  console.log('loading value ',loading)
-  if (loading) return <p>Loadisdfsdfsfsfsdfsfsdfsdfdfsng...</p>; // Prevents flashing
+  if (isLoading) return null;
 
-  return isAuthenticated ? children : null;
+  if (!isAuthenticated) {
+    return <Navigate to="/admin-panel/sign-in" replace />;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;
