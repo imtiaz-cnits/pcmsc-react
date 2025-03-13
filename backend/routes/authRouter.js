@@ -11,6 +11,7 @@ const {
 } = require('../middlewares/validators/auth/authValidator');
 const sanitization = require('../middlewares/validators/sanitization');
 const { Login } = require('../controllers/authController');
+const checkLogin = require('../middlewares/token/checkLogin')
 
 // internal imports
 
@@ -19,6 +20,8 @@ router.post('/sign-up', ...signupValidator, sanitization, SignUp);
 
 // login
 router.post('/login', ...loginValidator, sanitization, Login);
+
+router.get('/',checkLogin)
 
 // exports
 module.exports = router;

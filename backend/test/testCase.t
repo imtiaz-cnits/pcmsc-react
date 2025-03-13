@@ -38,3 +38,18 @@ https://chatgpt.com/share/67cddc37-b834-8003-91dd-2f3c70e899c3
     "OTP": "987654"
   }
 ]
+
+
+
+
+{
+  "name": "Elijah Thomas",
+  "username": "elijahT",
+  "email": "elijah.thomas@example.com",
+  "mobile": "+8801812345678",
+  "password": "Elijah@Pass1",
+  "avatar": "https://example.com/elijah.jpg",
+  "status": "inactive",
+  "role": "admin",
+  "OTP": "112211"
+}

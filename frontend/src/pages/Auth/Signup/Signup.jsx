@@ -26,7 +26,7 @@ const SignUpPage = () => {
       navigate('/admin-panel/sign-in' , {replace : true});
     } catch (error) {
       console.error(error.response?.data)
-      setError('Sign-up failed. Please try again.');
+      setError(`Sign-up failed. ${error.response?.data?.message}`);
     }
   };
 

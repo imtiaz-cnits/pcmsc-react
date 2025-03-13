@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
+import useAuth from "../../hook/useAuth";
 
 const Dahsboard = () => {
   
+const {isLoading,setIsLoading } = useAuth(); 
+
+console.log('dashboard loading value ' , isLoading)
 
 
   return (

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useLogout } from '../hook/useLogout';
+// import { useLogout } from '../hook/useLogout';
 import { getToken } from './token';
 
 
@@ -32,8 +32,11 @@ axiosPrivate.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response && error.response.status === 401) {
-      const { logout } = useLogout();
-      logout();
+
+      // here we need to use logout function instead of hook
+      // const { logout } = useLogout();
+      // logout
+      // logout handler
     }
 
     return Promise.reject(error);
