@@ -1,43 +1,62 @@
-import { useEffect } from "react";
 import "../../assets/css/all-modal.css";
+import useAddModal from "../../hook/useAddModal.jsx";
+import { useState } from "react";
+import Select from "react-select";
+import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import toast, { Toaster } from "react-hot-toast";
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
 
 const Section = () => {
-  useEffect(() => {
-    const createClassModal = document.getElementById("createClassModal");
-    const classModalBtn = document.getElementById("classModalBtn");
-    const classBtn = document.getElementById("classBtn");
+  const [section, setSection] = useState("");
+  const [selectedSection, setSelectedSection] = useState(null);
+  const [, setLoader] = useState(false);
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+  useAddModal("createClassModal", "classModalBtn", "classBtn");
+
+  // add class modal options
+  const statusOptions = [
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  //
+  const hanldeSection = async (e) => {
+    e.preventDefault();
+
+    // prepare payload
+    const payload = {
+      section,
+      status: selectedSection,
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    // toast loader
+    const toastId = toast.loading("Adding section...");
+    try {
+      const res = await axiosPrivate.post(
+        "/academic-management/add-section",
+        payload,
+      );
+      console.log("res data", res.data);
 
-    // Open the migrate modal and hide scroll
-    classModalBtn.addEventListener("click", () => {
-      createClassModal.classList.add("show");
-      disableScroll();
-    });
-
-    // Close the migrate modal and show scroll
-    classBtn.addEventListener("click", () => {
-      createClassModal.classList.remove("show");
-      enableScroll();
-    });
-
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === createClassModal) {
-        createClassModal.classList.remove("show");
-        enableScroll();
+      if (res.data.success) {
+        toast.success(res.data.message || "Successfully added!", {
+          id: toastId,
+        });
+      } else {
+        toast.error(res.data.message || "Failed to add section.", {
+          id: toastId,
+        });
       }
-    });
-  }, []);
-
+    } catch (error) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong!";
+      toast.error("Failed to add section.", { id: toastId });
+      console.log(errorMessage);
+    } finally {
+      setLoader(false);
+    }
+  };
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -267,7 +286,10 @@ const Section = () => {
                     <h3>Add Section</h3>
                     <form>
                       {/* <!-- Row 1 --> */}
-                      <div className="form-row">
+                      <div
+                        className="form-row"
+                        style={{ display: "flex", flexDirection: "column" }}
+                      >
                         <div className="form-group">
                           <label htmlFor="search-students">
                             Section Name *
@@ -276,6 +298,21 @@ const Section = () => {
                             type="text"
                             id="search-students"
                             placeholder="Section Name"
+                            value={section}
+                            onChange={(e) => setSection(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+                          <Select
+                            options={statusOptions}
+                            value={selectedSection}
+                            onChange={setSelectedSection}
+                            placeholder="Status"
+                            components={{
+                              DropdownIndicator: CustomDropdownIndicator,
+                            }}
                           />
                         </div>
                       </div>
@@ -289,7 +326,11 @@ const Section = () => {
                         >
                           Close
                         </button>
-                        <button type="button" className="button save">
+                        <button
+                          type="button"
+                          className="button save"
+                          onClick={hanldeSection}
+                        >
                           Save
                         </button>
                       </div>
@@ -303,6 +344,7 @@ const Section = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
+      <Toaster />
     </>
   );
 };

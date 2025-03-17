@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/img/logo.png";
-import Toggle from './Toggle';
+import Toggle from "./Toggle";
 
 import { useEffect, useRef, useState } from "react";
 

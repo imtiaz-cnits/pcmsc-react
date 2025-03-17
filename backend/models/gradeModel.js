@@ -1,25 +1,24 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-
-
-const gradeSchema = new mongoose.Schema({
-
-    minMarks : {
-        type : String, 
-        required : true
+const gradeSchema = new mongoose.Schema(
+  {
+    minMarks: {
+      type: String,
+      required: true,
     },
 
-    maxMarks : {
-        type : String , 
-        required : true
+    maxMarks: {
+      type: String,
+      required: true,
     },
-    grade : {
-        type : String, 
-        required : true
-    }
-} , {timestamps : true}) 
+    grade: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true },
+);
 
-const Grade  = mongoose.model('Grade' , gradeSchema)
+const Grade = mongoose.model("Grade", gradeSchema);
 
-
-module.exports = Grade
+module.exports = Grade;

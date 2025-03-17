@@ -1,42 +1,49 @@
-import { useEffect } from "react";
 import "../../assets/css/all-modal.css";
+import useAddModal from "../../hook/useAddModal.jsx";
+import Select from "react-select";
+import { useState } from "react";
+import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
 
 const Shift = () => {
-  useEffect(() => {
-    const createClassModal = document.getElementById("createClassModal");
-    const classModalBtn = document.getElementById("classModalBtn");
-    const classBtn = document.getElementById("classBtn");
+  const [shift, setShift] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(null);
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+  useAddModal("createClassModal", "classModalBtn", "classBtn");
+
+  // add shift modal options
+  const shiftStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  // 📝 handle the form submission
+  const handleAddShift = async (e) => {
+    e.preventDefault();
+
+    // prepare payload
+    const payload = {
+      shift,
+      status: selectedStatus,
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    console.log("before sending payload :", payload);
 
-    // Open the migrate modal and hide scroll
-    classModalBtn.addEventListener("click", () => {
-      createClassModal.classList.add("show");
-      disableScroll();
-    });
-
-    // Close the migrate modal and show scroll
-    classBtn.addEventListener("click", () => {
-      createClassModal.classList.remove("show");
-      enableScroll();
-    });
-
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === createClassModal) {
-        createClassModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-  }, []);
+    try {
+      const res = await axiosPrivate.post(
+        "/academic-management/add-shift",
+        payload,
+      );
+      console.log("res data of shift : ", res.data);
+      setShift("");
+      setSelectedStatus(null);
+      // toaster
+    } catch (error) {
+      console.error("Error in adding shift ", error);
+      const errorMsg = error.response?.data?.message;
+      console.log(errorMsg);
+    }
+  };
 
   return (
     <>
@@ -267,13 +274,31 @@ const Shift = () => {
                     <h3>Add Shift</h3>
                     <form>
                       {/* <!-- Row 1 --> */}
-                      <div className="form-row">
+                      <div
+                        className="form-row"
+                        style={{ display: "flex", flexDirection: "column" }}
+                      >
                         <div className="form-group">
                           <label htmlFor="search-students">Shift Name *</label>
                           <input
                             type="text"
                             id="search-students"
                             placeholder="Shift Name"
+                            value={shift}
+                            onChange={(e) => setShift(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+                          <Select
+                            options={shiftStatusOptions}
+                            value={selectedStatus}
+                            onChange={setSelectedStatus}
+                            components={{
+                              DropdownIndicator: CustomDropdownIndicator,
+                            }}
+                            placeholder="Status"
                           />
                         </div>
                       </div>
@@ -287,7 +312,11 @@ const Shift = () => {
                         >
                           Close
                         </button>
-                        <button type="button" className="button save">
+                        <button
+                          type="button"
+                          className="button save"
+                          onClick={handleAddShift}
+                        >
                           Save
                         </button>
                       </div>

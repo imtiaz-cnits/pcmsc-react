@@ -1,81 +1,80 @@
 /* login.css */
 .login-page {
-    font-family: Arial, sans-serif;
-    background-color: #fafafa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  .login-page .container {
-    background: #fff;
-    border: 1px solid #dbdbdb;
-    width: 350px;
-    padding: 40px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login-page h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #262626;
-  }
-  
-  .login-page input[type="text"],
-  .login-page input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #dbdbdb;
-    border-radius: 3px;
-    background: #fafafa;
-    font-size: 14px;
-    outline: none;
-  }
-  
-  .login-page button {
-    width: 100%;
-    padding: 10px;
-    background: #0095f6;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  
-  .login-page button:hover {
-    background: #0078d4;
-  }
-  
-  .login-page .forgot {
-    color: #0095f6;
-    font-size: 12px;
-    margin-top: 10px;
-    display: block;
-    text-decoration: none;
-  }
-  
-  .login-page .signup {
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
-  .login-page .signup a {
-    color: #0095f6;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .login-page .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-page .container {
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  width: 350px;
+  padding: 40px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-page h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #262626;
+}
+
+.login-page input[type="text"],
+.login-page input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  background: #fafafa;
+  font-size: 14px;
+  outline: none;
+}
+
+.login-page button {
+  width: 100%;
+  padding: 10px;
+  background: #0095f6;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.login-page button:hover {
+  background: #0078d4;
+}
+
+.login-page .forgot {
+  color: #0095f6;
+  font-size: 12px;
+  margin-top: 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.login-page .signup {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.login-page .signup a {
+  color: #0095f6;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-page .error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}

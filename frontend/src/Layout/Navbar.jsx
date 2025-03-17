@@ -14,8 +14,8 @@ import { removeToken, setToken } from "../utils/token";
 
 const Navbar = () => {
   const [lightMode, setLightMode] = useState(localStorage.lightMode || "light");
-  const {setIsToken ,setIsAuthenticated} = useAuth();
-  const navigate = useNavigate();  
+  const { setIsToken, setIsAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   function toggleSidebar() {
     const currentSize = document.body.getAttribute("data-sidebar-size");
@@ -58,16 +58,13 @@ const Navbar = () => {
     };
   }, [lightMode]);
 
-
-  const handleLogout = (e)=>{
-
-    e.preventDefault(); 
-    setIsAuthenticated(false)
-    removeToken()
-    setIsToken(null)
-    navigate('/admin-panel/sign-in')
-  }
-
+  const handleLogout = (e) => {
+    e.preventDefault();
+    setIsAuthenticated(false);
+    removeToken();
+    setIsToken(null);
+    navigate("/admin-panel/sign-in");
+  };
 
   return (
     <>

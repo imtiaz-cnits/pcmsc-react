@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useLogout } from "../../hook/useLogout";
@@ -6,22 +8,19 @@ import useAuth from "../../hook/useAuth";
 
 const StudentInformation = () => {
   const [activeMenu, setActiveMenu] = useState(null); // Tracks the active menu
-  const {logout} = useLogout(); 
-  const {user,isAuthenticated } = useAuth(); 
+  const { logout } = useLogout();
+  const { user, isAuthenticated } = useAuth();
 
   const handleToggle = (menu) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
     console.log(`${menu} menu clicked`);
   };
 
-
-
-
-  const handleLogout =(e)=>{
-    e.preventDefault()
-    console.log('logout value here is ', logout)
-    logout()
-  }
+  const handleLogout = (e) => {
+    e.preventDefault();
+    console.log("logout value here is ", logout);
+    logout();
+  };
 
   return (
     <>
@@ -509,11 +508,7 @@ const StudentInformation = () => {
                   <span className="align-middle">Lock screen</span>
                 </a>
                 <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#"
-                
-                onClick={handleLogout}
-                
-                >
+                <a className="dropdown-item" href="#" onClick={handleLogout}>
                   <i className="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i>
                   <span className="align-middle">Logout</span>
                 </a>
@@ -1646,7 +1641,9 @@ const StudentInformation = () => {
           <div className="copyright">
             <p>&copy; 2024. All Rights Reserved.</p>
             <span>user token : {user?.token}</span> <br />
- <br /> <br /><br />            <span>isAuthenticated : {isAuthenticated ? 'okk' : 'no'}</span>
+            <br /> <br />
+            <br />{" "}
+            <span>isAuthenticated : {isAuthenticated ? "okk" : "no"}</span>
           </div>
           {/* <!-- Dashboard Table End --> */}
         </div>

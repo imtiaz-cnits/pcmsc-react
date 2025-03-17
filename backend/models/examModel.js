@@ -1,21 +1,16 @@
-// external imports 
-const mongoose = require('mongoose')
+// external imports
+const mongoose = require("mongoose");
 
-
-// define the schema 
+// define the schema
 const examSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
 
-    name : {
-        type : String, 
-        required : true
-    },
+  subjects: [],
+});
 
-    subjects : [
-        
-    ]
-})
+const Exam = mongoose.model("Exam", examSchema);
 
-const Exam = mongoose.model('Exam',examSchema)
-
-
-module.exports = Exam; 
+module.exports = Exam;
