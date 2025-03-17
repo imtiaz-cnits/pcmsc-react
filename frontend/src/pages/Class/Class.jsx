@@ -1,43 +1,67 @@
-import { useEffect } from "react";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
+import useAddModal from "../../hook/useAddModal.jsx";
+import { useState } from "react";
+import Select from "react-select";
+import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
+import toast, { Toaster } from "react-hot-toast";
 
 const Class = () => {
-  useEffect(() => {
-    const createClassModal = document.getElementById("createClassModal");
-    const classModalBtn = document.getElementById("classModalBtn");
-    const classBtn = document.getElementById("classBtn");
+  const [className, setClassName] = useState("");
+  const [status, setStatus] = useState(null);
+  const [, setLoader] = useState(true);
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+  useAddModal("createClassModal", "classModalBtn", "classBtn");
+
+  // add class modal options
+  const statusOptions = [
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  // 📝 handle the form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // prepare the payload
+    const payload = {
+      className,
+      status: status?.value,
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    // 🧐 Debugging log
+    console.log("before payload", payload);
 
-    // Open the migrate modal and hide scroll
-    classModalBtn.addEventListener("click", () => {
-      createClassModal.classList.add("show");
-      disableScroll();
-    });
+    //toast loader
+    const toastId = toast.loading("Adding Class...");
 
-    // Close the migrate modal and show scroll
-    classBtn.addEventListener("click", () => {
-      createClassModal.classList.remove("show");
-      enableScroll();
-    });
+    try {
+      const res = await axiosPrivate.post(
+        "/academic-management/add-class",
+        payload,
+      );
+      console.log("res data : ", res.data);
 
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === createClassModal) {
-        createClassModal.classList.remove("show");
-        enableScroll();
+      if (res.data.success) {
+        setClassName("");
+        setStatus(null);
+        toast.success(res.data.message || "Class added successfully!", {
+          id: toastId,
+        });
+      } else {
+        toast.error(res.data.message || "Failed to add class", { id: toastId });
       }
-    });
-  }, []);
+    } catch (error) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong!";
+      console.log(errorMessage);
+      toast.error("Failed to add class", { id: toastId });
+    } finally {
+      setLoader(false);
+    }
+  };
 
   return (
     <>
@@ -271,13 +295,35 @@ const Class = () => {
                     <h3>Add Class</h3>
                     <form>
                       {/* <!-- Row 1 --> */}
-                      <div className="form-row">
+                      <div
+                        className="form-row"
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
                         <div className="form-group">
                           <label htmlFor="search-students">Class Name *</label>
                           <input
                             type="text"
                             id="search-students"
                             placeholder="Class"
+                            value={className}
+                            onChange={(e) => setClassName(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+
+                          <Select
+                            options={statusOptions}
+                            value={status}
+                            onChange={setStatus}
+                            placeholder="Status"
+                            components={{
+                              DropdownIndicator: CustomDropdownIndicator,
+                            }}
                           />
                         </div>
                       </div>
@@ -291,7 +337,11 @@ const Class = () => {
                         >
                           Close
                         </button>
-                        <button type="button" className="button save">
+                        <button
+                          type="button"
+                          className="button save"
+                          onClick={handleSubmit}
+                        >
                           Save
                         </button>
                       </div>
@@ -305,7 +355,7 @@ const Class = () => {
           {/* <!-- Create Class Pop Up Modal Start --> */}
         </div>
       </div>
-
+      <Toaster />
       {/* <!-- Hero Main Content End --> */}
     </>
   );

@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
 import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
@@ -36,7 +35,11 @@ import ProtectedRoute from "./PrivateRoute";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute><Main /></ProtectedRoute>,
+    element: (
+      <ProtectedRoute>
+        <Main />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "/",
@@ -166,6 +169,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "test",
-    element: <ProtectedRoute><Test /></ProtectedRoute>,
+    element: (
+      <ProtectedRoute>
+        <Test />
+      </ProtectedRoute>
+    ),
   },
 ]);

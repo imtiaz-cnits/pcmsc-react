@@ -13,7 +13,6 @@
 //   const [error, setError] = useState('');
 //   const {setIsAuthenticated} = useAuth()
 
-
 //   const handleChange = (e) => {
 //     setFormData({ ...formData, [e.target.name]: e.target.value });
 //   };
@@ -27,7 +26,7 @@
 //       const response = await axiosPublic.post('/auth/login', formData);
 //       setToken(response.data.access_token)
 //       setIsAuthenticated(true)
-//       console.log(response.data); 
+//       console.log(response.data);
 //       navigate('/' , {replace : true});
 //     } catch (error) {
 //       console.error(error.response?.data)
@@ -67,23 +66,24 @@
 
 // export default LoginPage;
 
-
 // after applying css file
 
-
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosPublic from '../../../utils/axiosPublic';
-import { Link } from 'react-router-dom';
-import useAuth from '../../../hook/useAuth';
-import { setToken } from '../../../utils/token';
-import './login.css';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosPublic from "../../../utils/axiosPublic";
+import { Link } from "react-router-dom";
+import useAuth from "../../../hook/useAuth";
+import { setToken } from "../../../utils/token";
+import "./login.css";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({ userIdentifier: '', password: '' });
+  const [formData, setFormData] = useState({
+    userIdentifier: "",
+    password: "",
+  });
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { setIsAuthenticated } = useAuth();
 
   const handleChange = (e) => {
@@ -93,16 +93,16 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoader(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await axiosPublic.post('/auth/login', formData);
+      const response = await axiosPublic.post("/auth/login", formData);
       setToken(response.data.access_token);
       setIsAuthenticated(true);
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     } catch (error) {
       console.error(error.response?.data);
-      setError('Login failed. Please check your credentials.');
+      setError("Login failed. Please check your credentials.");
     } finally {
       setLoader(false);
     }
@@ -130,11 +130,13 @@ const LoginPage = () => {
             required
           />
           <button type="submit" disabled={loader}>
-            {loader ? 'Logging in...' : 'Login'}
+            {loader ? "Logging in..." : "Login"}
           </button>
         </form>
         {error && <p className="error-message">{error}</p>}
-        <Link to="/admin-panel/sign-up" className="signup">Sign up</Link>
+        <Link to="/admin-panel/sign-up" className="signup">
+          Sign up
+        </Link>
       </div>
     </div>
   );

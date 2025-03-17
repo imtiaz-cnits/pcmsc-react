@@ -1,24 +1,27 @@
-// external imports 
-const mongoose = require('mongoose')
+// external imports
+const mongoose = require("mongoose");
 
-// define the schema 
-const shiftSchema = new mongoose.Schema({
-
-    name : {
-        type : String , 
-        required : true,
-        unique : true
+// define the schema
+const shiftSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      unique: true,
     },
     status: {
-        type: String,
-        enum: ['active', 'inactive'],
-        default: 'active',
-      },
-      
-} , {timestamps : true})
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+  },
+  { timestamps: true },
+);
 
-// create a model for the schema 
-const Shift = mongoose.model('Shift' , shiftSchema)
+// create a model for the schema
+const Shift = mongoose.model("Shift", shiftSchema);
 
-// exports 
-module.exports = Shift; 
+// exports
+module.exports = Shift;

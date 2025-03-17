@@ -1,9 +1,9 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 // file upload foalder
-const UPLOADS_FOLDER = path.join(__dirname, 'uploads');
+const UPLOADS_FOLDER = path.join(__dirname, "uploads");
 
 // check if folder exists or not
 
@@ -23,20 +23,20 @@ const storage = multer.diskStorage({
     const fileExt = path.extname(file.originalname);
     let filename;
     console.log(fileExt);
-    console.log(file.originalname.trim()[0] === '.');
-    if (file.originalname.trim()[0] === '.') {
-      filename = 'file';
+    console.log(file.originalname.trim()[0] === ".");
+    if (file.originalname.trim()[0] === ".") {
+      filename = "file";
     } else {
       filename = file.originalname
-        .replace(fileExt, '')
+        .replace(fileExt, "")
         .trim()
-        .replace(/\s+/g, ' ') // Convert multiple spaces to a single space
-        .replace(/[^a-zA-Z0-9\s.-]/g, '') // Remove special characters except `.` & `-`
-        .replace(/\.+/g, '.') // Replace multiple dots (`..`) with a single dot
-        .replace(/^-+|-+$/g, '') // Remove hyphens from start & end
+        .replace(/\s+/g, " ") // Convert multiple spaces to a single space
+        .replace(/[^a-zA-Z0-9\s.-]/g, "") // Remove special characters except `.` & `-`
+        .replace(/\.+/g, ".") // Replace multiple dots (`..`) with a single dot
+        .replace(/^-+|-+$/g, "") // Remove hyphens from start & end
         .toLowerCase()
-        .split(' ')
-        .join('-');
+        .split(" ")
+        .join("-");
     }
 
     cb(null, `${filename}-${Date.now()}${fileExt}`);
@@ -49,20 +49,20 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 }, // Max file size of 1MB
   fileFilter: (req, file, cb) => {
     console.log(file);
-    const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
-    if (file.fieldname === 'avatar') {
+    const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+    if (file.fieldname === "avatar") {
       if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
       } else {
-        const error = new Error('Only .jpg, .png or .jpeg format allowed!');
+        const error = new Error("Only .jpg, .png or .jpeg format allowed!");
         error.status = 400;
-        error.name = 'MulterError : FileTypeError';
+        error.name = "MulterError : FileTypeError";
         cb(error);
       }
     } else {
-      const error = new Error('There was an error!');
+      const error = new Error("There was an error!");
       error.status = 400;
-      error.name = 'MulterError : FieldTypeError';
+      error.name = "MulterError : FieldTypeError";
       cb(error);
     }
   },

@@ -1,42 +1,66 @@
-import { useEffect } from "react";
 import "../../assets/css/all-modal.css";
+import useAddModal from "../../hook/useAddModal.jsx";
+import { useState } from "react";
+import Select from "react-select";
+import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
+import toast, { Toaster } from "react-hot-toast";
 
 const Session = () => {
-  useEffect(() => {
-    const createClassModal = document.getElementById("createClassModal");
-    const classModalBtn = document.getElementById("classModalBtn");
-    const classBtn = document.getElementById("classBtn");
+  const [session, setSession] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [, setLoader] = useState(true);
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+  useAddModal("createClassModal", "classModalBtn", "classBtn");
+
+  // add session modal options
+  const sessiontStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  // 📝 handle the form submission
+  const handleAddSession = async (e) => {
+    e.preventDefault();
+
+    //prepare payload
+    const payload = {
+      session,
+      status: selectedSession,
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    // loader toast
+    const toastId = toast.loading("Adding session...");
 
-    // Open the migrate modal and hide scroll
-    classModalBtn.addEventListener("click", () => {
-      createClassModal.classList.add("show");
-      disableScroll();
-    });
+    try {
+      const res = await axiosPrivate.post(
+        "/academic-management/add-session",
+        payload,
+      );
+      console.log("res data of session ", res.data);
 
-    // Close the migrate modal and show scroll
-    classBtn.addEventListener("click", () => {
-      createClassModal.classList.remove("show");
-      enableScroll();
-    });
-
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === createClassModal) {
-        createClassModal.classList.remove("show");
-        enableScroll();
+      if (res.data.success) {
+        setSession(null);
+        setSelectedSession(null);
+        toast.success(res.data.message || "Successfully added!", {
+          id: toastId,
+        });
+      } else {
+        toast.error(res.data.message || "Failed to add session!", {
+          id: toastId,
+        });
       }
-    });
-  }, []);
+    } catch (e) {
+      console.error(e);
+      const errorMessage = e.response?.data?.message || "Something went wrong!";
+      toast.error("Failed to add session!", {
+        id: toastId,
+      });
+      console.log(errorMessage);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   return (
     <>
@@ -267,7 +291,10 @@ const Session = () => {
                     <h3>Create Session</h3>
                     <form>
                       {/* <!-- Row 1 --> */}
-                      <div className="form-row">
+                      <div
+                        className="form-row"
+                        style={{ display: "flex", flexDirection: "column" }}
+                      >
                         <div className="form-group">
                           <label htmlFor="search-students">
                             Session Name *
@@ -276,6 +303,21 @@ const Session = () => {
                             type="text"
                             id="search-students"
                             placeholder="Session Name"
+                            value={session}
+                            onChange={(e) => setSession(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+                          <Select
+                            options={sessiontStatusOptions}
+                            value={selectedSession}
+                            onChange={setSelectedSession}
+                            placeholder="Status"
+                            components={{
+                              DropdownIndicator: CustomDropdownIndicator,
+                            }}
                           />
                         </div>
                       </div>
@@ -289,7 +331,11 @@ const Session = () => {
                         >
                           Close
                         </button>
-                        <button type="button" className="button save">
+                        <button
+                          type="button"
+                          className="button save"
+                          onClick={handleAddSession}
+                        >
                           Save
                         </button>
                       </div>
@@ -303,6 +349,7 @@ const Session = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
+      <Toaster />
     </>
   );
 };

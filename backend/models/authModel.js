@@ -1,7 +1,7 @@
 // 📦 External Imports
-const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
-const createError = require('http-errors');
+const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const createError = require("http-errors");
 
 // 🏷️ define schema for authentication
 const authSchema = new mongoose.Schema(
@@ -39,17 +39,17 @@ const authSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: 'default_image_url',
+      default: "default_image_url",
     },
     status: {
       type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
+      enum: ["active", "inactive"],
+      default: "active",
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
+      enum: ["user", "admin"],
+      default: "user",
     },
     OTP: {
       type: String,
@@ -61,15 +61,15 @@ const authSchema = new mongoose.Schema(
 );
 
 // ✅ Edge Case: Prevent Race Conditions on Email Check
-authSchema.pre('save', async function validateUniqueEmail(next) {
+authSchema.pre("save", async function validateUniqueEmail(next) {
   if (this.isNew) {
     try {
       const existingUser = await mongoose
-        .model('Auth')
+        .model("Auth")
         .findOne({ $or: [{ email: this.email }, { mobile: this.mobile }] });
 
       if (existingUser) {
-        const field = existingUser.email === this.email ? 'email' : 'mobile';
+        const field = existingUser.email === this.email ? "email" : "mobile";
         return next(createError(409, `${field} already exists`));
       }
     } catch (error) {
@@ -80,14 +80,14 @@ authSchema.pre('save', async function validateUniqueEmail(next) {
 });
 
 // 🔑 Edge Case: Hash Password if Not Already Hashed
-authSchema.pre('save', async function hashPassword(next) {
+authSchema.pre("save", async function hashPassword(next) {
   // ⚠️ prevent re-hashing
-  console.log('check in auth model for passowrd ', this.isModified('password'));
-  if (this.isModified('password')) return next();
+  console.log("check in auth model for passowrd ", this.isModified("password"));
+  if (this.isModified("password")) return next();
 
   try {
     // Hash the password
-    console.log('this portion inside model try running ');
+    console.log("this portion inside model try running ");
     const saltRounds = 12;
     this.password = await bcrypt.hash(this.password, saltRounds);
     return next();
@@ -96,7 +96,7 @@ authSchema.pre('save', async function hashPassword(next) {
   }
 });
 
-const AuthModel = mongoose.model('Auth', authSchema);
+const AuthModel = mongoose.model("Auth", authSchema);
 
 // 🚀 Export Model for External Usage
 module.exports = AuthModel;

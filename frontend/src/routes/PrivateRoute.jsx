@@ -5,12 +5,12 @@ import { AuthContext } from "../contexts/AuthContext";
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useContext(AuthContext);
 
-  console.log('isAuthenticated value:', isAuthenticated);
-  console.log('isLoading value before:', isLoading);
+  console.log("isAuthenticated value:", isAuthenticated);
+  console.log("isLoading value before:", isLoading);
 
   if (isLoading) return <></>;
 
-  console.log('is loading value after : ', isLoading)
+  console.log("is loading value after : ", isLoading);
 
   if (!isAuthenticated) {
     return <Navigate to="/admin-panel/sign-in" replace />;
