@@ -1,0 +1,35 @@
+Backend Response Handling:
+
+Agar backend se response success: true hota hai:
+onSuccess trigger hota hai, jisme success toast dikhaya jata hai.
+Agar backend se response success: false hota hai:
+onSuccess trigger hota hai, lekin error toast dikhaya jata hai.
+Agar API call mein koi error hota hai:
+onError trigger hota hai, jisme generic error toast dikhaya jata hai.
+
+/
+
+try{
+Agar backend se response success: true hota hai:
+onSuccess trigger hota hai, jisme success toast dikhaya jata hai.
+
+Agar backend se response success: false hota hai:
+onSuccess trigger hota hai, lekin error toast dikhaya jata hai.
+
+}catch{
+
+Agar API call mein koi error hota hai:
+onError trigger hota hai, jisme generic error toast dikhaya jata hai.
+
+}
+
+onSuccess: (data) => {
+  if (data?.success) {  // Agar success true hai
+    toast.success(data.message || "Class added successfully! 🎉", { autoClose: 5000 });
+  } else {
+    toast.error(data.message || "Failed to add class 😢", { autoClose: 5000 });
+  }
+},
+onError: (error) => {
+  toast.error("Something went wrong! 😞", { autoClose: 5000 });
+},

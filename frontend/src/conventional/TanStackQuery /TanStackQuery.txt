@@ -1,0 +1,41 @@
+📂 Project Folder Structure (Conventional Way)
+
+📦 my-app
+ ┣ 📂 src
+ ┃ ┣ 📂 api              # 🛠 API calls and services
+ ┃ ┃ ┣ 📄 postApi.js     # Fetching, adding, deleting posts API logic
+ ┃ ┣ 📂 hooks            # 🎣 Custom hooks using TanStack Query
+ ┃ ┃ ┣ 📄 usePosts.js    # useQuery for fetching posts
+ ┃ ┃ ┣ 📄 useAddPost.js  # useMutation for adding posts
+ ┃ ┣ 📂 components       # 📦 UI components
+ ┃ ┃ ┣ 📄 PostList.js    # Component to display posts
+ ┃ ┃ ┣ 📄 AddPost.js     # Component to add new post
+ ┃ ┣ 📂 context          # 🌍 Query Client Provider
+ ┃ ┃ ┣ 📄 QueryProvider.js  # QueryClient setup
+ ┃ ┣ 📄 App.js           # 🏠 Main App component
+ ┃ ┣ 📄 index.js         # 🔥 Entry point
+ ┗ 📄 package.json
+
+
+
+📦 src
+ ┣ 📂 api
+ ┃ ┣ 📄 classApi.js        # API functions for fetching and adding classes
+ ┣ 📂 hooks
+ ┃ ┣ 📄 useClasses.js      # Custom hook to fetch classes (useQuery)
+ ┃ ┣ 📄 useAddClass.js     # Custom hook to add classes (useMutation)
+ ┣ 📂 components
+ ┃ ┣ 📄 ClassList.js       # Display class list
+ ┃ ┣ 📄 AddClass.js        # Form to add a new class
+ ┣ 📂 context
+ ┃ ┣ 📄 QueryProvider.js   # Query Client setup
+ ┣ 📄 App.js               # Main app entry point
+ ┣ 📄 index.js             # App ko render karna
+
+
+
+
+Emoji
+
+⏳   👨‍💻   🔍
+

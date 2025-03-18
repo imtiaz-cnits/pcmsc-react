@@ -19,7 +19,7 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    console.log("test value", activeMenu);
+    console.log("conventional value", activeMenu);
     if (activeMenu === "academic") {
       academicRef.current.classList.add("active");
       studentRef.current.classList.remove("active");

@@ -1,0 +1,45 @@
+📌 Naming Conventions for React Context and Provider Files/Folders
+
+❌ What to Avoid
+Context/AuthContext.js ❌ (Uppercase folder)
+context/auth-context.js ❌ (Kebab case in files)
+context/authcontext.js ❌ (Not readable)
+
+✅ File Naming Convention
+Use PascalCase for context files (e.g., AuthContext.js).
+Use PascalCase for provider files (e.g., AuthProvider.js).
+Use camelCase for instance exports (e.g., authContext).
+
+✅ Final Answer
+📂 Folder: context/ (lowercase)
+📄 Context File: AuthContext.js (PascalCase)
+🔄 Provider Component: AuthProvider.js (PascalCase)
+🏷 Context Variable: authContext (camelCase)
+🎯 Custom Hook: useAuth() (PascalCase)
+
+
+
+// 📌 Naming Conventions for API Folder and Files
+
+🔥 Recommended Folder Structure
+bash
+Copy
+Edit
+/src
+  /api  ✅ (Folder in lowercase)
+    apiClient.js  ✅ (camelCase for API client utility file)
+    userApi.js    ✅ (camelCase for user-related API functions)
+    productApi.js ✅ (camelCase for product-related API functions)
+
+
+❌ What to Avoid
+API/userApi.js ❌ (Uppercase folder)
+api/user-api.js ❌ (Kebab case)
+user-api-client.js ❌ (Not consistent with camelCase for utility files)
+
+
+✅ Final Answer
+📂 Folder: api/ (lowercase)
+📄 API File: userApi.js (camelCase)
+🛠 API Utility File: apiClient.js (camelCase)
+🎯 File Naming: Use camelCase for API function files and be descriptive about the resources/actions.

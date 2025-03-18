@@ -4,14 +4,13 @@ import useAddModal from "../../hook/useAddModal.jsx";
 import { useState } from "react";
 import Select from "react-select";
 import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
 import toast, { Toaster } from "react-hot-toast";
-import useAddClass from "../../hook/useAddClass.js";
 
 const Class = () => {
   const [className, setClassName] = useState("");
   const [status, setStatus] = useState(null);
   const [, setLoader] = useState(true);
-  const { mutate } = useAddClass();
 
   useAddModal("createClassModal", "classModalBtn", "classBtn");
 
@@ -34,25 +33,13 @@ const Class = () => {
     // 🧐 Debugging log
     console.log("before payload", payload);
 
-    mutate(payload, {
-      onSuccess: () => {
-        setClassName("");
-        setStatus(null);
-        toast.success("Class added successfully!");
-      },
-      onError: () => {
-        toast.error("Failed to add class!");
-      },
-    });
-
-    /*
     //toast loader
     const toastId = toast.loading("Adding Class...");
 
     try {
       const res = await axiosPrivate.post(
-          "/academic-management/add-class",
-          payload,
+        "/academic-management/add-class",
+        payload,
       );
       console.log("res data : ", res.data);
 
@@ -68,14 +55,12 @@ const Class = () => {
     } catch (error) {
       console.error(error);
       const errorMessage =
-          error.response?.data?.message || "Something went wrong!";
+        error.response?.data?.message || "Something went wrong!";
       console.log(errorMessage);
       toast.error("Failed to add class", { id: toastId });
     } finally {
       setLoader(false);
     }
-
- */
   };
 
   return (

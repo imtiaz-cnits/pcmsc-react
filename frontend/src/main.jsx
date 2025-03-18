@@ -15,17 +15,22 @@ import "./assets/css/style.css";
 import "./assets/css/table-funtion.css";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { AuthProvider } from "./contexts/AuthContext";
-import setupInterceptor from "./utils/axiosInterceptors.js";
+import { QueryClient } from "@tanstack/react-query";
+import QueryProvider from "./contexts/QueryProvider.jsx";
+// import setupInterceptor from "./utils/axiosInterceptors.js";
 
-setupInterceptor(); // its setup interceptors before start the app
+//
+// setupInterceptor(); // its setup interceptors before start the app
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     {/* <App /> */}
     <ErrorBoundary>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </QueryProvider>
     </ErrorBoundary>
   </StrictMode>,
 );

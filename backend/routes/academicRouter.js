@@ -10,18 +10,19 @@ const {
   AddSession,
   AddSection,
 } = require("../controllers/academicController");
+const checkLogin = require("../middlewares/token/checkLogin");
 
 // add class routes
-router.post("/add-class", AddClass);
+router.post("/add-class", checkLogin, AddClass);
 
 // add shift routes
-router.post("/add-shift", AddShift);
+router.post("/add-shift", checkLogin, AddShift);
 
 // add section routes
-router.post("/add-section", AddSection);
+router.post("/add-section", checkLogin, AddSection);
 
 // add session routes
-router.post("/add-session", AddSession);
+router.post("/add-session", checkLogin, AddSession);
 
 // exports
 module.exports = router;
