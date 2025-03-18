@@ -5,30 +5,30 @@ const Session = require("../models/sessionModel");
 const Section = require("../models/sectionModel");
 
 // 📝 do add class
-async function AddClass(req, res, next) {
-  try {
-    const { className, status } = req.body;
-
-    // 👤 create new add class object
-    const newClass = new ClassModel({
-      name: className.trim(),
-      status,
-    });
-    console.log("new added class", newClass);
-
-    // 💾 Save the user to the database
-    await newClass.save();
-
-    // 🎉 Success response
-    return res.status(200).json({
-      success: true,
-      message: "Successfully added!",
-    });
-  } catch (error) {
-    console.log("Error in adding class: ", error);
-    return next(error);
-  }
-}
+// async function AddClass(req, res, next) {
+//   try {
+//     const { className, status } = req.body;
+//
+//     // 👤 create new add class object
+//     const newClass = new ClassModel({
+//       name: className.trim(),
+//       status,
+//     });
+//     console.log("new added class", newClass);
+//
+//     // 💾 Save the user to the database
+//     await newClass.save();
+//
+//     // 🎉 Success response
+//     return res.status(200).json({
+//       success: true,
+//       message: "Successfully added!",
+//     });
+//   } catch (error) {
+//     console.log("Error in adding class: ", error);
+//     return next(error);
+//   }
+// }
 
 // 📝 do add shift
 async function AddShift(req, res, next) {
@@ -103,4 +103,4 @@ async function AddSession(req, res, next) {
 }
 
 // exports
-module.exports = { AddClass, AddShift, AddSection, AddSession };
+module.exports = { AddShift, AddSection, AddSession };

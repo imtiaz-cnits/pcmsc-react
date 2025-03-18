@@ -35,7 +35,7 @@ const SignUp = async (req, res, next) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    console.log("hashedpassword inside controller : ", hashedPassword);
+    console.log("hashed password inside controller : ", hashedPassword);
 
     // 👤 Create new user object
     const newUser = new Auth({

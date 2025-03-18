@@ -25,7 +25,7 @@ function errorHandler(err, req, res, next) {
   }
 
   // ⚠️ Handle Unexpected Errors
-  console.error("[ERROR]", err); // Debugging ke liye console pe log
+  console.error("[ERROR]", err); // TO Debugging
   return res.status(500).json({
     success: false,
     error: "InternalServerError",
