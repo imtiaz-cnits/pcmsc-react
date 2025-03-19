@@ -12,7 +12,7 @@ const {
   errorHandler,
 } = require("./middlewares/common/errorHandler");
 
-// express app intializtion
+// express app initialization
 const app = express();
 
 // 🛡️ global middlewares

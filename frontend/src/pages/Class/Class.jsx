@@ -1,18 +1,23 @@
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
 import useAddModal from "../../hook/useAddModal.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
 import axiosPrivate from "../../utils/axiosPrivate.jsx";
 import toast, { Toaster } from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  deleteClass,
+  fetchClass,
+} from "../../api/academic-management/classApi.js";
+import useAddClass from "../../hook/useAddClass.js";
 
 const Class = () => {
   const [className, setClassName] = useState("");
   const [status, setStatus] = useState(null);
   const [, setLoader] = useState(true);
-
-  useAddModal("createClassModal", "classModalBtn", "classBtn");
+  const { mutate: addClass, isLoading } = useAddClass();
 
   // add class modal options
   const statusOptions = [
@@ -20,8 +25,49 @@ const Class = () => {
     { value: "inactive", label: "Inactive" },
   ];
 
+  useAddModal("createClassModal", "classModalBtn", "classBtn");
+
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["classes"],
+    queryFn: fetchClass,
+    // gcTime:
+    // staleTime: 1000,
+    // refetchInterval: 1000,
+    // refetchIntervalInBackground : true,
+  });
+
+  const queryClient = useQueryClient();
+
+  //! mutate the data
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteClass,
+    onSuccess: (_, classId) => {
+      queryClient.setQueryData(["classes"], (oldData) =>
+        oldData?.filter((cls) => cls._id !== classId),
+      );
+      toast.success("Class deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete class");
+    },
+  });
+
+  if (isPending) return <span>Loading...</span>;
+  if (isError) return <span>Error: {error.message}</span>;
+
+  // if (isError) {
+  //   console.log("Error: ", error);
+  //
+  //   if (error instanceof Error) {
+  //     return <span>Error: {error}</span>;
+  //   } else {
+  //     return <span>Something went wrong. Please try again later.</span>;
+  //   }
+  // }
+
   // 📝 handle the form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     // prepare the payload
@@ -32,6 +78,15 @@ const Class = () => {
 
     // 🧐 Debugging log
     console.log("before payload", payload);
+
+    addClass(payload, {
+      onSuccess: () => {
+        setClassName(""); // Reset form fields
+        setStatus(null);
+      },
+    });
+
+    /*
 
     //toast loader
     const toastId = toast.loading("Adding Class...");
@@ -61,6 +116,8 @@ const Class = () => {
     } finally {
       setLoader(false);
     }
+
+     */
   };
 
   return (
@@ -131,93 +188,48 @@ const Class = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Student Name</th>
+                        <th>Class Name</th>
+                        <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>02</td>
-                        <td>Md. Siyam</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
+                      {data?.map((item, index) => {
+                        const {
+                          _id,
+                          name: className,
+                          status: classStatus,
+                        } = item;
+                        return (
+                          <tr key={_id}>
+                            <td>{index + 1}</td>
+                            <td>{className}</td>
+                            <td>{classStatus}</td>
+                            <td>
+                              {/* Edit Icon with Green Color and Hover Effect */}
+
+                              <a
+                                href="#"
+                                className="link custom-open-modal-btn openModalBtn editButton"
+                                data-modal="action-editmodal"
+                              >
+                                <i className="fa fa-edit"></i> Edit{" "}
+                                {/* FontAwesome Edit Icon */}
+                              </a>
+
+                              <a
+                                href="#"
+                                className="link custom-open-modal-btn openModalBtn deleteButton"
+                                data-modal="action-deletemodal"
+                                onClick={() => deleteMutation.mutate(_id)}
+                              >
+                                <i className="fa fa-trash"></i> Delete{" "}
+                                {/* FontAwesome Trash Icon */}
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>

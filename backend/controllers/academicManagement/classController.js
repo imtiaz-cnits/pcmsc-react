@@ -5,11 +5,13 @@ const createError = require("http-errors");
 // 📝 do add class
 async function addClass(req, res, next) {
   try {
-    const { name, status } = req.body;
+    const { className: name, status } = req.body;
 
     // 🔍 Check if `name` is provided (frontend)
-    if (!name || "") {
-      return next(createError(400, "Class name is required"));
+    if (!name || name.trim() === "") {
+      return next(
+        createError(400, "Class name is required and cannot be empty"),
+      );
     }
 
     console.log("class add body", req.body);
@@ -105,10 +107,11 @@ async function updateClass(req, res, next) {
 // delete
 async function deleteClass(req, res, next) {
   try {
-    const { classId } = req.params;
+    console.log("deleted id : ", req.params);
+    const { id: classId } = req.params;
 
     // 🔍 Find the class by ID before deleting it
-    const classToDelete = await ClassModel.findById({ _id: classId });
+    const classToDelete = await ClassModel.findById(classId);
 
     if (!classToDelete) {
       return next(404, "Class not found!");
@@ -118,6 +121,10 @@ async function deleteClass(req, res, next) {
     const classDeleted = await ClassModel.deleteOne({ _id: classId });
 
     console.log("deleted class  : ", classDeleted);
+
+    if (classDeleted.deletedCount === 0) {
+      return next(createError(404, "Class not found!"));
+    }
 
     // send the response with the deleted data
 
