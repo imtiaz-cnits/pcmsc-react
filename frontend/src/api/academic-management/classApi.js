@@ -21,26 +21,16 @@ export const fetchClass = async () => {
 // to delete
 
 export const deleteClass = async (classId) => {
-  try {
-    const res = await axiosPrivate.delete(
-      `/academic-management/classes/${classId}`,
-    );
-    return res.data.success ? res.data.deletedItem : null;
-  } catch (error) {
-    console.error("inside deleteClass ", error);
-    toast.error("Failed to delete class");
-    throw new Error(error.response?.data?.message || "Error deleting class");
-  }
+  const res = await axiosPrivate.delete(
+    `/academic-management/class/${classId}`,
+  );
+  return res.data.success ? res.data.deletedItem : null;
 };
 
 export const addClassAPI = async (payload) => {
-  try {
-    const response = await axiosPrivate.post(
-      "/academic-management/add-class",
-      payload,
-    );
-    return response.data; // Expected format: { success: true, message: 'Class added successfully', newClass: {...} }
-  } catch (error) {
-    throw error; // This will be caught in the mutation hook's onError
-  }
+  const response = await axiosPrivate.post(
+    "/academic-management/add-class",
+    payload,
+  );
+  return response.data;
 };

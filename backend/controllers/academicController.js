@@ -30,29 +30,29 @@ const Section = require("../models/sectionModel");
 //   }
 // }
 
-// 📝 do add shift
-async function AddShift(req, res, next) {
-  const { shift, status } = req.body;
-  try {
-    // 👤 Create new shift object
-    const newShift = new Shift({
-      name: shift.trim(),
-      status: status?.value,
-    });
-
-    // 💾 Save the user to the database
-    await newShift.save();
-
-    // 🎉 Success response
-    return res.status(200).json({
-      success: true,
-      message: "Successfully added!",
-    });
-  } catch (error) {
-    console.log("Error in adding shift: ", error);
-    return next(error);
-  }
-}
+// // 📝 do add shift
+// async function AddShift(req, res, next) {
+//   const { shift, status } = req.body;
+//   try {
+//     // 👤 Create new shift object
+//     const newShift = new Shift({
+//       name: shift.trim(),
+//       status: status?.value,
+//     });
+//
+//     // 💾 Save the user to the database
+//     await newShift.save();
+//
+//     // 🎉 Success response
+//     return res.status(200).json({
+//       success: true,
+//       message: "Successfully added!",
+//     });
+//   } catch (error) {
+//     console.log("Error in adding shift: ", error);
+//     return next(error);
+//   }
+// }
 
 // 📝 do add section
 async function AddSection(req, res, next) {
@@ -103,4 +103,4 @@ async function AddSession(req, res, next) {
 }
 
 // exports
-module.exports = { AddShift, AddSection, AddSession };
+module.exports = { AddSection, AddSession };

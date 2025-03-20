@@ -1,6 +1,6 @@
 // external imports
-const ClassModel = require("../../models/classModel");
 const createError = require("http-errors");
+const ClassModel = require("../../models/classModel");
 
 // 📝 do add class
 async function addClass(req, res, next) {

@@ -1,0 +1,23 @@
+step 1 :
+
+create instance
+// 🌟 Create a client
+const queryClient = new QueryClient();
+
+step 02
+queryclient provider
+
+
+const QueryProvider = ({ children }) => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {/* ✅ DevTools Enable for Debugging */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+};
+
+step 03 :
+
+https://github.com/codersgyan/yt-react-query-advance/blob/after/src/optimistic.jsx

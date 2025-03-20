@@ -4,7 +4,7 @@ import useAddModal from "../../hook/useAddModal.jsx";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
-import axiosPrivate from "../../utils/axiosPrivate.jsx";
+// import axiosPrivate from "../../utils/axiosPrivate.jsx";
 import toast, { Toaster } from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -16,8 +16,7 @@ import useAddClass from "../../hook/useAddClass.js";
 const Class = () => {
   const [className, setClassName] = useState("");
   const [status, setStatus] = useState(null);
-  const [, setLoader] = useState(true);
-  const { mutate: addClass, isLoading } = useAddClass();
+  const [, setLoader] = useState(false);
 
   // add class modal options
   const statusOptions = [
@@ -30,16 +29,15 @@ const Class = () => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["classes"],
     queryFn: fetchClass,
-    // gcTime:
-    // staleTime: 1000,
+    gcTime: 1000 * 60 * 10, // remove garbage collection after 10 minutes
+    staleTime: 1000 * 60 * 3, // for 3 minutes stale
     // refetchInterval: 1000,
     // refetchIntervalInBackground : true,
   });
 
   const queryClient = useQueryClient();
 
-  //! mutate the data
-
+  //! delete mutation
   const deleteMutation = useMutation({
     mutationFn: deleteClass,
     onSuccess: (_, classId) => {
@@ -49,7 +47,14 @@ const Class = () => {
       toast.success("Class deleted successfully");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to delete class");
+      console.log("Error in Deleted Class ", error);
+      console.log(
+        "Error fetching shifts",
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong!",
+      );
+      toast.error("Failed to delete class");
     },
   });
 
@@ -67,7 +72,7 @@ const Class = () => {
   // }
 
   // 📝 handle the form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // prepare the payload
@@ -78,15 +83,13 @@ const Class = () => {
 
     // 🧐 Debugging log
     console.log("before payload", payload);
-
-    addClass(payload, {
-      onSuccess: () => {
-        setClassName(""); // Reset form fields
-        setStatus(null);
-      },
-    });
-
-    /*
+    //
+    // addClass(payload, {
+    //   onSuccess: () => {
+    //     setClassName(""); // Reset form fields
+    //     setStatus(null);
+    //   },
+    // });
 
     //toast loader
     const toastId = toast.loading("Adding Class...");
@@ -116,8 +119,6 @@ const Class = () => {
     } finally {
       setLoader(false);
     }
-
-     */
   };
 
   return (
