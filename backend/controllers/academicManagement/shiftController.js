@@ -127,9 +127,27 @@ async function updateShift(req, res, next) {
 // delete
 async function deleteShift(req, res, next) {
   try {
-    const shiftDeleted = await Shift.deleteOne();
-    console.log("shift deleted", shiftDeleted);
-    return undefined;
+    console.log("deleted shift params ", req.params);
+
+    const { id } = req.params;
+
+    if (!id) {
+      return next(createError(404, "❌ Shift ID is required."));
+    }
+
+    const shiftDeleted = await Shift.findByIdAndDelete(id);
+
+    console.log("✅ Shift deleted:", shiftDeleted);
+
+    if (!shiftDeleted) {
+      return next(createError(400, "⚠️ Shift not found or already deleted."));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Shift successfully deleted.",
+      deletedShift: shiftDeleted,
+    });
   } catch (error) {
     console.log("delete shift error : ", error);
     return next(error);

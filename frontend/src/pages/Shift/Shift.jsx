@@ -26,28 +26,30 @@ const Shift = () => {
                   {/* <!-- Search and Filter --> */}
                   <div className="input-group class-group">
                     {/* <!-- Entries per page --> */}
-                    <div>
-                      <div className="entries-page">
-                        <label htmlFor="entries" className="mr-2">
-                          Entries:
-                        </label>
-                        <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </select>
-                          <span className="dropdown-icon">&#9662;</span>
-                          {/* <!-- Dropdown icon --> */}
-                        </div>
-                      </div>
-                    </div>
+                    {/*<div >*/}
+                    {/*  <div className="entries-page">*/}
+                    {/*    <label htmlFor="entries" className="mr-2">*/}
+                    {/*      Entries:*/}
+                    {/*    </label>*/}
+                    {/*    <div className="select-container dropdown-button">*/}
+                    {/*      <select*/}
+                    {/*        id="entries"*/}
+                    {/*        className="form-control"*/}
+                    {/*        style={{ width: "auto" }}*/}
+                    {/*      >*/}
+                    {/*        <option value="5">5</option>*/}
+                    {/*        <option value="10">10</option>*/}
+                    {/*        <option value="25">25</option>*/}
+                    {/*        <option value="50">50</option>*/}
+                    {/*        <option value="100">100</option>*/}
+                    {/*      </select>*/}
+                    {/*      <span className="dropdown-icon">&#9662;</span>*/}
+                    {/*      /!* <!-- Dropdown icon --> *!/*/}
+                    {/*    </div>*/}
+                    {/*  </div>*/}
+                    {/*</div>*/}
+
+
                     <div className="class-search">
                       <input
                         style={{ width: "20%", margin: "0" }}

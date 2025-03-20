@@ -3,12 +3,12 @@ import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.js
 import { useState } from "react";
 import useAddModal from "../../hook/useAddModal.jsx";
 import axiosPrivate from "../../utils/axiosPrivate.jsx";
-import { useMutation } from "@tanstack/react-query";
+import {useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 const ShiftForm = () => {
   const [shift, setShift] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState('');
 
   // const { data: shifts, isPending, isError, error } = useFetchShifts();
 
@@ -26,6 +26,7 @@ const ShiftForm = () => {
   //mutation for adding a shift
 
   // Mutation for adding a shift
+  const queryClient = useQueryClient();
   const {
     mutate: addShift,
     isPending,
@@ -41,8 +42,23 @@ const ShiftForm = () => {
       );
       return response.data;
     },
+
+
     onSuccess: (data) => {
       toast.success("Shift successfully added!");
+
+      // optimistic update
+      queryClient.setQueryData(["shifts"] ,(oldData)=>{
+    console.log('all shifts ', oldData)
+        const currentShifts = oldData?.shifts || [];
+
+        return {
+          ...oldData,
+          shifts: [...currentShifts, data], // Add the new shift to the list
+        };
+      });
+      queryClient.invalidateQueries({ queryKey: ["shifts"] });
+
       setShift("");
       setSelectedStatus(null);
     },
@@ -58,6 +74,10 @@ const ShiftForm = () => {
         toast.error("An unexpected error occurred.");
       }
     },
+
+
+
+
   });
 
   // Handle form submission
@@ -148,15 +168,21 @@ const ShiftForm = () => {
 
                   <div className="form-group">
                     <label htmlFor="search-students">Status *</label>
-                    <Select
-                      options={shiftStatusOptions}
+                    <select
                       value={selectedStatus}
-                      onChange={setSelectedStatus}
-                      components={{
-                        DropdownIndicator: CustomDropdownIndicator,
-                      }}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
                       placeholder="Status"
-                    />
+                    >
+                      <option value="">Select Status</option>
+                      {shiftStatusOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                      ))}
+
+
+
+                    </select>
                   </div>
                 </div>
 

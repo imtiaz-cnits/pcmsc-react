@@ -22,3 +22,20 @@ export const fetchedPaginatedShifts = async (limit, skip) => {
     ? { data: res.data?.data, total: res.data?.total }
     : { data: [], total: 0 };
 };
+
+// to delete
+export const deleteShiftAPI = async (shiftId) => {
+  if (!shiftId) throw new Error("❌ Shift ID is required");
+  try {
+    const res = await axiosPrivate.delete(
+      `/academic-management/shift/${shiftId}`,
+    );
+    return res.data?.success ? res.data : [];
+  } catch (error) {
+    console.log(
+      "❌ Error deleting shift:",
+      error.response?.data?.message || error.message,
+    );
+    throw error;
+  }
+};

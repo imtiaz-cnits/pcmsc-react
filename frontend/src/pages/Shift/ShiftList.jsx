@@ -1,11 +1,16 @@
-import { useFetchPaginatedShifts } from "../../hook/useShift.js";
+import {
+  useDeleteShift,
+  useFetchPaginatedShifts,
+} from "../../hook/useShift.js";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useState } from "react";
+import shift from "./Shift.jsx";
 
 const ShiftList = () => {
   //todo : converted limit , skip into useParams value
   const [limit] = useState(2);
   const [skip, setSkip] = useState(0);
+  const { mutate: deleteShift } = useDeleteShift();
 
   const { data, isPending, isError, error } = useFetchPaginatedShifts(
     limit,
@@ -13,6 +18,12 @@ const ShiftList = () => {
   );
 
   const { data: shifts, total } = data || {};
+
+  const handleDelete = (e, shiftId) => {
+    e.preventDefault();
+
+    deleteShift(shiftId);
+  };
 
   if (isPending) {
     return <p>Loading.... </p>;
@@ -88,6 +99,7 @@ const ShiftList = () => {
                     >
                       <FaRegTrashAlt
                         style={{ color: "red", fontSize: "25px" }}
+                        onClick={(e) => handleDelete(e, item?._id)}
                       />
                     </button>
                   </td>
@@ -101,29 +113,53 @@ const ShiftList = () => {
         <span id="display-info"></span>
       </div>
 
-      <div id="pagination" className="pagination">
-        <button
-          id="prevBtn"
-          className="btn"
-          style={{ cursor: "pointer" }}
-          disabled={skip < limit}
-          onClick={() => setSkip((prev) => Math.max(prev - limit, 0))}
-        >
-          Prev
-        </button>
+      <div className="d-flex justify-content-between align-items-center">
+        <div className="entries-page">
+          <label htmlFor="entries" className="mr-2">
+            Entries:
+          </label>
+          <div className="select-container dropdown-button">
+            <select
+                id="entries"
+                className="form-control"
+                style={{ width: "auto" }}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span className="dropdown-icon">&#9662;</span>
+            {/* <!-- Dropdown icon --> */}
+          </div>
+        </div>
+        <div id="pagination" className="pagination">
+          <button
+              id="prevBtn"
+              className="btn"
+              style={{ cursor: "pointer" }}
+              disabled={skip < limit}
+              onClick={() => setSkip((prev) => Math.max(prev - limit, 0))}
+          >
+            Prev
+          </button>
 
-        <span>
-          Page : {Math.floor(skip / limit) + 1} of {Math.ceil(total / limit)}
-        </span>
-        <button
-          id="nextBtn"
-          className="btn"
-          disabled={skip + limit >= total}
-          onClick={() => setSkip((prev) => prev + limit)}
-        >
-          Next
-        </button>
+          <>
+            Page : {Math.floor(skip / limit) + 1} of {Math.ceil(total / limit)}
+          </>
+          <button
+              id="nextBtn"
+              className="btn"
+              disabled={skip + limit >= total}
+              onClick={() => setSkip((prev) => prev + limit)}
+          >
+            Next
+          </button>
+        </div>
       </div>
+
+
       {/* <!-- Table End --> */}
     </>
   );
