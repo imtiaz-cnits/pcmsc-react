@@ -32,7 +32,12 @@ const ShiftList = () => {
   if (isError) {
     if (error instanceof Error) {
       console.log("inside shifts list ", error);
-      return <p>Error : {error.message}</p>;
+
+      if(error.response){
+        return  <p>{error.response?.data?.message}</p>
+      }else{
+        return <p>Error : {error.message}</p>;
+      }
     } else {
       return <p>Something went wrong. Please! try again later.</p>;
     }
