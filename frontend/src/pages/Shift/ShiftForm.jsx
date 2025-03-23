@@ -89,7 +89,7 @@ const ShiftForm = () => {
   };
 
   // Handle Edit Submit
-  const handleEditSubmit = async (e) => {
+  const handleEditSubmit =  (e) => {
     e.preventDefault();
 
     if (!shift || !selectedStatus) {
@@ -102,7 +102,7 @@ const ShiftForm = () => {
       label: selectedStatus?.label,
     };
 
-    await updateShift({ shiftId: editShiftId, updatedData });
+    updateShift({ shiftId: editShiftId, updatedData });
 
     setEditModalOpen(false);
     setShift("");

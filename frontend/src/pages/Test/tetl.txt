@@ -1,73 +1,42 @@
-import { useState,useEffect } from "react";
-import '../../assets/css/all-modal.css'
-import { useFetchShifts } from "../../hook/useShift";
-
+import { useEffect } from "react";
+import "../../assets/css/all-modal.css";
 
 const Test = () => {
-
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [shift , setShift]  = useState('')
-  const [shiftStatus , setShiftStatus] = useState('')
-  const [warn , setWarn] = useState('')
-  const {data : shifts , isPending , isError , error} = useFetchShifts(); 
-
-
   useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
-    } else {
-      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
-    }
-  }, [isModalOpen]);
+    const createClassModal = document.getElementById("createClassModal");
+    const classModalBtn = document.getElementById("classModalBtn");
+    const classBtn = document.getElementById("classBtn");
 
-  const shiftStatusOptions = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-  ];
+    // Function to disable scrolling
+    const disableScroll = () => {
+      document.body.style.overflow = "hidden";
+    };
 
-  console.log(shifts)
+    // Function to enable scrolling
+    const enableScroll = () => {
+      document.body.style.overflow = "";
+    };
 
-  // handle pop modal save button 
-  const handleSubmit = (e)=>{
-    e.preventDefault()
-    
-    if(!shift){
-      setWarn('Please fill in all fields.')
-    }
+    // Open the migrate modal and hide scroll
+    classModalBtn.addEventListener("click", () => {
+      createClassModal.classList.add("show");
+      disableScroll();
+    });
 
-    const label = shiftStatus.charAt(0).toUpperCase() + shiftStatus.slice(1); 
-    console.log('label' , label)
+    // Close the migrate modal and show scroll
+    classBtn.addEventListener("click", () => {
+      createClassModal.classList.remove("show");
+      enableScroll();
+    });
 
-    const payload = {
-      shift,
-      status : shiftStatus,
-      label : label
-
-    }
-    console.log('payload : ',payload)
-
-  }
-
-
-  //todo shimmer effect 
-  if(isPending) return <>Loading ...</>
-
-
-  if (isError) {
-    if (error instanceof Error) {
-      console.log("inside shifts list ", error);
-
-      if (error.response) {
-        return <p>{error.response?.data?.message}</p>;
-      } else {
-        return <p>Error : {error.message}</p>;
+    // Close the migrate modal by clicking outside it and show scroll
+    document.addEventListener("click", (e) => {
+      if (e.target === createClassModal) {
+        createClassModal.classList.remove("show");
+        enableScroll();
       }
-    } else {
-      return <p>Something went wrong. Please! try again later.</p>;
-    }
-  } 
-
+    });
+  }, []);
 
   return (
     <>
@@ -79,11 +48,9 @@ const Test = () => {
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
-                  <h3 className="heading">Shift List</h3>
-                  <button className="create-cls-btn"  onClick={() => setIsModalOpen(true)}
-                    
-                    >
-                    Add Shift
+                  <h3 className="heading">Session List</h3>
+                  <button className="create-cls-btn" id="classModalBtn">
+                    Create Session
                   </button>
                 </div>
                 {/* <!-- Class heading End --> */}
@@ -136,16 +103,14 @@ const Test = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-
-
-                        <th>Shift Name</th>
+                        <th>Session Name</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td>01</td>
-                        <td>Day</td>
+                        <td>2024</td>
                         <td>
                           <div id="action_btn">
                             <div id="menu-wrap">
@@ -186,7 +151,7 @@ const Test = () => {
                       </tr>
                       <tr>
                         <td>02</td>
-                        <td>Morning</td>
+                        <td>2025</td>
                         <td>
                           <div id="action_btn">
                             <div id="menu-wrap">
@@ -281,91 +246,65 @@ const Test = () => {
             </div>
           </div>
           {/* <!-- Edit Modal End -->
-        <!-- Quick View Modal Start --> */}
-          {/* <!-- <div id="quickViewModal" class="modal">
+        <!-- Quick View Modal Start -->
+        <!-- <div id="quickViewModal" class="modal">
           <div class="modal-content">
             <p>Quick View</p>
             <div class="modal-buttons">
               <button id="quickClose">X</button>
             </div>
           </div>
-        </div> --> */}
-          {/* <!-- Quick View Modal End -->
+        </div> -->
+        <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Shift Pop Up Modal Start --> */}
-          <div className="shift-modal">
-          {isModalOpen && (
-        <section id="createClassModal" className="modal migrateModal show">
-          <div className="modal-content">
-            <div id="popup-modal">
-              <div className="form-container">
-                <h3>Add Shift</h3>
-                <form>
-                  {/* ✅ Shift Name Input */}
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="search-students">Shift Name *</label>
-                      <input type="text" id="search-students" placeholder="Shift Name"
-                      
-                      value={shift}
-                      onChange={(e)=> setShift(e.target.value)}
-                      />
-                    </div>
+        <!-- Session Pop Up Modal Start --> */}
+          <div className="session-modal">
+            <section id="createClassModal" className="modal migrateModal">
+              <div className="modal-content">
+                <div id="popup-modal">
+                  <div className="form-container">
+                    <h3>Create Session</h3>
+                    <form>
+                      {/* <!-- Row 1 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="search-students">
+                            Session Name *
+                          </label>
+                          <input
+                            type="text"
+                            id="search-students"
+                            placeholder="Session Name"
+                          />
+                        </div>
+                      </div>
+
+                      {/* <!-- Actions --> */}
+                      <div className="form-actions">
+                        <button
+                          type="button"
+                          id="classBtn"
+                          className="button close closeBtn"
+                        >
+                          Close
+                        </button>
+                        <button type="button" className="button save">
+                          Save
+                        </button>
+                      </div>
+                    </form>
                   </div>
-
-                  {warn && <p style={{color: 'lightcoral'}}>{warn}</p>}
-
-                {/* ✅ Shift Status Input */}
-
-                <div className="form-group">
-                    <label htmlFor="search-students">Status *</label>
-                    <select
-                      value={shiftStatus}
-                      onChange={(e) => setShiftStatus(e.target.value)}
-                      placeholder="Status Name"
-                    >
-                      <option value="" disabled>
-                        Select Status
-                      </option>
-                      {shiftStatusOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-
-                  {/* ✅ Buttons for modal actions */}
-                  <div className="form-actions">
-                    <button
-                      type="button"
-                      className="button close closeBtn"
-                      onClick={() => setIsModalOpen(false)} // ✅ Close modal on click
-                    >
-                      Close
-                    </button>
-                    <button type="button" className="button save"
-                    
-                    onClick={handleSubmit}
-
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
+                </div>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
-      )}
-          </div>
-          {/* <!-- Shift Pop Up Modal Start --> */}
+          {/* <!-- Session Pop Up Modal Start --> */}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
+
 export default Test;

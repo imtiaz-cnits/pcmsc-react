@@ -4,7 +4,7 @@ import {
 } from "../../hook/useShift.js";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useState } from "react";
-import shift from "./Shift.jsx";
+import shift from "./_Shift.jsx";
 
 const ShiftList = () => {
   //todo : converted limit , skip into useParams value

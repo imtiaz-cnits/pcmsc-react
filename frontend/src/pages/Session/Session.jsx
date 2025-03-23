@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import {
   useAddSession,
   useDeleteSession,
-  useFetchPaginatedShifts,
+  useFetchPaginatedSession,
   useUpdateSession,
 } from "../../hook/useSession.js";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
@@ -26,7 +26,7 @@ const Session = () => {
     data: sessions,
     isPending,
     isError,
-  } = useFetchPaginatedShifts(limit, skip);
+  } = useFetchPaginatedSession(limit, skip);
   const { mutate: addSession } = useAddSession();
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: updateSession } = useUpdateSession();

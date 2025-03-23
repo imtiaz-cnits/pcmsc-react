@@ -89,7 +89,7 @@ export const useFetchSessionAPI = () => {
 };
 
 //with paginated
-export const useFetchPaginatedShifts = (limit, skip) => {
+export const useFetchPaginatedSession = (limit, skip) => {
   return useQuery({
     queryKey: ["sessions", limit, skip],
     queryFn: async () => await fetchedPaginatedSessions(limit, skip),
