@@ -33,9 +33,9 @@ const ShiftList = () => {
     if (error instanceof Error) {
       console.log("inside shifts list ", error);
 
-      if(error.response){
-        return  <p>{error.response?.data?.message}</p>
-      }else{
+      if (error.response) {
+        return <p>{error.response?.data?.message}</p>;
+      } else {
         return <p>Error : {error.message}</p>;
       }
     } else {
@@ -67,8 +67,6 @@ const ShiftList = () => {
                   </td>
                   <td
                     style={{
-                      color:
-                        item?.status === "active" ? "lightgreen" : "lightcoral",
                       fontWeight: "normal",
                       texAlign: "center",
                     }}
@@ -125,9 +123,9 @@ const ShiftList = () => {
           </label>
           <div className="select-container dropdown-button">
             <select
-                id="entries"
-                className="form-control"
-                style={{ width: "auto" }}
+              id="entries"
+              className="form-control"
+              style={{ width: "auto" }}
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -141,11 +139,11 @@ const ShiftList = () => {
         </div>
         <div id="pagination" className="pagination">
           <button
-              id="prevBtn"
-              className="btn"
-              style={{ cursor: "pointer" }}
-              disabled={skip < limit}
-              onClick={() => setSkip((prev) => Math.max(prev - limit, 0))}
+            id="prevBtn"
+            className="btn"
+            style={{ cursor: "pointer" }}
+            disabled={skip < limit}
+            onClick={() => setSkip((prev) => Math.max(prev - limit, 0))}
           >
             Prev
           </button>
@@ -154,16 +152,15 @@ const ShiftList = () => {
             Page : {Math.floor(skip / limit) + 1} of {Math.ceil(total / limit)}
           </>
           <button
-              id="nextBtn"
-              className="btn"
-              disabled={skip + limit >= total}
-              onClick={() => setSkip((prev) => prev + limit)}
+            id="nextBtn"
+            className="btn"
+            disabled={skip + limit >= total}
+            onClick={() => setSkip((prev) => prev + limit)}
           >
             Next
           </button>
         </div>
       </div>
-
 
       {/* <!-- Table End --> */}
     </>

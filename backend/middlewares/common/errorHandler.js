@@ -2,6 +2,7 @@ const multer = require("multer");
 const createError = require("http-errors");
 // ⚠️ Default error handler middleware
 function errorHandler(err, req, res, next) {
+  console.log("other : ", err);
   if (res.headersSent) {
     next(err);
   }

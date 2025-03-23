@@ -5,11 +5,6 @@ const router = express.Router();
 
 // internal imports
 const {
-  AddShift,
-  AddSession,
-  AddSection,
-} = require("../controllers/academicController");
-const {
   addClass,
   getAllClasses,
   updateClass,
@@ -21,7 +16,16 @@ const {
   getAllShiftsPagination,
   deleteShift,
 } = require("../controllers/academicManagement/shiftController");
-const {addSection} = require("../controllers/academicManagement/sectionController");
+const {
+  addSection,
+} = require("../controllers/academicManagement/sectionController");
+const {
+  addSession,
+  getAllSessions,
+  updateSession,
+  deleteSession,
+  getAllPaginatedSession,
+} = require("../controllers/academicManagement/sessionController");
 
 // 🔍 Class - CRUD
 router.post("/add-class", addClass);
@@ -39,14 +43,11 @@ router.delete("/shift/:id", deleteShift);
 router.post("/add-section", addSection);
 
 // 🚀 Session - CRUD
-
-// add shift routes
-
-// add section routes
-router.post("/add-section", AddSection);
-
-// add session routes
-router.post("/add-session", AddSession);
+router.post("/add-session", addSession);
+router.get("/sessions", getAllSessions);
+router.get("/session-paginated", getAllPaginatedSession);
+router.patch("/session/:id", updateSession);
+router.delete("/session/:id", deleteSession);
 
 // exports
 module.exports = router;

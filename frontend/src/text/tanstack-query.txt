@@ -21,3 +21,440 @@ const QueryProvider = ({ children }) => {
 step 03 :
 
 https://github.com/codersgyan/yt-react-query-advance/blob/after/src/optimistic.jsx
+
+
+
+useMutation({
+
+1. mutationFn: (variables: TVariables) => Promise<TData>
+Required: Agar default mutation function define nahi ki gayi ho toh ye function dena padta hai.
+Example: Agar hum user data update karna chahte hain, to mutationFn ek function hoga jo data ko update karega aur promise return karega.
+Execution Flow: Mutation function mutate ke call par trigger hota hai aur variables ko use karta hai.
+
+Use Case: Jab aapko kisi asynchronous task ko perform karna ho, jaise kisi API ko call karna
+(e.g., user data update karna).
+
+
+const mutationFn = async (variables) => {
+  return await axios.post('/api/user/update', variables);
+};
+
+When to Use:
+Jab aapko data update karna ho ya kisi backend service ko call karna ho.
+Important: Ye required hota hai agar default mutation function define nahi ki gayi ho.
+
+
+
+
+2. gcTime: number | Infinity
+Description: Ye specify karta hai ki cache data ko kitni der tak memory mein rakhna hai jab tak wo inactive ho.
+Example: Agar gcTime ko 5000 milliseconds (5 seconds) set karte hain, toh jab mutation ka cache inactive ho, toh 5 seconds ke baad wo garbage collected ho jayega.
+Execution Flow: Ye parameter garbage collection ke liye kaam aata hai jab cache data use nahi ho raha hota.
+})
+
+Use Case: Jab aapko cache ko garbage collect karne ka time set karna ho.
+
+gcTime: 60000 // Cache 1 minute ke baad clear ho jayega.
+
+When to Use:
+Agar aap chahte ho ki unused cache ko specific time ke baad clear kar diya jaaye.
+Agar aapko cache ko forever rakhna ho, toh Infinity set kar sakte ho.
+
+
+
+3. mutationKey: unknown[]
+Use Case: Jab aapko mutation ke result ko identify karna ho,
+especially jab multiple mutations ek hi time par chal rahe ho.
+
+mutationKey: ['updateUser', userId]
+
+When to Use:
+Jab aapko multiple mutations ko differentiate karna ho.
+Agar aapko same mutation key ke saath mutation run karna ho,
+toh use karein.
+
+
+
+4. networkMode: 'online' | 'always' | 'offlineFirst'
+Description: Ye optional parameter hai jo network mode ko set karta hai.
+Example: Agar networkMode ko 'offlineFirst' set kiya jata hai, toh mutation pehle local cache ko use karega aur phir network request karega.
+Execution Flow: Ye network mode mutation ki behavior ko control karta hai.
+
+networkMode: 'offlineFirst'
+
+When to Use:
+'online': Default hai, jab network available ho, tab hi mutation perform ho.
+'offlineFirst': Agar aapko pehle offline data use karna ho, tab network request baad mein ho.
+'always': Hamesha network request bhejni hai.
+
+
+
+
+5. onMutate: (variables: TVariables) => Promise<TContext | void> | TContext | void
+Description: Ye function mutation ke hone se pehle fire hota hai.
+Example: Agar aapko optimistic updates karni hai, toh yaha pe aap update kar sakte ho data ko bina mutation ke success ke wait kiye.
+Execution Flow: Ye function mutation ke execution se pehle call hota hai, aur agar mutation fail ho jata hai toh rollback karne ke liye use hota hai.
+
+Use Case: Jab aapko optimistic updates perform karne ho,
+ya kisi resource ko update karne se pehle kuch karna ho.
+
+onMutate: (variables) => {
+  // Optimistic update
+  queryClient.setQueryData(['user', variables.id], { ...variables });
+}
+
+
+When to Use:
+Jab aap mutation ke hone se pehle data ko local state mein update karna chahte ho.
+Optimistic updates mein useful hota hai.
+
+
+6. onSuccess: (data: TData, variables: TVariables, context: TContext) => Promise<unknown> | unknown
+
+
+Use Case: Jab mutation successfully complete ho jaye
+aur aapko koi additional task perform karna ho, jaise UI update karna.
+
+onSuccess: (data) => {
+  toast.success('User updated successfully!');
+}
+
+When to Use:
+Jab mutation successfully execute ho jaaye aur aapko success state ko handle karna ho.
+
+
+
+
+7. onError: (err: TError, variables: TVariables, context?: TContext) => Promise<unknown> | unknown
+Description: Ye function tab fire hota hai jab mutation error encounter karta hai.
+Example: Agar mutation ke dauran error aata hai, toh error ko handle karne ke liye is function ka use kar sakte hain, jaise ki user ko error message dena.
+Execution Flow: Ye function mutation ke error state mein call hota hai.
+
+Use Case: Jab mutation fail ho aur aapko error handling karna ho.
+
+onError: (err) => {
+  toast.error('Something went wrong! Please try again.');
+}
+
+When to Use:
+Jab mutation mein koi error aaye aur aapko error handling ya user ko error dikhana ho.
+
+
+8. onSettled: (data: TData, error: TError, variables: TVariables, context?: TContext) => Promise<unknown> | unknown
+Description: Ye function tab fire hota hai jab mutation successful ho ya error encounter kare.
+Example: Agar aapko cleanup actions perform karni hain (jaise logs, UI updates), toh is function ka use kar sakte hain.
+Execution Flow: Ye function mutation complete hone ke baad call hota hai, chahe success ho ya error.
+
+Use Case: Jab mutation complete ho jaaye, chahe wo successful ho ya error aaye,
+aur aapko cleanup ya UI update karna ho.
+
+onSettled: () => {
+  // Reset some state or UI update
+  queryClient.invalidateQueries({ queryKey: ['todos'] })
+}
+
+When to Use:
+Jab aapko mutation complete hone ke baad kuch action perform karna ho,
+irrespective of success ya failure.
+
+
+9. retry: boolean | number | (failureCount: number, error: TError) => boolean
+Description: Agar mutation fail hota hai, toh retry kitni baar karna hai yeh specify karta hai.
+Example: Agar aap chahte ho ki mutation 3 baar retry ho, toh aap retry: 3 set kar sakte ho.
+Execution Flow: Agar mutation fail hota hai, toh retry parameter ke according retry count decide hota hai.
+
+
+
+
+10. retryDelay: number | (retryAttempt: number, error: TError) => number
+Description: Ye delay define karta hai jo har retry ke beech mein hona chahiye.
+Example: Agar aap chahte ho ki retry attempts ke beech 2 seconds ka gap ho, toh retryDelay: 2000 set kar sakte ho.
+Execution Flow: Har retry attempt ke beech ye delay apply hota hai.
+
+
+retry: 3 // Mutation ko 3 baar retry karega
+
+When to Use:
+true: Hamesha retry karega.
+false: Retry nahi karega.
+number: Specified number of retries (e.g., 3).
+Function: Conditional retry logic ke liye use kar sakte ho.
+
+
+10. retryDelay: number | (retryAttempt: number, error: TError) => number
+Use Case: Jab aapko retry ke beech delay set karna ho.
+
+retryDelay: (attempt) => Math.min(attempt * 1000, 5000) // Exponential backoff
+
+
+When to Use:
+Retry ke beech mein delay set karne ke liye. Exponential backoff ya linear delay apply kar sakte ho.
+
+
+
+Parameters 1
+
+Quick Recap for Easy Recall:
+mutationFn: Asynchronous task perform karna (e.g., API call).
+gcTime: Cache ko specific time ke baad clean karna.
+mutationKey: Mutation results ko track karna.
+networkMode: Network conditions ke hisaab se mutation control karna.
+onMutate: Optimistic updates aur pre-mutation tasks.
+onSuccess: Successful mutation ke baad tasks.
+onError: Mutation failure ke baad error handling.
+onSettled: Mutation complete hone ke baad cleanup tasks.
+retry: Mutation retry logic set karna.
+retryDelay: Retry attempts ke beech delay set karna.
+scope: Mutations ko serially run karna.
+throwOnError: Errors ko render phase mein handle karna.
+meta: Additional metadata store karna mutation ke response ke sath.
+
+
+
+Parameters 2
+
+mutate: (variables: TVariables, { onSuccess, onSettled, onError }) => void
+Use Case: Tumhare mutation ko trigger karne wali function.
+Isme variables pass kar ke mutation ko execute karte ho aur success, error, ya settled callbacks handle kar sakte ho.
+Example:
+
+mutate({ id: 1, name: 'John' }, {
+  onSuccess: (data) => console.log('Mutation success:', data),
+  onError: (err) => console.log('Error:', err),
+});
+
+When to Use:
+Tumhare mutation ko trigger karna ho with variables aur custom callbacks.
+Jab mutation ko call karna ho aur optional success, error ya settled callbacks ko handle karna ho.
+
+// mutate () ke andar
+const mutation = useMutation({
+    mutationFn: async (data: any) => {
+      // Backend API call
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Something went wrong');
+      return response.json();
+    },
+  });
+
+  const handleSubmit = () => {
+    const formData = { name: 'John Doe', email: 'john@example.com' };
+
+    // Directly passing onSuccess and onError for this mutation call
+    mutation.mutate(formData, {
+      onSuccess: (data) => {
+        toast.success('Data successfully submitted: ' + data.message);
+      },
+      onError: (error) => {
+        toast.error('Error: ' + error.message);
+      },
+    });
+  };
+
+
+ // useMutation() ke andar handle onError , onSuccess
+   const mutation = useMutation({
+     mutationFn: async (data: any) => {
+       // Backend API call (for example)
+       const response = await fetch('/api/submit', {
+         method: 'POST',
+         body: JSON.stringify(data),
+       });
+       if (!response.ok) throw new Error('Something went wrong');
+       return response.json();
+     },
+     onSuccess: (data) => {
+       // Mutation successful, show toast notification
+       toast.success('Data successfully submitted: ' + data.message);
+     },
+     onError: (error) => {
+       // Mutation failed, show error notification
+       toast.error('Error: ' + error.message);
+     },
+   });
+
+   const handleSubmit = () => {
+     // Sample form data
+     const formData = { name: 'John Doe', email: 'john@example.com' };
+     mutation.mutate(formData);
+   };
+
+
+
+mutationKey
+
+const mutation = useMutation({
+  mutationKey: ['updateUser', userId],  // Unique key for this mutation
+  mutationFn: async (userData) => {
+    const response = await fetch(`/api/updateUser/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) throw new Error('Failed to update');
+    return response.json();
+  },
+  onSuccess: (data) => {
+    console.log('User updated successfully:', data);
+  },
+  onError: (error) => {
+    console.error('Error updating user:', error);
+  },
+});
+
+When to use mutationKey:
+
+Jab tum cache invalidation ya cache updates karna chahte ho.
+Agar tum optimistic updates kar rahe ho.
+Jab tum specific mutation ko track karna chahte ho.
+
+
+
+
+variables: TVariables
+Use Case: Variables ka object jo mutation function ko pass kiya jata hai.
+Example:
+
+const variables = { id: 1, name: 'John' };
+
+When to Use:
+Jab tumhe mutation function me specific data pass karna ho, jo mutation operation ke liye zaroori ho.
+
+
+
+onSuccess: (data: TData, variables: TVariables, context: TContext) => void
+Use Case: Jab mutation successfully complete ho jaye, aur tumhe us result ke baad kuch karna ho (e.g., UI update).
+Example:
+
+onSuccess: (data) => {
+  toast.success('Data updated successfully!');
+}
+
+
+When to Use:
+Jab mutation successful ho aur tumhe result ko use karna ho, jaise UI ya state ko update karna.
+
+In **Tanstack Query v5**, jab tum **`onSuccess`** callback use karte ho, tab woh function **3 parameters** accept karta hai:
+
+1. **`data`**
+2. **`variables`**
+3. **`context`**
+
+### **1. `data`:**
+- **Definition**: Yeh woh data hai jo mutation function se return hota hai jab mutation successfully execute ho jata hai.
+- **Use Case**: Tum typically yeh **response data** use karte ho, jo backend se mutation ke baad milta hai.
+- **Example**: Agar tum updateUser mutation kar rahe ho, toh `data` mein updated user ka information aayega.
+
+**Example**:
+```tsx
+onSuccess: (data) => {
+  console.log('Updated user data:', data); // data mein updated user ka data hoga
+  toast.success('User updated successfully!');
+}
+```
+
+### **2. `variables`:**
+- **Definition**: Yeh woh variables hain jo tumne **mutation ko trigger karte waqt** pass kiye the. Yeh object hota hai jo tumhare mutation function ko execute karte waqt tum pass karte ho (jaise form input values, user data, etc.).
+- **Use Case**: Tum `variables` ka use karke dekh sakte ho ki kis input data ke basis pe mutation successful tha.
+- **Example**: Agar tum update kar rahe ho, toh `variables` mein woh user data hoga jo tum mutation ke liye pass kar rahe ho.
+
+**Example**:
+```tsx
+onSuccess: (data, variables) => {
+  console.log('User data sent for update:', variables); // variables mein woh data hoga jo update ke liye pass kiya gaya
+  toast.success('User updated successfully!');
+}
+```
+
+### **3. `context`:**
+- **Definition**: Yeh value tumhare **`onMutate`** callback se return hoti hai. Agar tumne `onMutate` mein kuch value return ki thi, toh woh `context` ke roop mein tumhe `onSuccess` mein milti hai.
+- **Use Case**: Context ko tum **optimistic updates** mein use kar sakte ho. Agar tum `onMutate` mein koi context set kar rahe ho (like, updating the UI optimistically), toh tum `onSuccess` mein usse use kar sakte ho, jaise UI ko restore karna ya rollback karna.
+- **Example**: Agar tumne `onMutate` mein koi optimistic state set ki thi, toh tum usse yahan handle kar sakte ho.
+
+**Example**:
+```tsx
+onMutate: async (variables) => {
+  // Optimistic update logic
+  return { optimisticData: variables }; // Context set kiya
+},
+
+onSuccess: (data, variables, context) => {
+  console.log('Optimistic context data:', context.optimisticData); // context se optimisticData fetch kiya
+  toast.success('User updated successfully!');
+}
+```
+
+### **Summary:**
+
+- **`data`**: Mutation ke successful execution se jo data return hota hai (server se).
+- **`variables`**: Tumhare mutation ko trigger karte waqt jo data tum pass karte ho (input values, etc.).
+- **`context`**: `onMutate` se return hota hai aur optimistic updates mein use hota hai.
+
+
+-------------------------------------------
+-------------------------------------------
+-------------------------------------------
+
+
+status: string
+Use Case: Mutation ke current status ko track karta hai. Possible values:
+idle: Jab mutation execute nahi ho raha ho.
+pending: Jab mutation execute ho raha ho.
+error: Jab mutation fail ho gaya ho.
+success: Jab mutation successfully complete ho gaya ho.
+
+isIdle or status === 'idle' - The mutation is currently idle or in a fresh/reset state
+isPending or status === 'pending' - The mutation is currently running
+isError or status === 'error' - The mutation encountered an error
+isSuccess or status === 'success' - The mutation was successful and mutation data is available
+
+
+error - If the mutation is in an error state, the error is available via the error property.
+data - If the mutation is in a success state, the data is available via the data property.
+
+
+
+Example:
+
+console.log(status); // 'pending', 'success', etc.
+
+When to Use:
+Jab tumhe mutation ke status ko dynamically track karna ho aur UI mein use karna ho.
+
+
+---------------------------------
+--------------------------------
+----------------------------------
+
+isIdle, isPending, isSuccess, isError
+Use Case: Status variables jo mutation ke current state ko track karte hain.
+Example:
+
+if (isError) {
+  console.log('Mutation failed!');
+}
+
+When to Use:
+Jab tumhe mutation ke different states (idle, pending, success, error) ko check karna ho aur UI update karni ho accordingly.
+
+
+---------------------------------
+--------------------------------
+----------------------------------
+
+error: null | TError
+Use Case: Mutation ke liye error object agar koi error encounter hota hai.
+Example:
+
+
+if (error) {
+  console.log('Error:', error);
+}
+
+
+When to Use:
+Jab mutation fail ho aur tumhe error ko track karna ho.
+
+

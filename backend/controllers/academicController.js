@@ -55,52 +55,52 @@ const Section = require("../models/sectionModel");
 // }
 
 // 📝 do add section
-async function AddSection(req, res, next) {
-  const { section, status } = req.body;
-
-  try {
-    // create new object
-    const newSection = new Section({
-      name: section.trim(),
-      status: status?.value,
-    });
-
-    // save to db
-    await newSection.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Successfully added!",
-    });
-  } catch (error) {
-    console.log("Error in adding section: ", error);
-    return next(error);
-  }
-}
+// async function AddSection(req, res, next) {
+//   const { section, status } = req.body;
+//
+//   try {
+//     // create new object
+//     const newSection = new Section({
+//       name: section.trim(),
+//       status: status?.value,
+//     });
+//
+//     // save to db
+//     await newSection.save();
+//
+//     return res.status(200).json({
+//       success: true,
+//       message: "Successfully added!",
+//     });
+//   } catch (error) {
+//     console.log("Error in adding section: ", error);
+//     return next(error);
+//   }
+// }
 
 // 📝 do add session
-async function AddSession(req, res, next) {
-  const { session, status } = req.body;
-
-  try {
-    // 👤 Create new session object
-    const newSession = new Session({
-      year: session,
-      status: status?.value,
-    });
-
-    // 💾 Save the user to the database
-    await newSession.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Successfully added!",
-    });
-  } catch (error) {
-    console.log("Error in adding session: ", error);
-    return next(error);
-  }
-}
+// async function AddSession(req, res, next) {
+//   const { session, status } = req.body;
+//
+//   try {
+//     // 👤 Create new session object
+//     const newSession = new Session({
+//       year: session,
+//       status: status?.value,
+//     });
+//
+//     // 💾 Save the user to the database
+//     await newSession.save();
+//
+//     return res.status(200).json({
+//       success: true,
+//       message: "Successfully added!",
+//     });
+//   } catch (error) {
+//     console.log("Error in adding session: ", error);
+//     return next(error);
+//   }
+// }
 
 // exports
-module.exports = { AddSection, AddSession };
+// module.exports = { AddSession };

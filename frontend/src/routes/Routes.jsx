@@ -31,6 +31,7 @@ import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
 import ProtectedRoute from "./PrivateRoute";
+import TodoComponent from "../pages/Test/Todo.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -169,10 +170,14 @@ export const router = createBrowserRouter([
   },
   {
     path: "test",
-    element: (
-      <ProtectedRoute>
-        <Test />
-      </ProtectedRoute>
-    ),
+    element: <Test />,
+  },
+  {
+    path: "todo",
+    element: <TodoComponent />,
+  },
+  {
+    path: "test",
+    element: <Test />,
   },
 ]);
