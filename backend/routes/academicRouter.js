@@ -15,6 +15,7 @@ const {
   getAllShift,
   getAllShiftsPagination,
   deleteShift,
+  updateShift,
 } = require("../controllers/academicManagement/shiftController");
 const {
   addSection,
@@ -37,6 +38,7 @@ router.delete("/class/:id", deleteClass);
 router.post("/add-shift", addShift);
 router.get("/shifts", getAllShift);
 router.get("/shifts-paginated", getAllShiftsPagination);
+router.patch("/shift/:id", updateShift);
 router.delete("/shift/:id", deleteShift);
 
 // ⚙️ Section - CRUD

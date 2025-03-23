@@ -10,6 +10,10 @@ const shiftSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    label: {
+      type: String,
+      trim: true,
+    },
     status: {
       type: String,
       enum: ["active", "inactive"],

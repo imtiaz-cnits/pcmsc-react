@@ -2,13 +2,14 @@
 
 const createError = require("http-errors");
 const Shift = require("../../models/shiftModel");
+const Session = require("../../models/sessionModel");
 
 // internal imports
 
 // 📝 do add shift
 async function addShift(req, res, next) {
   try {
-    const { shift: name, status } = req.body;
+    const { shift: name, status, label } = req.body;
 
     console.log("before => shift add body", req.body);
 
@@ -31,6 +32,7 @@ async function addShift(req, res, next) {
     const newClass = new Shift({
       name,
       status,
+      label,
     });
     console.log("before enter to db => new added shift", newClass);
 
@@ -110,16 +112,41 @@ async function getAllShiftsPagination(req, res, next) {
       total,
     });
   } catch (error) {
-    // console.error("❌ Error fetching shifts: ", error);
+    console.error("❌ Error fetching shifts: ", error);
     return next(error);
   }
 }
-// 📝 update
+// 📝 Update Shift
 async function updateShift(req, res, next) {
   try {
-    return undefined;
+    console.log("shift params : ", req.params);
+    const { id: shiftId } = req.params;
+    const updatePayload = req.body;
+
+    console.log(
+      `🔄 Updating session [ID: ${shiftId}] with data:`,
+      updatePayload,
+    );
+
+    const updatedShift = await Shift.findByIdAndUpdate(shiftId, updatePayload, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedShift) {
+      console.warn(`⚠️ Shift not found [ID: ${shiftId}]`);
+      return next(createError(404, "Shift not found!"));
+    }
+
+    console.log("✅ Successfully updated shift:", updatedShift);
+
+    return res.status(200).json({
+      success: true,
+      message: "Shift updated successfully!",
+      data: updatedShift, // ✅ Use `data` instead of `updatedData` for consistency
+    });
   } catch (error) {
-    console.error("update class error : ", error);
+    console.error("❌ Error updating session:", error);
     return next(error);
   }
 }
@@ -132,15 +159,16 @@ async function deleteShift(req, res, next) {
     const { id } = req.params;
 
     if (!id) {
-      return next(createError(404, "❌ Shift ID is required."));
+      return "❌ Shift ID is required.";
     }
 
     const shiftDeleted = await Shift.findByIdAndDelete(id);
 
     console.log("✅ Shift deleted:", shiftDeleted);
 
-    if (!shiftDeleted) {
-      return next(createError(400, "⚠️ Shift not found or already deleted."));
+    if (shiftDeleted.deletedCount === 0) {
+      console.warn(`⚠️ Shift with ID ${id} not found or already deleted.`);
+      return next(createError(404, "Shift not found or already deleted."));
     }
 
     return res.status(200).json({

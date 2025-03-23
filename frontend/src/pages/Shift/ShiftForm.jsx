@@ -1,16 +1,19 @@
-import Select from "react-select";
-import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
 import { useState } from "react";
 import useAddModal from "../../hook/useAddModal.jsx";
 import axiosPrivate from "../../utils/axiosPrivate.jsx";
-import {useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
+import { useUpdateShift } from "../../hook/useShift.js";
 
 const ShiftForm = () => {
   const [shift, setShift] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState('');
-
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [warn, setWarn] = useState("");
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [editShiftId, setEditShiftId] = useState("");
   // const { data: shifts, isPending, isError, error } = useFetchShifts();
+  const { mutate: updateShift } = useUpdateShift();
 
   useAddModal("createClassModal", "classModalBtn", "classBtn");
 
@@ -25,16 +28,9 @@ const ShiftForm = () => {
 
   //mutation for adding a shift
 
-  // Mutation for adding a shift
+  //  add a shift
   const queryClient = useQueryClient();
-  const {
-    mutate: addShift,
-    isPending,
-    isError,
-    error,
-    isSuccess,
-    isLoading,
-  } = useMutation({
+  const { mutate: addShift } = useMutation({
     mutationFn: async (newShift) => {
       const response = await axiosPrivate.post(
         "/academic-management/add-shift",
@@ -43,21 +39,10 @@ const ShiftForm = () => {
       return response.data;
     },
 
-
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success("Shift successfully added!");
 
-      // optimistic update
-      queryClient.setQueryData(["shifts"] ,(oldData)=>{
-    console.log('all shifts ', oldData)
-        const currentShifts = oldData?.shifts || [];
-
-        return {
-          ...oldData,
-          shifts: [...currentShifts, data], // Add the new shift to the list
-        };
-      });
-      queryClient.invalidateQueries({ queryKey: ["shifts"] });
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
 
       setShift("");
       setSelectedStatus(null);
@@ -74,24 +59,55 @@ const ShiftForm = () => {
         toast.error("An unexpected error occurred.");
       }
     },
-
-
-
-
   });
 
   // Handle form submission
   const handleAddShift = (e) => {
     e.preventDefault();
     if (!shift) {
-      toast.success("Please fill in all fields.");
+      setWarn("Please fill in all fields.");
       return;
     }
     const newShift = {
       shift,
       status: selectedStatus?.value,
+      label: selectedStatus?.label,
     };
     addShift(newShift);
+  };
+
+  // Handle Edit Click
+  const handleEditClick = (session) => {
+    console.log("Edit button clicked for session:", session);
+    setEditShiftId(session._id);
+    setShift(session.session);
+    setSelectedStatus({
+      value: session.status,
+      label: session.label,
+    });
+    setEditModalOpen(true);
+  };
+
+  // Handle Edit Submit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!shift || !selectedStatus) {
+      return setWarn("Please fill in all fields ");
+    }
+
+    const updatedData = {
+      shift,
+      status: selectedStatus?.value,
+      label: selectedStatus?.label,
+    };
+
+    await updateShift({ shiftId: editShiftId, updatedData });
+
+    setEditModalOpen(false);
+    setShift("");
+    setSelectedStatus(null);
+    setEditShiftId(null);
   };
 
   // 📝 handle the form submission
@@ -166,6 +182,8 @@ const ShiftForm = () => {
                     />
                   </div>
 
+                  {warn && <span style={{ color: "lightcoral" }}>{warn}</span>}
+
                   <div className="form-group">
                     <label htmlFor="search-students">Status *</label>
                     <select
@@ -173,15 +191,14 @@ const ShiftForm = () => {
                       onChange={(e) => setSelectedStatus(e.target.value)}
                       placeholder="Status"
                     >
-                      <option value="">Select Status</option>
+                      <option value="" disabled>
+                        Select Status
+                      </option>
                       {shiftStatusOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
                       ))}
-
-
-
                     </select>
                   </div>
                 </div>

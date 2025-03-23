@@ -2,6 +2,7 @@ import "../../assets/css/all-modal.css";
 import ShiftList from "./ShiftList.jsx";
 import ShiftForm from "./ShiftForm.jsx";
 import { Toaster } from "react-hot-toast";
+import { useDeleteShift } from "../../hook/useShift.js";
 
 const Shift = () => {
   return (
@@ -48,7 +49,6 @@ const Shift = () => {
                     {/*    </div>*/}
                     {/*  </div>*/}
                     {/*</div>*/}
-
 
                     <div className="class-search">
                       <input

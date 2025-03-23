@@ -11,6 +11,7 @@ import {
 } from "../api/academic-management/shiftApi.js";
 import shift from "../pages/Shift/Shift.jsx";
 import toast from "react-hot-toast";
+import axiosPrivate from "../utils/axiosPrivate.jsx";
 
 //without pagination
 export const useFetchShifts = () => {
@@ -86,6 +87,26 @@ export const useDeleteShift = () => {
           "Something went wrong!",
       );
       toast.error("Failed to delete shift");
+    },
+  });
+};
+
+// update
+
+export const useUpdateShift = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ shiftId, updatedData }) => {
+      console.log("inside mutation session id : ", shiftId);
+      const { data } = await axiosPrivate.patch(
+        `/academic-management/session/${shiftId}`,
+        updatedData,
+      );
+      return data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["shifts"]);
     },
   });
 };
