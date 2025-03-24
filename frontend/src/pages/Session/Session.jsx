@@ -460,7 +460,7 @@ const Session = () => {
                       }}
                       menuIsOpen={isDropdownOpen} // 🛠️ CHANGED CODE: Controlled dropdown state
                       onMenuOpen={() => setIsDropdownOpen(true)} // 🛠️ Keep open state when manually opened
-                      onMenuClose={() => setIsDropdownOpen(false)} // 🛠️ Close on outside click
+                        onMenuClose={() => setIsDropdownOpen(false)} // 🛠️ Close on outside click
                     />
                   </div>
 

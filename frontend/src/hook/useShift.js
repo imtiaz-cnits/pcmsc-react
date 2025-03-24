@@ -33,7 +33,10 @@ export const useAddShifts = () => {
       const afterOptimistic = queryClient.setQueryData(
         ["shifts"],
         (oldData) => {
-          return [...oldData, { ...variables, id: Date.now(), opacity: 0.5 }];
+          return [
+            ...(Array.isArray(oldData) ? oldData : []),
+            { ...variables, id: Date.now() }
+          ];
         },
       );
 
@@ -200,14 +203,15 @@ export const useUpdateShift = () => {
   return useMutation({
     mutationFn: async ({ shiftId, updatedData }) => {
       console.log("inside mutation session id : ", shiftId);
-      const { data } = await axiosPrivate.patch(
-        `/academic-management/session/${shiftId}`,
+      const res = await axiosPrivate.patch(
+        `/academic-management/shift/${shiftId}`,
         updatedData,
       );
-      return data;
+      console.log('mutation updated', res)
+      return res.data;
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["shifts"]);
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
     },
   });
 };

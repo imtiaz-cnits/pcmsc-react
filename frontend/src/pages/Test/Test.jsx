@@ -6,7 +6,7 @@ import {
   useFetchPaginatedShifts,
   useUpdateShift,
 } from "../../hook/useShift";
-import toast, { Toaster } from "react-hot-toast";
+import  { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const Test = () => {
@@ -15,7 +15,8 @@ const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [shift, setShift] = useState("");
-  const [shiftStatus, setShiftStatus] = useState("");
+  const [shiftStatus, setShiftStatus] = useState('');
+  const [editShiftId , setEditShiftId] = useState('')
   const [warn, setWarn] = useState("");
   // const { data: shifts, isPending, isError, error } = useFetchShifts();
   const { mutate: addShift } = useAddShifts();
@@ -25,10 +26,10 @@ const Test = () => {
     limit,
     skip,
   );
-  const { data: updateShift } = useUpdateShift();
+  const {mutate: updateshift} = useUpdateShift()  
   const { data: shifts, total } = data || {};
-  console.log("shifts value", shifts);
-  console.log("total value : ", total);
+  // console.log("shifts value", shifts);
+  // console.log("total value : ", total);
 
   // useEffect(() => {
   //   if (shifts?.length !== 0 && page > 1 && total > 0) {
@@ -44,6 +45,14 @@ const Test = () => {
     }
   }, [isModalOpen]);
 
+  useEffect(() => {
+    if (isEditModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
+  }, [isEditModalOpen]);
+
   const shiftStatusOptions = [
     { value: "active", label: "Active" },
     { value: "inactive", label: "Inactive" },
@@ -58,9 +67,8 @@ const Test = () => {
       return;
     }
 
-    console.log("status", shiftStatus);
 
-    const label = shiftStatus.charAt(0).toUpperCase() + shiftStatus.slice(1);
+    const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
 
     const payload = {
       shift,
@@ -68,12 +76,55 @@ const Test = () => {
       label: label,
     };
 
+
     console.log("payload", payload);
     addShift(payload);
     setWarn("");
     setShift("");
     setShiftStatus("");
   };
+
+  useEffect(()=>{
+    console.log("status", shiftStatus);
+
+  },[shiftStatus])
+
+  // handle edit
+
+  const handleEditClick =(e,shift)=>{
+    e.preventDefault();
+    console.log("Edit button clicked for shift:", shift);
+    console.log("Edit button clicked for shift id :", shift?._id);
+
+    setEditShiftId(shift._id)
+    setShift(shift.name)
+    setShiftStatus({
+      value: shift.status,
+      label: shift.label
+    })
+    setIsEditModalOpen(true)
+
+  }
+
+  const handleEditSubmit = async (e)=>{
+    e.preventDefault()
+
+    if(!shift || !shiftStatus){
+      return setWarn("Please fill in all fields ");
+    }
+
+    const updatedData = {
+      shift,
+      label: shiftStatus.label,
+      status: shiftStatus.value,
+    };
+
+   await updateshift({shiftId : editShiftId , updatedData })
+    setIsEditModalOpen(false)
+    setShift('')
+    setShiftStatus(null)
+    setEditShiftId(null)
+  }
 
   //todo shimmer effect
   if (isPending) return <>Loading ...</>;
@@ -204,6 +255,7 @@ const Test = () => {
                                     border: "none",
                                     cursor: "pointer",
                                   }}
+                                  onClick={(e)=> handleEditClick(e,item)}
                                 >
                                   <FaRegEdit
                                     style={{
@@ -374,13 +426,84 @@ const Test = () => {
               </section>
             )}
           </div>
-          {/* <!-- Shift Pop Up Modal Start --> */}
+          {/* <!-- Shift Pop Up Modal End --> */}
 
           {/* <!-- Shift Edit Pop Up Modal Start --> */}
 
-          {/*https://chatgpt.com/share/67e10b2a-bb58-8003-8bb9-b292d798e9f4*/}
+          <div className="shift-modal">
+            {isEditModalOpen && (
+                <section
+                    id="createClassModal"
+                    className="modal migrateModal show"
+                >
+                  <div className="modal-content">
+                    <div id="popup-modal">
+                      <div className="form-container">
+                        <h3>Add Shift</h3>
+                        <form>
+                          {/* ✅ Shift Name Input */}
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label htmlFor="search-students">
+                                Shift Name *
+                              </label>
+                              <input
+                                  type="text"
+                                  id="search-students"
+                                  placeholder="Shift Name"
+                                  value={shift}
+                                  onChange={(e) => setShift(e.target.value)}
+                              />
+                            </div>
+                          </div>
 
-          {/* <!-- Shift Edit Pop Up Modal Start --> */}
+                          {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+
+                          {/* ✅ Shift Status Input */}
+
+                          <div className="form-group">
+                            <label htmlFor="search-students">Status *</label>
+                            <select
+                                value={shiftStatus}
+                                onChange={(e) => setShiftStatus(e.target.value)}
+                                placeholder="Status Name"
+                            >
+                              <option disabled>Select Status</option>
+                              {shiftStatusOptions.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* ✅ Buttons for modal actions */}
+                          <div className="form-actions">
+                            <button
+                                type="button"
+                                className="button close closeBtn"
+                                onClick={() => setIsEditModalOpen(false)} // ✅ Close modal on click
+                            >
+                              Close
+                            </button>
+                            <button
+                                type="button"
+                                className="button save"
+                                onClick={handleEditSubmit}
+                            >
+                              Update
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+            )}
+
+            {/* <!-- Shift Edit Pop Up Modal End --> */}
+          </div>
+
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

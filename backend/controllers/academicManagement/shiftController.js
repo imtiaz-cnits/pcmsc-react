@@ -30,7 +30,7 @@ async function addShift(req, res, next) {
 
     // 👤 create new add class object
     const newShift = new Shift({
-      name: name,
+      name,
       label,
       status,
     });
@@ -131,16 +131,28 @@ async function updateShift(req, res, next) {
   try {
     console.log("shift params : ", req.params);
     const { id: shiftId } = req.params;
-    const updatePayload = req.body;
+    const {shift,label,status} = req.body;
 
     console.log(
       `🔄 Updating session [ID: ${shiftId}] with data:`,
-      updatePayload,
+      req.body,
+    );
+
+    // updated payload
+    const updatePayload = {
+      name: shift,
+      label,
+      status,
+    }
+
+    console.log(
+      `🔄 Before => Updating session [ID: ${shiftId}] with data:`, updatePayload
+
     );
 
     const updatedShift = await Shift.findByIdAndUpdate(shiftId, updatePayload, {
       new: true,
-      runValidators: true,
+
     });
 
     if (!updatedShift) {

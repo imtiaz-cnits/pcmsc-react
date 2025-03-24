@@ -1,8 +1,8 @@
 // internal imports
-const ClassModel = require("../models/classModel");
-const Shift = require("../models/shiftModel");
-const Session = require("../models/sessionModel");
-const Section = require("../models/sectionModel");
+// const ClassModel = require("../models/classModel");
+// const Shift = require("../models/shiftModel");
+// const Session = require("../models/sessionModel");
+// const Section = require("../models/sectionModel");
 
 // 📝 do add class
 // async function AddClass(req, res, next) {
