@@ -95,14 +95,6 @@ export const useFetchPaginatedSession = (limit, skip) => {
     queryFn: async () => await fetchedPaginatedSessions(limit, skip),
     gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 3,
-    onError: (error) => {
-      const errorMessage =
-        error.response?.data?.message || "Something went wrong!";
-
-      console.error("❌ Error fetching sessions:", errorMessage);
-
-      alert(errorMessage);
-    },
     placeholderData: keepPreviousData,
   });
 };

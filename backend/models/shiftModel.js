@@ -9,10 +9,12 @@ const shiftSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
       trim: true,
+      unique: true,
     },
     label: {
       type: String,
       trim: true,
+      default: "Active",
     },
     status: {
       type: String,

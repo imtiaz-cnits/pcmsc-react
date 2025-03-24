@@ -2,61 +2,71 @@
 
 const createError = require("http-errors");
 const Shift = require("../../models/shiftModel");
-const Session = require("../../models/sessionModel");
 
 // internal imports
 
 // 📝 do add shift
 async function addShift(req, res, next) {
   try {
+    console.log("📥 Received shift data: ", req.body);
+
     const { shift: name, status, label } = req.body;
 
     console.log("before => shift add body", req.body);
 
     // frontend required field check
-    if (!name || name.trim() === "") {
-      return next(
-        createError(400, "Shift name is required and cannot be empty"),
-      );
-    }
+    // if (!name || name.trim() === "") {
+    //   return "Shift name is required and cannot be empty";
+    // }
 
     // check if already exists
 
-    const existingShift = await Shift.findOne({ name, status });
+    const existingShift = await Shift.findOne({ name });
 
+    console.log("existing shift : ", existingShift);
     if (existingShift) {
-      return next(createError(400, "Shift already exists!"));
+      return next(createError(403, "Shift already exists!"));
     }
 
     // 👤 create new add class object
-    const newClass = new Shift({
-      name,
-      status,
+    const newShift = new Shift({
+      name: name,
       label,
+      status,
     });
-    console.log("before enter to db => new added shift", newClass);
+    console.log("🛠️ Preparing to save session:", newShift);
 
     // 💾 Save the user to the database
-    await newClass.save();
+    await newShift.save();
+
+    console.log("✅ [Session] Successfully added:", newShift);
 
     // 🎉 Success response
     return res.status(200).json({
       success: true,
-      message: "Successfully added!",
+      message: "Shift added successfully!",
     });
   } catch (error) {
     console.log("Error in adding class: ", error);
     console.log("error statuses code ", error.status);
     // Handle duplicate key error for unique fields (custom error)
 
-    // Handle duplicate key error (code 11000)
-    if (error.code === 11000) {
-      return next(
-        createError(
-          400,
-          "Shift already exists! Please choose a different name.",
-        ),
-      );
+    // custom Mongoose Error
+    if (error.name === "ValidationError") {
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    // MongoServerError
+    if (error.name === "MongoServerError") {
+      if (error.errorResponse.code === 11000) {
+        return res.status(403).json({
+          success: false,
+          error: "MongoServerError",
+          message: "Session already exists!",
+        });
+      }
     }
     // ⚠️ Handle unexpected errors (fallback)
     return next(error);

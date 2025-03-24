@@ -23,7 +23,6 @@ import Result from "../pages/Result/Result";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
 import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
-import Shift from "../pages/Shift/Shift";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
 import StudentInformation from "../pages/StudentInformation/StudentInformation";
 import StudentManagement from "../pages/StudentManagement/StudentManagement";
@@ -54,10 +53,10 @@ export const router = createBrowserRouter([
             path: "class",
             element: <Class />,
           },
-          {
-            path: "shift",
-            element: <Shift />,
-          },
+          // {
+          //   path: "shift",
+          //   element: <Shift />,
+          // },
           {
             path: "section",
             element: <Section />,

@@ -1,7 +1,16 @@
-// to add
-
-// to fetch all shifts
 import axiosPrivate from "../../utils/axiosPrivate.jsx";
+
+// to add
+export const addShiftAPI = async (payload) => {
+  const res = await axiosPrivate.post(
+    "/academic-management/add-shift",
+    payload,
+  );
+  // console.log("value of ,", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+// GET - method
 
 // without pagination
 export const fetchedShifts = async () => {
@@ -23,19 +32,14 @@ export const fetchedPaginatedShifts = async (limit, skip) => {
     : { data: [], total: 0 };
 };
 
-// to delete
+// PATCH - method
+
+// DELETE - method
 export const deleteShiftAPI = async (shiftId) => {
   if (!shiftId) throw new Error("❌ Shift ID is required");
-  try {
-    const res = await axiosPrivate.delete(
-      `/academic-management/shift/${shiftId}`,
-    );
-    return res.data?.success ? res.data : [];
-  } catch (error) {
-    console.log(
-      "❌ Error deleting shift:",
-      error.response?.data?.message || error.message,
-    );
-    throw error;
-  }
+  const res = await axiosPrivate.delete(
+    `/academic-management/shift/${shiftId}`,
+  );
+  console.log("delete api : ", res.data);
+  return res.data?.success ? res.data : [];
 };
