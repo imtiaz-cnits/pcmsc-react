@@ -225,7 +225,7 @@ async function deleteShift(req, res, next) {
     console.log("✅ Shift deleted:", shiftDeleted);
 
     if (shiftDeleted.deletedCount === 0) {
-      console.warn(`⚠️ Shift with ID ${id} not found or already deleted.`);
+      console.log(`⚠️ Shift with ID ${id} not found or already deleted.`);
       return next(createError(404, "Shift not found or already deleted."));
     }
 

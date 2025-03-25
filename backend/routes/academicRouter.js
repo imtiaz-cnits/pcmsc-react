@@ -8,7 +8,7 @@ const {
   addClass,
   getAllClasses,
   updateClass,
-  deleteClass,
+  deleteClass, getAllPaginatedClasses,
 } = require("../controllers/academicManagement/classController");
 const {
   addShift,
@@ -32,6 +32,7 @@ const {
 // 🔍 Class - CRUD
 router.post("/add-class", addClass);
 router.get("/classes", getAllClasses);
+router.get("/class-paginated", getAllPaginatedClasses);
 router.patch("/class/:id", updateClass);
 router.delete("/class/:id", deleteClass);
 

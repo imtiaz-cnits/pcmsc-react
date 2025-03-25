@@ -5,7 +5,6 @@ import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Signup from "../pages/Auth/Signup/Signup";
-import Class from "../pages/Class/Class";
 import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
 import CombineResult from "../pages/CombineResult/CombineResult";
 import Dahsboard from "../pages/Dashboard/Dashboard";
@@ -50,10 +49,10 @@ export const router = createBrowserRouter([
         path: "/academic-management",
         element: <AcademicManagement />,
         children: [
-          {
-            path: "class",
-            element: <Class />,
-          },
+          // {
+          //   path: "class",
+          //   element: <Class />,
+          // },
           {
             path: "shift",
             element: <Shift />,
