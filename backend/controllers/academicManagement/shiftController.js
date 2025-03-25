@@ -22,9 +22,10 @@ async function addShift(req, res, next) {
     // check if already exists
 
     const existingShift = await Shift.findOne({ name });
+    const totaldocuments = await Shift.countDocuments();
 
     console.log("existing shift : ", existingShift);
-    if (existingShift) {
+    if (existingShift || totaldocuments === 0) {
       return next(createError(403, "Shift already exists!"));
     }
 

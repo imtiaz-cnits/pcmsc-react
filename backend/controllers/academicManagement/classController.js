@@ -5,20 +5,28 @@ const ClassModel = require("../../models/classModel");
 // 📝 do add class
 async function addClass(req, res, next) {
   try {
-    const { className: name, status } = req.body;
+    console.log("📥 Received class data: ", req.body);
 
-    // 🔍 Check if `name` is provided (frontend)
-    if (!name || name.trim() === "") {
-      return next(
-        createError(400, "Class name is required and cannot be empty"),
-      );
+    const { className: name, status, label } = req.body;
+
+    console.log("before => shift add body", req.body);
+
+    // check if already exists
+    const existingClass = await ClassModel.findOne({ name });
+    const totaldocuments = await ClassModel.countDocuments();
+
+    // documents count
+
+    console.log("existing shift : ", existingClass);
+    console.log("total class documents : ", totaldocuments);
+    if (existingClass || totaldocuments === 0) {
+      return next(createError(403, "Class already exists!"));
     }
-
-    console.log("class add body", req.body);
 
     // 👤 create new add class object
     const newClass = new ClassModel({
       name,
+      label,
       status,
     });
     console.log("new added class", newClass);
@@ -33,17 +41,25 @@ async function addClass(req, res, next) {
     });
   } catch (error) {
     console.log("Error in adding class: ", error);
-
-    // Handle duplicate key error for unique fields
-    if (error.code === 11000) {
-      return next(
-        createError(
-          400,
-          "Class already exists! Please choose a different name.",
-        ),
-      );
+    // custom Mongoose Error
+    if (error.name === "ValidationError") {
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
     }
-    // For other errors
+    // MongoServerError
+    if (error.name === "MongoServerError") {
+      if (error.errorResponse.code === 11000) {
+        return res.status(403).json({
+          success: false,
+          error: "MongoServerError",
+          message: "Class already exists!",
+        });
+      }
+    }
+
+    // ⚠️ Handle unexpected errors (fallback)
     return next(error);
   }
 }
@@ -72,6 +88,8 @@ async function getAllClasses(req, res, next) {
     return next(error);
   }
 }
+
+// 📝 Get all shifts with pagination
 
 // 📝 update
 async function updateClass(req, res, next) {
