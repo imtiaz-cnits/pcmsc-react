@@ -99,60 +99,95 @@ async function getAllShiftsPagination(req, res, next) {
   try {
     console.log("📥 Received request for shifts: ", req.query);
 
-    const limit = Math.max(parseInt(req.query.limit, 10) || 5, 1);
-    const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
+    // const limit = Math.max(parseInt(req.query.limit, 10) || 5, 1);
+    // const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
+
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+    const skip = (page - 1) * limit;
 
     const shifts = await Shift.find({}).skip(skip).limit(limit);
 
     const total = await Shift.countDocuments();
 
-    if (!shifts.length) {
-      console.warn("⚠️ No shifts found");
-      return res.status(404).json({
-        success: false,
-        message: "No shifts found",
-      });
-    }
+    const totalPages = Math.ceil(total / limit);
 
-    // console.log("✅ Retrieved shifts: ", shifts);
+    // if (total <= 0) {
+    //   console.log("⚠️ No shifts found");
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "No shifts found",
+    //     currentPage: page,
+    //     totalPages,
+    //     total,
+    //   });
+    // }
+
+    console.log("✅ Retrieved shifts: ", shifts);
     return res.status(200).json({
       success: true,
       count: shifts.length,
-      data: shifts,
+      currentPage: page,
+      totalPages,
       total,
+      data: shifts,
     });
   } catch (error) {
     console.error("❌ Error fetching shifts: ", error);
     return next(error);
   }
 }
+
+// 📝 Get all shifts with entries
+async function getAllShiftsEntries(req, res, next) {
+  try {
+    console.log("entries value :", req.query);
+    const entries = parseInt(req.query.limit, 10);
+
+    console.log("entries value and tyeof : ", entries, typeof entries);
+
+    const entriesValue = await Shift.find({}).limit(entries);
+
+    const totalEntries = await Shift.countDocuments();
+
+    if (totalEntries < 1) {
+      return next(createError(403, "not found"));
+    }
+
+    return res.status(200).json({
+      success: true,
+      totalEntries,
+      data: entriesValue,
+    });
+  } catch (error) {
+    console.log("entries error : ", error);
+    return next(error);
+  }
+}
+
 // 📝 Update Shift
 async function updateShift(req, res, next) {
   try {
     console.log("shift params : ", req.params);
     const { id: shiftId } = req.params;
-    const {shift,label,status} = req.body;
+    const { shift, label, status } = req.body;
 
-    console.log(
-      `🔄 Updating session [ID: ${shiftId}] with data:`,
-      req.body,
-    );
+    console.log(`🔄 Updating session [ID: ${shiftId}] with data:`, req.body);
 
     // updated payload
     const updatePayload = {
       name: shift,
       label,
       status,
-    }
+    };
 
     console.log(
-      `🔄 Before => Updating session [ID: ${shiftId}] with data:`, updatePayload
-
+      `🔄 Before => Updating session [ID: ${shiftId}] with data:`,
+      updatePayload,
     );
 
     const updatedShift = await Shift.findByIdAndUpdate(shiftId, updatePayload, {
       new: true,
-
     });
 
     if (!updatedShift) {
@@ -211,4 +246,5 @@ module.exports = {
   getAllShiftsPagination,
   updateShift,
   deleteShift,
+  getAllShiftsEntries,
 };

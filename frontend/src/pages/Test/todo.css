@@ -1,49 +1,50 @@
 /* TodoComponent.css */
 .todo-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
 }
 
 .left,
 .right {
-    width: 45%;
+  width: 45%;
 }
 
 .left h2,
 .right h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
 }
 
 .add-todo input {
-    padding: 8px;
-    width: 80%;
-    margin-right: 10px;
+  padding: 8px;
+  width: 80%;
+  margin-right: 10px;
 }
 
 .add-todo button {
-    padding: 8px 15px;
-    cursor: pointer;
+  padding: 8px 15px;
+  cursor: pointer;
 }
 
 .right ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 .right li {
-    background-color: #f4f4f4;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-    transition: opacity 0.3s ease;
+  background-color: #f4f4f4;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  transition: opacity 0.3s ease;
 }
 
 .right li:hover {
-    background-color: #e2e2e2;
+  background-color: #e2e2e2;
 }
 
-input, button {
-    margin-bottom: 10px;
+input,
+button {
+  margin-bottom: 10px;
 }

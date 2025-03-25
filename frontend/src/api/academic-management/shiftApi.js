@@ -19,20 +19,34 @@ export const fetchedShifts = async () => {
 };
 
 //with paginated
-export const fetchedPaginatedShifts = async (limit, skip) => {
+export const fetchedPaginatedShifts = async (page) => {
   const res = await axiosPrivate.get(
-    `/academic-management/shifts-paginated?limit=${limit}&skip=${skip}`,
+    `/academic-management/shifts-paginated?page=${page}`,
   );
-  console.log("paginated value and total", {
-    data: res.data?.data,
-    total: res.data?.total,
-  });
-  return res.data?.success
-    ? { data: res.data?.data, total: res.data?.total }
-    : { data: [], total: 0 };
+  console.log("paginated value and total", res.data);
+  return res.data?.success ? res.data : {};
+};
+
+//with entries
+export const fetchShiftEntries = async (limit) => {
+  const res = await axiosPrivate.get(
+    `/academic-management/shifts-entries?limit=${limit}`,
+  );
+  console.log("✅  Entries value :", res.data);
+  return res.data?.success ? res.data : {};
 };
 
 // PATCH - method
+
+export const updateShiftAPI = async ({ shiftId, updatedData }) => {
+  console.log("inside mutation session id : ", shiftId);
+  const res = await axiosPrivate.patch(
+    `/academic-management/shift/${shiftId}`,
+    updatedData,
+  );
+  console.log("mutation updated", res.data);
+  return res.data?.success ? res.data : [];
+};
 
 // DELETE - method
 export const deleteShiftAPI = async (shiftId) => {

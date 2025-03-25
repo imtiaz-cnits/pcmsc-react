@@ -31,6 +31,7 @@ import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
 import ProtectedRoute from "./PrivateRoute";
 import TodoComponent from "../pages/Test/Todo.jsx";
+import Shift from "../pages/Shift/Shift.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -53,10 +54,10 @@ export const router = createBrowserRouter([
             path: "class",
             element: <Class />,
           },
-          // {
-          //   path: "shift",
-          //   element: <Shift />,
-          // },
+          {
+            path: "shift",
+            element: <Shift />,
+          },
           {
             path: "section",
             element: <Section />,

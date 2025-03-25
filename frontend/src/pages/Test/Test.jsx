@@ -3,39 +3,36 @@ import "../../assets/css/all-modal.css";
 import {
   useAddShifts,
   useDeleteShift,
+  useFetchEntriesShifts,
   useFetchPaginatedShifts,
   useUpdateShift,
 } from "../../hook/useShift";
-import  { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const Test = () => {
-  const [limit] = useState(5);
   const [page, setPage] = useState(1);
+  const [shiftEntries, setShiftEntries] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [shift, setShift] = useState("");
-  const [shiftStatus, setShiftStatus] = useState('');
-  const [editShiftId , setEditShiftId] = useState('')
+  const [shiftStatus, setShiftStatus] = useState("");
+  const [editShiftId, setEditShiftId] = useState("");
   const [warn, setWarn] = useState("");
-  // const { data: shifts, isPending, isError, error } = useFetchShifts();
   const { mutate: addShift } = useAddShifts();
   const { mutate: deleteShift } = useDeleteShift();
-  const skip = (page - 1) * limit; // calculate skip
-  const { data, isPending, isError, error } = useFetchPaginatedShifts(
-    limit,
-    skip,
-  );
-  const {mutate: updateshift} = useUpdateShift()  
-  const { data: shifts, total } = data || {};
-  // console.log("shifts value", shifts);
-  // console.log("total value : ", total);
+  const { data: entries } = useFetchEntriesShifts(shiftEntries);
+  const {
+    data: shifts,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedShifts(page);
+  const { mutate: updateShift } = useUpdateShift();
 
-  // useEffect(() => {
-  //   if (shifts?.length !== 0 && page > 1 && total > 0) {
-  //     setPage((old) => old - 1);
-  //   }
-  // }, [shifts, page, total]);
+  useEffect(() => {
+    console.log("shift - entries value :", shiftEntries);
+  }, [shiftEntries]);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -53,9 +50,19 @@ const Test = () => {
     }
   }, [isEditModalOpen]);
 
+  console.log("paginated data value ", shifts);
+
   const shiftStatusOptions = [
     { value: "active", label: "Active" },
     { value: "inactive", label: "Inactive" },
+  ];
+
+  const shiftEntriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 100, label: "100" },
   ];
 
   // handle pop modal save button
@@ -67,15 +74,13 @@ const Test = () => {
       return;
     }
 
-
     const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
 
     const payload = {
       shift,
-      status: shiftStatus,
-      label: label,
+      status: shiftStatus || "active",
+      label: label || "Active",
     };
-
 
     console.log("payload", payload);
     addShift(payload);
@@ -84,32 +89,30 @@ const Test = () => {
     setShiftStatus("");
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("status", shiftStatus);
-
-  },[shiftStatus])
+  }, [shiftStatus]);
 
   // handle edit
 
-  const handleEditClick =(e,shift)=>{
+  const handleEditClick = (e, shift) => {
     e.preventDefault();
     console.log("Edit button clicked for shift:", shift);
     console.log("Edit button clicked for shift id :", shift?._id);
 
-    setEditShiftId(shift._id)
-    setShift(shift.name)
+    setEditShiftId(shift._id);
+    setShift(shift.name);
     setShiftStatus({
       value: shift.status,
-      label: shift.label
-    })
-    setIsEditModalOpen(true)
+      label: shift.label,
+    });
+    setIsEditModalOpen(true);
+  };
 
-  }
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleEditSubmit = async (e)=>{
-    e.preventDefault()
-
-    if(!shift || !shiftStatus){
+    if (!shift || !shiftStatus) {
       return setWarn("Please fill in all fields ");
     }
 
@@ -119,12 +122,24 @@ const Test = () => {
       status: shiftStatus.value,
     };
 
-   await updateshift({shiftId : editShiftId , updatedData })
-    setIsEditModalOpen(false)
-    setShift('')
-    setShiftStatus(null)
-    setEditShiftId(null)
-  }
+    await updateShift({ shiftId: editShiftId, updatedData });
+    setIsEditModalOpen(false);
+    setShift("");
+    setShiftStatus(null);
+    setEditShiftId(null);
+  };
+
+  const handleDelete = (e, shift) => {
+    e.preventDefault();
+    console.log("after deleting  shift value : ", shifts);
+    deleteShift(shift?._id, {
+      onSuccess: () => {
+        if (shifts?.data?.length === 1 && page > 1) {
+          setPage((prev) => prev - 1);
+        }
+      },
+    });
+  };
 
   //todo shimmer effect
   if (isPending) return <>Loading ...</>;
@@ -140,11 +155,6 @@ const Test = () => {
       );
     }
   }
-  // Ensure that `total` is a valid number and use fallback to 0 if not
-  const validTotal = typeof total === "number" && !isNaN(total) ? total : 0;
-
-  // Calculate total pages safely
-  const totalPages = validTotal ? Math.ceil(validTotal / limit) : 0;
 
   return (
     <>
@@ -166,146 +176,120 @@ const Test = () => {
                 </div>
                 {/* <!-- Class heading End --> */}
 
-                {/* <!-- Action Buttons --> */}
-                <div className="button-wrapper mb-3">
-                  {/* <!-- Search and Filter --> */}
-                  <div className="input-group class-group">
-                    {/* <!-- Entries per page --> */}
-                    <div>
-                      <div className="entries-page">
-                        <label htmlFor="entries" className="mr-2">
-                          Entries:
-                        </label>
-                        <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </select>
-                          <span className="dropdown-icon">&#9662;</span>
-                          {/* <!-- Dropdown icon --> */}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="class-search">
-                      <input
-                        style={{ width: "20%", margin: "0" }}
-                        type="text"
-                        id="searchInput"
-                        className="form-control"
-                        placeholder="Search Class..."
-                      />
-                    </div>
-                  </div>
-                </div>
+                {shifts?.data && shifts?.data?.length === 0 ? (
+                  <p>No Shifts Found !</p>
+                ) : (
+                  <>
+                    {/* <!-- Paginated Table --> */}
+                    <div className="table-wrapper">
+                      <table
+                        id="printTable"
+                        className="table table-bordered table-hover"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Sl No:</th>
 
-                {/* <!-- Table --> */}
-                <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Sl No:</th>
-
-                        <th>Shift Name</th>
-                        <th>Status Name</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {shifts &&
-                        shifts?.map((item, index) => {
-                          return (
-                            <tr
-                              key={item?._id}
-                              // style={{
-                              //   transition: "opacity 0.3s ease",
-                              //   opacity: shift.isDeleting ? 0.5 : 1,
-                              // }}
-                            >
-                              <td>{(page - 1) * limit + index + 1}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                {item?.name}
-                              </td>
-                              <td>{item?.label}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e)=> handleEditClick(e,item)}
+                            <th>Shift Name</th>
+                            <th>Status Name</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {shifts?.data &&
+                            shifts?.data?.map((item, index) => {
+                              return (
+                                <tr
+                                  key={item?._id}
+                                  // style={{
+                                  //   transition: "opacity 0.3s ease",
+                                  //   opacity: shift.isDeleting ? 0.5 : 1,
+                                  // }}
                                 >
-                                  <FaRegEdit
+                                  <td>{index + 1}</td>
+                                  <td
                                     style={{
-                                      color: "lightgreen",
-                                      fontSize: "25px",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      gap: "20px",
                                     }}
-                                  />
-                                </button>
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    padding: 0,
-                                  }}
-                                  onClick={() => deleteShift(item?._id)}
-                                >
-                                  <FaRegTrashAlt
-                                    style={{ color: "red", fontSize: "25px" }}
-                                  />
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
-                </div>
-                {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                                  >
+                                    {item?.name}
+                                  </td>
+                                  <td>{item?.label}</td>
+                                  <td
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      gap: "20px",
+                                    }}
+                                  >
+                                    <button
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={(e) => handleEditClick(e, item)}
+                                    >
+                                      <FaRegEdit
+                                        style={{
+                                          color: "lightgreen",
+                                          fontSize: "25px",
+                                        }}
+                                      />
+                                    </button>
+                                    <button
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                        padding: 0,
+                                      }}
+                                      onClick={(e) => handleDelete(e, item)}
+                                    >
+                                      <FaRegTrashAlt
+                                        style={{
+                                          color: "red",
+                                          fontSize: "25px",
+                                        }}
+                                      />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                    {/* <!-- Pagination and Display Info --> */}
+                    <div className="my-3">
+                      <span id="display-info"></span>
+                    </div>
+                  </>
+                )}
 
                 <div id="pagination" className="pagination">
                   <button
                     id="prevBtn"
                     className="btn"
-                    onClick={() => setPage((old) => Math.max(old - 1, 1))}
+                    onClick={() =>
+                      setPage((prevState) => Math.max(prevState - 1, 1))
+                    }
                     disabled={page === 1}
                   >
                     Prev
                   </button>
-                  {page}
+                  {shifts?.currentPage} of {shifts?.totalPages}
                   <button
                     id="nextBtn"
                     className="btn"
                     onClick={() =>
-                      setPage((old) => Math.min(old + 1, totalPages))
+                      setPage((prevState) =>
+                        Math.min(prevState + 1, shifts?.totalPages),
+                      )
                     }
-                    disabled={page === totalPages}
+                    disabled={page === shifts?.totalPages}
                   >
                     Next
                   </button>
@@ -394,8 +378,8 @@ const Test = () => {
                             <option value="" disabled>
                               Select status
                             </option>
-                            {shiftStatusOptions.map((option) => (
-                              <option key={option.value} value={option.value}>
+                            {shiftStatusOptions.map((option, index) => (
+                              <option key={index} value={option.value}>
                                 {option.label}
                               </option>
                             ))}
@@ -432,78 +416,77 @@ const Test = () => {
 
           <div className="shift-modal">
             {isEditModalOpen && (
-                <section
-                    id="createClassModal"
-                    className="modal migrateModal show"
-                >
-                  <div className="modal-content">
-                    <div id="popup-modal">
-                      <div className="form-container">
-                        <h3>Add Shift</h3>
-                        <form>
-                          {/* ✅ Shift Name Input */}
-                          <div className="form-row">
-                            <div className="form-group">
-                              <label htmlFor="search-students">
-                                Shift Name *
-                              </label>
-                              <input
-                                  type="text"
-                                  id="search-students"
-                                  placeholder="Shift Name"
-                                  value={shift}
-                                  onChange={(e) => setShift(e.target.value)}
-                              />
-                            </div>
-                          </div>
-
-                          {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
-
-                          {/* ✅ Shift Status Input */}
-
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Shift</h3>
+                      <form>
+                        {/* ✅ Shift Name Input */}
+                        <div className="form-row">
                           <div className="form-group">
-                            <label htmlFor="search-students">Status *</label>
-                            <select
-                                value={shiftStatus}
-                                onChange={(e) => setShiftStatus(e.target.value)}
-                                placeholder="Status Name"
-                            >
-                              <option disabled>Select Status</option>
-                              {shiftStatusOptions.map((option) => (
-                                  <option key={option.value} value={option.value}>
-                                    {option.label}
-                                  </option>
-                              ))}
-                            </select>
+                            <label htmlFor="search-students">
+                              Shift Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Shift Name"
+                              value={shift}
+                              onChange={(e) => setShift(e.target.value)}
+                            />
                           </div>
+                        </div>
 
-                          {/* ✅ Buttons for modal actions */}
-                          <div className="form-actions">
-                            <button
-                                type="button"
-                                className="button close closeBtn"
-                                onClick={() => setIsEditModalOpen(false)} // ✅ Close modal on click
-                            >
-                              Close
-                            </button>
-                            <button
-                                type="button"
-                                className="button save"
-                                onClick={handleEditSubmit}
-                            >
-                              Update
-                            </button>
-                          </div>
-                        </form>
-                      </div>
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+
+                        {/* ✅ Shift Status Input */}
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+                          <select
+                            value={shiftStatus}
+                            onChange={(e) => setShiftStatus(e.target.value)}
+                            placeholder="Status Name"
+                          >
+                            <option disabled>Select Status</option>
+                            {shiftStatusOptions.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* ✅ Buttons for modal actions */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsEditModalOpen(false)} // ✅ Close modal on click
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleEditSubmit}
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
-                </section>
+                </div>
+              </section>
             )}
 
             {/* <!-- Shift Edit Pop Up Modal End --> */}
           </div>
-
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

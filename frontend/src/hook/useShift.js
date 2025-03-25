@@ -9,11 +9,13 @@ import {
   deleteShiftAPI,
   fetchedPaginatedShifts,
   fetchedShifts,
+  fetchShiftEntries,
+  updateShiftAPI,
 } from "../api/academic-management/shiftApi.js";
 import toast from "react-hot-toast";
-import axiosPrivate from "../utils/axiosPrivate.jsx";
 
 //POST - method
+//todo optimistic opacity
 export const useAddShifts = () => {
   const queryClient = useQueryClient();
 
@@ -33,9 +35,11 @@ export const useAddShifts = () => {
       const afterOptimistic = queryClient.setQueryData(
         ["shifts"],
         (oldData) => {
+          console.log("inside optimistic old dat : ", oldData);
+
           return [
             ...(Array.isArray(oldData) ? oldData : []),
-            { ...variables, id: Date.now() }
+            { ...variables, id: Date.now() },
           ];
         },
       );
@@ -60,7 +64,7 @@ export const useAddShifts = () => {
 
       console.log(
         "❌ An error occurred while saving the shift. Please try again. : ",
-        error.response?.data?.message || "Failed to add session . Try again!",
+        error.response?.data?.message || "Failed to add shift . Try again!",
       );
     },
 
@@ -73,7 +77,10 @@ export const useAddShifts = () => {
         toast("Shifts added successfully");
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
+      queryClient.setQueryData(["shifts"], (oldData) => {
+        return [...oldData, data];
+      });
+      // await queryClient.invalidateQueries({ queryKey: ["shifts"] });
       console.log(
         "✅ After Backend Response (Cache Data): ",
         queryClient.getQueryData(["shifts"]),
@@ -82,11 +89,15 @@ export const useAddShifts = () => {
 
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["shifts"] });
+      console.log(
+        "✅ After Backend Response (onSettled Cache Data): ",
+        queryClient.getQueryData(["shifts"]),
+      );
     },
   });
 };
 
-//without pagination
+// GET - method
 export const useFetchShifts = () => {
   return useQuery({
     queryKey: ["shifts"],
@@ -98,7 +109,68 @@ export const useFetchShifts = () => {
   });
 };
 
-//todo fade-out optimistic
+// GET - method
+export const useFetchPaginatedShifts = (page) => {
+  return useQuery({
+    queryKey: ["shifts", page], // 🔑 Memoized query key
+    queryFn: () => fetchedPaginatedShifts(page), // ⚡ Ensure function safety
+    gcTime: 1000 * 60 * 10, // 🗑️ Garbage collection time (10 min)
+    staleTime: 1000 * 60 * 3, // ⏳ Data remains fresh for 3 min
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+  });
+};
+
+// GET - method
+export const useFetchEntriesShifts = (limit) => {
+  return useQuery({
+    queryKey: ["shifts", limit],
+    queryFn: () => fetchShiftEntries(limit),
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 3,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+  });
+};
+
+//todo module structure + optimistic
+// PATCH - method
+export const useUpdateShift = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    // mutationFn: async ({ shiftId, updatedData }) => {
+    //   console.log("inside mutation session id : ", shiftId);
+    //   const res = await axiosPrivate.patch(
+    //     `/academic-management/shift/${shiftId}`,
+    //     updatedData,
+    //   );
+    //   console.log("mutation updated", res);
+    //   return res.data;
+    // },
+    mutationFn: updateShiftAPI,
+
+    onError: (error) => {
+      console.log("error updating shift : ", error);
+
+      if (error?.response) {
+        toast(error.response?.data?.message);
+      }
+
+      console.log(
+        "❌ An error occurred while updating the shift. Please try again. : ",
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to delete shift . Try again!",
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
+    },
+  });
+};
+
+//todo optimistic opacity
 // DELETE - method
 export const useDeleteShift = () => {
   const queryClient = useQueryClient();
@@ -114,21 +186,21 @@ export const useDeleteShift = () => {
       const prevShift = queryClient.getQueryData(["shifts"]);
       console.log("🔍 Before Update (Cache Data):", prevShift);
 
-      // const afterOptimistic = queryClient.setQueryData(
-      //   ["shifts"],
-      //   (oldData) => {
-      //     return oldData?.filter((shift) => shift?._id !== shiftId);
-      //   },
-      // );
-
       const afterOptimistic = queryClient.setQueryData(
         ["shifts"],
         (oldData) => {
-          return oldData?.map((shift) =>
-            shift._id === shiftId ? { ...shift, isDeleting: true } : shift,
-          );
+          return oldData?.filter((shift) => shift?._id !== shiftId);
         },
       );
+
+      // const afterOptimistic = queryClient.setQueryData(
+      //   ["shifts"],
+      //   (oldData) => {
+      //     return oldData?.map((shift) =>
+      //       shift._id === shiftId ? { ...shift, isDeleting: true } : shift,
+      //     );
+      //   },
+      // );
 
       console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
       return { prevShift, shiftId };
@@ -177,41 +249,6 @@ export const useDeleteShift = () => {
         "✅ After Backend Response (Cache Data - onSettled): ",
         queryClient.getQueryData(["shifts"]),
       );
-    },
-  });
-};
-
-//with paginated
-export const useFetchPaginatedShifts = (limit, skip) => {
-  return useQuery({
-    queryKey: ["shifts", limit, skip], // 🔑 Memoized query key
-    queryFn: async () => await fetchedPaginatedShifts(limit, skip), // ⚡ Ensure function safety
-    gcTime: 1000 * 60 * 10, // 🗑️ Garbage collection time (10 min)
-    staleTime: 1000 * 60 * 3, // ⏳ Data remains fresh for 3 min
-    placeholderData: keepPreviousData,
-    refetchOnWindowFocus: true,
-  });
-};
-
-//* delete mutation
-
-// update
-//todo module structure
-export const useUpdateShift = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ shiftId, updatedData }) => {
-      console.log("inside mutation session id : ", shiftId);
-      const res = await axiosPrivate.patch(
-        `/academic-management/shift/${shiftId}`,
-        updatedData,
-      );
-      console.log('mutation updated', res)
-      return res.data;
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
     },
   });
 };
