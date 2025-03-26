@@ -7,9 +7,11 @@ import {
 import {
   addSectionAPI,
   deleteSectionAPI,
-  fetchedPaginatedSections,
+  fetchedPaginatedSections, updateSectionAPI,
 } from "../api/academic-management/sectionAPI.js";
 import toast from "react-hot-toast";
+import {updateShiftAPI} from "../api/academic-management/shiftApi.js";
+import {updateClassAPI} from "../api/academic-management/classApi.js";
 
 //POST - method
 //todo optimistic opacity
@@ -106,6 +108,50 @@ export const useFetchPaginatedShifts = (page) => {
     refetchOnWindowFocus: true,
   });
 };
+
+
+
+//✅  PATCH - method
+export const useUpdateSection = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateSectionAPI,
+    onError: (error, variables) => {
+      console.log("⚙️ error updating section : ", error);
+      console.log("⚙️ error updating section variables : ", variables);
+
+      if (error?.response) {
+        toast(
+            error.response?.data?.message ||
+            "An error occurred while updating the section. Please try again.",
+        );
+      }
+
+      console.log(
+          "❌ An error occurred while updating the section. Please try again. : ",
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update section . Try again!",
+      );
+    },
+
+    onSuccess: async (data, { sectionId, payload }) => {
+      console.log("🚀 update section onSuccess data value :", data);
+      console.log("🚀 update section payload , id  :", payload, sectionId);
+
+      if (data?.success) {
+        toast(data?.message);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["sections"] });
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["sections"] });
+    },
+  });
+};
+
 
 // DELETE - method
 //todo optimistic opacity

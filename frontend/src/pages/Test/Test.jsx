@@ -8,9 +8,10 @@ import axiosPrivate from "../../utils/axiosPrivate.jsx";
 import {
   useAddSections,
   useDeleteSection,
-  useFetchPaginatedShifts,
+  useFetchPaginatedShifts, useUpdateSection,
 } from "../../hook/useSection.js";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+
 
 const Test = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -18,9 +19,10 @@ const Test = () => {
   const [section, setSection] = useState("");
   const [sectionStatus, setSectionStatus] = useState("");
   const [page, setPage] = useState(1);
-  const [editClassId, setEditClassId] = useState("");
+  const [editSectionId, setEditSectionId] = useState("");
   const [warn, setWarn] = useState("");
   const { mutate: addSection } = useAddSections();
+  const {mutate: updateSection} = useUpdateSection()
   const { mutate: deleteSection } = useDeleteSection();
 
   const {
@@ -80,10 +82,45 @@ const Test = () => {
     setSectionStatus("");
   };
 
-  const handleDelete = (e, section) => {
+  const handleEditClick = (e, item) => {
     e.preventDefault();
-    console.log("after deleting  section value : ", section);
-    deleteSection(section?._id, {
+    console.log("Edit button clicked for section:", item);
+    console.log("Edit button clicked for section id :", item?._id);
+    setEditSectionId(item?._id);
+    setSection(item?.name);
+    setSectionStatus(item?.status);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit =  (e) => {
+    e.preventDefault();
+
+    if (!section) {
+      setWarn("Section name is required and cannot be empty");
+      return;
+    }
+
+    const label = sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
+
+    const updatedPayload = {
+      name: section,
+      label: label || "Active",
+      status: sectionStatus || "active",
+    };
+
+    updateSection({ sectionId: editSectionId, payload: updatedPayload });
+    setSection("");
+    setSectionStatus("");
+    setWarn("");
+    setEditSectionId("");
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
+
+  const handleSectionDelete = (e, item) => {
+    e.preventDefault();
+    console.log("after deleting  section value : ", item);
+    deleteSection(item?._id, {
       onSuccess: () => {
         if (sections?.data?.length === 1 && page > 1) {
           setPage((prev) => prev - 1);
@@ -91,6 +128,10 @@ const Test = () => {
       },
     });
   };
+
+  useEffect(() => {
+    console.log('edit modal value ',isEditModalOpen)
+  }, [isEditModalOpen]);
 
   //todo shimmer effect
   if (isPending) return <>Loading ...</>;
@@ -209,6 +250,9 @@ const Test = () => {
                                     border: "none",
                                     cursor: "pointer",
                                   }}
+
+                                  onClick={(e)=> handleEditClick(e,item)}
+
                                 >
                                   <FaRegEdit
                                     style={{
@@ -224,7 +268,7 @@ const Test = () => {
                                     cursor: "pointer",
                                     padding: 0,
                                   }}
-                                  onClick={(e) => handleDelete(e, item)}
+                                  onClick={(e) => handleSectionDelete(e, item)}
                                 >
                                   <FaRegTrashAlt
                                     style={{
@@ -237,47 +281,7 @@ const Test = () => {
                             </tr>
                           );
                         })}
-                      <tr>
-                        <td>02</td>
-                        <td>Commerce</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
+
                     </tbody>
                   </table>
                 </div>
@@ -354,7 +358,7 @@ const Test = () => {
         <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Section Pop Up Modal Start --> */}
+        <!-- Section Add Pop Up Modal Start --> */}
           <div className="section-modal">
             {isAddModalOpen && (
               <section
@@ -409,7 +413,7 @@ const Test = () => {
                             id="classBtn"
                             className="button close closeBtn"
                             onClick={() =>
-                              setIsAddModalOpen(!setIsAddModalOpen)
+                              setIsAddModalOpen(!isAddModalOpen)
                             }
                           >
                             Close
@@ -429,7 +433,87 @@ const Test = () => {
               </section>
             )}
           </div>
-          {/* <!-- Section Pop Up Modal Start --> */}
+          {/* <!-- Section Add Pop Up Modal Start --> */}
+
+          {/* <!-- Section Edit Pop Up Modal Start --> */}
+
+          <div className="section-modal">
+            {isEditModalOpen && (
+                <section
+                    id="createClassModal"
+                    className="modal migrateModal show"
+                >
+                  <div className="modal-content">
+                    <div id="popup-modal">
+                      <div className="form-container">
+                        <h3>Update Section</h3>
+                        <form>
+                          {/* <!-- Row 1 --> */}
+                          <div
+                              className="form-row"
+                              style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <div className="form-group">
+                              <label htmlFor="search-students">
+                                Section Name *
+                              </label>
+                              <input
+                                  type="text"
+                                  id="search-students"
+                                  placeholder="Section Name"
+                                  value={section}
+                                  onChange={(e) => setSection(e.target.value)}
+                              />
+                            </div>
+
+                            <div className="form-group">
+                              <label htmlFor="search-students">Status *</label>
+                              <select
+                                  value={sectionStatus}
+                                  onChange={(e) => setSectionStatus(e.target.value)}
+                              >
+                                <option value="" disabled>
+                                  Select status
+                                </option>
+                                {sectionStatusOptions.map((option, index) => (
+                                    <option key={index} value={option.value}>
+                                      {option.label}
+                                    </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* <!-- Actions --> */}
+                          <div className="form-actions">
+                            <button
+                                type="button"
+                                id="classBtn"
+                                className="button close closeBtn"
+  onClick={()=> setIsEditModalOpen(!isEditModalOpen)}
+                            >
+                              Close
+                            </button>
+                            <button
+                                type="button"
+                                className="button save"
+                               onClick={handleEditSubmit}
+
+                            >
+                              Update
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+            )}
+
+          </div>
+
+          {/* <!-- Section Edit Pop Up Modal Start --> */}
+
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

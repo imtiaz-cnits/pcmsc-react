@@ -114,8 +114,9 @@ async function getAllPaginatedSections(req, res, next) {
 async function updateSection(req, res, next) {
   try {
     console.log("section params : ", req.params);
+    console.log("section body : ", req.body);
     const { id: sectionId } = req.params;
-    const { section, label, status } = req.body;
+    const { name:section, label, status } = req.body;
 
     console.log(`🔄 Updating section [ID: ${sectionId}] with data:`, req.body);
 

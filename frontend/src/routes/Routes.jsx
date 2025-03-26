@@ -21,7 +21,7 @@ import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import Migration from "../pages/Migration/Migration";
 import Result from "../pages/Result/Result";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
-// import Section from "../pages/Section/Section";
+import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
 import Shift from "../pages/Shift/Shift.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
@@ -58,10 +58,10 @@ export const router = createBrowserRouter([
             path: "shift",
             element: <Shift />,
           },
-          // {
-          //   path: "section",
-          //   element: <Section />,
-          // },
+          {
+            path: "section",
+            element: <Section />,
+          },
           {
             path: "session",
             element: <Session />,
