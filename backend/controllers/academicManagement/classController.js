@@ -9,7 +9,7 @@ async function addClass(req, res, next) {
 
     const { name, status, label } = req.body;
 
-    console.log("before => shift add body", req.body);
+    console.log("before => class add body", req.body);
 
     // check if already exists
     const existingClass = await ClassModel.findOne({ name });

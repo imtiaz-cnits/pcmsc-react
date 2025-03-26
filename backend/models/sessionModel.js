@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 // define the schema
 const sessionSchema = new mongoose.Schema(
   {
-    session: {
+    name: {
       type: String,
       required: true,
       lowercase: true,
@@ -18,7 +18,7 @@ const sessionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["active", "inactive"],
+      enum: ["active", "pending", "inactive"],
       default: "active",
     },
   },

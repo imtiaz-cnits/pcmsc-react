@@ -2,7 +2,7 @@ import {
   addSessionAPI,
   deleteSessionAPI,
   fetchedPaginatedSessions,
-  fetchSessionAPI,
+  fetchSessionAPI, updateSessionAPI,
 } from "../api/academic-management/sessionApi.js";
 import {
   useMutation,
@@ -13,42 +13,16 @@ import {
 import toast from "react-hot-toast";
 import axiosPrivate from "../utils/axiosPrivate.jsx";
 
-//todo twitter toast
+
 export const useAddSession = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addSessionAPI,
 
-    // 📝 Optimistic Update: Before API Call
-    onMutate: async (variables) => {
-      console.log("⏳ [Session] Attempting to add session:", variables);
-
-      await queryClient.cancelQueries({ queryKey: ["sessions"] });
-
-      const previousSessions = queryClient.getQueryData(["sessions"]);
-
-      console.log("🔍 Before Update (Cache Data):", previousSessions);
-
-      const afterOptimistic = queryClient.setQueryData(
-        ["sessions"],
-        (oldData) => {
-          return [...oldData, { variables, id: Date.now(), opacity: 0.5 }];
-        },
-      );
-
-      console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
-
-      return { previousSessions };
-    },
-
     onError: (error, _, context) => {
       console.log("error adding session : ", error);
 
-      // ⚙️ rollback cache
-      if (context?.previousSessions) {
-        queryClient.setQueryData(["sessions"], context.previousSessions);
-      }
       console.log(
         "❌ An error occurred while saving the session. Please try again. : ",
         error.response?.data?.message || "Failed to add session . Try again!",
@@ -62,7 +36,7 @@ export const useAddSession = () => {
       console.log("variables", variables);
 
       toast.success(data?.message || "Session added!");
-      // await queryClient.invalidateQueries({ queryKey: ["sessions"] });
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
       console.log(
         "✅ After Backend Response (Cache Data): ",
         queryClient.getQueryData(["sessions"]),
@@ -76,28 +50,61 @@ export const useAddSession = () => {
   });
 };
 
-// to fetch
-export const useFetchSessionAPI = () => {
+//✅  GET - method (paginated)
+export const useFetchPaginatedSessions = (page) => {
   return useQuery({
-    queryKey: ["sessions"],
-    queryFn: fetchSessionAPI,
-    gcTime: 1000 * 60 * 10000,
-    startTime: 1000 * 60 * 5000,
-    refetchOnWindowFocus: false,
-    retry: 3,
+    queryKey: ["classes", page],
+    queryFn: async () => await fetchedPaginatedSessions(page),
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    retry: 4,
   });
 };
 
-//with paginated
-export const useFetchPaginatedSession = (limit, skip) => {
-  return useQuery({
-    queryKey: ["sessions", limit, skip],
-    queryFn: async () => await fetchedPaginatedSessions(limit, skip),
-    gcTime: 1000 * 60 * 10,
-    staleTime: 1000 * 60 * 3,
-    placeholderData: keepPreviousData,
+//✅  PATCH - method
+export const useUpdateSession = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateSessionAPI,
+    onError: (error, variables) => {
+      console.log("⚙️ error updating class : ", error);
+      console.log("⚙️ error updating class variables : ", variables);
+
+      if (error?.response) {
+        toast(
+            error.response?.data?.message ||
+            "An error occurred while updating the class. Please try again.",
+        );
+      }
+
+      console.log(
+          "❌ An error occurred while updating the class. Please try again. : ",
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update class . Try again!",
+      );
+    },
+
+    onSuccess: async (data, { classID, payload }) => {
+      console.log("🚀 update class onSuccess data value :", data);
+      console.log("🚀 update  :", payload, classID);
+
+      if (data?.success) {
+        toast(data?.message);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["classes"] });
+    },
   });
 };
+
+
 
 // todo optimized
 export const useDeleteSession = () => {
@@ -139,24 +146,6 @@ export const useDeleteSession = () => {
 
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["sessions"] });
-    },
-  });
-};
-
-export const useUpdateSession = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ sessionId, updatedData }) => {
-      console.log("inside mutation session id : ", sessionId);
-      const { data } = await axiosPrivate.patch(
-        `/academic-management/session/${sessionId}`,
-        updatedData,
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["sessions"]);
     },
   });
 };

@@ -57,7 +57,7 @@ router.delete("/section/:id", deleteSection);
 
 // 🚀 Session - CRUD
 router.post("/add-session", addSession);
-router.get("/sessions", getAllSessions);
+router.get("/sessions", getAllPaginatedSession);
 router.get("/session-paginated", getAllPaginatedSession);
 router.patch("/session/:id", updateSession);
 router.delete("/session/:id", deleteSession);

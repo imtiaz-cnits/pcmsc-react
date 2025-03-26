@@ -6,38 +6,36 @@ export const addSessionAPI = async (payload) => {
     "/academic-management/add-session",
     payload,
   );
-  console.log("full response api : ", res);
-  return res.data;
+  // console.log("full response api : ", res);
+  return res.data?.success ? res.data : [];
 };
 
 // fetch
 export const fetchSessionAPI = async () => {
   const res = await axiosPrivate.get("/academic-management/sessions");
 
-  console.log("full response api : ", res);
-  console.log("fetch api data ", res.data);
-  return res.data?.data;
+  // console.log("full response api : ", res);
+  // console.log("fetch api data ", res.data);
+  return res.data?.success ? res.data : [];
 };
 
-// to delete post
-
-export const deleteSessionAPI = async (id) => {
-  const res = await axiosPrivate.delete(`/academic-management/session/${id}`);
-  console.log("full response delete-api ", res);
-  console.log("deleting session api : ", res.data);
-  return res.data;
-};
-
-//with paginated
-export const fetchedPaginatedSessions = async (limit, skip) => {
+// ✅  GET - method (paginated)
+export const fetchedPaginatedSessions= async (page) => {
   const res = await axiosPrivate.get(
-    `/academic-management/session-paginated?limit=${limit}&skip=${skip}`,
+      `/academic-management/session-paginated?page=${page}`,
   );
-  console.log("paginated value and total", {
-    data: res.data?.data,
-    total: res.data?.total,
-  });
-  return res.data?.success
-    ? { data: res.data?.data, total: res.data?.total }
-    : { data: [], total: 0 };
+  console.log("full response api : ", res);
+  console.log("paginated value and total", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+// ✅ UPDATE
+export const updateSessionAPI = async ({ sessionId, payload }) => {
+  const res = await axiosPrivate.patch(
+      `/academic-management/session/${sessionId}`,
+      payload,
+  );
+
+  console.log("⚙️ updated api :", res.data);
+  return res.data?.success ? res.data : [];
 };

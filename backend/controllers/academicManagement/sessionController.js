@@ -5,56 +5,49 @@ const Session = require("../../models/sessionModel");
 async function addSession(req, res, next) {
   try {
     console.log("📥 Received session data: ", req.body);
-    const { session, label, status } = req.body;
 
-    // 🚨 Validate request data
-    if (!session) {
-      console.log("⚠️ [Session] Validation Error: Session name is required");
-      return next(createError(404, "Session field is required!"));
+    const { name, status, label } = req.body;
+
+    console.log("before => session add body", req.body);
+
+    // check if already exists
+    const existingSession = await Session.findOne({ name });
+    const totalDocuments = await Session.countDocuments();
+
+    // documents count
+
+    console.log("existing session : ", existingSession);
+    console.log("total session documents : ", totalDocuments);
+    console.log(null)
+    if (existingSession ) {
+      return next(createError(403, "Session already exists!"));
     }
 
-    if (session.trim().length === 0) {
-      console.log(
-        "⚠️ [Session] Validation Error: Session name cannot be empty!",
-      );
-
-      return next(createError(403, "Session field cannot be empty!"));
-    }
-
-    // check for existing session
-    // noinspection JSCheckFunctionSignatures
-    const existingSession = await Session.findOne({ session });
-
-    if (existingSession) {
-      return next(createError(403, "Session already exits!"));
-    }
-
-    // 👤 Create new shift object
-    const newSessionObj = new Session({
-      session,
+    // 👤 create new add session object
+    const newSession = new Session({
+      name,
       label,
       status,
     });
-
-    console.log("🛠️ Preparing to save session:", newSessionObj);
+    console.log("new added session", newSession);
 
     // 💾 Save the user to the database
-    await newSessionObj.save();
-
-    console.log("✅ [Session] Successfully added:", newSessionObj);
+     const addedItem = await newSession.save()
 
     // 🎉 Success response
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "Session added successfully!",
-      data: newSessionObj,
+      message: "Successfully added!",
+      data: addedItem,
     });
   } catch (error) {
-    console.log("Error adding session - without paginated", error);
-
+    console.log("Error in adding session: ", error);
     // custom Mongoose Error
     if (error.name === "ValidationError") {
-      return next(createError(400, error.message));
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
     }
     // MongoServerError
     if (error.name === "MongoServerError") {
@@ -66,74 +59,51 @@ async function addSession(req, res, next) {
         });
       }
     }
+
+    // ⚠️ Handle unexpected errors (fallback)
     return next(error);
   }
 }
 
-// 📝 get all shifts - without pagination
-async function getAllSessions(req, res, next) {
-  try {
-    console.log("📤 [Session] Fetching all sessions...");
 
-    // 🛠️
-    const sessions = await Session.find({});
 
-    const totalSession = await Session.countDocuments();
-
-    //* Check if no sessions exists
-    if (!sessions || totalSession === 0) {
-      console.log("⚠️ [Session] No sessions found");
-      return next(createError(404, "No sessions found"));
-    }
-
-    console.log(`✅ [Session] Retrieved ${sessions.length} sessions`);
-
-    //* Success response
-    return res.status(200).json({
-      success: true,
-      message: "All sessions retrieved successfully!",
-      count: totalSession,
-      data: sessions || "No sessions found!",
-    });
-  } catch (error) {
-    console.error("❌ [Session] Error retrieving data:", error.message);
-
-    if (error.name === "ValidationError") {
-      console.log(" 🛑 Mongoose Validation Error : ", error.message);
-      return next(createError(400, error.message));
-    }
-
-    //! 🛑 Handle unexpected errors properly
-    return next(createError(500, "Internal Server Error"));
-  }
-}
-
-// 📝 get all shifts - with pagination
+// 📝 Get all session with pagination
 async function getAllPaginatedSession(req, res, next) {
   try {
-    console.log("📥 Received request for sessions: ", req.query);
-    const limit = Math.max(parseInt(req.query.limit, 10) || 5, 1);
-    const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
+    console.log("📥 Received request for session: ", req.query);
+
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+    const skip = (page - 1) * limit;
 
     const sessions = await Session.find({}).skip(skip).limit(limit);
 
     const total = await Session.countDocuments();
 
-    if (!sessions.length) {
-      console.warn("⚠️ No shifts found");
-      return res.status(404).json({
-        success: false,
-        message: "No shifts found",
-      });
-    }
+    const totalPages = Math.ceil(total / limit);
+
+    // if (total <= 0) {
+    //   console.log("⚠️ No shifts found");
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "No shifts found",
+    //     currentPage: page,
+    //     totalPages,
+    //     total,
+    //   });
+    // }
+
+    console.log("✅ Retrieved session: ", sessions);
     return res.status(200).json({
       success: true,
       count: sessions.length,
-      data: sessions,
+      currentPage: page,
+      totalPages,
       total,
+      data: sessions,
     });
   } catch (error) {
-    console.error("❌ Error fetching sessions: ", error);
+    console.error("❌ Error fetching session: ", error);
     return next(error);
   }
 }
@@ -207,8 +177,7 @@ async function deleteSession(req, res, next) {
 // exports
 module.exports = {
   addSession,
-  getAllSessions,
-  updateSession,
   getAllPaginatedSession,
+  updateSession,
   deleteSession,
 };
