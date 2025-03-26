@@ -35,12 +35,12 @@ async function addShift(req, res, next) {
       label,
       status,
     });
-    console.log("🛠️ Preparing to save session:", newShift);
+    console.log("🛠️ Preparing to save shift:", newShift);
 
     // 💾 Save the user to the database
     await newShift.save();
 
-    console.log("✅ [Session] Successfully added:", newShift);
+    console.log("✅ [Shift] Successfully added:", newShift);
 
     // 🎉 Success response
     return res.status(200).json({
@@ -173,7 +173,7 @@ async function updateShift(req, res, next) {
     const { id: shiftId } = req.params;
     const { shift, label, status } = req.body;
 
-    console.log(`🔄 Updating session [ID: ${shiftId}] with data:`, req.body);
+    console.log(`🔄 Updating section [ID: ${shiftId}] with data:`, req.body);
 
     // updated payload
     const updatePayload = {
@@ -183,7 +183,7 @@ async function updateShift(req, res, next) {
     };
 
     console.log(
-      `🔄 Before => Updating session [ID: ${shiftId}] with data:`,
+      `🔄 Before => Updating shift [ID: ${shiftId}] with data:`,
       updatePayload,
     );
 
@@ -204,7 +204,7 @@ async function updateShift(req, res, next) {
       data: updatedShift, // ✅ Use `data` instead of `updatedData` for consistency
     });
   } catch (error) {
-    console.error("❌ Error updating session:", error);
+    console.error("❌ Error updating shift:", error);
     return next(error);
   }
 }
@@ -240,7 +240,7 @@ async function deleteShift(req, res, next) {
   }
 }
 
-// module exports
+// ✅  module exports
 module.exports = {
   addShift,
   getAllShift,

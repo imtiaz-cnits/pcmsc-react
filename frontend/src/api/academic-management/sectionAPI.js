@@ -1,0 +1,30 @@
+// to add
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
+
+export const addSectionAPI = async (payload) => {
+  const res = await axiosPrivate.post(
+    "/academic-management/add-section",
+    payload,
+  );
+  console.log("value of and type of ,", res.data, typeof res.data);
+  return res.data?.success ? res.data : [];
+};
+
+//with paginated
+export const fetchedPaginatedSections = async (page) => {
+  const res = await axiosPrivate.get(
+    `/academic-management/section-paginated?page=${page}`,
+  );
+  console.log("paginated value and total", res.data);
+  return res.data?.success ? res.data : {};
+};
+
+// DELETE - method
+export const deleteSectionAPI = async (sectionId) => {
+  if (!sectionId) throw new Error("❌ Section ID is required");
+  const res = await axiosPrivate.delete(
+    `/academic-management/section/${sectionId}`,
+  );
+  console.log("delete api : ", res.data);
+  return res.data?.success ? res.data : [];
+};

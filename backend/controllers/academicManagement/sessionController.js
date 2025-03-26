@@ -1,7 +1,5 @@
 const createError = require("http-errors");
 const Session = require("../../models/sessionModel");
-const ClassModel = require("../../models/classModel");
-const Shift = require("../../models/shiftModel");
 
 // 📝 do add session
 async function addSession(req, res, next) {

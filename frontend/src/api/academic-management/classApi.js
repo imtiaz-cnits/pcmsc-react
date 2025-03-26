@@ -1,7 +1,6 @@
 import axiosPrivate from "../../utils/axiosPrivate.jsx";
-import toast from "react-hot-toast";
 
-// POST - method
+// ✅  POST - method
 export const addClassAPI = async (payload) => {
   const res = await axiosPrivate.post(
     "/academic-management/add-class",
@@ -11,7 +10,7 @@ export const addClassAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
-// GET - method (paginated)
+// ✅  GET - method (paginated)
 export const fetchedPaginatedClasses = async (page) => {
   const res = await axiosPrivate.get(
     `/academic-management/class-paginated?page=${page}`,
@@ -20,19 +19,18 @@ export const fetchedPaginatedClasses = async (page) => {
   return res.data?.success ? res.data : [];
 };
 
-// UPDATE
-
+// ✅ UPDATE
 export const updateClassAPI = async ({ classId, payload }) => {
   const res = await axiosPrivate.patch(
     `/academic-management/class/${classId}`,
     payload,
   );
 
-  console.log("updated api :", res.data);
-  return res.data;
+  console.log("⚙️ updated api :", res.data);
+  return res.data?.success ? res.data : [];
 };
 
-// Delete - method
+// ✅  Delete - method
 export const deleteClassAPI = async (id) => {
   const res = await axiosPrivate.delete(`/academic-management/class/${id}`);
 

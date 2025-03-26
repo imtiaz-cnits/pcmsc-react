@@ -37,7 +37,6 @@ export const fetchShiftEntries = async (limit) => {
 };
 
 // PATCH - method
-
 export const updateShiftAPI = async ({ shiftId, updatedData }) => {
   console.log("inside mutation session id : ", shiftId);
   const res = await axiosPrivate.patch(

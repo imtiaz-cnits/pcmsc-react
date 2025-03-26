@@ -1,14 +1,13 @@
 // external imports
 const createError = require("http-errors");
 const ClassModel = require("../../models/classModel");
-const Shift = require("../../models/shiftModel");
 
 // 📝 do add class
 async function addClass(req, res, next) {
   try {
     console.log("📥 Received class data: ", req.body);
 
-    const {  name, status, label } = req.body;
+    const { name, status, label } = req.body;
 
     console.log("before => shift add body", req.body);
 
@@ -20,7 +19,7 @@ async function addClass(req, res, next) {
 
     console.log("existing class : ", existingClass);
     console.log("total class documents : ", totalDocuments);
-    if (existingClass ) {
+    if (existingClass) {
       return next(createError(403, "Class already exists!"));
     }
 
@@ -92,7 +91,6 @@ async function getAllClasses(req, res, next) {
 
 // 📝 Get all shifts with pagination
 async function getAllPaginatedClasses(req, res, next) {
-
   try {
     console.log("📥 Received request for shifts: ", req.query);
 
@@ -121,12 +119,12 @@ async function getAllPaginatedClasses(req, res, next) {
   }
 }
 
-
-
 // 📝 update
 async function updateClass(req, res, next) {
   try {
-    const { classId } = req.params;
+    console.log("class params : ", req.params);
+    console.log("class body : ", req.body);
+    const { id: classId } = req.params;
     const classData = req.body;
 
     // find and update the class document by ID
@@ -141,11 +139,17 @@ async function updateClass(req, res, next) {
       return next(createError(404, "Class not found!"));
     }
 
+    const existingClass = await ClassModel.find({ name: classData.name });
+
+    if (existingClass) {
+      return next(403, "Already exits!");
+    }
+
     console.log("updated class value : ", updatedClass);
 
     return res.status(200).json({
       success: true,
-      message: "Class updated successfully! 🎉",
+      message: "Class updated successfully!",
       updatedData: updatedClass,
     });
   } catch (error) {
@@ -156,20 +160,19 @@ async function updateClass(req, res, next) {
 
 // 📝 Delete Shift
 async function deleteClass(req, res, next) {
-  try{
+  try {
     console.log("deleted class params ", req.params);
-    const {id} = req.params
+    const { id } = req.params;
 
-    if(!id){
+    if (!id) {
       return "❌ Class ID is required.";
     }
 
-
     // not found
-    const deletedItem = await ClassModel.findByIdAndDelete(id)
+    const deletedItem = await ClassModel.findByIdAndDelete(id);
 
     console.log("✅ Class deleted:", deletedItem);
-    if(deletedItem.deletedCount === 0){
+    if (deletedItem.deletedCount === 0) {
       console.log(`⚠️ Class with ID ${id} not found or already deleted.`);
       return next(createError(404, "Class not found or already deleted."));
     }
@@ -177,15 +180,19 @@ async function deleteClass(req, res, next) {
     return res.status(200).json({
       success: true,
       message: "Class successfully deleted.",
-      deletedItem
+      deletedItem,
     });
-
-
-  }catch(error){
+  } catch (error) {
     console.log("delete class error : ", error);
-    return next(error)
+    return next(error);
   }
 }
 
 // module exports
-module.exports = { addClass, getAllClasses, updateClass, deleteClass ,getAllPaginatedClasses,deleteClass};
+module.exports = {
+  addClass,
+  getAllClasses,
+  updateClass,
+  deleteClass,
+  getAllPaginatedClasses,
+};

@@ -10,7 +10,7 @@ import logo from "../assets/img/logo.png";
 import navbparProfileImg from "../assets/img/navbar-profile-logo.png";
 import Sidebar from "../components/Sidebar";
 import useAuth from "../hook/useAuth";
-import { removeToken, setToken } from "../utils/token";
+import { removeToken } from "../utils/token";
 
 const Navbar = () => {
   const [lightMode, setLightMode] = useState(localStorage.lightMode || "light");

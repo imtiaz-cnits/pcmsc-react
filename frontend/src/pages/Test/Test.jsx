@@ -1,111 +1,115 @@
 import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import Select from "react-select";
 import "../../assets/css/all-modal.css";
+import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import useAddModal from "../../hook/useAddModal.jsx";
+import axiosPrivate from "../../utils/axiosPrivate.jsx";
 import {
-  useAddClass,
-  useDeleteClass,
-  useFetchPaginatedClasses,
-  useUpdateShift,
-} from "../../hook/useClass.js";
+  useAddSections,
+  useDeleteSection,
+  useFetchPaginatedShifts,
+} from "../../hook/useSection.js";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+
 const Test = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [section, setSection] = useState("");
+  const [sectionStatus, setSectionStatus] = useState("");
   const [page, setPage] = useState(1);
-  const [className, setClassName] = useState("");
-  const [classStatus, setClassStatus] = useState("");
+  const [editClassId, setEditClassId] = useState("");
   const [warn, setWarn] = useState("");
+  const { mutate: addSection } = useAddSections();
+  const { mutate: deleteSection } = useDeleteSection();
+
   const {
-    data: classes,
+    data: sections,
     isPending,
     isError,
     error,
-  } = useFetchPaginatedClasses(page);
-  const { mutate: addClass } = useAddClass();
-  const { mutate: deleteClass } = useDeleteClass();
-  const { mutate: updateClass } = useUpdateShift();
+  } = useFetchPaginatedShifts(page);
 
-  // ✅ Enable-Disable scrolling when modal is open-close
   useEffect(() => {
-    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+    if (isAddModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
   }, [isAddModalOpen]);
 
   useEffect(() => {
-    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+    if (isEditModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
   }, [isEditModalOpen]);
 
-  const classNameOptions = [
+  // add class modal options
+  const sectionStatusOptions = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
 
-  const handleSubmit = (e) => {
+  //
+  const handleAddSubmit = (e) => {
     e.preventDefault();
 
-    if (!className.trim()) {
-      setWarn("Class name is required and cannot be empty");
+    if (!section.trim()) {
+      setWarn("name is required and cannot be empty");
       return;
     }
 
-    const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
-    console.log("status : ", classStatus);
+    const label =
+      sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
+
     const payload = {
-      name: className,
+      section,
+      status: sectionStatus || "active",
       label: label || "Active",
-      status: classStatus || "active",
     };
+
+    console.log("before payload : ", payload);
+
     console.log("payload", payload);
-    addClass(payload);
+    addSection(payload);
     setWarn("");
-    setClassName("");
-    setClassStatus("");
-    setIsAddModalOpen(false);
+    setSection("");
+    setSectionStatus("");
   };
 
-
-  const handleEditClick = (e,item)=>{
-    e.preventDefault()
-    console.log("Edit button clicked for class:", item);
-    console.log("Edit button clicked for class id :", item?._id);
-    setClassName(item?.name)
-
-    setIsEditModalOpen(true)
-  }
-
-  const handleClassDelete = (e, id) => {
+  const handleDelete = (e, section) => {
     e.preventDefault();
-    console.log("after deleting  class value : ", classes);
-    deleteClass(id, {
+    console.log("after deleting  section value : ", section);
+    deleteSection(section?._id, {
       onSuccess: () => {
-        if (classes?.count === 1 && page > 1) {
+        if (sections?.data?.length === 1 && page > 1) {
           setPage((prev) => prev - 1);
         }
       },
     });
   };
 
-
-
-  if (isPending) return <p>Loading....................</p>;
+  //todo shimmer effect
+  if (isPending) return <>Loading ...</>;
 
   if (isError) {
-    console.log("inside class list error : ", error);
     if (error instanceof Error) {
-      const errorMsg =
-        error.response?.data?.message ||
-        error.message ||
-        "Something went wrong. Please! try again later!";
+      console.log("inside section list ", error);
 
-      return <p>{errorMsg}</p>;
+      return (
+        <p>{error.response?.data?.message}</p> || <p>{error.message}</p> || (
+          <p>Something went wrong. Please! try again later!</p>
+        )
+      );
     }
   }
 
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
-
-      {/* Sidebar */}
-
       <div className="main-content">
         <div className="page-content">
           <div className="data-table">
@@ -113,177 +117,209 @@ const Test = () => {
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
-                  <h3 className="heading">Class List</h3>
+                  <h3 className="heading">Section List</h3>
                   <button
                     className="create-cls-btn"
-                    onClick={() => setIsAddModalOpen(true)}
+                    onClick={() => setIsAddModalOpen(!isAddModalOpen)}
                   >
-                    Add Class
+                    Add Section
                   </button>
                 </div>
+                {/* <!-- Class heading End --> */}
 
-                {classes?.data?.length === 0 ? (
-                  <p>No Classes Found !</p>
-                ) : (
-                  <>
-                    {/* <!-- Class heading End --> */}
-
-                    {/* <!-- Action Buttons --> */}
-                    <div className="button-wrapper mb-3">
-                      {/* <!-- Search and Filter --> */}
-                      <div className="input-group class-group">
-                        {/* <!-- Entries per page --> */}
-                        <div>
-                          <div className="entries-page">
-                            <label htmlFor="entries" className="mr-2">
-                              Entries:
-                            </label>
-                            <div className="select-container dropdown-button">
-                              <select
-                                id="entries"
-                                className="form-control"
-                                style={{ width: "auto" }}
-                              >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                              </select>
-                              <span className="dropdown-icon">&#9662;</span>
-                              {/* <!-- Dropdown icon --> */}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="class-search">
-                          <input
-                            style={{ width: "20%", margin: "0" }}
-                            type="text"
-                            id="searchInput"
+                {/* <!-- Action Buttons --> */}
+                <div className="button-wrapper mb-3">
+                  {/* <!-- Search and Filter --> */}
+                  <div className="input-group class-group">
+                    {/* <!-- Entries per page --> */}
+                    <div>
+                      <div className="entries-page">
+                        <label htmlFor="entries" className="mr-2">
+                          Entries:
+                        </label>
+                        <div className="select-container dropdown-button">
+                          <select
+                            id="entries"
                             className="form-control"
-                            placeholder="Search Class..."
-                          />
+                            style={{ width: "auto" }}
+                          >
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                          </select>
+                          <span className="dropdown-icon">&#9662;</span>
+                          {/* <!-- Dropdown icon --> */}
                         </div>
                       </div>
                     </div>
+                    <div className="class-search">
+                      <input
+                        style={{ width: "20%", margin: "0" }}
+                        type="text"
+                        id="searchInput"
+                        className="form-control"
+                        placeholder="Search Class..."
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                    {/* <!-- Table --> */}
-                    <div className="table-wrapper">
-                      <table
-                        id="printTable"
-                        className="table table-bordered table-hover"
-                      >
-                        <thead>
-                          <tr>
-                            <th>Sl No:</th>
-                            <th>Student Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {classes?.data &&
-                            classes?.data?.map((item, index) => {
-                              return (
-                                <tr key={item?._id}>
-                                  <td>{index + 1}</td>
-                                  <td
+                {/* <!-- Table --> */}
+                <div className="table-wrapper">
+                  <table
+                    id="printTable"
+                    className="table table-bordered table-hover"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Sl No:</th>
+                        <th>Section Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sections?.data &&
+                        sections?.data?.map((item, index) => {
+                          return (
+                            <tr key={item?._id}>
+                              <td>{(page - 1) * 5 + index + 1}</td>
+                              <td
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  gap: "20px",
+                                }}
+                              >
+                                {item?.name}
+                              </td>
+                              <td>{item?.label}</td>
+                              <td
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  gap: "20px",
+                                }}
+                              >
+                                <button
+                                  style={{
+                                    background: "none",
+                                    border: "none",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <FaRegEdit
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      gap: "20px",
+                                      color: "lightgreen",
+                                      fontSize: "25px",
                                     }}
-                                  >
-                                    {item?.name}
-                                  </td>
-                                  <td>{item?.label}</td>
-                                  <td
+                                  />
+                                </button>
+                                <button
+                                  style={{
+                                    background: "none",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    padding: 0,
+                                  }}
+                                  onClick={(e) => handleDelete(e, item)}
+                                >
+                                  <FaRegTrashAlt
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      gap: "20px",
+                                      color: "red",
+                                      fontSize: "25px",
                                     }}
-                                  >
-                                    <button
-                                      style={{
-                                        background: "none",
-                                        border: "none",
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={(e) => handleEditClick(e,item)}
-                                    >
-                                      <FaRegEdit
-                                        style={{
-                                          color: "lightgreen",
-                                          fontSize: "25px",
-                                        }}
-                                      />
-                                    </button>
-                                    <button
-                                      style={{
-                                        background: "none",
-                                        border: "none",
-                                        cursor: "pointer",
-                                        padding: 0,
-                                      }}
-                                      onClick={(e) =>
-                                        handleClassDelete(e, item?._id)
-                                      }
-                                    >
-                                      <FaRegTrashAlt
-                                        style={{
-                                          color: "red",
-                                          fontSize: "25px",
-                                        }}
-                                      />
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                        </tbody>
-                      </table>
-                    </div>
-                    {/* <!-- Pagination and Display Info --> */}
-                    <div className="my-3">
-                      <span id="display-info"></span>
-                    </div>
+                                  />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      <tr>
+                        <td>02</td>
+                        <td>Commerce</td>
+                        <td>
+                          <div id="action_btn">
+                            <div id="menu-wrap">
+                              <input type="checkbox" className="toggler" />
+                              <div className="dots">
+                                <div></div>
+                              </div>
+                              <div className="menu">
+                                <div>
+                                  <ul>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="link custom-open-modal-btn openModalBtn editButton"
+                                        data-modal="action-editmodal"
+                                      >
+                                        Edit
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="link custom-open-modal-btn openModalBtn deleteButton"
+                                        data-modal="action-deletemodal"
+                                      >
+                                        Delete
+                                      </a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            {/* <!-- <button class="quick-view quickButton">
+                            <i class="fa-regular fa-eye"></i>
+                          </button> --> */}
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                {/* <!-- Pagination and Display Info --> */}
+                <div className="my-3">
+                  <span id="display-info"></span>
+                </div>
 
-                    <div id="pagination" className="pagination">
-                      <button
-                        id="prevBtn"
-                        className="btn"
-                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={page === 1}
-                      >
-                        Prev
-                      </button>
-                      {classes?.currentPage} of {classes?.totalPages}
-                      <button
-                        id="nextBtn"
-                        className="btn"
-                        onClick={() =>
-                          setPage((prev) =>
-                            Math.min(prev + 1, classes?.totalPages),
-                          )
-                        }
-                        disabled={page === classes?.totalPages}
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </>
-                )}
+                <div id="pagination" className="pagination">
+                  <button
+                    id="prevBtn"
+                    className="btn"
+                    onClick={() =>
+                      setPage((prevState) => Math.max(prevState - 1, 1))
+                    }
+                    disabled={page === 1}
+                  >
+                    Prev
+                  </button>
+                  {page} of {sections?.totalPages}
+                  <button
+                    id="nextBtn"
+                    className="btn"
+                    onClick={() =>
+                      setPage((prev) =>
+                        Math.min(prev + 1, sections?.totalPages),
+                      )
+                    }
+                    disabled={page === sections?.totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-
           <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
-          {/* <!-- Table End --> */}
+          {/* <!-- Table End -->
 
-          {/* <!-- Table Action Button Modal Start -->
+        <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
           <div id="confirmationModal" className="modal">
             <div className="modal-content">
@@ -318,49 +354,48 @@ const Test = () => {
         <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Create Class Pop Up Modal Start --> */}
-          <div className="createClassModal">
+        <!-- Section Pop Up Modal Start --> */}
+          <div className="section-modal">
             {isAddModalOpen && (
-              <section id="createClassModal" className="modal show">
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
                 <div className="modal-content">
                   <div id="popup-modal">
                     <div className="form-container">
-                      <h3>Add Class</h3>
+                      <h3>Add Section</h3>
                       <form>
                         {/* <!-- Row 1 --> */}
-                        <div className="form-row">
+                        <div
+                          className="form-row"
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <div className="form-group">
                             <label htmlFor="search-students">
-                              Class Name *
+                              Section Name *
                             </label>
                             <input
                               type="text"
                               id="search-students"
-                              placeholder="Class"
-                              value={className}
-                              onChange={(e) => setClassName(e.target.value)}
+                              placeholder="Section Name"
+                              value={section}
+                              onChange={(e) => setSection(e.target.value)}
                             />
                           </div>
-                        </div>
-                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
-                        <div className="form-row">
+
                           <div className="form-group">
-                            <label htmlFor="search-students">
-                              Status Name *
-                            </label>
+                            <label htmlFor="search-students">Status *</label>
                             <select
-                              id="search-students"
-                              placeholder="Class"
-                              value={classStatus}
-                              onChange={(e) => setClassStatus(e.target.value)}
+                              value={sectionStatus}
+                              onChange={(e) => setSectionStatus(e.target.value)}
                             >
                               <option value="" disabled>
-                                Select Status
+                                Select status
                               </option>
-
-                              {classNameOptions?.map((option, index) => (
-                                <option key={index} value={option?.value}>
-                                  {option?.label}
+                              {sectionStatusOptions.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                  {option.label}
                                 </option>
                               ))}
                             </select>
@@ -371,15 +406,18 @@ const Test = () => {
                         <div className="form-actions">
                           <button
                             type="button"
+                            id="classBtn"
                             className="button close closeBtn"
-                            onClick={() => setIsAddModalOpen(false)}
+                            onClick={() =>
+                              setIsAddModalOpen(!setIsAddModalOpen)
+                            }
                           >
                             Close
                           </button>
                           <button
                             type="button"
                             className="button save"
-                            onClick={handleSubmit}
+                            onClick={handleAddSubmit}
                           >
                             Save
                           </button>
@@ -391,90 +429,12 @@ const Test = () => {
               </section>
             )}
           </div>
-
-          {/* <!-- Create Class Pop Up Modal Start --> */}
-
-          {/* <!-- Edit Class Pop Up Modal Start --> */}
-          <div className="createClassModal">
-            {isEditModalOpen && (
-              <section id="createClassModal" className="modal show">
-                <div className="modal-content">
-                  <div id="popup-modal">
-                    <div className="form-container">
-                      <h3>Update Class</h3>
-                      <form>
-                        {/* <!-- Row 1 --> */}
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label htmlFor="search-students">
-                              Class Name *
-                            </label>
-                            <input
-                              type="text"
-                              id="search-students"
-                              placeholder="Class"
-                              value={className}
-                              onChange={(e) => setClassName(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label htmlFor="search-students">
-                              Status Name *
-                            </label>
-                            <select
-                              id="search-students"
-                              placeholder="Class"
-                              value={classStatus}
-                              onChange={(e) => setClassStatus(e.target.value)}
-                            >
-                              <option value="" disabled>
-                                Select Status
-                              </option>
-
-                              {classNameOptions?.map((option, index) => (
-                                <option key={index} value={option?.value}>
-                                  {option?.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-
-                        {/* <!-- Actions --> */}
-                        <div className="form-actions">
-                          <button
-                            type="button"
-                            className="button close closeBtn"
-                            onClick={() => setIsEditModalOpen(false)}
-                          >
-                            Close
-                          </button>
-                          <button
-                            type="button"
-                            className="button save"
-                            onClick={handleSubmit}
-                          >
-                            Update
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            )}
-          </div>
-
-          {/* <!-- Edit Class Pop Up Modal Start --> */}
+          {/* <!-- Section Pop Up Modal Start --> */}
         </div>
       </div>
-
       {/* <!-- Hero Main Content End --> */}
+      <Toaster />
     </>
   );
 };
-
 export default Test;

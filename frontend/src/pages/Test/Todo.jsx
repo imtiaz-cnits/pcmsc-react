@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
 import "./todo.css"; // Importing the CSS
 
 // API for adding a todo

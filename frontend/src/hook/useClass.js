@@ -1,4 +1,3 @@
-//POST - method
 //todo optimistic opacity
 import {
   keepPreviousData,
@@ -6,23 +5,22 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import {
   addClassAPI,
   deleteClassAPI,
   fetchedPaginatedClasses,
   updateClassAPI,
 } from "../api/academic-management/classApi.js";
-import toast from "react-hot-toast";
-import { useDeleteShift } from "./useShift.js";
 
-//POST - method
+//📌  POST - method
 export const useAddClass = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addClassAPI,
     onError: (error) => {
-      console.log("error adding session : ", error);
+      console.log("⚙️ error adding session : ", error);
       if (error.response) {
         toast.error(
           error.response?.data?.message || "Failed to add class . Try again!",
@@ -34,7 +32,7 @@ export const useAddClass = () => {
       );
     },
     onSuccess: async (data) => {
-      console.log("✅ Shifts added successfully: ", data);
+      console.log("🚀 Shifts added successfully: ", data);
 
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
 
@@ -49,7 +47,7 @@ export const useAddClass = () => {
   });
 };
 
-//GET - method (paginated)
+//✅  GET - method (paginated)
 export const useFetchPaginatedClasses = (page) => {
   return useQuery({
     queryKey: ["classes", page],
@@ -62,12 +60,14 @@ export const useFetchPaginatedClasses = (page) => {
   });
 };
 
-// PATCH - method
+//✅  PATCH - method
 export const useUpdateShift = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateClassAPI,
-    onError: (error) => {
-      console.log("error updating class : ", error);
+    onError: (error, variables) => {
+      console.log("⚙️ error updating class : ", error);
+      console.log("⚙️ error updating class variables : ", variables);
 
       if (error?.response) {
         toast(
@@ -83,11 +83,25 @@ export const useUpdateShift = () => {
           "Failed to update class . Try again!",
       );
     },
+
+    onSuccess: async (data, { classID, payload }) => {
+      console.log("🚀 update class onSuccess data value :", data);
+      console.log("🚀 update  :", payload, classID);
+
+      if (data?.success) {
+        toast(data?.message);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["classes"] });
+    },
   });
 };
 
-// DELETE - method
-
+//✅  DELETE - method
 export const useDeleteClass = () => {
   const queryClient = useQueryClient();
 
@@ -95,7 +109,7 @@ export const useDeleteClass = () => {
     mutationFn: deleteClassAPI,
 
     onError: (error) => {
-      console.log("error deleting class : ", error);
+      console.log("⚙️  error deleting class : ", error);
       if (error?.response) {
         toast(
           error.response?.data?.message ||
@@ -112,8 +126,8 @@ export const useDeleteClass = () => {
     },
 
     onSuccess: async (data) => {
-      console.log("✅ Class deleted successfully: ", data);
-      toast.success(data?.message || "Shift deleted successfully!");
+      console.log("🚀 Class deleted successfully: ", data);
+      toast.success(data?.message || "Class deleted successfully!");
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
     },
 

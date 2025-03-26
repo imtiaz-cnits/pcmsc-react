@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import {
   useAddShifts,
   useDeleteShift,
-  useFetchEntriesShifts,
   useFetchPaginatedShifts,
   useUpdateShift,
 } from "../../hook/useShift.js";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import { Toaster } from "react-hot-toast";
 
 const Shift = () => {
   const [page, setPage] = useState(1);
-  const [shiftEntries, setShiftEntries] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [shift, setShift] = useState("");
@@ -20,7 +18,6 @@ const Shift = () => {
   const [warn, setWarn] = useState("");
   const { mutate: addShift } = useAddShifts();
   const { mutate: deleteShift } = useDeleteShift();
-  const { data: entries } = useFetchEntriesShifts(shiftEntries);
   const {
     data: shifts,
     isPending,
@@ -29,10 +26,6 @@ const Shift = () => {
   } = useFetchPaginatedShifts(page);
 
   const { mutate: updateShift } = useUpdateShift();
-
-  useEffect(() => {
-    console.log("shift - entries value :", shiftEntries);
-  }, [shiftEntries]);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -57,13 +50,13 @@ const Shift = () => {
     { value: "inactive", label: "Inactive" },
   ];
 
-  const shiftEntriesOptions = [
-    { value: 5, label: "5" },
-    { value: 10, label: "10" },
-    { value: 25, label: "25" },
-    { value: 50, label: "50" },
-    { value: 100, label: "100" },
-  ];
+  // const shiftEntriesOptions = [
+  //   { value: 5, label: "5" },
+  //   { value: 10, label: "10" },
+  //   { value: 25, label: "25" },
+  //   { value: 50, label: "50" },
+  //   { value: 100, label: "100" },
+  // ];
 
   // handle pop modal save button
   const handleSubmit = (e) => {
@@ -206,7 +199,7 @@ const Shift = () => {
                                   //   opacity: shift.isDeleting ? 0.5 : 1,
                                   // }}
                                 >
-                                  <td>{index + 1}</td>
+                                  <td>{(page - 1) * 5 + index + 1}</td>
                                   <td
                                     style={{
                                       display: "flex",

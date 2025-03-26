@@ -8,7 +8,8 @@ const {
   addClass,
   getAllClasses,
   updateClass,
-  deleteClass, getAllPaginatedClasses,
+  deleteClass,
+  getAllPaginatedClasses,
 } = require("../controllers/academicManagement/classController");
 const {
   addShift,
@@ -20,6 +21,9 @@ const {
 } = require("../controllers/academicManagement/shiftController");
 const {
   addSection,
+  getAllPaginatedSections,
+  deleteSection,
+  updateSection,
 } = require("../controllers/academicManagement/sectionController");
 const {
   addSession,
@@ -46,6 +50,10 @@ router.delete("/shift/:id", deleteShift);
 
 // ⚙️ Section - CRUD
 router.post("/add-section", addSection);
+router.get("/sections");
+router.get("/section-paginated", getAllPaginatedSections);
+router.patch("/section/:id", updateSection);
+router.delete("/section/:id", deleteSection);
 
 // 🚀 Session - CRUD
 router.post("/add-session", addSession);
