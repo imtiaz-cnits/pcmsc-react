@@ -5,11 +5,11 @@ const ClassModel = require("../../models/classModel");
 // 📝 do add class
 async function addClass(req, res, next) {
   try {
-    console.log("📥 Received class data: ", req.body);
+    // console.log("📥 Received class data: ", req.body);
 
     const { name, status, label } = req.body;
 
-    console.log("before => class add body", req.body);
+    // console.log("before => class add body", req.body);
 
     // check if already exists
     const existingClass = await ClassModel.findOne({ name });
@@ -92,7 +92,7 @@ async function getAllClasses(req, res, next) {
 // 📝 Get all shifts with pagination
 async function getAllPaginatedClasses(req, res, next) {
   try {
-    console.log("📥 Received request for shifts: ", req.query);
+    // console.log("📥 Received request for shifts: ", req.query);
 
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 5;
@@ -122,8 +122,8 @@ async function getAllPaginatedClasses(req, res, next) {
 // 📝 update
 async function updateClass(req, res, next) {
   try {
-    console.log("class params : ", req.params);
-    console.log("class body : ", req.body);
+    // console.log("class params : ", req.params);
+    // console.log("class body : ", req.body);
     const { id: classId } = req.params;
     const classData = req.body;
 
@@ -161,7 +161,7 @@ async function updateClass(req, res, next) {
 // 📝 Delete Shift
 async function deleteClass(req, res, next) {
   try {
-    console.log("deleted class params ", req.params);
+    // console.log("deleted class params ", req.params);
     const { id } = req.params;
 
     if (!id) {

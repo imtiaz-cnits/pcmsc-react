@@ -7,6 +7,7 @@ import {
   useFetchPaginatedShifts,
   useUpdateShift,
 } from "../../hook/useShift.js";
+import Shimmer from "../../components/Shimmer.jsx";
 
 const Shift = () => {
   const [page, setPage] = useState(1);
@@ -134,9 +135,6 @@ const Shift = () => {
     });
   };
 
-  //todo shimmer effect
-  if (isPending) return <>Loading ...</>;
-
   if (isError) {
     if (error instanceof Error) {
       console.log("inside shifts list ", error);
@@ -169,8 +167,14 @@ const Shift = () => {
                 </div>
                 {/* <!-- Class heading End --> */}
 
-                {shifts?.data && shifts?.data?.length === 0 ? (
-                  <p>No Shifts Found !</p>
+                {shifts?.total <= 0 ? (
+                  <>
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: "center" }}>
+                        No Shifts Found !
+                      </td>
+                    </tr>
+                  </>
                 ) : (
                   <>
                     {/* <!-- Paginated Table --> */}
@@ -189,69 +193,71 @@ const Shift = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {shifts?.data &&
-                            shifts?.data?.map((item, index) => {
-                              return (
-                                <tr
-                                  key={item?._id}
-                                  // style={{
-                                  //   transition: "opacity 0.3s ease",
-                                  //   opacity: shift.isDeleting ? 0.5 : 1,
-                                  // }}
+                          {isPending ? (
+                            <Shimmer count={5} />
+                          ) : (
+                            shifts?.data &&
+                            shifts?.data?.map((item, index) => (
+                              <tr
+                                key={item?._id}
+                                // style={{
+                                //   transition: "opacity 0.3s ease",
+                                //   opacity: shift.isDeleting ? 0.5 : 1,
+                                // }}
+                              >
+                                <td>{(page - 1) * 5 + index + 1}</td>
+                                <td
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
                                 >
-                                  <td>{(page - 1) * 5 + index + 1}</td>
-                                  <td
+                                  {item?.name}
+                                </td>
+                                <td>{item?.label}</td>
+                                <td
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  <button
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      gap: "20px",
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
                                     }}
+                                    onClick={(e) => handleEditClick(e, item)}
                                   >
-                                    {item?.name}
-                                  </td>
-                                  <td>{item?.label}</td>
-                                  <td
+                                    <FaRegEdit
+                                      style={{
+                                        color: "lightgreen",
+                                        fontSize: "25px",
+                                      }}
+                                    />
+                                  </button>
+                                  <button
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      gap: "20px",
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      padding: 0,
                                     }}
+                                    onClick={(e) => handleDelete(e, item)}
                                   >
-                                    <button
+                                    <FaRegTrashAlt
                                       style={{
-                                        background: "none",
-                                        border: "none",
-                                        cursor: "pointer",
+                                        color: "red",
+                                        fontSize: "25px",
                                       }}
-                                      onClick={(e) => handleEditClick(e, item)}
-                                    >
-                                      <FaRegEdit
-                                        style={{
-                                          color: "lightgreen",
-                                          fontSize: "25px",
-                                        }}
-                                      />
-                                    </button>
-                                    <button
-                                      style={{
-                                        background: "none",
-                                        border: "none",
-                                        cursor: "pointer",
-                                        padding: 0,
-                                      }}
-                                      onClick={(e) => handleDelete(e, item)}
-                                    >
-                                      <FaRegTrashAlt
-                                        style={{
-                                          color: "red",
-                                          fontSize: "25px",
-                                        }}
-                                      />
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                    />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -259,34 +265,34 @@ const Shift = () => {
                     <div className="my-3">
                       <span id="display-info"></span>
                     </div>
+
+                    <div id="pagination" className="pagination">
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prevState) => Math.max(prevState - 1, 1))
+                        }
+                        disabled={page === 1}
+                      >
+                        Prev
+                      </button>
+                      {shifts?.currentPage} of {shifts?.totalPages}
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prevState) =>
+                            Math.min(prevState + 1, shifts?.totalPages),
+                          )
+                        }
+                        disabled={page === shifts?.totalPages}
+                      >
+                        Next
+                      </button>
+                    </div>
                   </>
                 )}
-
-                <div id="pagination" className="pagination">
-                  <button
-                    id="prevBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prevState) => Math.max(prevState - 1, 1))
-                    }
-                    disabled={page === 1}
-                  >
-                    Prev
-                  </button>
-                  {shifts?.currentPage} of {shifts?.totalPages}
-                  <button
-                    id="nextBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prevState) =>
-                        Math.min(prevState + 1, shifts?.totalPages),
-                      )
-                    }
-                    disabled={page === shifts?.totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
               </div>
             </div>
           </div>

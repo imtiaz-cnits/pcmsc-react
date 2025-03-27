@@ -30,6 +30,7 @@ const {
   updateSession,
   deleteSession,
   getAllPaginatedSession,
+  getAllEntriesSession,
 } = require("../controllers/academicManagement/sessionController");
 
 // 🔍 Class - CRUD
@@ -58,6 +59,7 @@ router.delete("/section/:id", deleteSection);
 router.post("/add-session", addSession);
 router.get("/sessions", getAllPaginatedSession);
 router.get("/session-paginated", getAllPaginatedSession);
+router.get("/session-entries", getAllEntriesSession);
 router.patch("/session/:id", updateSession);
 router.delete("/session/:id", deleteSession);
 
