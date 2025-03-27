@@ -27,7 +27,6 @@ const {
 } = require("../controllers/academicManagement/sectionController");
 const {
   addSession,
-  getAllSessions,
   updateSession,
   deleteSession,
   getAllPaginatedSession,

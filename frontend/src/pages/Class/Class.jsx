@@ -112,7 +112,6 @@ const Class = () => {
 
   if (isPending) return <p>Loading....................</p>;
 
-
   if (isError) {
     console.log("inside class list error : ", error);
     if (error instanceof Error) {
@@ -211,7 +210,7 @@ const Class = () => {
                             classes?.data?.map((item, index) => {
                               return (
                                 <tr key={item?._id}>
-                                  <td>{(page-1)*5 + index +1}</td>
+                                  <td>{(page - 1) * 5 + index + 1}</td>
                                   <td
                                     style={{
                                       display: "flex",

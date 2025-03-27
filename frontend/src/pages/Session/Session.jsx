@@ -1,145 +1,133 @@
-import "../../assets/css/all-modal.css";
-import { useState } from "react";
-import Select from "react-select";
-import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
+import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import "../../assets/css/all-modal.css";
 import {
   useAddSession,
   useDeleteSession,
-  useFetchPaginatedSession,
+  useFetchPaginatedSessions,
   useUpdateSession,
-} from "../../hook/useSession.js";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import "../../assets/css/all-modal.css";
-import useAddModal from "../../hook/useAddModal.jsx";
+} from "../../hook/useSession";
 
 const Session = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const [session, setSession] = useState("");
-  const [selectedSession, setSelectedSession] = useState(null);
-  const [warn, setWarn] = useState("");
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [sessionStatus, setSessionStatus] = useState("");
   const [editSessionId, setEditSessionId] = useState("");
-  const [skip, setSkip] = useState(0);
-  const [limit] = useState(5);
+  const [warn, setWarn] = useState("");
+  const { mutate: addSession } = useAddSession();
+  const { mutate: updateSession } = useUpdateSession();
+  const { mutate: deleteSession } = useDeleteSession();
+
   const {
     data: sessions,
     isPending,
     isError,
-  } = useFetchPaginatedSession(limit, skip);
-  const { mutate: addSession } = useAddSession();
-  const { mutate: deleteSession } = useDeleteSession();
-  const { mutate: updateSession } = useUpdateSession();
+    error,
+  } = useFetchPaginatedSessions(page);
 
-  //todo fixed modal open closed
-  useAddModal("createClassModal", "classModalBtn", "classBtn");
+  // ✅ Enable-Disable scrolling when modal is open-close
+  useEffect(() => {
+    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+  }, [isAddModalOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+  }, [isEditModalOpen]);
 
   // add session modal options
   const sessionStatusOptions = [
     { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
 
-  // total documents
-  const total = sessions?.total;
-
-  // 📝 handle the form submission
-  const handleAddSession = async (e) => {
+  const handleAddSession = (e) => {
     e.preventDefault();
 
-    if (!sessions) {
-      return setWarn("Please fill in all fields ");
+    if (!session.trim()) {
+      setWarn("Session name is required and cannot be empty");
+      return;
     }
 
-    //prepare payload
+    const label =
+      sessionStatus?.charAt(0).toUpperCase() + sessionStatus.slice(1);
+    console.log("session status : ", sessionStatus);
     const payload = {
-      session,
-      label: selectedSession.label,
-      status: selectedSession.value,
+      name: session,
+      label: label || "Active",
+      status: sessionStatus || "active",
     };
-
     console.log("payload", payload);
-
-    await addSession(payload);
-
-    setSelectedSession("");
+    addSession(payload);
+    setWarn("");
     setSession("");
-    setSelectedSession(null);
-
-    /*
-    // loader toast
-    const toastId = toast.loading("Adding session...");
-
-    try {
-      const res = await axiosPrivate.post(
-        "/academic-management/add-session",
-        payload,
-      );
-      console.log("res data of session ", res.data);
-
-      if (res.data.success) {
-        setSession(null);
-        setSelectedSession(null);
-        toast.success(res.data.message || "Successfully added!", {
-          id: toastId,
-        });
-      } else {
-        toast.error(res.data.message || "Failed to add session!", {
-          id: toastId,
-        });
-      }
-    } catch (e) {
-      console.error(e);
-      const errorMessage = e.response?.data?.message || "Something went wrong!";
-      toast.error("Failed to add session!", {
-        id: toastId,
-      });
-      console.log(errorMessage);
-    } finally {
-      setLoader(false);
-    }
-
-
-     */
+    setSessionStatus("");
+    setIsAddModalOpen(!isAddModalOpen);
   };
 
-  console.log("data sessions: ", sessions);
-  // Handle Edit Click
-  const handleEditClick = (session) => {
-    console.log("Edit button clicked for session:", session);
-    setEditSessionId(session._id);
-    setSession(session.session);
-    setSelectedSession({
-      value: session.status,
-      label: session.label,
-    });
-    setEditModalOpen(true);
+  const handleSessionEditClick = (e, item) => {
+    e.preventDefault();
+    console.log("Edit button clicked for session:", item);
+    console.log("Edit button clicked for session id :", item?._id);
+    setEditSessionId(item?._id);
+    setSession(item?.name);
+    setSessionStatus(item?.status);
+    setIsEditModalOpen(!isEditModalOpen);
   };
 
-  // Handle Edit Submit
-  const handleEditSubmit = async (e) => {
+  const handleSessionEditSubmit = (e) => {
     e.preventDefault();
 
-    if (!session || !selectedSession) {
-      return setWarn("Please fill in all fields ");
+    if (!session) {
+      setWarn("Session name is required and cannot be empty");
+      return;
     }
 
-    const updatedData = {
-      session,
-      label: selectedSession.label,
-      status: selectedSession.value,
+    const label =
+      sessionStatus?.charAt(0).toUpperCase() + sessionStatus.slice(1);
+
+    const updatedPayload = {
+      name: session,
+      label: label || "Active",
+      status: sessionStatus || "active",
     };
 
-    await updateSession({ sessionId: editSessionId, updatedData });
-
-    setEditModalOpen(false);
+    updateSession({ sessionId: editSessionId, payload: updatedPayload });
     setSession("");
-    setSelectedSession(null);
-    setEditSessionId(null);
+    setSessionStatus("");
+    setWarn("");
+    setEditSessionId("");
+    setIsEditModalOpen(!isEditModalOpen);
   };
 
-  if (isPending) return <p>Loading.....</p>;
-  if (isError) return <p>Error....</p>;
+  const handleSessionDelete = (e, item) => {
+    e.preventDefault();
+    console.log("after deleting  session value : ", item);
+    deleteSession(item?._id, {
+      onSuccess: () => {
+        if (sessions?.count === 1 && page > 1) {
+          setPage((prevState) => prevState - 1);
+        }
+      },
+    });
+  };
+
+  if (isPending) return <p>Loading....................</p>;
+
+  if (isError) {
+    console.log("inside session list error : ", error);
+    if (error instanceof Error) {
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong. Please! try again later!";
+
+      return <p>{errorMsg}</p>;
+    }
+  }
 
   return (
     <>
@@ -152,7 +140,10 @@ const Session = () => {
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
                   <h3 className="heading">Session List</h3>
-                  <button className="create-cls-btn" id="classModalBtn">
+                  <button
+                    className="create-cls-btn"
+                    onClick={() => setIsAddModalOpen(!isAddModalOpen)}
+                  >
                     Create Session
                   </button>
                 </div>
@@ -212,21 +203,21 @@ const Session = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {/*todo shimmer effect add with isFetching*/}
                       {sessions?.data &&
-                        sessions?.data?.map((session, index) => {
+                        sessions?.data?.map((item, index) => {
                           return (
-                            <tr key={session?._id}>
-                              <td>{index + skip + 1}</td>
+                            <tr key={item?._id}>
+                              <td>{(page - 1) * 5 + index + 1}</td>
                               <td
                                 style={{
                                   display: "flex",
                                   justifyContent: "center",
+                                  gap: "20px",
                                 }}
                               >
-                                {session?.session}
+                                {item?.name}
                               </td>
-                              <td>{session?.label}</td>
+                              <td>{item?.label}</td>
                               <td
                                 style={{
                                   display: "flex",
@@ -235,12 +226,14 @@ const Session = () => {
                                 }}
                               >
                                 <button
-                                  onClick={() => handleEditClick(session)}
                                   style={{
                                     background: "none",
                                     border: "none",
                                     cursor: "pointer",
                                   }}
+                                  onClick={(e) =>
+                                    handleSessionEditClick(e, item)
+                                  }
                                 >
                                   <FaRegEdit
                                     style={{
@@ -256,10 +249,13 @@ const Session = () => {
                                     cursor: "pointer",
                                     padding: 0,
                                   }}
+                                  onClick={(e) => handleSessionDelete(e, item)}
                                 >
                                   <FaRegTrashAlt
-                                    style={{ color: "red", fontSize: "25px" }}
-                                    onClick={() => deleteSession(session?._id)}
+                                    style={{
+                                      color: "red",
+                                      fontSize: "25px",
+                                    }}
                                   />
                                 </button>
                               </td>
@@ -278,17 +274,23 @@ const Session = () => {
                   <button
                     id="prevBtn"
                     className="btn"
-                    onClick={() => setSkip((prev) => Math.max(prev - limit, 0))}
-                    disabled={skip === 0}
+                    onClick={() =>
+                      setPage((prevState) => Math.max(prevState - 1, 1))
+                    }
+                    disabled={page === 1}
                   >
                     Prev
                   </button>
-
+                  {page} of {sessions?.totalPages}
                   <button
                     id="nextBtn"
                     className="btn"
-                    onClick={() => setSkip((prev) => Math.max(prev + limit))}
-                    disabled={limit + skip >= total}
+                    onClick={() =>
+                      setPage((prevState) =>
+                        Math.min(prevState + 1, sessions?.totalPages),
+                      )
+                    }
+                    disabled={page === sessions?.totalPages}
                   >
                     Next
                   </button>
@@ -338,171 +340,159 @@ const Session = () => {
 
         <!-- Session Pop Up Modal Start --> */}
           <div className="session-modal">
-            <section id="createClassModal" className="modal migrateModal">
-              <div className="modal-content">
-                <div id="popup-modal">
-                  <div className="form-container">
-                    <h3>Create Session</h3>
-                    <form>
-                      {/* <!-- Row 1 --> */}
-                      <div
-                        className="form-row"
-                        style={{ display: "flex", flexDirection: "column" }}
-                      >
-                        <div className="form-group">
-                          <label htmlFor="search-students">
-                            Session Name *
-                          </label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Session Name"
-                            value={session}
-                            onChange={(e) => setSession(e.target.value)}
-                          />
+            {isAddModalOpen && (
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Create Session</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div
+                          className="form-row"
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Session Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Session Name"
+                              value={session}
+                              onChange={(e) => setSession(e.target.value)}
+                            />
+                          </div>
+                          {warn && (
+                            <p style={{ color: "lightcoral" }}>{warn}</p>
+                          )}
+                          <div className="form-group">
+                            <label htmlFor="search-students">Status *</label>
+                            <select
+                              id="search-students"
+                              placeholder="Class"
+                              value={sessionStatus}
+                              onChange={(e) => setSessionStatus(e.target.value)}
+                            >
+                              <option value="" disabled>
+                                Select Status
+                              </option>
+
+                              {sessionStatusOptions?.map((option, index) => (
+                                <option key={index} value={option?.value}>
+                                  {option?.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
                         </div>
 
-                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
-
-                        <div className="form-group">
-                          <label htmlFor="search-students">Status *</label>
-                          <Select
-                            options={sessionStatusOptions}
-                            value={selectedSession}
-                            onChange={setSelectedSession}
-                            placeholder="Status"
-                            components={{
-                              DropdownIndicator: CustomDropdownIndicator,
-                            }}
-                          />
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            id="classBtn"
+                            className="button close closeBtn"
+                            onClick={() => setIsAddModalOpen(!isAddModalOpen)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleAddSession}
+                          >
+                            Save
+                          </button>
                         </div>
-                      </div>
-
-                      {/* <!-- Actions --> */}
-                      <div className="form-actions">
-                        <button
-                          type="button"
-                          id="classBtn"
-                          className="button close closeBtn"
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="button"
-                          className="button save"
-                          onClick={handleAddSession}
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
           </div>
-
           {/* <!-- Session Pop Up Modal Start --> */}
 
-          {/* Edit Modal */}
-          {/* Edit Modal */}
-          {editModalOpen && (
-            <div
-              style={{
-                position: "fixed",
-                zIndex: 1000,
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.4)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  background: "#fff",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  width: "40%",
-                  boxShadow: "0px 0px 10px #000",
-                }}
-              >
-                <h3>Edit Session</h3>
-                <form onSubmit={handleEditSubmit}>
-                  <div style={{ marginBottom: "10px" }}>
-                    <label>Session Name *</label>
-                    <input
-                      type="text"
-                      placeholder="Session Name"
-                      value={session}
-                      onChange={(e) => setSession(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "8px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                      }}
-                    />
-                  </div>
+          {/* <!-- Edit Class Pop Up Modal Start --> */}
+          <div className="createClassModal">
+            {isEditModalOpen && (
+              <section id="createClassModal" className="modal show">
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Update Session</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Session Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Class"
+                              value={session}
+                              onChange={(e) => setSession(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Status Name *
+                            </label>
+                            <select
+                              id="search-students"
+                              placeholder="Class"
+                              value={sessionStatus}
+                              onChange={(e) => setSessionStatus(e.target.value)}
+                            >
+                              <option value="" disabled>
+                                Select Status
+                              </option>
 
-                  <div style={{ marginBottom: "10px" }}>
-                    <label>Status *</label>
-                    <Select
-                      options={sessionStatusOptions}
-                      value={selectedSession}
-                      onChange={setSelectedSession}
-                      placeholder="Status"
-                      components={{
-                        DropdownIndicator: CustomDropdownIndicator,
-                      }}
-                      menuIsOpen={isDropdownOpen} // 🛠️ CHANGED CODE: Controlled dropdown state
-                      onMenuOpen={() => setIsDropdownOpen(true)} // 🛠️ Keep open state when manually opened
-                      onMenuClose={() => setIsDropdownOpen(false)} // 🛠️ Close on outside click
-                    />
-                  </div>
+                              {sessionStatusOptions?.map((option, index) => (
+                                <option key={index} value={option?.value}>
+                                  {option?.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
 
-                  {warn && <p style={{ color: "red" }}>{warn}</p>}
-
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginTop: "15px",
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setEditModalOpen(false)}
-                      style={{
-                        padding: "10px 15px",
-                        background: "gray",
-                        color: "#fff",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Close
-                    </button>
-                    <button
-                      type="submit"
-                      style={{
-                        padding: "10px 15px",
-                        background: "lightgreen",
-                        color: "#fff",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Save Changes
-                    </button>
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsEditModalOpen(false)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleSessionEditSubmit}
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
-                </form>
-              </div>
-            </div>
-          )}
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* <!-- Edit Class Pop Up Modal Start --> */}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

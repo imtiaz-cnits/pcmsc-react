@@ -18,8 +18,8 @@ async function addSession(req, res, next) {
 
     console.log("existing session : ", existingSession);
     console.log("total session documents : ", totalDocuments);
-    console.log(null)
-    if (existingSession ) {
+    console.log(null);
+    if (existingSession) {
       return next(createError(403, "Session already exists!"));
     }
 
@@ -32,7 +32,7 @@ async function addSession(req, res, next) {
     console.log("new added session", newSession);
 
     // 💾 Save the user to the database
-     const addedItem = await newSession.save()
+    const addedItem = await newSession.save();
 
     // 🎉 Success response
     return res.status(200).json({
@@ -64,8 +64,6 @@ async function addSession(req, res, next) {
     return next(error);
   }
 }
-
-
 
 // 📝 Get all session with pagination
 async function getAllPaginatedSession(req, res, next) {

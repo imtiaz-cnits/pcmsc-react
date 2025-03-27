@@ -4,14 +4,13 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import {
   addSectionAPI,
   deleteSectionAPI,
-  fetchedPaginatedSections, updateSectionAPI,
+  fetchedPaginatedSections,
+  updateSectionAPI,
 } from "../api/academic-management/sectionAPI.js";
-import toast from "react-hot-toast";
-import {updateShiftAPI} from "../api/academic-management/shiftApi.js";
-import {updateClassAPI} from "../api/academic-management/classApi.js";
 
 //POST - method
 //todo optimistic opacity
@@ -109,8 +108,6 @@ export const useFetchPaginatedShifts = (page) => {
   });
 };
 
-
-
 //✅  PATCH - method
 export const useUpdateSection = () => {
   const queryClient = useQueryClient();
@@ -122,14 +119,14 @@ export const useUpdateSection = () => {
 
       if (error?.response) {
         toast(
-            error.response?.data?.message ||
+          error.response?.data?.message ||
             "An error occurred while updating the section. Please try again.",
         );
       }
 
       console.log(
-          "❌ An error occurred while updating the section. Please try again. : ",
-          error?.response?.data?.message ||
+        "❌ An error occurred while updating the section. Please try again. : ",
+        error?.response?.data?.message ||
           error?.message ||
           "Failed to update section . Try again!",
       );
@@ -151,7 +148,6 @@ export const useUpdateSection = () => {
     },
   });
 };
-
 
 // DELETE - method
 //todo optimistic opacity

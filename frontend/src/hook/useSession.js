@@ -1,18 +1,16 @@
 import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import {
   addSessionAPI,
   deleteSessionAPI,
   fetchedPaginatedSessions,
-  fetchSessionAPI, updateSessionAPI,
+  updateSessionAPI,
 } from "../api/academic-management/sessionApi.js";
-import {
-  useMutation,
-  useQueryClient,
-  useQuery,
-  keepPreviousData,
-} from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import axiosPrivate from "../utils/axiosPrivate.jsx";
-
 
 export const useAddSession = () => {
   const queryClient = useQueryClient();
@@ -20,7 +18,7 @@ export const useAddSession = () => {
   return useMutation({
     mutationFn: addSessionAPI,
 
-    onError: (error, _, context) => {
+    onError: (error) => {
       console.log("error adding session : ", error);
 
       console.log(
@@ -53,7 +51,7 @@ export const useAddSession = () => {
 //✅  GET - method (paginated)
 export const useFetchPaginatedSessions = (page) => {
   return useQuery({
-    queryKey: ["classes", page],
+    queryKey: ["sessions", page],
     queryFn: async () => await fetchedPaginatedSessions(page),
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
@@ -74,37 +72,35 @@ export const useUpdateSession = () => {
 
       if (error?.response) {
         toast(
-            error.response?.data?.message ||
+          error.response?.data?.message ||
             "An error occurred while updating the class. Please try again.",
         );
       }
 
       console.log(
-          "❌ An error occurred while updating the class. Please try again. : ",
-          error?.response?.data?.message ||
+        "❌ An error occurred while updating the class. Please try again. : ",
+        error?.response?.data?.message ||
           error?.message ||
           "Failed to update class . Try again!",
       );
     },
 
-    onSuccess: async (data, { classID, payload }) => {
+    onSuccess: async (data, { sessionId, payload }) => {
       console.log("🚀 update class onSuccess data value :", data);
-      console.log("🚀 update  :", payload, classID);
+      console.log("🚀 update  :", payload, sessionId);
 
       if (data?.success) {
         toast(data?.message);
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
     },
 
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["classes"] });
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
     },
   });
 };
-
-
 
 // todo optimized
 export const useDeleteSession = () => {
