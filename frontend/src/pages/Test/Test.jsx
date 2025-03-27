@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../../assets/css/all-modal.css";
+import Shimmer from "../../components/Shimmer";
 import {
   useAddSession,
   useDeleteSession,
@@ -108,14 +109,13 @@ const Test = () => {
     console.log("after deleting  session value : ", item);
     deleteSession(item?._id, {
       onSuccess: () => {
-        if (sessions?.count === 1 && page > 1) {
+        if (sessions?.data?.length === 1 && page > 1) {
           setPage((prevState) => prevState - 1);
         }
       },
     });
   };
 
-  if (isPending) return <p>Loading....................</p>;
 
   if (isError) {
     console.log("inside session list error : ", error);
@@ -148,6 +148,14 @@ const Test = () => {
                   </button>
                 </div>
                 {/* <!-- Class heading End --> */}
+
+                {sessions?.total <= 0  ? (<tr>
+      <td colSpan="4" style={{ textAlign: "center" }}>No Sessions Found</td>
+    </tr>) : (
+
+
+<>
+
 
                 {/* <!-- Action Buttons --> */}
                 <div className="button-wrapper mb-3">
@@ -203,66 +211,67 @@ const Test = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {sessions?.data &&
-                        sessions?.data?.map((item, index) => {
-                          return (
-                            <tr key={item?._id}>
-                              <td>{(page - 1) * 5 + index + 1}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                {item?.name}
-                              </td>
-                              <td>{item?.label}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e) =>
-                                    handleSessionEditClick(e, item)
-                                  }
-                                >
-                                  <FaRegEdit
-                                    style={{
-                                      color: "lightgreen",
-                                      fontSize: "25px",
-                                    }}
-                                  />
-                                </button>
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    padding: 0,
-                                  }}
-                                  onClick={(e) => handleSessionDelete(e, item)}
-                                >
-                                  <FaRegTrashAlt
-                                    style={{
-                                      color: "red",
-                                      fontSize: "25px",
-                                    }}
-                                  />
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
+  {isPending ? (
+    <Shimmer count={5} />
+  ) : sessions?.data?.length > 0 && (
+    sessions?.data?.map((item, index) => (
+      <tr key={item?._id}>
+        <td>{(page - 1) * 5 + index + 1}</td>
+        <td
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
+          {item?.name}
+        </td>
+        <td>{item?.label}</td>
+        <td
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
+          <button
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+            }}
+            onClick={(e) => handleSessionEditClick(e, item)}
+          >
+            <FaRegEdit
+              style={{
+                color: "lightgreen",
+                fontSize: "25px",
+              }}
+            />
+          </button>
+          <button
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+            onClick={(e) => handleSessionDelete(e, item)}
+          >
+            <FaRegTrashAlt
+              style={{
+                color: "red",
+                fontSize: "25px",
+              }}
+            />
+          </button>
+        </td>
+      </tr>
+    ))
+  ) }
+ 
+</tbody>
+
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
@@ -295,6 +304,20 @@ const Test = () => {
                     Next
                   </button>
                 </div>
+
+
+</>
+
+    )
+    
+  
+  
+  }
+
+
+
+
+
               </div>
             </div>
           </div>
