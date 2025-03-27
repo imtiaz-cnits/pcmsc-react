@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
+import Select from 'react-select';
 
 const StudentInformation = () => {
-  const [bloodGroup, setBloodGroup] = useState("");
+  const [bloodGroup, setBloodGroup] = useState(null);
+  const [className , setClassName] = useState(null);
+  const [shift, setShift] = useState(null);
+  const [section , setSection] = useState(null)
+  const [session, setSession] = useState(null); 
+
 
   useEffect(() => {
     const studentModal = document.getElementById("studentModal");
@@ -162,6 +168,47 @@ const StudentInformation = () => {
     // Restore the original content
     document.body.innerHTML = originalContent;
   };
+
+  const bloodGroupOptions = [
+
+  { value: 'A+', label: 'A+' },
+  { value: 'A-', label: 'A-' },
+  { value: 'B+', label: 'B+' },
+  { value: 'B-', label: 'B-' },
+  { value: 'AB+', label: 'AB+' },
+  { value: 'AB-', label: 'AB-' },
+  { value: 'O+', label: 'O+' },
+  { value: 'O-', label: 'O-' },
+  ]
+
+  const classOptions =[
+    {value: 'One', label: 'One'},
+    {value: 'Two', label: 'Two'},
+    {value: 'Three', label: 'Three'},
+  ]
+
+  const shiftOptions =[
+    {value: 'Morning', label: 'Morning'},
+    {value: 'Day', label: 'Day'},
+    {value: 'Evening', label: 'Evening'},
+  ]
+
+  const sectionOptions =[
+    {value: 'A', label: 'A'},
+    {value: 'B', label: 'B'},
+    {value: 'C', label: 'C'},
+  ]
+
+  const sessionOPtions = [
+    {value: 'A', label: 'A'},
+    {value: 'B', label: 'B'},
+    {value: 'C', label: 'C'},
+  ]
+
+  useEffect(()=>{
+    console.log('blood group name : ', bloodGroup)
+  }, [bloodGroup])
+
 
   return (
     <>
@@ -1116,23 +1163,13 @@ const StudentInformation = () => {
                       </div>
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Blood Group</label>
+                        <Select 
+                        options={bloodGroupOptions}
+                        onChange={setBloodGroup}
+                        placeholder='Select Blood Group'               
+                        />
 
-                        <select
-                          name=""
-                          id=""
-                          value={bloodGroup}
-                          onChange={(e) => setBloodGroup(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            Select Blood Group
-                          </option>
-                          <option value="A">A</option>
-                          <option value="B">B</option>
-                          <option value="AB">AB</option>
-                          <option value="B+">B+</option>
-                          <option value="O+">O+</option>
-                          <option value="AB-">AB-</option>
-                        </select>
+          
                       </div>
                     </div>
                     {/* <!-- Row 3 --> */}
@@ -1394,42 +1431,44 @@ const StudentInformation = () => {
 
                     {/* <!-- Row 9 --> */}
                     <div className="form-row row">
+
+                    <div className="form-group select-input-box col-lg-4">
+                        <label htmlFor="select-to">Class Name</label>
+                        <Select 
+                        options={classOptions}
+                        onChange={setClassName}
+                        placeholder='Select Class'               
+                        />
+                      </div>
+
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Shift Name</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Shift</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">Morning</div>
-                            <div className="option">Evening</div>
-                          </div>
-                        </div>
+                       <Select 
+                       options={shiftOptions}
+                       onChange={setShift}
+                       placeholder='Select Shift'
+                       />
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="section">Section Name</label>
-                        <input
-                          type="text"
-                          id="section"
-                          placeholder="Enter section name"
+                        <Select
+                        
+                        options={sectionOptions}
+                        onChange={setSection}                        
+                         placeholder="Enter section name"
                         />
+                        
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="session">Session Name</label>
-                        <input
-                          type="text"
-                          id="session"
-                          placeholder="Enter session name"
+
+                        <Select
+                        
+                        options={sessionOPtions}
+                        onChange={setSection}                        
+                         placeholder="Enter section name"
                         />
+                       
                       </div>
                     </div>
 

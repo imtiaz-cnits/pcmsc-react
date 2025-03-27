@@ -6,6 +6,7 @@ import Shimmer from "../../components/Shimmer";
 import {
   useAddSession,
   useDeleteSession,
+  useFetchEntriesSessions,
   useFetchPaginatedSessions,
   useUpdateSession,
 } from "../../hook/useSession.js";
@@ -17,10 +18,14 @@ const Test = () => {
   const [session, setSession] = useState("");
   const [sessionStatus, setSessionStatus] = useState("");
   const [editSessionId, setEditSessionId] = useState("");
+  const [entries, setEntries] = useState("");
+  const [entrieslimit, setEntriesLimit] = useState(5);
   const [warn, setWarn] = useState("");
   const { mutate: addSession } = useAddSession();
   const { mutate: updateSession } = useUpdateSession();
   const { mutate: deleteSession } = useDeleteSession();
+
+  const { data: sessionentries } = useFetchEntriesSessions(entrieslimit);
 
   const {
     data: sessions,
@@ -44,6 +49,20 @@ const Test = () => {
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
+
+  // add session entries options
+  const sessionEntriesOptions = [
+    { value: 5 },
+    { value: 10 },
+    { value: 25 },
+    { value: 50 },
+    { value: 75 },
+    { value: 100 },
+  ];
+
+  useEffect(() => {
+    console.log("entries value : ", entries);
+  }, [entries]);
 
   const handleAddSession = (e) => {
     e.preventDefault();
@@ -116,7 +135,6 @@ const Test = () => {
     });
   };
 
-
   if (isError) {
     console.log("inside session list error : ", error);
     if (error instanceof Error) {
@@ -149,175 +167,168 @@ const Test = () => {
                 </div>
                 {/* <!-- Class heading End --> */}
 
-                {sessions?.total <= 0  ? (<tr>
-      <td colSpan="4" style={{ textAlign: "center" }}>No Sessions Found</td>
-    </tr>) : (
-
-
-<>
-
-
-                {/* <!-- Action Buttons --> */}
-                <div className="button-wrapper mb-3">
-                  {/* <!-- Search and Filter --> */}
-                  <div className="input-group class-group">
-                    {/* <!-- Entries per page --> */}
-                    <div>
-                      <div className="entries-page">
-                        <label htmlFor="entries" className="mr-2">
-                          Entries:
-                        </label>
-                        <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
+                {sessions?.total <= 0 ? (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: "center" }}>
+                      No Sessions Found
+                    </td>
+                  </tr>
+                ) : (
+                  <>
+                    {/* <!-- Action Buttons --> */}
+                    <div className="button-wrapper mb-3">
+                      {/* <!-- Search and Filter --> */}
+                      <div className="input-group class-group">
+                        {/* <!-- Entries per page --> */}
+                        <div>
+                          <div className="entries-page">
+                            <label htmlFor="entries" className="mr-2">
+                              Entries:
+                            </label>
+                            <div className="select-container dropdown-button">
+                              <select
+                                id="entries"
+                                className="form-control"
+                                style={{ width: "auto" }}
+                                value={entries}
+                                onChange={(e) => setEntries(e.target.value)}
+                              >
+                                {sessionEntriesOptions?.map((item, index) => (
+                                  <option key={index} value={item.value}>
+                                    {item.value}
+                                  </option>
+                                ))}
+                              </select>
+                              <span className="dropdown-icon">&#9662;</span>
+                              {/* <!-- Dropdown icon --> */}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="class-search">
+                          <input
+                            style={{ width: "20%", margin: "0" }}
+                            type="text"
+                            id="searchInput"
                             className="form-control"
-                            style={{ width: "auto" }}
-                          >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </select>
-                          <span className="dropdown-icon">&#9662;</span>
-                          {/* <!-- Dropdown icon --> */}
+                            placeholder="Search Class..."
+                          />
                         </div>
                       </div>
                     </div>
-                    <div className="class-search">
-                      <input
-                        style={{ width: "20%", margin: "0" }}
-                        type="text"
-                        id="searchInput"
-                        className="form-control"
-                        placeholder="Search Class..."
-                      />
+
+                    {/* <!-- Table --> */}
+                    <div className="table-wrapper">
+                      <table
+                        id="printTable"
+                        className="table table-bordered table-hover"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Sl No:</th>
+                            <th>Session Name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {isPending ? (
+                            <Shimmer count={5} />
+                          ) : (
+                            sessions?.data?.length > 0 &&
+                            sessions?.data?.map((item, index) => (
+                              <tr key={item?._id}>
+                                <td>{(page - 1) * 5 + index + 1}</td>
+                                <td
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  {item?.name}
+                                </td>
+                                <td>{item?.label}</td>
+                                <td
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  <button
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) =>
+                                      handleSessionEditClick(e, item)
+                                    }
+                                  >
+                                    <FaRegEdit
+                                      style={{
+                                        color: "lightgreen",
+                                        fontSize: "25px",
+                                      }}
+                                    />
+                                  </button>
+                                  <button
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      padding: 0,
+                                    }}
+                                    onClick={(e) =>
+                                      handleSessionDelete(e, item)
+                                    }
+                                  >
+                                    <FaRegTrashAlt
+                                      style={{
+                                        color: "red",
+                                        fontSize: "25px",
+                                      }}
+                                    />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
                     </div>
-                  </div>
-                </div>
+                    {/* <!-- Pagination and Display Info --> */}
+                    <div className="my-3">
+                      <span id="display-info"></span>
+                    </div>
 
-                {/* <!-- Table --> */}
-                <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Sl No:</th>
-                        <th>Session Name</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-  {isPending ? (
-    <Shimmer count={5} />
-  ) : sessions?.data?.length > 0 && (
-    sessions?.data?.map((item, index) => (
-      <tr key={item?._id}>
-        <td>{(page - 1) * 5 + index + 1}</td>
-        <td
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-          }}
-        >
-          {item?.name}
-        </td>
-        <td>{item?.label}</td>
-        <td
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-          }}
-        >
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-            onClick={(e) => handleSessionEditClick(e, item)}
-          >
-            <FaRegEdit
-              style={{
-                color: "lightgreen",
-                fontSize: "25px",
-              }}
-            />
-          </button>
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
-            onClick={(e) => handleSessionDelete(e, item)}
-          >
-            <FaRegTrashAlt
-              style={{
-                color: "red",
-                fontSize: "25px",
-              }}
-            />
-          </button>
-        </td>
-      </tr>
-    ))
-  ) }
- 
-</tbody>
-
-                  </table>
-                </div>
-                {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
-
-                <div id="pagination" className="pagination">
-                  <button
-                    id="prevBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prevState) => Math.max(prevState - 1, 1))
-                    }
-                    disabled={page === 1}
-                  >
-                    Prev
-                  </button>
-                  {page} of {sessions?.totalPages}
-                  <button
-                    id="nextBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prevState) =>
-                        Math.min(prevState + 1, sessions?.totalPages),
-                      )
-                    }
-                    disabled={page === sessions?.totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
-
-
-</>
-
-    )
-    
-  
-  
-  }
-
-
-
-
-
+                    <div id="pagination" className="pagination">
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prevState) => Math.max(prevState - 1, 1))
+                        }
+                        disabled={page === 1}
+                      >
+                        Prev
+                      </button>
+                      {page} of {sessions?.totalPages}
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prevState) =>
+                            Math.min(prevState + 1, sessions?.totalPages),
+                          )
+                        }
+                        disabled={page === sessions?.totalPages}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

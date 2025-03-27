@@ -30,6 +30,16 @@ export const fetchedPaginatedSessions = async (page) => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅  GET - method (entries)
+export const fetchedEntriesSessionsAPI = async (limit) => {
+  const res = await axiosPrivate.get(
+    `/academic-management/session-entries?limit=${limit}`,
+  );
+  console.log("full response api : ", res);
+  console.log("entries value and total", res.data);
+  return res.data?.success ? res.data : [];
+};
+
 // ✅ UPDATE
 export const updateSessionAPI = async ({ sessionId, payload }) => {
   const res = await axiosPrivate.patch(

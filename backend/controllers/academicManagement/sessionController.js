@@ -106,6 +106,28 @@ async function getAllPaginatedSession(req, res, next) {
   }
 }
 
+// 📝 Get all session with entries
+async function getAllEntriesSession(req, res, next) {
+  try {
+    console.log("📥 Received request for session: ", req.query);
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    const entries = await Session.find({}).limit(limit);
+    const totalEntries = await Session.countDocuments();
+
+    console.log("✅ Retrieved session: ", entries);
+    return res.status(200).json({
+      success: true,
+      count: entries.length,
+      total: totalEntries,
+      data: entries,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching sessions :", error);
+    return next(error);
+  }
+}
+
 // 📝 Update Session
 async function updateSession(req, res, next) {
   try {
@@ -176,6 +198,7 @@ async function deleteSession(req, res, next) {
 module.exports = {
   addSession,
   getAllPaginatedSession,
+  getAllEntriesSession,
   updateSession,
   deleteSession,
 };
