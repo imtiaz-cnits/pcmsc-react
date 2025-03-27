@@ -23,13 +23,14 @@ import Result from "../pages/Result/Result";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
 import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
-import Shift from "../pages/Shift/Shift";
+import Shift from "../pages/Shift/Shift.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
 import StudentInformation from "../pages/StudentInformation/StudentInformation";
 import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Test from "../pages/Test/Test";
+import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -169,10 +170,14 @@ export const router = createBrowserRouter([
   },
   {
     path: "test",
-    element: (
-      <ProtectedRoute>
-        <Test />
-      </ProtectedRoute>
-    ),
+    element: <Test />,
+  },
+  {
+    path: "todo",
+    element: <TodoComponent />,
+  },
+  {
+    path: "test",
+    element: <Test />,
   },
 ]);

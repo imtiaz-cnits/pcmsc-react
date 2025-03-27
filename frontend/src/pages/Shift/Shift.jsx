@@ -1,49 +1,153 @@
-import "../../assets/css/all-modal.css";
-import useAddModal from "../../hook/useAddModal.jsx";
-import Select from "react-select";
-import { useState } from "react";
-import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
-import axiosPrivate from "../../utils/axiosPrivate.jsx";
+import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import {
+  useAddShifts,
+  useDeleteShift,
+  useFetchPaginatedShifts,
+  useUpdateShift,
+} from "../../hook/useShift.js";
 
 const Shift = () => {
+  const [page, setPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [shift, setShift] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [shiftStatus, setShiftStatus] = useState("");
+  const [editShiftId, setEditShiftId] = useState("");
+  const [warn, setWarn] = useState("");
+  const { mutate: addShift } = useAddShifts();
+  const { mutate: deleteShift } = useDeleteShift();
+  const {
+    data: shifts,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedShifts(page);
 
-  useAddModal("createClassModal", "classModalBtn", "classBtn");
+  const { mutate: updateShift } = useUpdateShift();
 
-  // add shift modal options
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    if (isEditModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
+  }, [isEditModalOpen]);
+
+  console.log("paginated data value ", shifts);
+
   const shiftStatusOptions = [
     { value: "active", label: "Active" },
     { value: "inactive", label: "Inactive" },
   ];
 
-  // 📝 handle the form submission
-  const handleAddShift = async (e) => {
+  // const shiftEntriesOptions = [
+  //   { value: 5, label: "5" },
+  //   { value: 10, label: "10" },
+  //   { value: 25, label: "25" },
+  //   { value: 50, label: "50" },
+  //   { value: 100, label: "100" },
+  // ];
+
+  // handle pop modal save button
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // prepare payload
+    if (!shift.trim()) {
+      setWarn("Shift name is required and cannot be empty");
+      return;
+    }
+
+    const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
+
     const payload = {
       shift,
-      status: selectedStatus,
+      status: shiftStatus || "active",
+      label: label || "Active",
     };
 
-    console.log("before sending payload :", payload);
-
-    try {
-      const res = await axiosPrivate.post(
-        "/academic-management/add-shift",
-        payload,
-      );
-      console.log("res data of shift : ", res.data);
-      setShift("");
-      setSelectedStatus(null);
-      // toaster
-    } catch (error) {
-      console.error("Error in adding shift ", error);
-      const errorMsg = error.response?.data?.message;
-      console.log(errorMsg);
-    }
+    console.log("payload", payload);
+    addShift(payload);
+    setWarn("");
+    setShift("");
+    setShiftStatus("");
   };
+
+  useEffect(() => {
+    console.log("status", shiftStatus);
+  }, [shiftStatus]);
+
+  // handle edit
+
+  const handleEditClick = (e, shift) => {
+    e.preventDefault();
+    console.log("Edit button clicked for shift:", shift);
+    console.log("Edit button clicked for shift id :", shift?._id);
+
+    setEditShiftId(shift._id);
+    setShift(shift.name);
+    setShiftStatus({
+      value: shift.status,
+      label: shift.label,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!shift || !shiftStatus) {
+      return setWarn("Please fill in all fields ");
+    }
+
+    const updatedData = {
+      shift,
+      label: shiftStatus.label,
+      status: shiftStatus.value,
+    };
+
+    await updateShift({ shiftId: editShiftId, updatedData });
+    setIsEditModalOpen(false);
+    setShift("");
+    setShiftStatus(null);
+    setEditShiftId(null);
+  };
+
+  const handleDelete = (e, shift) => {
+    e.preventDefault();
+    console.log("after deleting  shift value : ", shifts);
+    deleteShift(shift?._id, {
+      onSuccess: () => {
+        if (shifts?.data?.length === 1 && page > 1) {
+          setPage((prev) => prev - 1);
+        }
+      },
+    });
+  };
+
+  //todo shimmer effect
+  if (isPending) return <>Loading ...</>;
+
+  if (isError) {
+    if (error instanceof Error) {
+      console.log("inside shifts list ", error);
+
+      return (
+        <p>{error.response?.data?.message}</p> || <p>{error.message}</p> || (
+          <p>Something went wrong. Please! try again later!</p>
+        )
+      );
+    }
+  }
 
   return (
     <>
@@ -56,169 +160,130 @@ const Shift = () => {
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
                   <h3 className="heading">Shift List</h3>
-                  <button className="create-cls-btn" id="classModalBtn">
+                  <button
+                    className="create-cls-btn"
+                    onClick={() => setIsModalOpen(true)}
+                  >
                     Add Shift
                   </button>
                 </div>
                 {/* <!-- Class heading End --> */}
 
-                {/* <!-- Action Buttons --> */}
-                <div className="button-wrapper mb-3">
-                  {/* <!-- Search and Filter --> */}
-                  <div className="input-group class-group">
-                    {/* <!-- Entries per page --> */}
-                    <div>
-                      <div className="entries-page">
-                        <label htmlFor="entries" className="mr-2">
-                          Entries:
-                        </label>
-                        <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
-                            className="form-control"
-                            style={{ width: "auto" }}
-                          >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </select>
-                          <span className="dropdown-icon">&#9662;</span>
-                          {/* <!-- Dropdown icon --> */}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="class-search">
-                      <input
-                        style={{ width: "20%", margin: "0" }}
-                        type="text"
-                        id="searchInput"
-                        className="form-control"
-                        placeholder="Search Class..."
-                      />
-                    </div>
-                  </div>
-                </div>
+                {shifts?.data && shifts?.data?.length === 0 ? (
+                  <p>No Shifts Found !</p>
+                ) : (
+                  <>
+                    {/* <!-- Paginated Table --> */}
+                    <div className="table-wrapper">
+                      <table
+                        id="printTable"
+                        className="table table-bordered table-hover"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Sl No:</th>
 
-                {/* <!-- Table --> */}
-                <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Sl No:</th>
-                        <th>Shift Name</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>Day</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>02</td>
-                        <td>Morning</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                            <th>Shift Name</th>
+                            <th>Status Name</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {shifts?.data &&
+                            shifts?.data?.map((item, index) => {
+                              return (
+                                <tr
+                                  key={item?._id}
+                                  // style={{
+                                  //   transition: "opacity 0.3s ease",
+                                  //   opacity: shift.isDeleting ? 0.5 : 1,
+                                  // }}
+                                >
+                                  <td>{(page - 1) * 5 + index + 1}</td>
+                                  <td
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      gap: "20px",
+                                    }}
+                                  >
+                                    {item?.name}
+                                  </td>
+                                  <td>{item?.label}</td>
+                                  <td
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      gap: "20px",
+                                    }}
+                                  >
+                                    <button
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={(e) => handleEditClick(e, item)}
+                                    >
+                                      <FaRegEdit
+                                        style={{
+                                          color: "lightgreen",
+                                          fontSize: "25px",
+                                        }}
+                                      />
+                                    </button>
+                                    <button
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                        padding: 0,
+                                      }}
+                                      onClick={(e) => handleDelete(e, item)}
+                                    >
+                                      <FaRegTrashAlt
+                                        style={{
+                                          color: "red",
+                                          fontSize: "25px",
+                                        }}
+                                      />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                    {/* <!-- Pagination and Display Info --> */}
+                    <div className="my-3">
+                      <span id="display-info"></span>
+                    </div>
+                  </>
+                )}
 
                 <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
+                  <button
+                    id="prevBtn"
+                    className="btn"
+                    onClick={() =>
+                      setPage((prevState) => Math.max(prevState - 1, 1))
+                    }
+                    disabled={page === 1}
+                  >
                     Prev
                   </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
+                  {shifts?.currentPage} of {shifts?.totalPages}
+                  <button
+                    id="nextBtn"
+                    className="btn"
+                    onClick={() =>
+                      setPage((prevState) =>
+                        Math.min(prevState + 1, shifts?.totalPages),
+                      )
+                    }
+                    disabled={page === shifts?.totalPages}
+                  >
                     Next
                   </button>
                 </div>
@@ -267,69 +332,158 @@ const Shift = () => {
 
         <!-- Shift Pop Up Modal Start --> */}
           <div className="shift-modal">
-            <section id="createClassModal" className="modal migrateModal">
-              <div className="modal-content">
-                <div id="popup-modal">
-                  <div className="form-container">
-                    <h3>Add Shift</h3>
-                    <form>
-                      {/* <!-- Row 1 --> */}
-                      <div
-                        className="form-row"
-                        style={{ display: "flex", flexDirection: "column" }}
-                      >
-                        <div className="form-group">
-                          <label htmlFor="search-students">Shift Name *</label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Shift Name"
-                            value={shift}
-                            onChange={(e) => setShift(e.target.value)}
-                          />
+            {isModalOpen && (
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Shift</h3>
+                      <form>
+                        {/* ✅ Shift Name Input */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Shift Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Shift Name"
+                              value={shift}
+                              onChange={(e) => setShift(e.target.value)}
+                            />
+                          </div>
                         </div>
+
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+
+                        {/* ✅ Shift Status Input */}
 
                         <div className="form-group">
                           <label htmlFor="search-students">Status *</label>
-                          <Select
-                            options={shiftStatusOptions}
-                            value={selectedStatus}
-                            onChange={setSelectedStatus}
-                            components={{
-                              DropdownIndicator: CustomDropdownIndicator,
-                            }}
-                            placeholder="Status"
-                          />
+                          <select
+                            value={shiftStatus}
+                            onChange={(e) => setShiftStatus(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select status
+                            </option>
+                            {shiftStatusOptions.map((option, index) => (
+                              <option key={index} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
                         </div>
-                      </div>
 
-                      {/* <!-- Actions --> */}
-                      <div className="form-actions">
-                        <button
-                          type="button"
-                          id="classBtn"
-                          className="button close closeBtn"
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="button"
-                          className="button save"
-                          onClick={handleAddShift}
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </form>
+                        {/* ✅ Buttons for modal actions */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsModalOpen(false)} // ✅ Close modal on click
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleSubmit}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
           </div>
-          {/* <!-- Shift Pop Up Modal Start --> */}
+          {/* <!-- Shift Pop Up Modal End --> */}
+
+          {/* <!-- Shift Edit Pop Up Modal Start --> */}
+
+          <div className="shift-modal">
+            {isEditModalOpen && (
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Shift</h3>
+                      <form>
+                        {/* ✅ Shift Name Input */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Shift Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Shift Name"
+                              value={shift}
+                              onChange={(e) => setShift(e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+
+                        {/* ✅ Shift Status Input */}
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+                          <select
+                            value={shiftStatus}
+                            onChange={(e) => setShiftStatus(e.target.value)}
+                            placeholder="Status Name"
+                          >
+                            <option disabled>Select Status</option>
+                            {shiftStatusOptions.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* ✅ Buttons for modal actions */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsEditModalOpen(false)} // ✅ Close modal on click
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleEditSubmit}
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* <!-- Shift Edit Pop Up Modal End --> */}
+          </div>
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
+      <Toaster />
     </>
   );
 };

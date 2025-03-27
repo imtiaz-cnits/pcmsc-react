@@ -11,6 +11,11 @@ const shiftSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+    label: {
+      type: String,
+      trim: true,
+      default: "Active",
+    },
     status: {
       type: String,
       enum: ["active", "inactive"],

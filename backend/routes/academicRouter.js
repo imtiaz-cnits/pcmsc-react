@@ -5,23 +5,61 @@ const router = express.Router();
 
 // internal imports
 const {
-  AddClass,
-  AddShift,
-  AddSession,
-  AddSection,
-} = require("../controllers/academicController");
+  addClass,
+  getAllClasses,
+  updateClass,
+  deleteClass,
+  getAllPaginatedClasses,
+} = require("../controllers/academicManagement/classController");
+const {
+  addShift,
+  getAllShift,
+  getAllShiftsPagination,
+  deleteShift,
+  updateShift,
+  getAllShiftsEntries,
+} = require("../controllers/academicManagement/shiftController");
+const {
+  addSection,
+  getAllPaginatedSections,
+  deleteSection,
+  updateSection,
+} = require("../controllers/academicManagement/sectionController");
+const {
+  addSession,
+  updateSession,
+  deleteSession,
+  getAllPaginatedSession,
+} = require("../controllers/academicManagement/sessionController");
 
-// add class routes
-router.post("/add-class", AddClass);
+// 🔍 Class - CRUD
+router.post("/add-class", addClass);
+router.get("/classes", getAllClasses);
+router.get("/class-paginated", getAllPaginatedClasses);
+router.patch("/class/:id", updateClass);
+router.delete("/class/:id", deleteClass);
 
-// add shift routes
-router.post("/add-shift", AddShift);
+// 📝 Shift - CRUD
+router.post("/add-shift", addShift);
+router.get("/shifts", getAllShift);
+router.get("/shifts-paginated", getAllShiftsPagination);
+router.get("/shifts-entries", getAllShiftsEntries);
+router.patch("/shift/:id", updateShift);
+router.delete("/shift/:id", deleteShift);
 
-// add section routes
-router.post("/add-section", AddSection);
+// ⚙️ Section - CRUD
+router.post("/add-section", addSection);
+router.get("/sections");
+router.get("/section-paginated", getAllPaginatedSections);
+router.patch("/section/:id", updateSection);
+router.delete("/section/:id", deleteSection);
 
-// add session routes
-router.post("/add-session", AddSession);
+// 🚀 Session - CRUD
+router.post("/add-session", addSession);
+router.get("/sessions", getAllPaginatedSession);
+router.get("/session-paginated", getAllPaginatedSession);
+router.patch("/session/:id", updateSession);
+router.delete("/session/:id", deleteSession);
 
 // exports
 module.exports = router;

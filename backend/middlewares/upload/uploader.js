@@ -44,6 +44,7 @@ const storage = multer.diskStorage({
 });
 
 // prepare the final multer upload object
+// eslint-disable-next-line no-unused-vars
 const upload = multer({
   storage,
   limits: { fileSize: 1024 * 1024 }, // Max file size of 1MB

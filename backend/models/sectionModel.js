@@ -11,9 +11,14 @@ const sectionSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+    label: {
+      type: String,
+      trim: true,
+      defautl: "Active",
+    },
     status: {
       type: String,
-      enum: ["active", "inactive"],
+      enum: ["active", "pending", "inactive"],
       default: "active",
     },
   },

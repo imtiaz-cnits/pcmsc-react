@@ -1,67 +1,128 @@
-import "../../assets/css/all-modal.css";
-import "../../assets/css/style.css";
-import useAddModal from "../../hook/useAddModal.jsx";
-import { useState } from "react";
-import Select from "react-select";
-import CustomDropdownIndicator from "../../components/CustomDropdownIndicator.jsx";
-import axiosPrivate from "../../utils/axiosPrivate.jsx";
-import toast, { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import {
+  useAddClass,
+  useDeleteClass,
+  useFetchPaginatedClasses,
+  useUpdateShift,
+} from "../../hook/useClass.js";
 
 const Class = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
   const [className, setClassName] = useState("");
-  const [status, setStatus] = useState(null);
-  const [, setLoader] = useState(true);
+  const [classStatus, setClassStatus] = useState("");
+  const [editClassId, setEditClassId] = useState("");
+  const [warn, setWarn] = useState("");
+  const {
+    data: classes,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedClasses(page);
+  const { mutate: addClass } = useAddClass();
+  const { mutate: deleteClass } = useDeleteClass();
+  const { mutate: updateClass } = useUpdateShift();
 
-  useAddModal("createClassModal", "classModalBtn", "classBtn");
+  // ✅ Enable-Disable scrolling when modal is open-close
+  useEffect(() => {
+    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+  }, [isAddModalOpen]);
 
-  // add class modal options
-  const statusOptions = [
+  useEffect(() => {
+    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+  }, [isEditModalOpen]);
+
+  const classNameOptions = [
     { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
 
-  // 📝 handle the form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // prepare the payload
+    if (!className.trim()) {
+      setWarn("Class name is required and cannot be empty");
+      return;
+    }
+
+    const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
+    console.log("status : ", classStatus);
     const payload = {
-      className,
-      status: status?.value,
+      name: className,
+      label: label || "Active",
+      status: classStatus || "active",
+    };
+    console.log("payload", payload);
+    addClass(payload);
+    setWarn("");
+    setClassName("");
+    setClassStatus("");
+    setIsAddModalOpen(false);
+  };
+
+  const handleEditClick = (e, item) => {
+    e.preventDefault();
+    console.log("Edit button clicked for class:", item);
+    console.log("Edit button clicked for class id :", item?._id);
+    setEditClassId(item?._id);
+    setClassName(item?.name);
+    setClassStatus(item?.status);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!className) {
+      setWarn("Class name is required and cannot be empty");
+      return;
+    }
+
+    const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
+
+    const updatedPayload = {
+      name: className,
+      label: label || "Active",
+      status: classStatus || "active",
     };
 
-    // 🧐 Debugging log
-    console.log("before payload", payload);
-
-    //toast loader
-    const toastId = toast.loading("Adding Class...");
-
-    try {
-      const res = await axiosPrivate.post(
-        "/academic-management/add-class",
-        payload,
-      );
-      console.log("res data : ", res.data);
-
-      if (res.data.success) {
-        setClassName("");
-        setStatus(null);
-        toast.success(res.data.message || "Class added successfully!", {
-          id: toastId,
-        });
-      } else {
-        toast.error(res.data.message || "Failed to add class", { id: toastId });
-      }
-    } catch (error) {
-      console.error(error);
-      const errorMessage =
-        error.response?.data?.message || "Something went wrong!";
-      console.log(errorMessage);
-      toast.error("Failed to add class", { id: toastId });
-    } finally {
-      setLoader(false);
-    }
+    await updateClass({ classId: editClassId, payload: updatedPayload });
+    setClassName("");
+    setClassStatus("");
+    setWarn("");
+    setEditClassId("");
+    setIsEditModalOpen(false);
   };
+
+  const handleClassDelete = (e, id) => {
+    e.preventDefault();
+    console.log("after deleting  class value : ", classes);
+    deleteClass(id, {
+      onSuccess: () => {
+        if (classes?.count === 1 && page > 1) {
+          setPage((prev) => prev - 1);
+        }
+      },
+    });
+  };
+
+  if (isPending) return <p>Loading....................</p>;
+
+  if (isError) {
+    console.log("inside class list error : ", error);
+    if (error instanceof Error) {
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong. Please! try again later!";
+
+      return <p>{errorMsg}</p>;
+    }
+  }
 
   return (
     <>
@@ -77,175 +138,170 @@ const Class = () => {
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
                   <h3 className="heading">Class List</h3>
-                  <button className="create-cls-btn" id="classModalBtn">
+                  <button
+                    className="create-cls-btn"
+                    onClick={() => setIsAddModalOpen(true)}
+                  >
                     Add Class
                   </button>
                 </div>
-                {/* <!-- Class heading End --> */}
 
-                {/* <!-- Action Buttons --> */}
-                <div className="button-wrapper mb-3">
-                  {/* <!-- Search and Filter --> */}
-                  <div className="input-group class-group">
-                    {/* <!-- Entries per page --> */}
-                    <div>
-                      <div className="entries-page">
-                        <label htmlFor="entries" className="mr-2">
-                          Entries:
-                        </label>
-                        <div className="select-container dropdown-button">
-                          <select
-                            id="entries"
+                {classes?.data?.length === 0 ? (
+                  <p>No Classes Found !</p>
+                ) : (
+                  <>
+                    {/* <!-- Class heading End --> */}
+
+                    {/* <!-- Action Buttons --> */}
+                    <div className="button-wrapper mb-3">
+                      {/* <!-- Search and Filter --> */}
+                      <div className="input-group class-group">
+                        {/* <!-- Entries per page --> */}
+                        <div>
+                          <div className="entries-page">
+                            <label htmlFor="entries" className="mr-2">
+                              Entries:
+                            </label>
+                            <div className="select-container dropdown-button">
+                              <select
+                                id="entries"
+                                className="form-control"
+                                style={{ width: "auto" }}
+                              >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                              </select>
+                              <span className="dropdown-icon">&#9662;</span>
+                              {/* <!-- Dropdown icon --> */}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="class-search">
+                          <input
+                            style={{ width: "20%", margin: "0" }}
+                            type="text"
+                            id="searchInput"
                             className="form-control"
-                            style={{ width: "auto" }}
-                          >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </select>
-                          <span className="dropdown-icon">&#9662;</span>
-                          {/* <!-- Dropdown icon --> */}
+                            placeholder="Search Class..."
+                          />
                         </div>
                       </div>
                     </div>
-                    <div className="class-search">
-                      <input
-                        style={{ width: "20%", margin: "0" }}
-                        type="text"
-                        id="searchInput"
-                        className="form-control"
-                        placeholder="Search Class..."
-                      />
+
+                    {/* <!-- Table --> */}
+                    <div className="table-wrapper">
+                      <table
+                        id="printTable"
+                        className="table table-bordered table-hover"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Sl No:</th>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {classes?.data &&
+                            classes?.data?.map((item, index) => {
+                              return (
+                                <tr key={item?._id}>
+                                  <td>{(page - 1) * 5 + index + 1}</td>
+                                  <td
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      gap: "20px",
+                                    }}
+                                  >
+                                    {item?.name}
+                                  </td>
+                                  <td>{item?.label}</td>
+                                  <td
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      gap: "20px",
+                                    }}
+                                  >
+                                    <button
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={(e) => handleEditClick(e, item)}
+                                    >
+                                      <FaRegEdit
+                                        style={{
+                                          color: "lightgreen",
+                                          fontSize: "25px",
+                                        }}
+                                      />
+                                    </button>
+                                    <button
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                        padding: 0,
+                                      }}
+                                      onClick={(e) =>
+                                        handleClassDelete(e, item?._id)
+                                      }
+                                    >
+                                      <FaRegTrashAlt
+                                        style={{
+                                          color: "red",
+                                          fontSize: "25px",
+                                        }}
+                                      />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
                     </div>
-                  </div>
-                </div>
+                    {/* <!-- Pagination and Display Info --> */}
+                    <div className="my-3">
+                      <span id="display-info"></span>
+                    </div>
 
-                {/* <!-- Table --> */}
-                <div className="table-wrapper">
-                  <table
-                    id="printTable"
-                    className="table table-bordered table-hover"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Sl No:</th>
-                        <th>Student Name</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>02</td>
-                        <td>Md. Siyam</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
-
-                <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
-                </div>
+                    <div id="pagination" className="pagination">
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                      >
+                        Prev
+                      </button>
+                      {classes?.currentPage} of {classes?.totalPages}
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, classes?.totalPages),
+                          )
+                        }
+                        disabled={page === classes?.totalPages}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
+
           <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
@@ -288,75 +344,160 @@ const Class = () => {
 
         <!-- Create Class Pop Up Modal Start --> */}
           <div className="createClassModal">
-            <section id="createClassModal" className="modal">
-              <div className="modal-content">
-                <div id="popup-modal">
-                  <div className="form-container">
-                    <h3>Add Class</h3>
-                    <form>
-                      {/* <!-- Row 1 --> */}
-                      <div
-                        className="form-row"
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <div className="form-group">
-                          <label htmlFor="search-students">Class Name *</label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Class"
-                            value={className}
-                            onChange={(e) => setClassName(e.target.value)}
-                          />
+            {isAddModalOpen && (
+              <section id="createClassModal" className="modal show">
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Class</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Class Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Class"
+                              value={className}
+                              onChange={(e) => setClassName(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Status Name *
+                            </label>
+                            <select
+                              id="search-students"
+                              placeholder="Class"
+                              value={classStatus}
+                              onChange={(e) => setClassStatus(e.target.value)}
+                            >
+                              <option value="" disabled>
+                                Select Status
+                              </option>
+
+                              {classNameOptions?.map((option, index) => (
+                                <option key={index} value={option?.value}>
+                                  {option?.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
                         </div>
 
-                        <div className="form-group">
-                          <label htmlFor="search-students">Status *</label>
-
-                          <Select
-                            options={statusOptions}
-                            value={status}
-                            onChange={setStatus}
-                            placeholder="Status"
-                            components={{
-                              DropdownIndicator: CustomDropdownIndicator,
-                            }}
-                          />
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsAddModalOpen(false)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleSubmit}
+                          >
+                            Save
+                          </button>
                         </div>
-                      </div>
-
-                      {/* <!-- Actions --> */}
-                      <div className="form-actions">
-                        <button
-                          type="button"
-                          id="classBtn"
-                          className="button close closeBtn"
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="button"
-                          className="button save"
-                          onClick={handleSubmit}
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
           </div>
 
           {/* <!-- Create Class Pop Up Modal Start --> */}
+
+          {/* <!-- Edit Class Pop Up Modal Start --> */}
+          <div className="createClassModal">
+            {isEditModalOpen && (
+              <section id="createClassModal" className="modal show">
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Update Class</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Class Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Class"
+                              value={className}
+                              onChange={(e) => setClassName(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Status Name *
+                            </label>
+                            <select
+                              id="search-students"
+                              placeholder="Class"
+                              value={classStatus}
+                              onChange={(e) => setClassStatus(e.target.value)}
+                            >
+                              <option value="" disabled>
+                                Select Status
+                              </option>
+
+                              {classNameOptions?.map((option, index) => (
+                                <option key={index} value={option?.value}>
+                                  {option?.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsEditModalOpen(false)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleEditSubmit}
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* <!-- Edit Class Pop Up Modal Start --> */}
         </div>
       </div>
-      <Toaster />
+
       {/* <!-- Hero Main Content End --> */}
+      <Toaster />
     </>
   );
 };
