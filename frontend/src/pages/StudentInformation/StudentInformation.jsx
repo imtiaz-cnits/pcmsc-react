@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
-import Select from 'react-select';
+import Select from "react-select";
 
 const StudentInformation = () => {
   const [bloodGroup, setBloodGroup] = useState(null);
-  const [className , setClassName] = useState(null);
+  const [className, setClassName] = useState(null);
   const [shift, setShift] = useState(null);
-  const [section , setSection] = useState(null)
-  const [session, setSession] = useState(null); 
-
+  const [section, setSection] = useState(null);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
     const studentModal = document.getElementById("studentModal");
@@ -170,45 +169,43 @@ const StudentInformation = () => {
   };
 
   const bloodGroupOptions = [
+    { value: "A+", label: "A+" },
+    { value: "A-", label: "A-" },
+    { value: "B+", label: "B+" },
+    { value: "B-", label: "B-" },
+    { value: "AB+", label: "AB+" },
+    { value: "AB-", label: "AB-" },
+    { value: "O+", label: "O+" },
+    { value: "O-", label: "O-" },
+  ];
 
-  { value: 'A+', label: 'A+' },
-  { value: 'A-', label: 'A-' },
-  { value: 'B+', label: 'B+' },
-  { value: 'B-', label: 'B-' },
-  { value: 'AB+', label: 'AB+' },
-  { value: 'AB-', label: 'AB-' },
-  { value: 'O+', label: 'O+' },
-  { value: 'O-', label: 'O-' },
-  ]
+  const classOptions = [
+    { value: "One", label: "One" },
+    { value: "Two", label: "Two" },
+    { value: "Three", label: "Three" },
+  ];
 
-  const classOptions =[
-    {value: 'One', label: 'One'},
-    {value: 'Two', label: 'Two'},
-    {value: 'Three', label: 'Three'},
-  ]
+  const shiftOptions = [
+    { value: "Morning", label: "Morning" },
+    { value: "Day", label: "Day" },
+    { value: "Evening", label: "Evening" },
+  ];
 
-  const shiftOptions =[
-    {value: 'Morning', label: 'Morning'},
-    {value: 'Day', label: 'Day'},
-    {value: 'Evening', label: 'Evening'},
-  ]
-
-  const sectionOptions =[
-    {value: 'A', label: 'A'},
-    {value: 'B', label: 'B'},
-    {value: 'C', label: 'C'},
-  ]
+  const sectionOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+  ];
 
   const sessionOPtions = [
-    {value: 'A', label: 'A'},
-    {value: 'B', label: 'B'},
-    {value: 'C', label: 'C'},
-  ]
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+  ];
 
-  useEffect(()=>{
-    console.log('blood group name : ', bloodGroup)
-  }, [bloodGroup])
-
+  useEffect(() => {
+    console.log("blood group name : ", bloodGroup);
+  }, [bloodGroup]);
 
   return (
     <>
@@ -1163,13 +1160,11 @@ const StudentInformation = () => {
                       </div>
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Blood Group</label>
-                        <Select 
-                        options={bloodGroupOptions}
-                        onChange={setBloodGroup}
-                        placeholder='Select Blood Group'               
+                        <Select
+                          options={bloodGroupOptions}
+                          onChange={setBloodGroup}
+                          placeholder="Select Blood Group"
                         />
-
-          
                       </div>
                     </div>
                     {/* <!-- Row 3 --> */}
@@ -1431,44 +1426,39 @@ const StudentInformation = () => {
 
                     {/* <!-- Row 9 --> */}
                     <div className="form-row row">
-
-                    <div className="form-group select-input-box col-lg-4">
+                      <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Class Name</label>
-                        <Select 
-                        options={classOptions}
-                        onChange={setClassName}
-                        placeholder='Select Class'               
+                        <Select
+                          options={classOptions}
+                          onChange={setClassName}
+                          placeholder="Select Class"
                         />
                       </div>
 
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Shift Name</label>
-                       <Select 
-                       options={shiftOptions}
-                       onChange={setShift}
-                       placeholder='Select Shift'
-                       />
+                        <Select
+                          options={shiftOptions}
+                          onChange={setShift}
+                          placeholder="Select Shift"
+                        />
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="section">Section Name</label>
                         <Select
-                        
-                        options={sectionOptions}
-                        onChange={setSection}                        
-                         placeholder="Enter section name"
+                          options={sectionOptions}
+                          onChange={setSection}
+                          placeholder="Enter section name"
                         />
-                        
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="session">Session Name</label>
 
                         <Select
-                        
-                        options={sessionOPtions}
-                        onChange={setSection}                        
-                         placeholder="Enter section name"
+                          options={sessionOPtions}
+                          onChange={setSection}
+                          placeholder="Enter section name"
                         />
-                       
                       </div>
                     </div>
 
