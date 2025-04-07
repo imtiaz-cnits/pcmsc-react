@@ -50,11 +50,6 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    phone: {
-      type: String,
-      required: true,
-    },
-
     fatherName: {
       type: String,
       trim: true,
@@ -67,7 +62,7 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    fatherMobile: {
+    fatherPhone: {
       type: String,
       trim: true,
       required: true,
@@ -84,7 +79,7 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    motherMobile: {
+    motherPhone: {
       type: String,
       trim: true,
       required: true,
@@ -108,7 +103,7 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    guardianMobile: {
+    guardianPhone: {
       type: String,
       required: true,
     },
@@ -118,7 +113,7 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    gender: {
+    studentGender: {
       type: String,
       enum: ["Male", "Female"],
       required: true,
@@ -142,6 +137,12 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
+    className: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Class",
+      required: true,
+    },
+
     shiftName: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shift",
@@ -160,15 +161,10 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    className: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
-      required: true,
-    },
-
     studentRoll: {
       type: Number,
       required: true,
+      default: "temp-123",
     },
 
     isActive: {

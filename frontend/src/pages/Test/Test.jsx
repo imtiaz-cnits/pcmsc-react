@@ -27,9 +27,9 @@ const Test = () => {
   const [permanentAddress, setPermanentAddress] = useState("");
   const [guardian, setGuardian] = useState("");
   const [guardianPhone, setGuardianPhone] = useState("");
-  const [dob , setDOB]= useState('')
+  const [dob, setDOB] = useState("");
   const [studentGender, setStudentGender] = useState(null);
-  const [studentEmail, setStudentEmail] = useState('');
+  const [studentEmail, setStudentEmail] = useState("");
   const [smsStatus, setSmsStatus] = useState("");
   const [registrationDate, setRegistrationDate] = useState("");
   const [className, setClassName] = useState(null);
@@ -204,8 +204,32 @@ const Test = () => {
 
   const handleResetForm = () => {
     console.log("button is clicked");
-    console.log(formRef.current.reset());
+    console.log(formRef.current);
     formRef.current.reset();
+    setAdmissionNumber("");
+    setStudentName("");
+    setNameBangla("");
+    setBirthCertificate("");
+    setBloodGroup(null);
+    setReligion("");
+    setFatherName("");
+    setFatherNID("");
+    setFatherPhoneNo("");
+    setMotherName("");
+    setMotherNID("");
+    setMotherPhoneNo("");
+    setPresentAddress("");
+    setPermanentAddress("");
+    setGuardian("");
+    setGuardianPhone("");
+    setStudentGender("");
+    setStudentEmail("");
+    setSmsStatus("");
+    setRegistrationDate("");
+    setClassName(null);
+    setShift(null);
+    setSection(null);
+    setSession(null);
   };
 
   const handleSubmit = (e) => {
@@ -1433,9 +1457,9 @@ const Test = () => {
                           />
                         </div>
 
-                        <DatepickerComponent 
-                        title={"Date of Birth *"}
-                        setSelectedDate={setDOB}
+                        <DatepickerComponent
+                          title={"Date of Birth *"}
+                          setSelectedDate={setDOB}
                         />
 
                         <div className="form-group select-input-box col-lg-4">

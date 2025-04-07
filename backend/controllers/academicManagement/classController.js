@@ -31,7 +31,7 @@ async function addClass(req, res, next) {
       label,
       status,
     });
-    console.log("new added class", newClass);
+    // console.log("🚀 Adding Class to DB: ", newClass);
 
     // 💾 Save the user to the database
     await newClass.save();
