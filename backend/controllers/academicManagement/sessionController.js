@@ -73,7 +73,7 @@ async function getAllSession(req, res, next) {
       return next(createError(404, "Session not found!"));
     }
 
-    console.log("🔑 Fetched all sessions :", sessions);
+    // console.log("🔑 Fetched all sessions :", sessions);
 
     return res.status(200).json({
       success: true,

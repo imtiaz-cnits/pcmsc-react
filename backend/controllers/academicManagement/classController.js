@@ -75,7 +75,7 @@ async function getAllClasses(req, res, next) {
       return next(createError(404, "Class not found!"));
     }
 
-    console.log("🔑 Fetched all classes:", classes);
+    // console.log("🔑 Fetched all classes:", classes);
 
     return res.status(200).json({
       success: true,

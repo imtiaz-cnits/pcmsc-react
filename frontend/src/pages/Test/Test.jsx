@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+
 import Select from "react-select";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 import DatepickerComponent from "../../components/DatepickerComponent ";
@@ -7,6 +9,7 @@ import { useFetchClasses } from "../../hook/useClass";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
+import { useAddSutdent, useFetchSutdents } from "../../hook/useStudentInfo";
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,11 +35,19 @@ const Test = () => {
   const [studentEmail, setStudentEmail] = useState("");
   const [smsStatus, setSmsStatus] = useState("");
   const [registrationDate, setRegistrationDate] = useState("");
-  const [className, setClassName] = useState(null);
+  const [className, setClassName] = useState("");
   const [shift, setShift] = useState(null);
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
   const formRef = useRef(null);
+  const { mutate: addStudent } = useAddSutdent();
+
+  const {
+    data: students,
+    isPending: isStudentsPending,
+    isError: isStudentsError,
+    error: studentsError,
+  } = useFetchSutdents();
   const {
     data: classes,
     isPending: isclassPending,
@@ -205,6 +216,69 @@ const Test = () => {
   const handleResetForm = () => {
     console.log("button is clicked");
     console.log(formRef.current);
+
+    setAdmissionNumber("");
+    setStudentName("");
+    setNameBangla("");
+    setBirthCertificate("");
+    setBloodGroup(null);
+    setReligion("");
+    setFatherName("");
+    setFatherNID("");
+    setFatherPhoneNo("");
+    setMotherName("");
+    setMotherNID("");
+    setMotherPhoneNo("");
+    setPresentAddress("");
+    setPermanentAddress("");
+    setGuardian("");
+    setGuardianPhone("");
+    setDOB(null);
+    setStudentGender("");
+    setStudentEmail("");
+    setSmsStatus("");
+    setRegistrationDate("");
+    setClassName("");
+    setShift(null);
+    setSection(null);
+    setSession(null);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      admissionNumber,
+      admissionDate,
+      studentName,
+      nameBangla,
+      birthCertificate,
+      bloodGroup: bloodGroup ? bloodGroup.value : null,
+      religion,
+      fatherName,
+      fatherNID,
+      fatherPhoneNo,
+      motherName,
+      motherNID,
+      motherPhoneNo,
+      presentAddress,
+      permanentAddress,
+      guardian,
+      guardianPhone,
+      dob,
+      studentGender: studentGender ? studentGender.value : null,
+      studentEmail,
+      smsStatus: smsStatus ? smsStatus.value : null,
+      registrationDate,
+      className: className ? className.value : null,
+      shift: shift ? shift.value : null,
+      section: section ? section.value : null,
+      session: session ? session.value : null,
+    };
+
+    console.log("payload : ", payload);
+
+    addStudent(payload);
     formRef.current.reset();
     setAdmissionNumber("");
     setStudentName("");
@@ -230,47 +304,19 @@ const Test = () => {
     setShift(null);
     setSection(null);
     setSession(null);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const payload = {
-      admissionNumber,
-      admissionDate,
-      studentName,
-      nameBangla,
-      birthCertificate,
-      bloodGroup: bloodGroup.value,
-      religion,
-      fatherName,
-      fatherNID,
-      fatherPhoneNo,
-      motherName,
-      motherNID,
-      motherPhoneNo,
-      presentAddress,
-      permanentAddress,
-      guardian,
-      guardianPhone,
-      dob,
-      studentGender: studentGender.value,
-      studentEmail,
-      smsStatus: smsStatus.value,
-      registrationDate,
-      className: className.value,
-      shift: shift.value,
-      section: section.value,
-      session: session.value,
-    };
-
-    console.log("payload : ", payload);
+    setIsModalOpen(false);
   };
 
   if (isclassPending || isshiftPending || isSectionPending || isSessionPending)
     return <Shimmer count={10} />;
 
-  if (isClassError || isShiftError || isSectionError || isSessionError) {
+  if (
+    isClassError ||
+    isShiftError ||
+    isSectionError ||
+    isSessionError ||
+    isStudentsError
+  ) {
     let errorMsg = "Something went wrong. Please try again later!";
 
     if (isClassError && classError instanceof Error) {
@@ -290,6 +336,12 @@ const Test = () => {
     if (isSessionError && sessionError instanceof Error) {
       console.log("Session Error: ", sessionError);
       errorMsg = sessionError?.response?.data?.message || sessionError?.message;
+    }
+
+    if (isStudentsError && studentsError instanceof Error) {
+      console.log("Students Error: ", studentsError);
+      errorMsg =
+        studentsError?.response?.data?.message || studentsError?.message;
     }
 
     return <p>{errorMsg}</p>;
@@ -611,426 +663,80 @@ const Test = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr data-date="2024-08-05">
-                        <td>01</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
+                      {isStudentsPending ? (
+                        <Shimmer count={10} />
+                      ) : (
+                        students?.data?.length > 0 &&
+                        students?.data?.map((item, index) => (
+                          <tr key={item?._id} data-date="2024-08-05">
+                            <td>{index + 1}</td>
+                            <td>
+                              <div id="action_btn">
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  <button
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    <FaRegEdit
+                                      style={{
+                                        color: "lightgreen",
+                                        fontSize: "25px",
+                                      }}
+                                    />
+                                  </button>
+                                  <button
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      padding: 0,
+                                    }}
+                                  >
+                                    <FaRegTrashAlt
+                                      style={{
+                                        color: "red",
+                                        fontSize: "25px",
+                                      }}
+                                    />
+                                  </button>
+                                </div>
+                                <button className="quick-view quickButton">
+                                  <i className="fa-regular fa-eye"></i>
+                                </button>
                               </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                            </td>
+                            <td>{item?.admissionNumber}</td>
+                            <td>{item?.name}</td>
+                            <td>{item?.fatherName}</td>
+                            <td>{item?.motherName}</td>
+                            <td>{item?.fatherPhone}</td>
+                            <td>
+                              <div className="client-item">
+                                <div className="image">
+                                  <img
+                                    src={productMemberPng}
+                                    alt="client"
+                                    className="rounded-circle mr-2"
+                                    width="30"
+                                  />
                                 </div>
                               </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222101</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>1</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>02</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222102</td>
-                        <td>Khandaker Shanto</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Shilpi Khatun</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>2</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>03</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222103</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>3</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>04</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222104</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>4</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>05</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222105</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>5</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>06</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222106</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>6</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>07</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222107</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberPng}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>7</td>
-                      </tr>
+                            </td>
+                            <td>{item?.className?.nameLabel}</td>
+                            <td>Science</td>
+                            <td>1</td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>

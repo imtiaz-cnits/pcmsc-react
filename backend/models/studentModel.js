@@ -17,7 +17,7 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
     admissionDate: {
-      type: Date,
+      type: String,
       required: true,
     },
 
@@ -109,7 +109,7 @@ const studentSchema = new mongoose.Schema(
     },
 
     dateOfBirth: {
-      type: Date,
+      type: String,
       required: true,
     },
 
@@ -133,7 +133,7 @@ const studentSchema = new mongoose.Schema(
     },
 
     registrationDate: {
-      type: Date,
+      type: String,
       required: true,
     },
 
@@ -159,12 +159,6 @@ const studentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section",
       required: true,
-    },
-
-    studentRoll: {
-      type: Number,
-      required: true,
-      default: "temp-123",
     },
 
     isActive: {

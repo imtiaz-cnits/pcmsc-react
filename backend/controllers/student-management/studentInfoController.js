@@ -41,12 +41,12 @@ async function addStudentInfo(req, res, next) {
     } = req.body;
 
     // ✅ check if already exists
-    const existingStudentInfo = await Student.findeOne({
+    const existingStudentInfo = await Student.findOne({
       studentID: admissionNumber,
     });
 
     if (existingStudentInfo) {
-      return next(createError(403, "Studentnsdf already exists!"));
+      return next(createError(403, "Student already exists!"));
     }
 
     const newStudentInfo = new Student({
@@ -82,7 +82,7 @@ async function addStudentInfo(req, res, next) {
     console.log("🚀  Adding Student Info into DB : ", newStudentInfo);
 
     // 💾 Save the s_info to the database
-    // await newStudentInfo.save()
+    await newStudentInfo.save();
 
     return res.status(200).json({
       success: true,
@@ -113,4 +113,26 @@ async function addStudentInfo(req, res, next) {
   }
 }
 
-module.exports = { addStudentInfo };
+// 📝 get all students
+async function getAllStudents(req, res, next) {
+  try {
+    const students = await Student.find({})
+      .populate("className")
+      .populate("shiftName")
+      .populate("sectionName")
+      .populate("sessionName");
+
+    const totalDocuments = await Student.countDocuments();
+
+    return res.status(200).json({
+      success: true,
+      count: totalDocuments,
+      data: students,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching students ", error);
+    return next(error);
+  }
+}
+
+module.exports = { addStudentInfo, getAllStudents };
