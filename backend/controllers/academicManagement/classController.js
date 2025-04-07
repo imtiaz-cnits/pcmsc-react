@@ -40,6 +40,8 @@ async function addClass(req, res, next) {
     return res.status(200).json({
       success: true,
       message: "Successfully added!",
+      count: totalDocuments,
+      data: newClass,
     });
   } catch (error) {
     console.log("Error in adding class: ", error);

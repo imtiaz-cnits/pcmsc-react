@@ -10,11 +10,15 @@ const router = express.Router();
 const {
   addStudentInfo,
   getAllStudents,
+  deleteStudent,
+  updateStudent,
 } = require("../controllers/student-management/studentInfoController");
 
-// 📝 Student Information
+// 🚀  Student Information - CRUD
 router.post("/student-info", addStudentInfo);
 router.get("/students", getAllStudents);
+router.patch("/student/:id", updateStudent);
+router.delete("/student/:id", deleteStudent);
 
 // 🛠️ exports
 module.exports = router;

@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-
 import Select from "react-select";
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 import DatepickerComponent from "../../components/DatepickerComponent ";
@@ -10,6 +8,7 @@ import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useAddSutdent, useFetchSutdents } from "../../hook/useStudentInfo";
+import '../../assets/css/all-modal.css'
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -307,7 +306,13 @@ const Test = () => {
     setIsModalOpen(false);
   };
 
-  if (isclassPending || isshiftPending || isSectionPending || isSessionPending)
+  if (
+    isclassPending ||
+    isshiftPending ||
+    isSectionPending ||
+    isSessionPending ||
+    isStudentsPending
+  )
     return <Shimmer count={10} />;
 
   if (
@@ -672,42 +677,35 @@ const Test = () => {
                             <td>{index + 1}</td>
                             <td>
                               <div id="action_btn">
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    gap: "20px",
-                                  }}
-                                >
-                                  <button
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                  >
-                                    <FaRegEdit
-                                      style={{
-                                        color: "lightgreen",
-                                        fontSize: "25px",
-                                      }}
-                                    />
-                                  </button>
-                                  <button
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                      padding: 0,
-                                    }}
-                                  >
-                                    <FaRegTrashAlt
-                                      style={{
-                                        color: "red",
-                                        fontSize: "25px",
-                                      }}
-                                    />
-                                  </button>
+                                <div id="menu-wrap">
+                                  <input type="checkbox" className="toggler" />
+                                  <div className="dots">
+                                    <div></div>
+                                  </div>
+                                  <div className="menu">
+                                    <div>
+                                      <ul>
+                                        <li>
+                                          <a
+                                            href="#"
+                                            className="link custom-open-modal-btn openModalBtn editButton"
+                                            data-modal="action-editmodal"
+                                          >
+                                            Edit
+                                          </a>
+                                        </li>
+                                        <li>
+                                          <a
+                                            href="#"
+                                            className="link custom-open-modal-btn openModalBtn deleteButton"
+                                            data-modal="action-deletemodal"
+                                          >
+                                            Delete
+                                          </a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
                                 </div>
                                 <button className="quick-view quickButton">
                                   <i className="fa-regular fa-eye"></i>

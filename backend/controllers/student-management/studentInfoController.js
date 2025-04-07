@@ -79,7 +79,7 @@ async function addStudentInfo(req, res, next) {
       sessionName: session,
     });
 
-    console.log("🚀  Adding Student Info into DB : ", newStudentInfo);
+    // console.log("🚀  Adding Student Info into DB : ", newStudentInfo);
 
     // 💾 Save the s_info to the database
     await newStudentInfo.save();
@@ -122,7 +122,13 @@ async function getAllStudents(req, res, next) {
       .populate("sectionName")
       .populate("sessionName");
 
+    if (!students) {
+      return next(createError(404, "Student not found!"));
+    }
+
     const totalDocuments = await Student.countDocuments();
+
+    // console.log("🔑 Fetched all students and count :", {count: totalDocuments , data: students});
 
     return res.status(200).json({
       success: true,
@@ -135,4 +141,79 @@ async function getAllStudents(req, res, next) {
   }
 }
 
-module.exports = { addStudentInfo, getAllStudents };
+// 📝 update student
+async function updateStudent(req, res, next) {
+  try {
+    console.log(" 🚀  student params : ", req.params);
+    console.log(" 🚀  student body : ", req.body);
+
+    const { id } = req.params;
+    const payload = req.body;
+
+    const updatedStudent = await Student.findByIdAndUpdate(id, payload, {
+      new: true,
+    });
+
+    if (!updatedStudent) {
+      return next(createError(404, "Item not found!"));
+    }
+
+    if (payload.admissionNumber) {
+      const existingStudent = await Student.find({
+        studentID: payload.admissionNumber,
+      });
+
+      if (existingStudent) {
+        return next(createError(403, "Already exists!"));
+      }
+    }
+    console.log("🚀 updated student : ", updatedStudent);
+
+    return res.status(200).json({
+      success: true,
+      message: "Student updated successfully!",
+      updatedData: updatedStudent,
+    });
+  } catch (error) {
+    console.error("updateStudent  error : ", error);
+
+    return next(error);
+  }
+}
+
+// 📝 delete students
+async function deleteStudent(req, res, next) {
+  try {
+    // console.log("deleted student params ", req.params);
+    const { id } = req.params;
+
+    if (!id) {
+      return "❌ Student ID is required.";
+    }
+
+    const deletedItem = await Student.findByIdAndDelete(id);
+
+    console.log("✅  Deleted student :", deletedItem);
+
+    if (deletedItem.deletedCount === 0) {
+      console.log(`⚠️ Student with ID ${id} not found or already deleted.`);
+      return next(createError(404, "Student not found or already deleted."));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted.",
+      deletedItem,
+    });
+  } catch (error) {
+    console.log("delete student error : ", error);
+    return next(error);
+  }
+}
+
+module.exports = {
+  addStudentInfo,
+  getAllStudents,
+  updateStudent,
+  deleteStudent,
+};
