@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import Shimmer from "../../components/Shimmer.jsx";
 import {
   useAddClass,
   useDeleteClass,
   useFetchPaginatedClasses,
   useUpdateShift,
 } from "../../hook/useClass.js";
-import Shimmer from "../../components/Shimmer.jsx";
 
-const Class = () => {
+const ClassPages = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -52,6 +52,7 @@ const Class = () => {
 
     const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
     console.log("status : ", classStatus);
+    console.log("class name ", className);
     const payload = {
       name: className,
       label: label || "Active",
@@ -223,7 +224,7 @@ const Class = () => {
                                     gap: "20px",
                                   }}
                                 >
-                                  {item?.name}
+                                  {item?.nameLabel}
                                 </td>
                                 <td>{item?.label}</td>
                                 <td
@@ -507,4 +508,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default ClassPages;

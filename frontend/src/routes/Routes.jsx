@@ -5,7 +5,7 @@ import AdmitCard from "../pages/AdmitCard/AdmitCard";
 import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Signup from "../pages/Auth/Signup/Signup";
-import Class from "../pages/Class/Class";
+import ClassPages from "../pages/Class/Class";
 import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
 import CombineResult from "../pages/CombineResult/CombineResult";
 import Dahsboard from "../pages/Dashboard/Dashboard";
@@ -29,6 +29,7 @@ import StudentInformation from "../pages/StudentInformation/StudentInformation";
 import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
+import Ok from "../pages/Test/Ok";
 import Test from "../pages/Test/Test";
 import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "class",
-            element: <Class />,
+            element: <ClassPages />,
           },
           {
             path: "shift",
@@ -179,5 +180,9 @@ export const router = createBrowserRouter([
   {
     path: "test",
     element: <Test />,
+  },
+  {
+    path: "ok",
+    element: <Ok />,
   },
 ]);

@@ -4,15 +4,15 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import {
   addShiftAPI,
   deleteShiftAPI,
   fetchedPaginatedShifts,
-  fetchedShifts,
+  fetchedShiftsAPI,
   fetchShiftEntries,
   updateShiftAPI,
 } from "../api/academic-management/shiftApi.js";
-import toast from "react-hot-toast";
 
 //POST - method
 //todo optimistic opacity
@@ -35,7 +35,7 @@ export const useAddShifts = () => {
       const afterOptimistic = queryClient.setQueryData(
         ["shifts"],
         (oldData) => {
-          console.log("inside optimistic old dat : ", oldData);
+          console.log("inside optimistic old data : ", oldData);
 
           return [
             ...(Array.isArray(oldData) ? oldData : []),
@@ -97,25 +97,25 @@ export const useAddShifts = () => {
   });
 };
 
-// GET - method
+// ✅  GET  - method
 export const useFetchShifts = () => {
   return useQuery({
     queryKey: ["shifts"],
-    queryFn: fetchedShifts,
-    gcTime: 1000 * 60 * 10, // remove garbage collection after 10 minutes
+    queryFn: fetchedShiftsAPI,
+    gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 3,
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   });
 };
 
-// GET - method
+// ✅  GET - method (paginated)
 export const useFetchPaginatedShifts = (page) => {
   return useQuery({
-    queryKey: ["shifts", page], // 🔑 Memoized query key
-    queryFn: () => fetchedPaginatedShifts(page), // ⚡ Ensure function safety
-    gcTime: 1000 * 60 * 10, // 🗑️ Garbage collection time (10 min)
-    staleTime: 1000 * 60 * 3, // ⏳ Data remains fresh for 3 min
+    queryKey: ["shifts", page],
+    queryFn: () => fetchedPaginatedShifts(page),
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 3,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
   });

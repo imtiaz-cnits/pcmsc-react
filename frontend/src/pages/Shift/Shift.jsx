@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import Shimmer from "../../components/Shimmer.jsx";
 import {
   useAddShifts,
   useDeleteShift,
   useFetchPaginatedShifts,
   useUpdateShift,
 } from "../../hook/useShift.js";
-import Shimmer from "../../components/Shimmer.jsx";
 
 const Shift = () => {
   const [page, setPage] = useState(1);
@@ -44,7 +44,7 @@ const Shift = () => {
     }
   }, [isEditModalOpen]);
 
-  console.log("paginated data value ", shifts);
+  // console.log("paginated data value ", shifts);
 
   const shiftStatusOptions = [
     { value: "active", label: "Active" },
@@ -86,8 +86,6 @@ const Shift = () => {
   useEffect(() => {
     console.log("status", shiftStatus);
   }, [shiftStatus]);
-
-  // handle edit
 
   const handleEditClick = (e, shift) => {
     e.preventDefault();
@@ -213,7 +211,7 @@ const Shift = () => {
                                     gap: "20px",
                                   }}
                                 >
-                                  {item?.name}
+                                  {item?.nameLabel}
                                 </td>
                                 <td>{item?.label}</td>
                                 <td

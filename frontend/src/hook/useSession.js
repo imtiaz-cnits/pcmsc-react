@@ -10,6 +10,7 @@ import {
   deleteSessionAPI,
   fetchedEntriesSessionsAPI,
   fetchedPaginatedSessions,
+  fetchSessionAPI,
   updateSessionAPI,
 } from "../api/academic-management/sessionApi.js";
 
@@ -46,6 +47,19 @@ export const useAddSession = () => {
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["sessions"] });
     },
+  });
+};
+
+//✅  GET - method
+export const useFetchSessions = () => {
+  return useQuery({
+    queryKey: ["sessions"],
+    queryFn: fetchSessionAPI,
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    retry: 3,
   });
 };
 

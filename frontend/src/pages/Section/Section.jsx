@@ -230,7 +230,7 @@ const Section = () => {
                                   gap: "20px",
                                 }}
                               >
-                                {item?.name}
+                                {item?.nameLabel}
                               </td>
                               <td>{item?.label}</td>
                               <td

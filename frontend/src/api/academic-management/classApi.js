@@ -10,6 +10,13 @@ export const addClassAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅  GET - method
+export const fetchedClassesAPI = async () => {
+  const res = await axiosPrivate.get("/academic-management/classes");
+  console.log("🚀 fetchedClasses api : ", res.data);
+  return res.data?.success ? res.data : [];
+};
+
 // ✅  GET - method (paginated)
 export const fetchedPaginatedClasses = async (page) => {
   const res = await axiosPrivate.get(

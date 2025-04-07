@@ -5,13 +5,14 @@ const ClassModel = require("../../models/classModel");
 // 📝 do add class
 async function addClass(req, res, next) {
   try {
-    // console.log("📥 Received class data: ", req.body);
+    console.log("📥 Received class data: ", req.body);
 
     const { name, status, label } = req.body;
 
     // console.log("before => class add body", req.body);
 
     // check if already exists
+    // todo fixed !already exits or not issue
     const existingClass = await ClassModel.findOne({ name });
     const totalDocuments = await ClassModel.countDocuments();
 
@@ -26,6 +27,7 @@ async function addClass(req, res, next) {
     // 👤 create new add class object
     const newClass = new ClassModel({
       name,
+      nameLabel: name,
       label,
       status,
     });
@@ -104,7 +106,7 @@ async function getAllPaginatedClasses(req, res, next) {
 
     const totalPages = Math.ceil(total / limit);
 
-    console.log("✅ Retrieved class: ", classes);
+    // console.log("✅ Retrieved class: ", classes);
     return res.status(200).json({
       success: true,
       count: classes.length,

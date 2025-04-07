@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import {
   addClassAPI,
   deleteClassAPI,
+  fetchedClassesAPI,
   fetchedPaginatedClasses,
   updateClassAPI,
 } from "../api/academic-management/classApi.js";
@@ -44,6 +45,18 @@ export const useAddClass = () => {
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
     },
+  });
+};
+
+//✅  GET - method
+export const useFetchClasses = () => {
+  return useQuery({
+    queryKey: ["classes"],
+    queryFn: fetchedClassesAPI,
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
   });
 };
 

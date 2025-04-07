@@ -10,20 +10,19 @@ export const addShiftAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
-// GET - method
-
-// without pagination
-export const fetchedShifts = async () => {
+// ✅  GET - method (pagination)
+export const fetchedShiftsAPI = async () => {
   const res = await axiosPrivate.get("/academic-management/shifts");
-  return res.data?.success ? res.data?.data : [];
+  console.log("🚀 fetchedShifts api : ", res.data);
+  return res.data?.success ? res.data : [];
 };
 
-//with paginated
+// ✅  GET - method
 export const fetchedPaginatedShifts = async (page) => {
   const res = await axiosPrivate.get(
     `/academic-management/shifts-paginated?page=${page}`,
   );
-  console.log("paginated value and total", res.data);
+  console.log("🚀 paginated value and total", res.data);
   return res.data?.success ? res.data : {};
 };
 

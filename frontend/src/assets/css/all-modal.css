@@ -161,19 +161,17 @@ input::-webkit-inner-spin-button {
   transition: 0.3s;
 }
 
-.css-hlgwow{
+.css-hlgwow {
   padding: 0px 8px !important;
 }
 
-.css-19bb58m{
+.css-19bb58m {
   padding: 0px !important;
   margin: 0px !important;
-
 }
 
-.css-19bb58m input{
-  height: 44px !important; 
-
+.css-19bb58m input {
+  height: 44px !important;
 }
 
 #studentModal .form-group select {

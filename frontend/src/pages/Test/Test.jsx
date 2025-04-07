@@ -1,16 +1,67 @@
-import { useEffect, useState } from "react";
-import productMemberPng from "../../assets/img/projuct-member-img-3.png";
+import { useEffect, useRef, useState } from "react";
 import Select from "react-select";
+import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 import DatepickerComponent from "../../components/DatepickerComponent ";
+import Shimmer from "../../components/Shimmer";
+import { useFetchClasses } from "../../hook/useClass";
+import { useFetchSections } from "../../hook/useSection";
+import { useFetchSessions } from "../../hook/useSession";
+import { useFetchShifts } from "../../hook/useShift";
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [admissionNumber, setAdmissionNumber] = useState("");
+  const [admissionDate, setAdmissionDate] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [nameBangla, setNameBangla] = useState("");
+  const [birthCertificate, setBirthCertificate] = useState("");
   const [bloodGroup, setBloodGroup] = useState(null);
+  const [religion, setReligion] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [fatherNID, setFatherNID] = useState("");
+  const [fatherPhoneNo, setFatherPhoneNo] = useState("");
+  const [motherName, setMotherName] = useState("");
+  const [motherNID, setMotherNID] = useState("");
+  const [motherPhoneNo, setMotherPhoneNo] = useState("");
+  const [presentAddress, setPresentAddress] = useState("");
+  const [permanentAddress, setPermanentAddress] = useState("");
+  const [guardian, setGuardian] = useState("");
+  const [guardianPhone, setGuardianPhone] = useState("");
+  const [dob , setDOB]= useState('')
+  const [studentGender, setStudentGender] = useState(null);
+  const [studentEmail, setStudentEmail] = useState('');
+  const [smsStatus, setSmsStatus] = useState("");
+  const [registrationDate, setRegistrationDate] = useState("");
   const [className, setClassName] = useState(null);
   const [shift, setShift] = useState(null);
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
-  const [gender, setGender] = useState(null);
+  const formRef = useRef(null);
+  const {
+    data: classes,
+    isPending: isclassPending,
+    isError: isClassError,
+    error: classError,
+  } = useFetchClasses();
+  const {
+    data: shifts,
+    isPending: isshiftPending,
+    isError: isShiftError,
+    error: shiftError,
+  } = useFetchShifts();
+  const {
+    data: sections,
+    isPending: isSectionPending,
+    isError: isSectionError,
+    errro: sectionError,
+  } = useFetchSections();
+
+  const {
+    data: sessions,
+    isPending: isSessionPending,
+    isError: isSessionError,
+    error: sessionError,
+  } = useFetchSessions();
 
   // Close the modal by clicking outside it
   const handleOutSideClick = (e) => {
@@ -119,38 +170,106 @@ const Test = () => {
     { value: "O-", label: "O-" },
   ];
 
-  const classOptions = [
-    { value: "One", label: "One" },
-    { value: "Two", label: "Two" },
-    { value: "Three", label: "Three" },
-  ];
+  // const classOptions = [
+  //   { value: "One", label: "One" },
+  //   { value: "Two", label: "Two" },
+  //   { value: "Three", label: "Three" },
+  // ];
 
-  const shiftOptions = [
-    { value: "Morning", label: "Morning" },
-    { value: "Day", label: "Day" },
-    { value: "Evening", label: "Evening" },
-  ];
+  const classOptions = classes?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
 
-  const sectionOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
+  const shiftOptions = shifts?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
 
-  const sessionOPtions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
+  const sectionOptions = sections?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sessionOPtions = sessions?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
 
   const genderOPtions = [
     { value: "Male", label: "Male" },
     { value: "Female", label: "Female" },
   ];
 
-  useEffect(() => {
-    console.log("blood group name : ", bloodGroup);
-  }, [bloodGroup]);
+  const smsStatusOPtions = [
+    { value: "Active", label: "Active" },
+    { value: "Inactive", label: "Inactive" },
+  ];
+
+  const handleResetForm = () => {
+    console.log("button is clicked");
+    console.log(formRef.current.reset());
+    formRef.current.reset();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      admissionNumber,
+      admissionDate,
+      studentName,
+      nameBangla,
+      birthCertificate,
+      bloodGroup: bloodGroup.value,
+      religion,
+      fatherName,
+      fatherNID,
+      fatherPhoneNo,
+      motherName,
+      motherNID,
+      motherPhoneNo,
+      presentAddress,
+      permanentAddress,
+      guardian,
+      guardianPhone,
+      dob,
+      studentGender: studentGender.value,
+      studentEmail,
+      smsStatus: smsStatus.value,
+      registrationDate,
+      className: className.value,
+      shift: shift.value,
+      section: section.value,
+      session: session.value,
+    };
+
+    console.log("payload : ", payload);
+  };
+
+  if (isclassPending || isshiftPending || isSectionPending || isSessionPending)
+    return <Shimmer count={10} />;
+
+  if (isClassError || isShiftError || isSectionError || isSessionError) {
+    let errorMsg = "Something went wrong. Please try again later!";
+
+    if (isClassError && classError instanceof Error) {
+      console.log("Class Error: ", classError);
+      errorMsg = classError?.response?.data?.message || classError?.message;
+    }
+    if (isShiftError && shiftError instanceof Error) {
+      console.log("Shift Error: ", shiftError);
+      errorMsg = shiftError?.response?.data?.message || shiftError?.message;
+    }
+
+    if (isSectionError && sectionError instanceof Error) {
+      console.log("Section Error: ", sectionError);
+      errorMsg = sectionError?.response?.data?.message || sectionError?.message;
+    }
+
+    if (isSessionError && sessionError instanceof Error) {
+      console.log("Session Error: ", sessionError);
+      errorMsg = sessionError?.response?.data?.message || sessionError?.message;
+    }
+
+    return <p>{errorMsg}</p>;
+  }
 
   return (
     <>
@@ -1052,7 +1171,7 @@ const Test = () => {
                 <div id="popup-modal">
                   <div className="form-container">
                     <h3>New Student Admission</h3>
-                    <form>
+                    <form ref={formRef} onSubmit={handleSubmit}>
                       {/* <!-- Row 1 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-4">
@@ -1063,9 +1182,15 @@ const Test = () => {
                             type="text"
                             id="admission-number"
                             placeholder="Enter admission number"
+                            value={admissionNumber}
+                            onChange={(e) => setAdmissionNumber(e.target.value)}
                           />
                         </div>
-                        <DatepickerComponent title={"Admission Date *"} />
+                        <DatepickerComponent
+                          title={"Admission Date *"}
+                          selectedDate={admissionDate}
+                          setSelectedDate={setAdmissionDate}
+                        />
 
                         <div className="form-group col-lg-4">
                           <label htmlFor="student-name">Student's Name *</label>
@@ -1073,6 +1198,8 @@ const Test = () => {
                             type="text"
                             id="student-name"
                             placeholder="Enter student's name"
+                            value={studentName}
+                            onChange={(e) => setStudentName(e.target.value)}
                           />
                         </div>
 
@@ -1082,6 +1209,8 @@ const Test = () => {
                             type="text"
                             id="name-bangla"
                             placeholder="বাংলায় নাম লিখুন"
+                            value={nameBangla}
+                            onChange={(e) => setNameBangla(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1092,6 +1221,10 @@ const Test = () => {
                             type="text"
                             id="birth-certificate"
                             placeholder="Enter birth certificate number"
+                            value={birthCertificate}
+                            onChange={(e) =>
+                              setBirthCertificate(e.target.value)
+                            }
                           />
                         </div>
                         <div className="form-group select-input-box col-lg-4">
@@ -1111,6 +1244,8 @@ const Test = () => {
                             type="text"
                             id="religion"
                             placeholder="Enter religion"
+                            value={religion}
+                            onChange={(e) => setReligion(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-8">
@@ -1124,8 +1259,7 @@ const Test = () => {
                                   viewBox="0 0 50 50"
                                   fill="none"
                                   xmlns="http://www.w3.org/2000/svg"
-                                  // eslint-disable-next-line react/no-unknown-property
-                                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                                  xmlnsXlink="http://www.w3.org/1999/xlink"
                                 >
                                   <rect
                                     width="50"
@@ -1178,6 +1312,8 @@ const Test = () => {
                             type="text"
                             id="father-name"
                             placeholder="Enter father's name"
+                            value={fatherName}
+                            onChange={(e) => setFatherName(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1186,6 +1322,8 @@ const Test = () => {
                             type="text"
                             id="father-nid"
                             placeholder="Enter father's NID"
+                            value={fatherNID}
+                            onChange={(e) => setFatherNID(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1196,6 +1334,8 @@ const Test = () => {
                             type="text"
                             id="father-mobile"
                             placeholder="Enter father's mobile number"
+                            value={fatherPhoneNo}
+                            onChange={(e) => setFatherPhoneNo(e.target.value)}
                           />
                         </div>
                       </div>
@@ -1208,6 +1348,8 @@ const Test = () => {
                             type="text"
                             id="mother-name"
                             placeholder="Enter mother's name"
+                            value={motherName}
+                            onChange={(e) => setMotherName(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1216,6 +1358,8 @@ const Test = () => {
                             type="text"
                             id="mother-nid"
                             placeholder="Enter mother's NID"
+                            value={motherNID}
+                            onChange={(e) => setMotherNID(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1226,6 +1370,8 @@ const Test = () => {
                             type="text"
                             id="mother-mobile"
                             placeholder="Enter mother's mobile number"
+                            value={motherPhoneNo}
+                            onChange={(e) => setMotherPhoneNo(e.target.value)}
                           />
                         </div>
                       </div>
@@ -1240,6 +1386,8 @@ const Test = () => {
                             type="text"
                             id="present-address"
                             placeholder="Enter present address"
+                            value={presentAddress}
+                            onChange={(e) => setPresentAddress(e.target.value)}
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1250,6 +1398,10 @@ const Test = () => {
                             type="text"
                             id="permanent-address"
                             placeholder="Enter permanent address"
+                            value={permanentAddress}
+                            onChange={(e) =>
+                              setPermanentAddress(e.target.value)
+                            }
                           />
                         </div>
                         <div className="form-group col-lg-4">
@@ -1260,6 +1412,8 @@ const Test = () => {
                             type="text"
                             id="guardian"
                             placeholder="Enter guardian's name"
+                            value={guardian}
+                            onChange={(e) => setGuardian(e.target.value)}
                           />
                         </div>
                       </div>
@@ -1274,10 +1428,15 @@ const Test = () => {
                             type="text"
                             id="guardian-mobile"
                             placeholder="Enter guardian's mobile number"
+                            value={guardianPhone}
+                            onChange={(e) => setGuardianPhone(e.target.value)}
                           />
                         </div>
 
-                        <DatepickerComponent title={"Date of Birth *"} />
+                        <DatepickerComponent 
+                        title={"Date of Birth *"}
+                        setSelectedDate={setDOB}
+                        />
 
                         <div className="form-group select-input-box col-lg-4">
                           <label htmlFor="select-to">Student Gender</label>
@@ -1285,7 +1444,7 @@ const Test = () => {
                           <div className="select-box-dropdown">
                             <Select
                               options={genderOPtions}
-                              onChange={setGender}
+                              onChange={setStudentGender}
                               placeholder="Select Gender"
                             />
                           </div>
@@ -1300,31 +1459,24 @@ const Test = () => {
                             type="email"
                             id="student-email"
                             placeholder="Enter student email"
+                            value={studentEmail}
+                            onChange={(e) => setStudentEmail(e.target.value)}
                           />
                         </div>
                         <div className="form-group select-input-box col-lg-4">
                           <label htmlFor="select-to">SMS Status</label>
-                          <div className="select-box-dropdown">
-                            <div className="select-dropdown-selected">
-                              <span>Select Status</span>
-                              <span className="icon">
-                                <i className="fas fa-angle-down"></i>
-                              </span>
-                              {/* <!-- Font Awesome angle-down icon --> */}
-                            </div>
-                            <div className="select-dropdown-items">
-                              <input
-                                type="text"
-                                className="select-search-box"
-                                placeholder="Search..."
-                              />
-                              <div className="option">Active</div>
-                              <div className="option">Inactive</div>
-                            </div>
-                          </div>
+
+                          <Select
+                            options={smsStatusOPtions}
+                            onChange={setSmsStatus}
+                            placeholder="Select Status"
+                          />
                         </div>
 
-                        <DatepickerComponent title={" Registration Date *"} />
+                        <DatepickerComponent
+                          title={" Registration Date *"}
+                          setSelectedDate={setRegistrationDate}
+                        />
                       </div>
 
                       {/* <!-- Row 9 --> */}
@@ -1359,7 +1511,7 @@ const Test = () => {
 
                           <Select
                             options={sessionOPtions}
-                            onChange={setSection}
+                            onChange={setSession}
                             placeholder="Enter section name"
                           />
                         </div>
@@ -1371,11 +1523,15 @@ const Test = () => {
                           type="button"
                           id="closBtn"
                           className="button close"
-                          onClick={()=> setIsModalOpen(!isModalOpen)}
+                          onClick={() => setIsModalOpen(!isModalOpen)}
                         >
                           Close
                         </button>
-                        <button type="reset" className="button reset">
+                        <button
+                          type="reset"
+                          className="button reset"
+                          onClick={handleResetForm}
+                        >
                           Reset
                         </button>
                         <button type="submit" className="button save">

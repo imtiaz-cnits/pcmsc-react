@@ -13,6 +13,13 @@ const classSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+
+    nameLabel: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
     label: {
       type: String,
       trim: true,
