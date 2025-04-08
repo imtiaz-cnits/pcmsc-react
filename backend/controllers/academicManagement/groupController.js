@@ -16,10 +16,10 @@ async function addGroup(req, res, next) {
     const existingGroup = await Group.findOne({ name });
     const totalDocuments = await Group.countDocuments();
 
-    console.log("existing group and total documents  : ", {
-      count: totalDocuments,
-      data: existingGroup,
-    });
+    // console.log("existing group and total documents  : ", {
+    //   count: totalDocuments,
+    //   data: existingGroup,
+    // });
 
     if (existingGroup) {
       return next(createError(403, "Already exists!"));
@@ -33,7 +33,7 @@ async function addGroup(req, res, next) {
       status,
     });
 
-    console.log("🚀 Adding Group to DB: ", newGroup);
+    // console.log("🚀 Adding Group to DB: ", newGroup);
 
     await newGroup.save();
 
@@ -44,7 +44,7 @@ async function addGroup(req, res, next) {
       data: newGroup,
     });
   } catch (error) {
-    console.log(" 📌 addSession Error : ", error);
+    // console.log(" 📌 addSession Error : ", error);
     // custom Mongoose Error
     if (error.name === "ValidationError") {
       return res.status(403).json({
@@ -77,7 +77,7 @@ async function getAllGroups(req, res, next) {
       return next(createError(404, "Class not found!"));
     }
 
-    console.log("🔑 Fetched all groups:", groups);
+    // console.log("🔑 Fetched all groups:", groups);
 
     return res.status(200).json({
       success: true,
@@ -86,9 +86,48 @@ async function getAllGroups(req, res, next) {
       data: groups,
     });
   } catch (error) {
-    console.error("❌ Error fetching groups:", error);
+    // console.error("❌ Error fetching groups:", error);
 
     // 💬 Passing the error to the next middleware
+    return next(error);
+  }
+}
+
+// 📝 update group
+async function updateGroup(req, res, next) {
+  try {
+    const { id } = req.params;
+    const payload = req.body;
+
+    const existingGroup = await Group.findOne({ name: payload.name });
+
+    if (existingGroup) {
+      return next(createError(403, "Already Exists!"));
+    }
+
+    const updatedItem = await Group.findByIdAndUpdate(id, payload, {
+      new: true,
+      runValidators: true,
+    });
+    const totalDocuments = await Group.countDocuments();
+
+    if (!updatedItem) {
+      return next(createError(404, "Group not found!"));
+    }
+
+    console.log("🚀 update item value and counts : ", {
+      count: totalDocuments,
+      data: updatedItem,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Group updated successfully!",
+      updatedData: updatedItem,
+      totalDocuments,
+    });
+  } catch (error) {
+    console.error(" 📌 ❌ updateGrouperror : ", error);
     return next(error);
   }
 }
@@ -122,4 +161,4 @@ async function deleteGroup(req, res, next) {
   }
 }
 
-module.exports = { addGroup, getAllGroups, deleteGroup };
+module.exports = { addGroup, getAllGroups, updateGroup, deleteGroup };

@@ -1,22 +1,33 @@
 import { useState } from "react";
 
-const AddModal = ({
+const EditModal = ({
   title,
-  isModalOpen,
-  setIsModalOpen,
+  isEditModalOpen,
+  setIsEditModalOpen,
   stateValue,
   setState,
   addAcademic,
   warn,
   setWarn,
-  status,
-  setStatus
+  group,
+  setGroup
 }) => {
+
+    
+  const [status, setStatus] = useState("");
+const [editClassId, setEditClassId] = useState("");
+  
+
   const statusOptions = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
+
+
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,14 +56,14 @@ const AddModal = ({
     <>
       {/*  <!-- Table Action Button Modal Start --> 
 
-        <!-- Group Pop Up Modal Start --> */}
+       {/* <!-- Edit Modal Start --> */}
       <div className="shift-modal">
-        {isModalOpen && (
+        {isEditModalOpen && (
           <section id="createClassModal" className="modal migrateModal show">
             <div className="modal-content">
               <div id="popup-modal">
                 <div className="form-container">
-                  <h3>Add {title}</h3>
+                  <h3>Update {title}</h3>
                   <form>
                     {/* <!-- Row 1 --> */}
                     <div className="form-row">
@@ -98,7 +109,7 @@ const AddModal = ({
                         type="button"
                         id="classBtn"
                         className="button close closeBtn"
-                        onClick={() => setIsModalOpen(false)}
+                        onClick={() => setIsEditModalOpen(false)}
                       >
                         Close
                       </button>
@@ -107,7 +118,7 @@ const AddModal = ({
                         className="button save"
                         onClick={handleSubmit}
                       >
-                        Save
+                        Update
                       </button>
                     </div>
                   </form>
@@ -117,8 +128,9 @@ const AddModal = ({
           </section>
         )}
       </div>
-      {/* <!-- Group Pop Up Modal Start --> */}
+               {/* <!-- Edit Modal End -->*/}
+
     </>
   );
 };
-export default AddModal;
+export default EditModal;

@@ -8,6 +8,7 @@ import {
   addGroupAPI,
   deleteGroupAPI,
   fetchedGroupsAPI,
+  updateGroupAPI,
 } from "../api/academic-management/groupAPI";
 
 //📌  POST - method
@@ -54,6 +55,49 @@ export const useFetchGroups = () => {
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
+  });
+};
+
+
+//✅  PATCH - method
+export const useUpdateGroup = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateGroupAPI,
+    onError: (error, variables) => {
+      console.log("⚙️ error updating group : ", error);
+      console.log("⚙️ error updating group variables : ", variables);
+
+      if (error?.response) {
+        alert(
+          error.response?.data?.message ||
+            "An error occurred while updating the group. Please try again.",
+        );
+      }
+
+      console.log(
+        "❌ An error occurred while updating group. Please try again. : ",
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update group . Try again!",
+      );
+    },
+
+    onSuccess: async (data, { groupID, payload }) => {
+      console.log("🚀 update group onSuccess data value :", data);
+      console.log("🚀 update  :", payload, groupID);
+
+   
+
+      await queryClient.invalidateQueries({ queryKey: ["groups", groupID] });
+      if (data?.success) {
+        alert(data?.message);
+      }
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["groups"] });
+    },
   });
 };
 

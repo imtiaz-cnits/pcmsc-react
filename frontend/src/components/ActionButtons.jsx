@@ -4,19 +4,35 @@ import { useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const ActionButtons = ({
+  isEditModalOpen,
+  setIsEditModalOpen,
   isDeleteModalOpen,
   setIsDeleteModalOpen,
   item,
   deleteAcademic,
   setWarn,
+  group,
+  setGroup,
+  status,
+  setStatus
 }) => {
+
+  const [editClassId, setEditClassId] = useState("");
+ 
   const [itemToDelete, setItemToDelete] = useState(null);
+
+
+  const handleEditClick = (e, item) => {
+    e.preventDefault();
+    console.log("editing item: ", item);
+    setEditClassId(item?._id)
+    setGroup(item?.name)
+    setStatus(item?.status)
+  }
 
   const handleDeleteClick = (e, item) => {
     e.preventDefault();
-    console.log("Deleting item: ", item?._id);
     setItemToDelete(item?._id);
-    // deleteAcademic(item?._id)
   };
 
   const handleDelete = (e) => {
@@ -58,7 +74,7 @@ const ActionButtons = ({
         >
           {/* Edit Button */}
           <button
-            onClick={() => console.log("Edit clicked")}
+            onClick={() => setIsEditModalOpen(!isEditModalOpen)}
             style={{
               background: "none",
               border: "none",
@@ -78,7 +94,7 @@ const ActionButtons = ({
               e.currentTarget.style.color = "#0a84ff";
             }}
           >
-            <FaRegEdit style={{ fontSize: "18px" }} />
+            <FaRegEdit style={{ fontSize: "18px" }} onClick={(e)=> handleEditClick(e,item)}/>
           </button>
 
           {/* Delete Button */}

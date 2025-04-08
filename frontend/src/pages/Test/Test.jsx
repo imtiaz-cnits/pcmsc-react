@@ -11,6 +11,7 @@ import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useAddSutdent, useFetchSutdents } from "../../hook/useStudentInfo";
+import { useFetchGroups } from "../../hook/useGroup";
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +43,7 @@ const Test = () => {
   const [shift, setShift] = useState(null);
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
+  const [group, setGroup] = useState(null); 
   const formRef = useRef(null);
   const { mutate: addStudent } = useAddSutdent();
 
@@ -77,6 +79,12 @@ const Test = () => {
     error: sessionError,
   } = useFetchSessions();
 
+  const {
+    data: groups,
+    isPending: isGroupsPending,
+    isError: isGroupsError,
+    error: groupsError,
+  } = useFetchGroups(); 
   //  Close the modal by clicking outside it
   const handleOutSideClick = (e) => {
     if (e.target.classList.contains("studentModal")) {
@@ -208,6 +216,11 @@ const Test = () => {
     return { value: item._id, label: item.nameLabel };
   });
 
+  const groupOPtions = groups?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+
   const genderOPtions = [
     { value: "Male", label: "Male" },
     { value: "Female", label: "Female" },
@@ -317,7 +330,7 @@ const Test = () => {
     isshiftPending ||
     isSectionPending ||
     isSessionPending ||
-    isStudentsPending
+    isStudentsPending || isGroupsPending
   )
     return <Shimmer count={10} />;
 
@@ -326,7 +339,8 @@ const Test = () => {
     isShiftError ||
     isSectionError ||
     isSessionError ||
-    isStudentsError
+    isStudentsError ||
+    isGroupsError
   ) {
     let errorMsg = "Something went wrong. Please try again later!";
 
@@ -353,6 +367,12 @@ const Test = () => {
       console.log("Students Error: ", studentsError);
       errorMsg =
         studentsError?.response?.data?.message || studentsError?.message;
+    }
+
+    if (isGroupsError && groupsError instanceof Error) {
+      console.log("Students Error: ", groupsError);
+      errorMsg =
+        groupsError?.response?.data?.message || groupsError?.message;
     }
 
     return <p>{errorMsg}</p>;
@@ -1280,8 +1300,8 @@ const Test = () => {
                           <label htmlFor="group">Group Name</label>
 
                           <Select
-                            options={sessionOPtions}
-                            onChange={setSession}
+                            options={groupOPtions}
+                            onChange={setGroup}
                             placeholder="Enter group name"
                           />
                         </div>

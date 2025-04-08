@@ -5,18 +5,25 @@ import {
   useAddGroup,
   useDeleteGroup,
   useFetchGroups,
+  useUpdateGroup,
 } from "../../hook/useGroup";
 import Shimmer from "../../components/Shimmer";
 import ActionButtons from "../../components/ActionButtons";
+import EditModal from "../../components/EditModal";
 
 const GroupPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [group, setGroup] = useState("");
+  const [groupStatus, setGroupStatus] = useState("");
+
   const [warn, setWarn] = useState("");
   const { mutate: addGroup } = useAddGroup();
+  const {mutate: updateGroup} = useUpdateGroup()
   const { mutate: deleteGroup } = useDeleteGroup();
   const { data: groups, isPening, isError, error } = useFetchGroups();
+
 
   if (isError) {
     console.log("GroupPage error : ", error);
@@ -118,10 +125,16 @@ const GroupPage = () => {
                             <td>
                               <ActionButtons
                                 item={item}
+                                group={group}
+                                setGroup={setGroup}
+            status={groupStatus}
+            setStatus={setGroupStatus}
                                 isDeleteModalOpen={isDeleteModalOpen}
                                 setIsDeleteModalOpen={setIsDeleteModalOpen}
                                 deleteAcademic={deleteGroup}
                                 setWarn={setWarn}
+                                isEditModalOpen={isEditModalOpen}
+                                setIsEditModalOpen={setIsEditModalOpen}
                               />
                             </td>
                           </tr>
@@ -191,6 +204,8 @@ const GroupPage = () => {
             title={"Group"}
             stateValue={group}
             setState={setGroup}
+            status={groupStatus}
+            setStatus={setGroupStatus}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             addAcademic={addGroup}
@@ -199,6 +214,20 @@ const GroupPage = () => {
           />
 
           {/* <!-- Group Pop Up Modal Start --> */}
+
+          {/* <!-- Edit Modal Start --> */}
+<EditModal 
+
+title={"Group"}
+group={group}
+setGroup={setGroup}
+setState={setGroup}
+            status={groupStatus}
+isEditModalOpen={isEditModalOpen}
+setIsEditModalOpen={setIsEditModalOpen}
+/>
+
+          {/* <!-- Edit Modal End -->*/}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

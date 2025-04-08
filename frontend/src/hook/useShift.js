@@ -105,7 +105,7 @@ export const useFetchShifts = () => {
     gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 3,
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 };
 

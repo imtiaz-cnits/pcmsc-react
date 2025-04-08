@@ -17,6 +17,18 @@ export const fetchedGroupsAPI = async () => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅ UPDATE
+export const updateGroupAPI = async ({ groupID, payload }) => {
+  const res = await axiosPrivate.patch(
+    `/academic-management/class/${groupID}`,
+    payload,
+  );
+
+  console.log("⚙️ updated api :", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+
 // ✅  Delete - method
 export const deleteGroupAPI = async (id) => {
   console.log("deleted id : ", id);

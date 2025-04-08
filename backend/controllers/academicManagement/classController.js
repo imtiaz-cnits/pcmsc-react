@@ -128,7 +128,11 @@ async function updateClass(req, res, next) {
     const { id: classId } = req.params;
     const classData = req.body;
 
-    // find and update the class document by ID
+    const existingClass = await ClassModel.find({ name: classData.name });
+
+    if (existingClass) {
+      return next(403, "Already exits!");
+    }
 
     const updatedClass = await ClassModel.findByIdAndUpdate(
       classId,
@@ -140,13 +144,7 @@ async function updateClass(req, res, next) {
       return next(createError(404, "Class not found!"));
     }
 
-    const existingClass = await ClassModel.find({ name: classData.name });
-
-    if (existingClass) {
-      return next(403, "Already exits!");
-    }
-
-    console.log("updated class value : ", updatedClass);
+    // console.log("🚀 updated class value : ", updatedClass);
 
     return res.status(200).json({
       success: true,
@@ -154,7 +152,7 @@ async function updateClass(req, res, next) {
       updatedData: updatedClass,
     });
   } catch (error) {
-    console.error("update class error : ", error);
+    // console.error("📌 ❌ update class error : ", error);
     return next(error);
   }
 }

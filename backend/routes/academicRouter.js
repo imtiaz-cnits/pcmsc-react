@@ -38,6 +38,7 @@ const {
   addGroup,
   getAllGroups,
   deleteGroup,
+  updateGroup,
 } = require("../controllers/academicManagement/groupController");
 
 // 🔍 Class - CRUD
@@ -75,7 +76,7 @@ router.post("/add-group", addGroup);
 router.get("/groups", getAllGroups);
 router.get("/session-paginated", getAllPaginatedSession);
 router.get("/session-entries", getAllEntriesSession);
-router.patch("/session/:id", updateSession);
+router.patch("/group/:id", updateGroup);
 router.delete("/group/:id", deleteGroup);
 
 // exports
