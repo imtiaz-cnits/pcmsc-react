@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import Select from "react-select";
+import "../../assets/css/all-modal.css";
+
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 import DatepickerComponent from "../../components/DatepickerComponent ";
+import ActionButtons from "../../components/EditDeleteButton";
 import Shimmer from "../../components/Shimmer";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useAddSutdent, useFetchSutdents } from "../../hook/useStudentInfo";
-import '../../assets/css/all-modal.css'
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [admissionDate, setAdmissionDate] = useState("");
+  const [studentRoll, setStudentRoll] = useState("");
   const [studentName, setStudentName] = useState("");
   const [nameBangla, setNameBangla] = useState("");
   const [birthCertificate, setBirthCertificate] = useState("");
@@ -73,7 +77,7 @@ const Test = () => {
     error: sessionError,
   } = useFetchSessions();
 
-  // Close the modal by clicking outside it
+  //  Close the modal by clicking outside it
   const handleOutSideClick = (e) => {
     if (e.target.classList.contains("studentModal")) {
       setIsModalOpen(false);
@@ -99,6 +103,8 @@ const Test = () => {
       document.addEventListener("keydown", handleEscKey);
     };
   }, [isModalOpen]);
+
+  // Delate Confirmation Modal Start....................
 
   useEffect(() => {
     $(document).ready(function () {
@@ -676,41 +682,35 @@ const Test = () => {
                           <tr key={item?._id} data-date="2024-08-05">
                             <td>{index + 1}</td>
                             <td>
-                              <div id="action_btn">
-                                <div id="menu-wrap">
-                                  <input type="checkbox" className="toggler" />
-                                  <div className="dots">
-                                    <div></div>
-                                  </div>
-                                  <div className="menu">
-                                    <div>
-                                      <ul>
-                                        <li>
-                                          <a
-                                            href="#"
-                                            className="link custom-open-modal-btn openModalBtn editButton"
-                                            data-modal="action-editmodal"
-                                          >
-                                            Edit
-                                          </a>
-                                        </li>
-                                        <li>
-                                          <a
-                                            href="#"
-                                            className="link custom-open-modal-btn openModalBtn deleteButton"
-                                            data-modal="action-deletemodal"
-                                          >
-                                            Delete
-                                          </a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
+                              {/* <div className="menu">
+                                <div>
+                                  <ul>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="link custom-open-modal-btn openModalBtn editButton"
+                                        data-modal="action-editmodal"
+                                      >
+                                        Edit
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a
+                                        href="#"
+                                        className="link custom-open-modal-btn openModalBtn deleteButton"
+                                        data-modal="action-deletemodal"
+                                        onClick={()=> setIsDeleteModalOpen(!isDeleteModalOpen)}
+                                      >
+                                        Delete
+                                      </a>
+                                    </li>
+                                  </ul>
                                 </div>
-                                <button className="quick-view quickButton">
-                                  <i className="fa-regular fa-eye"></i>
-                                </button>
-                              </div>
+                              </div> */}
+
+                              <ActionButtons
+                                setIsDeleteModalOpen={setIsDeleteModalOpen}
+                              />
                             </td>
                             <td>{item?.admissionNumber}</td>
                             <td>{item?.name}</td>
@@ -770,15 +770,22 @@ const Test = () => {
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+          {isDeleteModalOpen && (
+            <div id="confirmationModal" className="modal">
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes">Yes</button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -914,11 +921,25 @@ const Test = () => {
                             onChange={(e) => setAdmissionNumber(e.target.value)}
                           />
                         </div>
+
                         <DatepickerComponent
                           title={"Admission Date *"}
                           selectedDate={admissionDate}
                           setSelectedDate={setAdmissionDate}
                         />
+
+                        <div className="form-group col-lg-4">
+                          <label htmlFor="student-name">
+                            Student's roll number *
+                          </label>
+                          <input
+                            type="text"
+                            id="student-roll"
+                            placeholder="Enter student's Roll Number"
+                            value={studentName}
+                            onChange={(e) => setStudentRoll(e.target.value)}
+                          />
+                        </div>
 
                         <div className="form-group col-lg-4">
                           <label htmlFor="student-name">Student's Name *</label>
@@ -941,6 +962,7 @@ const Test = () => {
                             onChange={(e) => setNameBangla(e.target.value)}
                           />
                         </div>
+
                         <div className="form-group col-lg-4">
                           <label htmlFor="birth-certificate">
                             Birth Certificate
@@ -955,6 +977,9 @@ const Test = () => {
                             }
                           />
                         </div>
+                      </div>
+                      {/* <!-- Row 3 --> */}
+                      <div className="form-row row">
                         <div className="form-group select-input-box col-lg-4">
                           <label htmlFor="select-to">Blood Group</label>
                           <Select
@@ -963,19 +988,7 @@ const Test = () => {
                             placeholder="Select Blood Group"
                           />
                         </div>
-                      </div>
-                      {/* <!-- Row 3 --> */}
-                      <div className="form-row row">
-                        <div className="form-group col-lg-4">
-                          <label htmlFor="religion">Religion</label>
-                          <input
-                            type="text"
-                            id="religion"
-                            placeholder="Enter religion"
-                            value={religion}
-                            onChange={(e) => setReligion(e.target.value)}
-                          />
-                        </div>
+
                         <div className="form-group col-lg-8">
                           <label htmlFor="photo">Photo</label>
                           <div className="upload-profile">
@@ -1035,6 +1048,17 @@ const Test = () => {
                       {/* <!-- Row 4 --> */}
                       <div className="form-row row">
                         <div className="form-group col-lg-4">
+                          <label htmlFor="religion">Religion</label>
+                          <input
+                            type="text"
+                            id="religion"
+                            placeholder="Enter religion"
+                            value={religion}
+                            onChange={(e) => setReligion(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-group col-lg-4">
                           <label htmlFor="father-name">Father's Name *</label>
                           <input
                             type="text"
@@ -1054,6 +1078,10 @@ const Test = () => {
                             onChange={(e) => setFatherNID(e.target.value)}
                           />
                         </div>
+                      </div>
+
+                      {/* <!-- Row 5 --> */}
+                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="father-mobile">
                             Father's Mobile No *
@@ -1066,10 +1094,7 @@ const Test = () => {
                             onChange={(e) => setFatherPhoneNo(e.target.value)}
                           />
                         </div>
-                      </div>
 
-                      {/* <!-- Row 5 --> */}
-                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="mother-name">Mother's Name *</label>
                           <input
@@ -1090,6 +1115,10 @@ const Test = () => {
                             onChange={(e) => setMotherNID(e.target.value)}
                           />
                         </div>
+                      </div>
+
+                      {/* <!-- Row 6 --> */}
+                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="mother-mobile">
                             Mother's Mobile No *
@@ -1102,10 +1131,7 @@ const Test = () => {
                             onChange={(e) => setMotherPhoneNo(e.target.value)}
                           />
                         </div>
-                      </div>
 
-                      {/* <!-- Row 6 --> */}
-                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="present-address">
                             Present Address *
@@ -1132,6 +1158,10 @@ const Test = () => {
                             }
                           />
                         </div>
+                      </div>
+
+                      {/* <!-- Row 7 --> */}
+                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="guardian">
                             Guardian (In Absence of F/M)
@@ -1144,10 +1174,7 @@ const Test = () => {
                             onChange={(e) => setGuardian(e.target.value)}
                           />
                         </div>
-                      </div>
 
-                      {/* <!-- Row 7 --> */}
-                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="guardian-mobile">
                             Guardian Mobile *
@@ -1165,7 +1192,10 @@ const Test = () => {
                           title={"Date of Birth *"}
                           setSelectedDate={setDOB}
                         />
+                      </div>
 
+                      {/* <!-- Row 8 --> */}
+                      <div className="form-row row">
                         <div className="form-group select-input-box col-lg-4">
                           <label htmlFor="select-to">Student Gender</label>
 
@@ -1177,10 +1207,7 @@ const Test = () => {
                             />
                           </div>
                         </div>
-                      </div>
 
-                      {/* <!-- Row 8 --> */}
-                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="student-email">Student Email</label>
                           <input
@@ -1200,15 +1227,15 @@ const Test = () => {
                             placeholder="Select Status"
                           />
                         </div>
-
-                        <DatepickerComponent
-                          title={" Registration Date *"}
-                          setSelectedDate={setRegistrationDate}
-                        />
                       </div>
 
                       {/* <!-- Row 9 --> */}
                       <div className="form-row row">
+                        <DatepickerComponent
+                          title={" Registration Date *"}
+                          setSelectedDate={setRegistrationDate}
+                        />
+
                         <div className="form-group select-input-box col-lg-4">
                           <label htmlFor="select-to">Class Name</label>
                           <Select
@@ -1226,6 +1253,10 @@ const Test = () => {
                             placeholder="Select Shift"
                           />
                         </div>
+                      </div>
+
+                      {/* <!-- Row 10 --> */}
+                      <div className="form-row row">
                         <div className="form-group col-lg-4">
                           <label htmlFor="section">Section Name</label>
                           <Select
@@ -1234,6 +1265,7 @@ const Test = () => {
                             placeholder="Enter section name"
                           />
                         </div>
+
                         <div className="form-group col-lg-4">
                           <label htmlFor="session">Session Name</label>
 
@@ -1243,8 +1275,17 @@ const Test = () => {
                             placeholder="Enter section name"
                           />
                         </div>
-                      </div>
 
+                        <div className="form-group col-lg-4">
+                          <label htmlFor="group">Group Name</label>
+
+                          <Select
+                            options={sessionOPtions}
+                            onChange={setSession}
+                            placeholder="Enter group name"
+                          />
+                        </div>
+                      </div>
                       {/* <!-- Actions --> */}
                       <div className="form-actions">
                         <button

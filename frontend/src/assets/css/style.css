@@ -2686,6 +2686,15 @@ input::-webkit-inner-spin-button {
   background-size: cover;
 }
 
+.generate-id-container .id-card-wrap .student-roll {
+  display: inline-block;
+  color: var(--text-color);
+  margin: 4px auto;
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+}
+
 .generate-id-container .id-card-wrap .student-name {
   display: inline-block;
   color: var(--text-color);

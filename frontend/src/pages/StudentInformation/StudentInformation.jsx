@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
-import productMemberPng from "../../assets/img/projuct-member-img-3.png";
-import Select from "react-select";
 
 const StudentInformation = () => {
   const [bloodGroup, setBloodGroup] = useState(null);
-  const [className, setClassName] = useState(null);
-  const [shift, setShift] = useState(null);
-  const [section, setSection] = useState(null);
-  const [session, setSession] = useState(null);
 
   useEffect(() => {
     const studentModal = document.getElementById("studentModal");
@@ -49,6 +43,44 @@ const StudentInformation = () => {
       if (e.key === "Escape") {
         studentModal.classList.remove("show");
         enableScroll();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const modal = document.getElementById("confirmationModal");
+    const deleteButtons = document.querySelectorAll(".deleteButton");
+    const confirmButtons = [
+      document.getElementById("confirmYes"),
+      document.getElementById("confirmNo"),
+    ];
+
+    // Function to open modal
+    const openModal = () => {
+      modal.style.display = "flex";
+    };
+
+    // Function to close modal
+    const closeModal = () => {
+      modal.style.display = "none";
+    };
+
+    // Attach click event to all delete buttons
+    deleteButtons.forEach((button) => {
+      button.addEventListener("click", openModal);
+    });
+
+    // Attach click event to both Yes and No buttons
+    confirmButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        closeModal();
+      });
+    });
+
+    // Close modal when clicking outside of it
+    window.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        closeModal();
       }
     });
   }, []);
@@ -168,51 +200,14 @@ const StudentInformation = () => {
     document.body.innerHTML = originalContent;
   };
 
-  const bloodGroupOptions = [
-    { value: "A+", label: "A+" },
-    { value: "A-", label: "A-" },
-    { value: "B+", label: "B+" },
-    { value: "B-", label: "B-" },
-    { value: "AB+", label: "AB+" },
-    { value: "AB-", label: "AB-" },
-    { value: "O+", label: "O+" },
-    { value: "O-", label: "O-" },
-  ];
-
-  const classOptions = [
-    { value: "One", label: "One" },
-    { value: "Two", label: "Two" },
-    { value: "Three", label: "Three" },
-  ];
-
-  const shiftOptions = [
-    { value: "Morning", label: "Morning" },
-    { value: "Day", label: "Day" },
-    { value: "Evening", label: "Evening" },
-  ];
-
-  const sectionOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
-
-  const sessionOPtions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
-
   useEffect(() => {
     console.log("blood group name : ", bloodGroup);
   }, [bloodGroup]);
 
   return (
     <>
-      {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
-          {/* <!-- Table Start --> */}
           <div className="bredcam">
             <div className="bredcam-title">
               <h1>Student Information</h1>
@@ -228,9 +223,7 @@ const StudentInformation = () => {
           <div className="data-table">
             <div className="card">
               <div className="card-body">
-                {/* <!-- Action Buttons --> */}
                 <div className="button-wrapper mb-3">
-                  {/* <!-- Search and Filter --> */}
                   <div className="d-flex">
                     <div className="input-group">
                       <input
@@ -239,7 +232,6 @@ const StudentInformation = () => {
                         className="form-control"
                         placeholder="Search Student..."
                       />
-                      {/* <!-- Entries per page --> */}
                       <div
                         style={{
                           display: "flex",
@@ -265,7 +257,6 @@ const StudentInformation = () => {
                               <option value="100">100</option>
                             </select>
                             <span className="dropdown-icon">&#9662;</span>
-                            {/* <!-- Dropdown icon --> */}
                           </div>
                         </div>
 
@@ -412,7 +403,7 @@ const StudentInformation = () => {
                           />
                         </svg>
                       </button>
-                      <button id="printBtn" onClick={printTable}>
+                      <button id="printBtn" onClick="printTable()">
                         <svg
                           width="32"
                           height="32"
@@ -500,7 +491,6 @@ const StudentInformation = () => {
                   </div>
                 </div>
 
-                {/* <!-- Table --> */}
                 <div className="table-wrapper">
                   <table
                     id="printTable"
@@ -570,7 +560,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -630,7 +620,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -690,7 +680,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -750,7 +740,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -810,7 +800,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -870,7 +860,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -930,7 +920,7 @@ const StudentInformation = () => {
                           <div className="client-item">
                             <div className="image">
                               <img
-                                src={productMemberPng}
+                                src="./assets/img/projuct-member-img-3.png"
                                 alt="client"
                                 className="rounded-circle mr-2"
                                 width="30"
@@ -945,7 +935,6 @@ const StudentInformation = () => {
                     </tbody>
                   </table>
                 </div>
-                {/* <!-- Pagination and Display Info --> */}
                 <div className="my-3">
                   <span id="display-info"></span>
                 </div>
@@ -973,10 +962,7 @@ const StudentInformation = () => {
           <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
-          {/* <!-- Table End -->
 
-        <!-- Table Action Button Modal Start -->
-        <!-- Confirmation Modal Start --> */}
           <div id="confirmationModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -986,8 +972,6 @@ const StudentInformation = () => {
               </div>
             </div>
           </div>
-          {/* <!-- Confirmation Modal End -->
-        <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -997,8 +981,6 @@ const StudentInformation = () => {
               </div>
             </div>
           </div>
-          {/* <!-- Edit Modal End -->
-        <!-- Quick View Modal Start --> */}
           <div id="quickViewModal" className="modal">
             <div className="modal-content">
               <p>Quick View</p>
@@ -1007,7 +989,10 @@ const StudentInformation = () => {
                   <div className="col-6">
                     <div className="item">
                       <div className="profile-img">
-                        <img src={productMemberPng} alt="" />
+                        <img
+                          src="./assets/img/projuct-member-img-3.png"
+                          alt=""
+                        />
                       </div>
                       <h3>
                         Student Name: <span>Shanto</span>
@@ -1096,17 +1081,13 @@ const StudentInformation = () => {
               </div>
             </div>
           </div>
-          {/* <!-- Quick View Modal End -->
-        <!-- Table Action Button Modal Start -->
 
-        <!-- Add Students - Pop Up Modal Start --> */}
           <section id="studentModal" className="modal studentModal">
             <div className="modal-content">
               <div id="popup-modal">
                 <div className="form-container">
                   <h3>New Student Admission</h3>
                   <form>
-                    {/* <!-- Row 1 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="admission-number">
@@ -1160,14 +1141,29 @@ const StudentInformation = () => {
                       </div>
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Blood Group</label>
-                        <Select
-                          options={bloodGroupOptions}
-                          onChange={setBloodGroup}
-                          placeholder="Select Blood Group"
-                        />
+                        <div className="select-box-dropdown">
+                          <div className="select-dropdown-selected">
+                            <span>Select Blood Group</span>
+                            <span className="icon">
+                              <i className="fas fa-angle-down"></i>
+                            </span>
+                          </div>
+                          <div className="select-dropdown-items">
+                            <input
+                              type="text"
+                              className="select-search-box"
+                              placeholder="Search..."
+                            />
+                            <div className="option">A</div>
+                            <div className="option">B</div>
+                            <div className="option">AB</div>
+                            <div className="option">B+</div>
+                            <div className="option">O+</div>
+                            <div className="option">AB-</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    {/* <!-- Row 3 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="religion">Religion</label>
@@ -1188,8 +1184,7 @@ const StudentInformation = () => {
                                 viewBox="0 0 50 50"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
-                                // eslint-disable-next-line react/no-unknown-property
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
                               >
                                 <rect
                                   width="50"
@@ -1234,7 +1229,6 @@ const StudentInformation = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Row 4 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="father-name">Father's Name *</label>
@@ -1264,7 +1258,6 @@ const StudentInformation = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Row 5 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="mother-name">Mother's Name *</label>
@@ -1294,7 +1287,6 @@ const StudentInformation = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Row 6 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="present-address">
@@ -1328,7 +1320,6 @@ const StudentInformation = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Row 7 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="guardian-mobile">
@@ -1362,7 +1353,6 @@ const StudentInformation = () => {
                             <span className="icon">
                               <i className="fas fa-angle-down"></i>
                             </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
                           </div>
                           <div className="select-dropdown-items">
                             <input
@@ -1377,7 +1367,6 @@ const StudentInformation = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Row 8 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
                         <label htmlFor="student-email">Student Email</label>
@@ -1395,7 +1384,6 @@ const StudentInformation = () => {
                             <span className="icon">
                               <i className="fas fa-angle-down"></i>
                             </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
                           </div>
                           <div className="select-dropdown-items">
                             <input
@@ -1412,7 +1400,6 @@ const StudentInformation = () => {
                         <label htmlFor="vanilla-datepicker">
                           Registration Date *
                         </label>
-
                         <div className="input-datepicker-wrapper">
                           <input
                             type="text"
@@ -1424,45 +1411,45 @@ const StudentInformation = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Row 9 --> */}
                     <div className="form-row row">
                       <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Class Name</label>
-                        <Select
-                          options={classOptions}
-                          onChange={setClassName}
-                          placeholder="Select Class"
-                        />
-                      </div>
-
-                      <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Shift Name</label>
-                        <Select
-                          options={shiftOptions}
-                          onChange={setShift}
-                          placeholder="Select Shift"
-                        />
+                        <div className="select-box-dropdown">
+                          <div className="select-dropdown-selected">
+                            <span>Select Shift</span>
+                            <span className="icon">
+                              <i className="fas fa-angle-down"></i>
+                            </span>
+                          </div>
+                          <div className="select-dropdown-items">
+                            <input
+                              type="text"
+                              className="select-search-box"
+                              placeholder="Search..."
+                            />
+                            <div className="option">Morning</div>
+                            <div className="option">Evening</div>
+                          </div>
+                        </div>
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="section">Section Name</label>
-                        <Select
-                          options={sectionOptions}
-                          onChange={setSection}
+                        <input
+                          type="text"
+                          id="section"
                           placeholder="Enter section name"
                         />
                       </div>
                       <div className="form-group col-lg-4">
                         <label htmlFor="session">Session Name</label>
-
-                        <Select
-                          options={sessionOPtions}
-                          onChange={setSection}
-                          placeholder="Enter section name"
+                        <input
+                          type="text"
+                          id="session"
+                          placeholder="Enter session name"
                         />
                       </div>
                     </div>
 
-                    {/* <!-- Actions --> */}
                     <div className="form-actions">
                       <button
                         type="button"
@@ -1483,10 +1470,8 @@ const StudentInformation = () => {
               </div>
             </div>
           </section>
-          {/* <!-- Add Students - Pop Up Modal Start --> */}
         </div>
       </div>
-      {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
