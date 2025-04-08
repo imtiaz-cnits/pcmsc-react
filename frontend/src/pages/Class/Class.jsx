@@ -92,7 +92,7 @@ const ClassPages = () => {
       status: classStatus || "active",
     };
 
-    await updateClass({ classId: editClassId, payload: updatedPayload });
+    updateClass({ classId: editClassId, payload: updatedPayload });
     setClassName("");
     setClassStatus("");
     setWarn("");

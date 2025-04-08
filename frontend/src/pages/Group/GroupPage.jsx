@@ -1,9 +1,34 @@
 import { useState } from "react";
 
 import AddModal from "../../components/AddModal";
+import {
+  useAddGroup,
+  useDeleteGroup,
+  useFetchGroups,
+} from "../../hook/useGroup";
+import Shimmer from "../../components/Shimmer";
+import ActionButtons from "../../components/ActionButtons";
 
 const GroupPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [group, setGroup] = useState("");
+  const [warn, setWarn] = useState("");
+  const { mutate: addGroup } = useAddGroup();
+  const { mutate: deleteGroup } = useDeleteGroup();
+  const { data: groups, isPening, isError, error } = useFetchGroups();
+
+  if (isError) {
+    console.log("GroupPage error : ", error);
+    if (error instanceof Error) {
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong. Please! try again later!";
+
+      return <p>{errorMsg}</p>;
+    }
+  }
 
   return (
     <>
@@ -74,86 +99,34 @@ const GroupPage = () => {
                       <tr>
                         <th>Sl No:</th>
                         <th>Group Name</th>
+                        <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>Day</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>02</td>
-                        <td>Morning</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
+                      {isPening ? (
+                        <Shimmer count={5} />
+                      ) : (
+                        groups?.data?.length > 0 &&
+                        groups?.data?.map((item, index) => (
+                          <tr key={item?._id}>
+                            <td>{index + 1}</td>
+                            <td style={{ textAlign: "center" }}>
+                              {item?.nameLabel}
+                            </td>
+                            <td>{item?.label}</td>
+                            <td>
+                              <ActionButtons
+                                item={item}
+                                isDeleteModalOpen={isDeleteModalOpen}
+                                setIsDeleteModalOpen={setIsDeleteModalOpen}
+                                deleteAcademic={deleteGroup}
+                                setWarn={setWarn}
+                              />
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -188,17 +161,7 @@ const GroupPage = () => {
           {/* <!-- Table End --> */}
 
           {/* <!-- Table Action Button Modal Start --> */}
-          {/* <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
-              </div>
-            </div>
-          </div>
-          {/* <!-- Confirmation Modal End --> */}
+
           {/* <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
             <div className="modal-content">
@@ -226,8 +189,13 @@ const GroupPage = () => {
 
           <AddModal
             title={"Group"}
+            stateValue={group}
+            setState={setGroup}
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            addAcademic={addGroup}
+            warn={warn}
+            setWarn={setWarn}
           />
 
           {/* <!-- Group Pop Up Modal Start --> */}

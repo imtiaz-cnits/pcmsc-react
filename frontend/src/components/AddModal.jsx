@@ -1,4 +1,46 @@
-const AddModal = ({ title, isModalOpen, setIsModalOpen }) => {
+import { useState } from "react";
+
+const AddModal = ({
+  title,
+  isModalOpen,
+  setIsModalOpen,
+  stateValue,
+  setState,
+  addAcademic,
+  warn,
+  setWarn,
+}) => {
+  const [status, setStatus] = useState("");
+
+  const statusOptions = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!stateValue) {
+      setWarn(`${title} name is required and cannot be empty`);
+      return;
+    }
+
+    const label = status?.charAt(0).toUpperCase() + status.slice(1);
+
+    const payload = {
+      name: stateValue,
+      label: label || "Active",
+      status: status || "active",
+    };
+
+    addAcademic(payload);
+    setWarn("");
+    setState("");
+    setStatus("");
+    console.log("payload : ", payload);
+  };
+
   return (
     <>
       {/*  <!-- Table Action Button Modal Start --> 
@@ -19,8 +61,34 @@ const AddModal = ({ title, isModalOpen, setIsModalOpen }) => {
                         <input
                           type="text"
                           id="search-students"
-                          placeholder="Group Name"
+                          value={stateValue}
+                          onChange={(e) => setState(e.target.value)}
+                          placeholder={`${title} Name`}
                         />
+
+                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="search-students">Status Name *</label>
+                        <select
+                          id="search-students"
+                          placeholder="Class"
+                          value={status}
+                          onChange={(e) => setStatus(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select Status
+                          </option>
+
+                          {statusOptions?.map((option, index) => (
+                            <option key={index} value={option?.value}>
+                              {option?.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
 
@@ -34,7 +102,11 @@ const AddModal = ({ title, isModalOpen, setIsModalOpen }) => {
                       >
                         Close
                       </button>
-                      <button type="button" className="button save">
+                      <button
+                        type="button"
+                        className="button save"
+                        onClick={handleSubmit}
+                      >
                         Save
                       </button>
                     </div>

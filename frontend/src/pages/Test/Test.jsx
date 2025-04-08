@@ -4,7 +4,7 @@ import "../../assets/css/all-modal.css";
 
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
 import DatepickerComponent from "../../components/DatepickerComponent ";
-import ActionButtons from "../../components/EditDeleteButton";
+import ActionButtons from "../../components/ActionButtons";
 import Shimmer from "../../components/Shimmer";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchSections } from "../../hook/useSection";

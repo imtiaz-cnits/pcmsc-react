@@ -93,4 +93,33 @@ async function getAllGroups(req, res, next) {
   }
 }
 
-module.exports = { addGroup, getAllGroups };
+// 📝 Delete Group
+async function deleteGroup(req, res, next) {
+  try {
+    console.log(" 🚀 deleteGroup params ", req.params);
+    const { id } = req.params;
+
+    if (!id) {
+      return "❌ Class ID is required.";
+    }
+
+    const deletedItem = await Group.findByIdAndDelete(id);
+
+    console.log("🚀 Group deleted:", deletedItem);
+    if (deletedItem.deletedCount === 0) {
+      console.log(`⚠️ Group with ID ${id} not found or already deleted.`);
+      return next(createError(404, "Group not found or already deleted."));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted.",
+      deletedItem,
+    });
+  } catch (error) {
+    console.log("🚀 deleteGroup error : ", error);
+    return next(error);
+  }
+}
+
+module.exports = { addGroup, getAllGroups, deleteGroup };
