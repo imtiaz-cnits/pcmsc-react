@@ -16,6 +16,7 @@ import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
 import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
 import Grade from "../pages/Grade/Grade";
+import GroupPage from "../pages/Group/GroupPage";
 import MarkEntry from "../pages/MarkEntry/MarkEntry";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import Migration from "../pages/Migration/Migration";
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
           {
             path: "session",
             element: <Session />,
+          },
+          {
+            path: "group",
+            element: <GroupPage />,
           },
         ],
       },

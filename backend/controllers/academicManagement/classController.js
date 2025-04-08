@@ -9,17 +9,16 @@ async function addClass(req, res, next) {
 
     const { name, status, label } = req.body;
 
-    // console.log("before => class add body", req.body);
-
     // check if already exists
     // todo fixed !already exits or not issue
     const existingClass = await ClassModel.findOne({ name });
     const totalDocuments = await ClassModel.countDocuments();
 
-    // documents count
+    console.log("existing class and total documents  : ", {
+      count: totalDocuments,
+      data: existingClass,
+    });
 
-    console.log("existing class : ", existingClass);
-    console.log("total class documents : ", totalDocuments);
     if (existingClass) {
       return next(createError(403, "Class already exists!"));
     }
@@ -33,10 +32,8 @@ async function addClass(req, res, next) {
     });
     // console.log("🚀 Adding Class to DB: ", newClass);
 
-    // 💾 Save the user to the database
     await newClass.save();
 
-    // 🎉 Success response
     return res.status(200).json({
       success: true,
       message: "Successfully added!",

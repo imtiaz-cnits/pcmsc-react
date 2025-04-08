@@ -34,6 +34,10 @@ const {
   getAllEntriesSession,
   getAllSession,
 } = require("../controllers/academicManagement/sessionController");
+const {
+  addGroup,
+  getAllGroups,
+} = require("../controllers/academicManagement/groupController");
 
 // 🔍 Class - CRUD
 router.post("/add-class", addClass);
@@ -60,6 +64,14 @@ router.delete("/section/:id", deleteSection);
 // 🚀 Session - CRUD
 router.post("/add-session", addSession);
 router.get("/sessions", getAllSession);
+router.get("/session-paginated", getAllPaginatedSession);
+router.get("/session-entries", getAllEntriesSession);
+router.patch("/session/:id", updateSession);
+router.delete("/session/:id", deleteSession);
+
+// 🚀 Group - CRUD
+router.post("/add-group", addGroup);
+router.get("/groups", getAllGroups);
 router.get("/session-paginated", getAllPaginatedSession);
 router.get("/session-entries", getAllEntriesSession);
 router.patch("/session/:id", updateSession);
