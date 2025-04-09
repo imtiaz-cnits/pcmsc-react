@@ -104,6 +104,19 @@ const Toggle = ({
               <span className="text">Session</span>
             </Link>
           </li>
+
+          <li
+            className={
+              location.pathname === "/academic-management/group" ? "active" : ""
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <Link to="/academic-management/group">
+              <span className="text">Group</span>
+            </Link>
+          </li>
         </ul>
       </li>
       <li

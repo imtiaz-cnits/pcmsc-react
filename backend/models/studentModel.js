@@ -9,31 +9,136 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      // index : true
+    },
+
+    admissionNumber: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    admissionDate: {
+      type: String,
+      required: true,
+    },
+    studentRoll: {
+      type: String,
+      required: true,
     },
 
     name: {
       type: String,
+      trim: true,
+      required: true,
+    },
+
+    nameInBangla: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    birthCertificate: {
+      type: String,
+      required: true,
+    },
+
+    bloodGroup: {
+      type: String,
+      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Other"],
+      required: true,
+    },
+
+    religion: {
+      type: String,
+      trim: true,
       required: true,
     },
 
     fatherName: {
       type: String,
+      trim: true,
       required: true,
     },
+
+    fatherNID: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    fatherPhone: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
     motherName: {
       type: String,
+      trim: true,
       required: true,
     },
 
-    phone: {
+    motherNID: {
       type: String,
       required: true,
-      unique: true,
     },
 
-    roll: {
-      type: Number,
+    motherPhone: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    presentAddress: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    permanentAddress: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    guardianName: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    guardianPhone: {
+      type: String,
+      required: true,
+    },
+
+    dateOfBirth: {
+      type: String,
+      required: true,
+    },
+
+    studentGender: {
+      type: String,
+      enum: ["Male", "Female"],
+      required: true,
+    },
+
+    studentEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+
+    },
+
+    smsStatus: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      required: true,
+    },
+
+    registrationDate: {
+      type: String,
       required: true,
     },
 
@@ -42,22 +147,29 @@ const studentSchema = new mongoose.Schema(
       ref: "Class",
       required: true,
     },
+
+    shiftName: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shift",
+      required: true,
+    },
+
+    sectionName: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: true,
+    },
+
+    sessionName: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: true,
+    },
     groupName: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Group",
       required: true,
     },
-    studentRoll: {
-      type: Number,
-      required: true,
-    },
-
-    photo: {
-      type: String, // imgURL
-      required: false,
-    },
-
-    // for soft delete support
     isActive: {
       type: Boolean,
       default: true,

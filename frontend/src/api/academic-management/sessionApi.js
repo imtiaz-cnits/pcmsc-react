@@ -11,12 +11,12 @@ export const addSessionAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
-// ✅  GET - method (without paginated)
+// ✅  GET - method
 export const fetchSessionAPI = async () => {
   const res = await axiosPrivate.get("/academic-management/sessions");
 
   // console.log("full response api : ", res);
-  // console.log("fetch api data ", res.data);
+  console.log("fetchSessionAPI api: ", res.data);
   return res.data?.success ? res.data : [];
 };
 
@@ -27,6 +27,16 @@ export const fetchedPaginatedSessions = async (page) => {
   );
   console.log("full response api : ", res);
   console.log("paginated value and total", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+// ✅  GET - method (entries)
+export const fetchedEntriesSessionsAPI = async (limit) => {
+  const res = await axiosPrivate.get(
+    `/academic-management/session-entries?limit=${limit}`,
+  );
+  console.log("full response api : ", res);
+  console.log("entries value and total", res.data);
   return res.data?.success ? res.data : [];
 };
 

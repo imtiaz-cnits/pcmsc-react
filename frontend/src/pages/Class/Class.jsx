@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import Shimmer from "../../components/Shimmer.jsx";
 import {
   useAddClass,
   useDeleteClass,
@@ -8,7 +9,7 @@ import {
   useUpdateShift,
 } from "../../hook/useClass.js";
 
-const Class = () => {
+const ClassPages = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -51,6 +52,7 @@ const Class = () => {
 
     const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
     console.log("status : ", classStatus);
+    console.log("class name ", className);
     const payload = {
       name: className,
       label: label || "Active",
@@ -90,7 +92,7 @@ const Class = () => {
       status: classStatus || "active",
     };
 
-    await updateClass({ classId: editClassId, payload: updatedPayload });
+    updateClass({ classId: editClassId, payload: updatedPayload });
     setClassName("");
     setClassStatus("");
     setWarn("");
@@ -109,8 +111,6 @@ const Class = () => {
       },
     });
   };
-
-  if (isPending) return <p>Loading....................</p>;
 
   if (isError) {
     console.log("inside class list error : ", error);
@@ -146,8 +146,12 @@ const Class = () => {
                   </button>
                 </div>
 
-                {classes?.data?.length === 0 ? (
-                  <p>No Classes Found !</p>
+                {classes?.total <= 0 ? (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: "center" }}>
+                      No Sessions Found
+                    </td>
+                  </tr>
                 ) : (
                   <>
                     {/* <!-- Class heading End --> */}
@@ -206,65 +210,67 @@ const Class = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {classes?.data &&
-                            classes?.data?.map((item, index) => {
-                              return (
-                                <tr key={item?._id}>
-                                  <td>{(page - 1) * 5 + index + 1}</td>
-                                  <td
+                          {isPending ? (
+                            <Shimmer count={5} />
+                          ) : (
+                            classes?.data?.length > 0 &&
+                            classes?.data?.map((item, index) => (
+                              <tr key={item?._id}>
+                                <td>{(page - 1) * 5 + index + 1}</td>
+                                <td
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  {item?.nameLabel}
+                                </td>
+                                <td>{item?.label}</td>
+                                <td
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    gap: "20px",
+                                  }}
+                                >
+                                  <button
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      gap: "20px",
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
                                     }}
+                                    onClick={(e) => handleEditClick(e, item)}
                                   >
-                                    {item?.name}
-                                  </td>
-                                  <td>{item?.label}</td>
-                                  <td
+                                    <FaRegEdit
+                                      style={{
+                                        color: "lightgreen",
+                                        fontSize: "25px",
+                                      }}
+                                    />
+                                  </button>
+                                  <button
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      gap: "20px",
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      padding: 0,
                                     }}
+                                    onClick={(e) =>
+                                      handleClassDelete(e, item?._id)
+                                    }
                                   >
-                                    <button
+                                    <FaRegTrashAlt
                                       style={{
-                                        background: "none",
-                                        border: "none",
-                                        cursor: "pointer",
+                                        color: "red",
+                                        fontSize: "25px",
                                       }}
-                                      onClick={(e) => handleEditClick(e, item)}
-                                    >
-                                      <FaRegEdit
-                                        style={{
-                                          color: "lightgreen",
-                                          fontSize: "25px",
-                                        }}
-                                      />
-                                    </button>
-                                    <button
-                                      style={{
-                                        background: "none",
-                                        border: "none",
-                                        cursor: "pointer",
-                                        padding: 0,
-                                      }}
-                                      onClick={(e) =>
-                                        handleClassDelete(e, item?._id)
-                                      }
-                                    >
-                                      <FaRegTrashAlt
-                                        style={{
-                                          color: "red",
-                                          fontSize: "25px",
-                                        }}
-                                      />
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                    />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -502,4 +508,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default ClassPages;

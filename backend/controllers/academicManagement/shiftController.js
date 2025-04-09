@@ -12,8 +12,6 @@ async function addShift(req, res, next) {
 
     const { shift: name, status, label } = req.body;
 
-    console.log("before => shift add body", req.body);
-
     // frontend required field check
     // if (!name || name.trim() === "") {
     //   return "Shift name is required and cannot be empty";
@@ -25,13 +23,15 @@ async function addShift(req, res, next) {
     const totaldocuments = await Shift.countDocuments();
 
     console.log("existing shift : ", existingShift);
-    if (existingShift || totaldocuments === 0) {
+    console.log("total documents : ", totaldocuments);
+    if (existingShift) {
       return next(createError(403, "Shift already exists!"));
     }
 
     // 👤 create new add class object
     const newShift = new Shift({
       name,
+      nameLabel: name,
       label,
       status,
     });
@@ -77,20 +77,24 @@ async function addShift(req, res, next) {
 // 📝 get all shift
 async function getAllShift(req, res, next) {
   try {
-    const shifts = await Shift.find();
+    const shifts = await Shift.find({});
+
+    // console.log("shifts : ", shifts);
 
     if (!shifts) {
-      return next(createError(400, "Shift not found"));
+      return next(createError(404, "Shift not found"));
     }
 
-    console.log("get all shift value : ", shifts);
+    // console.log("🔑 Fetched all shifts :", shifts);
 
     return res.status(200).json({
       success: true,
+      message: "Shifts fetched successfully!",
+      count: shifts.length,
       data: shifts,
     });
   } catch (error) {
-    console.log("get all shift : ", error);
+    console.log("get all shifts : ", error);
     return next(error);
   }
 }
@@ -98,7 +102,7 @@ async function getAllShift(req, res, next) {
 // 📝 Get all shifts with pagination
 async function getAllShiftsPagination(req, res, next) {
   try {
-    console.log("📥 Received request for shifts: ", req.query);
+    // console.log("📥 Received request for shifts: ", req.query);
 
     // const limit = Math.max(parseInt(req.query.limit, 10) || 5, 1);
     // const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
@@ -142,10 +146,10 @@ async function getAllShiftsPagination(req, res, next) {
 // 📝 Get all shifts with entries
 async function getAllShiftsEntries(req, res, next) {
   try {
-    console.log("entries value :", req.query);
+    // console.log("entries value :", req.query);
     const entries = parseInt(req.query.limit, 10);
 
-    console.log("entries value and tyeof : ", entries, typeof entries);
+    // console.log("entries value and tyeof : ", entries, typeof entries);
 
     const entriesValue = await Shift.find({}).limit(entries);
 
@@ -169,11 +173,11 @@ async function getAllShiftsEntries(req, res, next) {
 // 📝 Update Shift
 async function updateShift(req, res, next) {
   try {
-    console.log("shift params : ", req.params);
+    // console.log("shift params : ", req.params);
     const { id: shiftId } = req.params;
     const { shift, label, status } = req.body;
 
-    console.log(`🔄 Updating section [ID: ${shiftId}] with data:`, req.body);
+    // console.log(`🔄 Updating section [ID: ${shiftId}] with data:`, req.body);
 
     // updated payload
     const updatePayload = {
@@ -182,10 +186,10 @@ async function updateShift(req, res, next) {
       status,
     };
 
-    console.log(
-      `🔄 Before => Updating shift [ID: ${shiftId}] with data:`,
-      updatePayload,
-    );
+    // console.log(
+    //   `🔄 Before => Updating shift [ID: ${shiftId}] with data:`,
+    //   updatePayload,
+    // );
 
     const updatedShift = await Shift.findByIdAndUpdate(shiftId, updatePayload, {
       new: true,
@@ -196,7 +200,7 @@ async function updateShift(req, res, next) {
       return next(createError(404, "Shift not found!"));
     }
 
-    console.log("✅ Successfully updated shift:", updatedShift);
+    // console.log("✅ Successfully updated shift:", updatedShift);
 
     return res.status(200).json({
       success: true,
@@ -222,10 +226,10 @@ async function deleteShift(req, res, next) {
 
     const shiftDeleted = await Shift.findByIdAndDelete(id);
 
-    console.log("✅ Shift deleted:", shiftDeleted);
+    // console.log("✅ Shift deleted:", shiftDeleted);
 
     if (shiftDeleted.deletedCount === 0) {
-      console.log(`⚠️ Shift with ID ${id} not found or already deleted.`);
+      // console.log(`⚠️ Shift with ID ${id} not found or already deleted.`);
       return next(createError(404, "Shift not found or already deleted."));
     }
 

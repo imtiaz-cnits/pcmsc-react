@@ -8,8 +8,6 @@ async function addSection(req, res, next) {
 
     const { section: name, status, label } = req.body;
 
-    console.log("before => section add body", req.body);
-
     // check if already exists
 
     const existingSection = await Section.findOne({ name });
@@ -20,13 +18,14 @@ async function addSection(req, res, next) {
       existingSection,
       totalDocuments,
     );
-    if (existingSection && totalDocuments <= 0) {
+    if (existingSection) {
       return next(createError(403, "Section already exists!"));
     }
 
     // 👤 create new add class object
     const newSection = new Section({
       name,
+      nameLabel: name,
       label,
       status,
     });
@@ -65,6 +64,28 @@ async function addSection(req, res, next) {
       }
     }
     // ⚠️ Handle unexpected errors (fallback)
+    return next(error);
+  }
+}
+
+// 📝 Get all shifts
+async function getAllSections(req, res, next) {
+  try {
+    const sections = await Section.find({});
+    const totalDocuments = await Section.countDocuments();
+
+    if (!sections) {
+      return next(createError(404, "Sections not foudn!"));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Classes fetched successfully!",
+      count: totalDocuments,
+      data: sections,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching sections:", error);
     return next(error);
   }
 }
@@ -192,6 +213,7 @@ async function deleteSection(req, res, next) {
 // module exports
 module.exports = {
   addSection,
+  getAllSections,
   getAllPaginatedSections,
   updateSection,
   deleteSection,

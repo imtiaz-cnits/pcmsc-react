@@ -160,6 +160,20 @@ input::-webkit-inner-spin-button {
   border-radius: 6px;
   transition: 0.3s;
 }
+
+.css-hlgwow {
+  padding: 0px 8px !important;
+}
+
+.css-19bb58m {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.css-19bb58m input {
+  height: 44px !important;
+}
+
 #studentModal .form-group select {
   padding: 10.33px 10px;
   height: 44px;

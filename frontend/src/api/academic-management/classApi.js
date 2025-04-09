@@ -6,7 +6,14 @@ export const addClassAPI = async (payload) => {
     "/academic-management/add-class",
     payload,
   );
-  // console.log("value of ,", res.data);
+  // console.log(" 🚀 value of ,", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+// ✅  GET - method
+export const fetchedClassesAPI = async () => {
+  const res = await axiosPrivate.get("/academic-management/classes");
+  console.log("🚀 fetchedClasses api : ", res.data);
   return res.data?.success ? res.data : [];
 };
 

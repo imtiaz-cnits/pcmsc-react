@@ -8,8 +8,6 @@ async function addSession(req, res, next) {
 
     const { name, status, label } = req.body;
 
-    console.log("before => session add body", req.body);
-
     // check if already exists
     const existingSession = await Session.findOne({ name });
     const totalDocuments = await Session.countDocuments();
@@ -26,6 +24,7 @@ async function addSession(req, res, next) {
     // 👤 create new add session object
     const newSession = new Session({
       name,
+      nameLabel: name,
       label,
       status,
     });
@@ -61,6 +60,29 @@ async function addSession(req, res, next) {
     }
 
     // ⚠️ Handle unexpected errors (fallback)
+    return next(error);
+  }
+}
+
+// 📝 Get all session
+async function getAllSession(req, res, next) {
+  try {
+    const sessions = await Session.find({});
+
+    if (!sessions) {
+      return next(createError(404, "Session not found!"));
+    }
+
+    // console.log("🔑 Fetched all sessions :", sessions);
+
+    return res.status(200).json({
+      success: true,
+      message: "Sessions fetched successfully!",
+      count: sessions.length,
+      data: sessions,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching session:", error);
     return next(error);
   }
 }
@@ -102,6 +124,28 @@ async function getAllPaginatedSession(req, res, next) {
     });
   } catch (error) {
     console.error("❌ Error fetching session: ", error);
+    return next(error);
+  }
+}
+
+// 📝 Get all session with entries
+async function getAllEntriesSession(req, res, next) {
+  try {
+    console.log("📥 Received request for session: ", req.query);
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    const entries = await Session.find({}).limit(limit);
+    const totalEntries = await Session.countDocuments();
+
+    console.log("✅ Retrieved session: ", entries);
+    return res.status(200).json({
+      success: true,
+      count: entries.length,
+      total: totalEntries,
+      data: entries,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching sessions :", error);
     return next(error);
   }
 }
@@ -175,7 +219,9 @@ async function deleteSession(req, res, next) {
 // exports
 module.exports = {
   addSession,
+  getAllSession,
   getAllPaginatedSession,
+  getAllEntriesSession,
   updateSession,
   deleteSession,
 };

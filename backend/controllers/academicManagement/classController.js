@@ -9,16 +9,16 @@ async function addClass(req, res, next) {
 
     const { name, status, label } = req.body;
 
-    console.log("before => class add body", req.body);
-
     // check if already exists
+    // todo fixed !already exits or not issue
     const existingClass = await ClassModel.findOne({ name });
     const totalDocuments = await ClassModel.countDocuments();
 
-    // documents count
+    console.log("existing class and total documents  : ", {
+      count: totalDocuments,
+      data: existingClass,
+    });
 
-    console.log("existing class : ", existingClass);
-    console.log("total class documents : ", totalDocuments);
     if (existingClass) {
       return next(createError(403, "Class already exists!"));
     }
@@ -26,18 +26,19 @@ async function addClass(req, res, next) {
     // 👤 create new add class object
     const newClass = new ClassModel({
       name,
+      nameLabel: name,
       label,
       status,
     });
-    console.log("new added class", newClass);
+    // console.log("🚀 Adding Class to DB: ", newClass);
 
-    // 💾 Save the user to the database
     await newClass.save();
 
-    // 🎉 Success response
     return res.status(200).json({
       success: true,
       message: "Successfully added!",
+      count: totalDocuments,
+      data: newClass,
     });
   } catch (error) {
     console.log("Error in adding class: ", error);
@@ -73,7 +74,7 @@ async function getAllClasses(req, res, next) {
       return next(createError(404, "Class not found!"));
     }
 
-    console.log("🔑 Fetched all classes:", classes);
+    // console.log("🔑 Fetched all classes:", classes);
 
     return res.status(200).json({
       success: true,
@@ -92,7 +93,7 @@ async function getAllClasses(req, res, next) {
 // 📝 Get all shifts with pagination
 async function getAllPaginatedClasses(req, res, next) {
   try {
-    console.log("📥 Received request for shifts: ", req.query);
+    // console.log("📥 Received request for shifts: ", req.query);
 
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 5;
@@ -104,7 +105,7 @@ async function getAllPaginatedClasses(req, res, next) {
 
     const totalPages = Math.ceil(total / limit);
 
-    console.log("✅ Retrieved class: ", classes);
+    // console.log("✅ Retrieved class: ", classes);
     return res.status(200).json({
       success: true,
       count: classes.length,
@@ -122,12 +123,16 @@ async function getAllPaginatedClasses(req, res, next) {
 // 📝 update
 async function updateClass(req, res, next) {
   try {
-    console.log("class params : ", req.params);
-    console.log("class body : ", req.body);
+    // console.log("class params : ", req.params);
+    // console.log("class body : ", req.body);
     const { id: classId } = req.params;
     const classData = req.body;
 
-    // find and update the class document by ID
+    const existingClass = await ClassModel.find({ name: classData.name });
+
+    if (existingClass) {
+      return next(403, "Already exits!");
+    }
 
     const updatedClass = await ClassModel.findByIdAndUpdate(
       classId,
@@ -139,13 +144,7 @@ async function updateClass(req, res, next) {
       return next(createError(404, "Class not found!"));
     }
 
-    const existingClass = await ClassModel.find({ name: classData.name });
-
-    if (existingClass) {
-      return next(403, "Already exits!");
-    }
-
-    console.log("updated class value : ", updatedClass);
+    // console.log("🚀 updated class value : ", updatedClass);
 
     return res.status(200).json({
       success: true,
@@ -153,7 +152,7 @@ async function updateClass(req, res, next) {
       updatedData: updatedClass,
     });
   } catch (error) {
-    console.error("update class error : ", error);
+    // console.error("📌 ❌ update class error : ", error);
     return next(error);
   }
 }
@@ -161,7 +160,7 @@ async function updateClass(req, res, next) {
 // 📝 Delete Shift
 async function deleteClass(req, res, next) {
   try {
-    console.log("deleted class params ", req.params);
+    // console.log("deleted class params ", req.params);
     const { id } = req.params;
 
     if (!id) {

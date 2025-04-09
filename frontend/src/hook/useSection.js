@@ -9,6 +9,7 @@ import {
   addSectionAPI,
   deleteSectionAPI,
   fetchedPaginatedSections,
+  fetchedSectionsAPI,
   updateSectionAPI,
 } from "../api/academic-management/sectionAPI.js";
 
@@ -96,13 +97,25 @@ export const useAddSections = () => {
 };
 
 // GET - method
+export const useFetchSections = () => {
+  return useQuery({
+    queryKey: ["sections"],
+    queryFn: fetchedSectionsAPI,
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 3,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+  });
+};
+
+// GET - method
 //todo optimistic opacity
 export const useFetchPaginatedShifts = (page) => {
   return useQuery({
-    queryKey: ["sections", page], // 🔑 Memoized query key
-    queryFn: () => fetchedPaginatedSections(page), // ⚡ Ensure function safety
-    gcTime: 1000 * 60 * 10, // 🗑️ Garbage collection time (10 min)
-    staleTime: 1000 * 60 * 3, // ⏳ Data remains fresh for 3 min
+    queryKey: ["sections", page],
+    queryFn: () => fetchedPaginatedSections(page),
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 3,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
   });

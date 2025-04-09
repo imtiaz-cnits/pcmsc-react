@@ -10,6 +10,13 @@ export const addSectionAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅  GET - method
+export const fetchedSectionsAPI = async () => {
+  const res = await axiosPrivate.get("/academic-management/sections");
+  console.log("🚀 fetchedSectionsAPI api : ", res.data);
+  return res.data?.success ? res.data : [];
+};
+
 //with paginated
 export const fetchedPaginatedSections = async (page) => {
   const res = await axiosPrivate.get(

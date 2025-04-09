@@ -8,7 +8,9 @@ import toast from "react-hot-toast";
 import {
   addSessionAPI,
   deleteSessionAPI,
+  fetchedEntriesSessionsAPI,
   fetchedPaginatedSessions,
+  fetchSessionAPI,
   updateSessionAPI,
 } from "../api/academic-management/sessionApi.js";
 
@@ -48,11 +50,37 @@ export const useAddSession = () => {
   });
 };
 
+//✅  GET - method
+export const useFetchSessions = () => {
+  return useQuery({
+    queryKey: ["sessions"],
+    queryFn: fetchSessionAPI,
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    retry: 3,
+  });
+};
+
 //✅  GET - method (paginated)
 export const useFetchPaginatedSessions = (page) => {
   return useQuery({
     queryKey: ["sessions", page],
     queryFn: async () => await fetchedPaginatedSessions(page),
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    retry: 4,
+  });
+};
+
+//✅  GET - method (entries)
+export const useFetchEntriesSessions = (limit) => {
+  return useQuery({
+    queryKey: ["sessions"],
+    queryFn: async () => fetchedEntriesSessionsAPI(limit),
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,

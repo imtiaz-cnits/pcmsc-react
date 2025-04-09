@@ -7,6 +7,7 @@ const connectDB = require("./config/database/db");
 const authRouter = require("./routes/authRouter");
 const testRouter = require("./routes/testRouter");
 const academicRouter = require("./routes/academicRouter");
+const studentRouter = require("./routes/studentRouter");
 const {
   notFoundHandler,
   errorHandler,
@@ -41,6 +42,7 @@ app.use("/api/v1", testRouter);
 // application routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/academic-management", academicRouter);
+app.use("/api/v1/student-management", studentRouter);
 // app.use('/api/v1/users', userRouter);
 
 // 404 not found handler
