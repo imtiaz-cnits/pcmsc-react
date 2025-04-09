@@ -58,7 +58,6 @@ export const useFetchGroups = () => {
   });
 };
 
-
 //✅  PATCH - method
 export const useUpdateGroup = () => {
   const queryClient = useQueryClient();
@@ -86,8 +85,6 @@ export const useUpdateGroup = () => {
     onSuccess: async (data, { groupID, payload }) => {
       console.log("🚀 update group onSuccess data value :", data);
       console.log("🚀 update  :", payload, groupID);
-
-   
 
       await queryClient.invalidateQueries({ queryKey: ["groups", groupID] });
       if (data?.success) {

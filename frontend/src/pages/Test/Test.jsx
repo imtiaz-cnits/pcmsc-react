@@ -10,7 +10,7 @@ import { useFetchClasses } from "../../hook/useClass";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
-import { useAddSutdent, useFetchSutdents } from "../../hook/useStudentInfo";
+import { useAddSutdent, useFetchStudents } from "../../hook/useStudentInfo";
 import { useFetchGroups } from "../../hook/useGroup";
 
 const Test = () => {
@@ -52,7 +52,7 @@ const Test = () => {
     isPending: isStudentsPending,
     isError: isStudentsError,
     error: studentsError,
-  } = useFetchSutdents();
+  } = useFetchStudents();
   const {
     data: classes,
     isPending: isclassPending,
@@ -69,7 +69,7 @@ const Test = () => {
     data: sections,
     isPending: isSectionPending,
     isError: isSectionError,
-    errro: sectionError,
+    error: sectionError,
   } = useFetchSections();
 
   const {

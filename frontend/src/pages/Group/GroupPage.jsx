@@ -23,7 +23,7 @@ const GroupPage = () => {
   const { mutate: addGroup } = useAddGroup();
   const { mutate: updateGroup } = useUpdateGroup();
   const { mutate: deleteGroup } = useDeleteGroup();
-  const { data: groups, isPening, isError, error } = useFetchGroups();
+  const { data: groups, isPending, isError, error } = useFetchGroups();
 
   if (isError) {
     console.log("GroupPage error : ", error);
@@ -111,7 +111,7 @@ const GroupPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isPening ? (
+                      {isPending ? (
                         <Shimmer count={5} />
                       ) : (
                         groups?.data?.length > 0 &&

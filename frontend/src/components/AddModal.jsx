@@ -10,7 +10,7 @@ const AddModal = ({
   warn,
   setWarn,
   status,
-  setStatus
+  setStatus,
 }) => {
   const statusOptions = [
     { value: "active", label: "Active" },

@@ -33,13 +33,12 @@ export const useAddSutdent = () => {
 };
 
 // ✅  GET - method
-export const useFetchSutdents = () => {
+export const useFetchStudents = () => {
   return useQuery({
     queryKey: ["students"],
     queryFn: fetchAllStudentsAPI,
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: true,
   });
 };

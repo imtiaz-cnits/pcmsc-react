@@ -32,6 +32,7 @@ const EditModal = ({
 
     const payload = {
       name: stateValue,
+      nameLabel: stateValue,
       label: label || "Active",
       status: status || "active",
     };
