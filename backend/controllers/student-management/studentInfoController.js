@@ -38,6 +38,7 @@ async function addStudentInfo(req, res, next) {
       shift,
       section,
       session,
+      group,
     } = req.body;
 
     // ✅ check if already exists
@@ -77,6 +78,7 @@ async function addStudentInfo(req, res, next) {
       shiftName: shift,
       sectionName: section,
       sessionName: session,
+      groupName: group,
     });
 
     // console.log("🚀  Adding Student Info into DB : ", newStudentInfo);

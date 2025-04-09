@@ -17,13 +17,13 @@ const GroupPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [group, setGroup] = useState("");
   const [groupStatus, setGroupStatus] = useState("");
+  const [editId, setEditId] = useState("");
 
   const [warn, setWarn] = useState("");
   const { mutate: addGroup } = useAddGroup();
-  const {mutate: updateGroup} = useUpdateGroup()
+  const { mutate: updateGroup } = useUpdateGroup();
   const { mutate: deleteGroup } = useDeleteGroup();
   const { data: groups, isPening, isError, error } = useFetchGroups();
-
 
   if (isError) {
     console.log("GroupPage error : ", error);
@@ -127,14 +127,15 @@ const GroupPage = () => {
                                 item={item}
                                 group={group}
                                 setGroup={setGroup}
-            status={groupStatus}
-            setStatus={setGroupStatus}
+                                status={groupStatus}
+                                setStatus={setGroupStatus}
                                 isDeleteModalOpen={isDeleteModalOpen}
                                 setIsDeleteModalOpen={setIsDeleteModalOpen}
                                 deleteAcademic={deleteGroup}
                                 setWarn={setWarn}
                                 isEditModalOpen={isEditModalOpen}
                                 setIsEditModalOpen={setIsEditModalOpen}
+                                setEditId={setEditId}
                               />
                             </td>
                           </tr>
@@ -216,16 +217,19 @@ const GroupPage = () => {
           {/* <!-- Group Pop Up Modal Start --> */}
 
           {/* <!-- Edit Modal Start --> */}
-<EditModal 
-
-title={"Group"}
-group={group}
-setGroup={setGroup}
-setState={setGroup}
+          <EditModal
+            title={"Group"}
+            stateValue={group}
+            setState={setGroup}
             status={groupStatus}
-isEditModalOpen={isEditModalOpen}
-setIsEditModalOpen={setIsEditModalOpen}
-/>
+            isEditModalOpen={isEditModalOpen}
+            setIsEditModalOpen={setIsEditModalOpen}
+            updateAcademic={updateGroup}
+            editId={editId}
+            setEditId={setEditId}
+            warn={warn}
+            setWarn={setWarn}
+          />
 
           {/* <!-- Edit Modal End -->*/}
         </div>

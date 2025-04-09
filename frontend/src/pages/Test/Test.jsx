@@ -43,7 +43,7 @@ const Test = () => {
   const [shift, setShift] = useState(null);
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
-  const [group, setGroup] = useState(null); 
+  const [group, setGroup] = useState(null);
   const formRef = useRef(null);
   const { mutate: addStudent } = useAddSutdent();
 
@@ -84,7 +84,7 @@ const Test = () => {
     isPending: isGroupsPending,
     isError: isGroupsError,
     error: groupsError,
-  } = useFetchGroups(); 
+  } = useFetchGroups();
   //  Close the modal by clicking outside it
   const handleOutSideClick = (e) => {
     if (e.target.classList.contains("studentModal")) {
@@ -194,12 +194,6 @@ const Test = () => {
     { value: "O-", label: "O-" },
   ];
 
-  // const classOptions = [
-  //   { value: "One", label: "One" },
-  //   { value: "Two", label: "Two" },
-  //   { value: "Three", label: "Three" },
-  // ];
-
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
   });
@@ -219,7 +213,6 @@ const Test = () => {
   const groupOPtions = groups?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
   });
-
 
   const genderOPtions = [
     { value: "Male", label: "Male" },
@@ -260,6 +253,7 @@ const Test = () => {
     setShift(null);
     setSection(null);
     setSession(null);
+    setGroup(null);
   };
 
   const handleSubmit = (e) => {
@@ -292,6 +286,7 @@ const Test = () => {
       shift: shift ? shift.value : null,
       section: section ? section.value : null,
       session: session ? session.value : null,
+      group: group ? group.value : null,
     };
 
     console.log("payload : ", payload);
@@ -322,6 +317,7 @@ const Test = () => {
     setShift(null);
     setSection(null);
     setSession(null);
+    setGroup(null);
     setIsModalOpen(false);
   };
 
@@ -330,7 +326,8 @@ const Test = () => {
     isshiftPending ||
     isSectionPending ||
     isSessionPending ||
-    isStudentsPending || isGroupsPending
+    isStudentsPending ||
+    isGroupsPending
   )
     return <Shimmer count={10} />;
 
@@ -371,8 +368,7 @@ const Test = () => {
 
     if (isGroupsError && groupsError instanceof Error) {
       console.log("Students Error: ", groupsError);
-      errorMsg =
-        groupsError?.response?.data?.message || groupsError?.message;
+      errorMsg = groupsError?.response?.data?.message || groupsError?.message;
     }
 
     return <p>{errorMsg}</p>;

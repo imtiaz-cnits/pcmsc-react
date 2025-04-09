@@ -6,28 +6,19 @@ const EditModal = ({
   setIsEditModalOpen,
   stateValue,
   setState,
-  addAcademic,
   warn,
   setWarn,
-  group,
-  setGroup
+  updateAcademic,
+  editId,
+  setEditId,
 }) => {
-
-    
   const [status, setStatus] = useState("");
-const [editClassId, setEditClassId] = useState("");
-  
 
   const statusOptions = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
-
-
-
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,10 +36,11 @@ const [editClassId, setEditClassId] = useState("");
       status: status || "active",
     };
 
-    addAcademic(payload);
+    updateAcademic({ editId, payload });
     setWarn("");
     setState("");
     setStatus("");
+    setEditId("");
     console.log("payload : ", payload);
   };
 
@@ -128,8 +120,7 @@ const [editClassId, setEditClassId] = useState("");
           </section>
         )}
       </div>
-               {/* <!-- Edit Modal End -->*/}
-
+      {/* <!-- Edit Modal End -->*/}
     </>
   );
 };

@@ -160,7 +160,11 @@ const studentSchema = new mongoose.Schema(
       ref: "Section",
       required: true,
     },
-
+    groupName: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group",
+      required: true,
+    },
     isActive: {
       type: Boolean,
       default: true,

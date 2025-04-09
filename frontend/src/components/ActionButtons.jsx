@@ -14,21 +14,18 @@ const ActionButtons = ({
   group,
   setGroup,
   status,
-  setStatus
+  setStatus,
+  setEditId,
 }) => {
-
-  const [editClassId, setEditClassId] = useState("");
- 
   const [itemToDelete, setItemToDelete] = useState(null);
 
-
-  const handleEditClick = (e, item) => {
-    e.preventDefault();
-    console.log("editing item: ", item);
-    setEditClassId(item?._id)
-    setGroup(item?.name)
-    setStatus(item?.status)
-  }
+  const handleEdit = () => {
+    console.log("handleEdit", item);
+    setGroup(item?.name);
+    setStatus(item?.status);
+    setEditId(item?._id);
+    setIsEditModalOpen(true);
+  };
 
   const handleDeleteClick = (e, item) => {
     e.preventDefault();
@@ -74,7 +71,7 @@ const ActionButtons = ({
         >
           {/* Edit Button */}
           <button
-            onClick={() => setIsEditModalOpen(!isEditModalOpen)}
+            onClick={handleEdit}
             style={{
               background: "none",
               border: "none",
@@ -94,7 +91,7 @@ const ActionButtons = ({
               e.currentTarget.style.color = "#0a84ff";
             }}
           >
-            <FaRegEdit style={{ fontSize: "18px" }} onClick={(e)=> handleEditClick(e,item)}/>
+            <FaRegEdit style={{ fontSize: "18px" }} />
           </button>
 
           {/* Delete Button */}
