@@ -25,6 +25,17 @@ const GroupPage = () => {
   const { mutate: deleteGroup } = useDeleteGroup();
   const { data: groups, isPending, isError, error } = useFetchGroups();
 
+
+  const handleEdit = (e,item) => {
+    console.log("handleEdit", item);
+    e.preventDefault();
+    setGroup(item?.name);
+    setGroupStatus(item?.status);
+    setEditId(item?._id);
+    setIsEditModalOpen(true);
+  };
+
+
   if (isError) {
     console.log("GroupPage error : ", error);
     if (error instanceof Error) {
@@ -105,7 +116,7 @@ const GroupPage = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Group Name</th>
+                      <th>Group Name</th>
                         <th>Status</th>
                         <th>Action</th>
                       </tr>
@@ -125,8 +136,8 @@ const GroupPage = () => {
                             <td>
                               <ActionButtons
                                 item={item}
-                                group={group}
-                                setGroup={setGroup}
+                                stateValue={group}
+                                setStateValue={setGroup}
                                 status={groupStatus}
                                 setStatus={setGroupStatus}
                                 isDeleteModalOpen={isDeleteModalOpen}
@@ -136,6 +147,7 @@ const GroupPage = () => {
                                 isEditModalOpen={isEditModalOpen}
                                 setIsEditModalOpen={setIsEditModalOpen}
                                 setEditId={setEditId}
+                                handleEdit={handleEdit}
                               />
                             </td>
                           </tr>

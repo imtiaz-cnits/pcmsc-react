@@ -14,6 +14,7 @@ async function addStudentInfo(req, res, next) {
     const {
       admissionNumber,
       admissionDate,
+      studentRoll,
       studentName,
       nameBangla,
       birthCertificate,
@@ -45,15 +46,16 @@ async function addStudentInfo(req, res, next) {
     const existingStudentInfo = await Student.findOne({
       studentID: admissionNumber,
     });
-
-    if (existingStudentInfo) {
-      return next(createError(403, "Student already exists!"));
-    }
+//todo
+    // if (existingStudentInfo) {
+    //   return next(createError(403, "Student already exists!"));
+    // }
 
     const newStudentInfo = new Student({
       studentID: admissionNumber,
       admissionNumber,
       admissionDate,
+      studentRoll,
       name: studentName,
       nameInBangla: nameBangla,
       birthCertificate,
@@ -81,7 +83,7 @@ async function addStudentInfo(req, res, next) {
       groupName: group,
     });
 
-    // console.log("🚀  Adding Student Info into DB : ", newStudentInfo);
+    console.log("🚀  Adding Student Info into DB : ", newStudentInfo);
 
     // 💾 Save the s_info to the database
     await newStudentInfo.save();
@@ -122,7 +124,8 @@ async function getAllStudents(req, res, next) {
       .populate("className")
       .populate("shiftName")
       .populate("sectionName")
-      .populate("sessionName");
+      .populate("sessionName")
+      .populate("groupName");
 
     if (!students) {
       return next(createError(404, "Student not found!"));
@@ -160,15 +163,13 @@ async function updateStudent(req, res, next) {
       return next(createError(404, "Item not found!"));
     }
 
-    if (payload.admissionNumber) {
-      const existingStudent = await Student.find({
-        studentID: payload.admissionNumber,
-      });
+    // if (payload.admissionNumber) {
+    //   const existingStudent = await Student.find({
+    //     studentID: payload.admissionNumber,
+    //   });
 
-      if (existingStudent) {
-        return next(createError(403, "Already exists!"));
-      }
-    }
+
+    // }
     console.log("🚀 updated student : ", updatedStudent);
 
     return res.status(200).json({

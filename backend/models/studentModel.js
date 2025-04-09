@@ -20,6 +20,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    studentRoll: {
+      type: String,
+      required: true,
+    },
 
     name: {
       type: String,
@@ -124,6 +128,7 @@ const studentSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
       unique: true,
+
     },
 
     smsStatus: {

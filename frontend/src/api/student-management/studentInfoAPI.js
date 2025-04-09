@@ -19,3 +19,23 @@ export const fetchAllStudentsAPI = async () => {
   console.log("🚀 fetchAllStudentsAPI : ", res.data);
   return res.data?.success ? res.data : [];
 };
+
+// ✅ PATCH - method
+export const updateStudentAPI = async ({ studentID, payload }) => {
+  const res = await axiosPrivate.patch(
+      `/student-management/student/${studentID}`,
+      payload,
+  );
+
+  console.log("⚙️ updateStudentAPI api :", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+
+
+// ✅  DELETE - method
+export const deleteStudentInfoAPI = async (id) => {
+  const res = await axiosPrivate.delete(`/student-management/student/${id}`);
+  console.log("🚀 deleteStudentInfoAPI : ", res.data);
+  return res.data?.success ? res.data : [];
+};
