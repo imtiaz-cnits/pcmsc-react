@@ -116,49 +116,49 @@ document.addEventListener("DOMContentLoaded", () => {
 // Quick View Modal End....................
 
 // Add Students - Pop Up Modal Start.............
-document.addEventListener("DOMContentLoaded", () => {
-  const studentModal = document.getElementById("studentModal");
-  const studentModalBtn = document.getElementById("studentModalBtn");
-  const closBtn = document.getElementById("closBtn");
+// document.addEventListener("DOMContentLoaded", () => {
+//   const studentModal = document.getElementById("studentModal");
+//   const studentModalBtn = document.getElementById("studentModalBtn");
+//   const closBtn = document.getElementById("closBtn");
 
-  // Function to disable scrolling
-  const disableScroll = () => {
-    document.body.style.overflow = "hidden";
-  };
+//   // Function to disable scrolling
+//   const disableScroll = () => {
+//     document.body.style.overflow = "hidden";
+//   };
 
-  // Function to enable scrolling
-  const enableScroll = () => {
-    document.body.style.overflow = "";
-  };
+//   // Function to enable scrolling
+//   const enableScroll = () => {
+//     document.body.style.overflow = "";
+//   };
 
-  // Open the student modal and hide scroll
-  studentModalBtn.addEventListener("click", () => {
-    studentModal.classList.add("show");
-    disableScroll();
-  });
+//   // Open the student modal and hide scroll
+//   studentModalBtn.addEventListener("click", () => {
+//     studentModal.classList.add("show");
+//     disableScroll();
+//   });
 
-  // Close the student modal and show scroll
-  closBtn.addEventListener("click", () => {
-    studentModal.classList.remove("show");
-    enableScroll();
-  });
+//   // Close the student modal and show scroll
+//   closBtn.addEventListener("click", () => {
+//     studentModal.classList.remove("show");
+//     enableScroll();
+//   });
 
-  // Close the modal by clicking outside it and show scroll
-  document.addEventListener("click", (e) => {
-    if (e.target === studentModal) {
-      studentModal.classList.remove("show");
-      enableScroll();
-    }
-  });
+//   // Close the modal by clicking outside it and show scroll
+//   document.addEventListener("click", (e) => {
+//     if (e.target === studentModal) {
+//       studentModal.classList.remove("show");
+//       enableScroll();
+//     }
+//   });
 
-  // Close the modal when Esc key is pressed
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      studentModal.classList.remove("show");
-      enableScroll();
-    }
-  });
-});
+//   // Close the modal when Esc key is pressed
+//   document.addEventListener("keydown", (e) => {
+//     if (e.key === "Escape") {
+//       studentModal.classList.remove("show");
+//       enableScroll();
+//     }
+//   });
+// });
 // Add Students - Pop Up Modal End.............
 
 // Migrate Students Pop Up Modal Start.........

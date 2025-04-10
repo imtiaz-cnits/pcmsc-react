@@ -23,15 +23,13 @@ export const fetchAllStudentsAPI = async () => {
 // ✅ PATCH - method
 export const updateStudentAPI = async ({ studentID, payload }) => {
   const res = await axiosPrivate.patch(
-      `/student-management/student/${studentID}`,
-      payload,
+    `/student-management/student/${studentID}`,
+    payload,
   );
 
   console.log("⚙️ updateStudentAPI api :", res.data);
   return res.data?.success ? res.data : [];
 };
-
-
 
 // ✅  DELETE - method
 export const deleteStudentInfoAPI = async (id) => {

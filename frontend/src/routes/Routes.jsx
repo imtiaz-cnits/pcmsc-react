@@ -34,6 +34,7 @@ import Ok from "../pages/Test/Ok";
 import Test from "../pages/Test/Test";
 import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
+import AddNewStudent from "../pages/StudentInformation/AddNewStudent.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ export const router = createBrowserRouter([
           {
             path: "student-information",
             element: <StudentInformation />,
+          },
+          {
+            path: "new-student",
+            element: <AddNewStudent />,
           },
           {
             path: "class-wise-student",
@@ -190,4 +195,5 @@ export const router = createBrowserRouter([
     path: "ok",
     element: <Ok />,
   },
+
 ]);

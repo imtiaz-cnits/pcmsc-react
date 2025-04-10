@@ -93,7 +93,9 @@ label {
 .page-content {
   min-height: 100vh;
   padding: 90px 20px 0px 20px;
-  background: #eef8ff;
+  /* background: #eef8ff; */
+  background: white;
+
 }
 
 .main-content .copyright p {

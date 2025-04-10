@@ -9,7 +9,8 @@ import {
 import {
   addStudentInfoAPI,
   deleteStudentInfoAPI,
-  fetchAllStudentsAPI, updateStudentAPI,
+  fetchAllStudentsAPI,
+  updateStudentAPI,
 } from "../api/student-management/studentInfoAPI";
 import toast from "react-hot-toast";
 
@@ -45,7 +46,6 @@ export const useFetchStudents = () => {
   });
 };
 
-
 //✅  PATCH - method
 export const useUpdateStudent = () => {
   const queryClient = useQueryClient();
@@ -57,14 +57,14 @@ export const useUpdateStudent = () => {
 
       if (error?.response) {
         alert(
-            error.response?.data?.message ||
+          error.response?.data?.message ||
             "An error occurred while updating the student. Please try again.",
         );
       }
 
       console.log(
-          "❌ An error occurred while updating student. Please try again. : ",
-          error?.response?.data?.message ||
+        "❌ An error occurred while updating student. Please try again. : ",
+        error?.response?.data?.message ||
           error?.message ||
           "Failed to update group . Try again!",
       );
@@ -74,7 +74,9 @@ export const useUpdateStudent = () => {
       console.log("🚀 update student onSuccess data value :", data);
       console.log("🚀 update  :", payload, studentID);
 
-      await queryClient.invalidateQueries({ queryKey: ["students", studentID] });
+      await queryClient.invalidateQueries({
+        queryKey: ["students", studentID],
+      });
       if (data?.success) {
         alert(data?.message);
       }
@@ -85,7 +87,6 @@ export const useUpdateStudent = () => {
     },
   });
 };
-
 
 //✅  DELETE - method
 export const useDeleteStudent = () => {
