@@ -3,7 +3,8 @@ const path = require("path");
 const fs = require("fs");
 
 // file upload foalder
-const UPLOADS_FOLDER = path.join(__dirname, "uploads");
+// const UPLOADS_FOLDER = path.join(__dirname, "uploads");
+const UPLOADS_FOLDER = path.join(__dirname, "../../uploads/avatar");
 
 // check if folder exists or not
 
@@ -68,6 +69,8 @@ const upload = multer({
     }
   },
 });
+
+module.exports = upload;
 
 // // 🛠️ basic route check
 // app.post('/', upload.array('avatar', 2), (req, res) => {

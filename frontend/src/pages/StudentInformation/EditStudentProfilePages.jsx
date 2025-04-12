@@ -8,11 +8,9 @@ import { useFetchGroups } from "../../hook/useGroup";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
-import { useAddSutdent } from "../../hook/useStudentInfo";
+import { useFetchStudents, useUpdateStudent } from "../../hook/useStudentInfo";
 
-import { useEffect } from "react";
-
-const AddNewStudentPages = () => {
+const EditStudentProfilePages = () => {
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [admissionDate, setAdmissionDate] = useState("");
   const [studentRoll, setStudentRoll] = useState("");
@@ -34,20 +32,26 @@ const AddNewStudentPages = () => {
   const [dob, setDOB] = useState("");
   const [studentGender, setStudentGender] = useState(null);
   const [studentEmail, setStudentEmail] = useState("");
-  const [smsStatus, setSmsStatus] = useState(null);
+  const [smsStatus, setSmsStatus] = useState("");
   const [registrationDate, setRegistrationDate] = useState("");
   const [className, setClassName] = useState("");
   const [shift, setShift] = useState(null);
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
   const [group, setGroup] = useState(null);
+  const [warn, setWarn] = useState("");
   const [imgFile, setImgFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [warn, setWarn] = useState({});
   const formRef = useRef(null);
 
-  const { mutate: addStudent } = useAddSutdent();
+  const { mutate: updateStudent } = useUpdateStudent();
 
+  const {
+    data: students,
+    isPending: isStudentsPending,
+    isError: isStudentsError,
+    error: studentsError,
+  } = useFetchStudents();
   const {
     data: classes,
     isPending: isclassPending,
@@ -80,12 +84,6 @@ const AddNewStudentPages = () => {
     isError: isGroupsError,
     error: groupsError,
   } = useFetchGroups();
-
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
 
   // selector option
   const bloodGroupOptions = [
@@ -129,115 +127,6 @@ const AddNewStudentPages = () => {
     { value: "Inactive", label: "Inactive" },
   ];
 
-  const MAX_FILE_SIZE_MB = 2; // Limit to 2MB
-  const allowedTypes = ["image/gif", "image/jpeg", "image/png"];
-  const handleFileChange = (e) => {
-    e.preventDefault();
-    console.log("img button clicked");
-
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    if (!allowedTypes.includes(file.type)) {
-      alert("Only GIF, JPEG, and PNG files are allowed.");
-      return;
-    }
-    const fileSizeMB = file.size / (1024 * 1024);
-    if (fileSizeMB > MAX_FILE_SIZE_MB) {
-      alert("File size should not exceed 2MB.");
-      return;
-    }
-
-    const previewURL = URL.createObjectURL(file);
-    console.log("Selected file:", file);
-    console.log("Preview URL:", previewURL);
-    setImgFile(file);
-    setPreview(previewURL);
-  };
-
-  const validateField = (name, value) => {
-    let error = "";
-    switch (name) {
-      case "admissionNumber":
-        if (!value) error = "Admission number is required.";
-        break;
-
-      case "studentRoll":
-        if (!value) error = "Student's Roll is required.";
-        break;
-
-      case "sutdentName":
-        if (!value) error = "Student name is required.";
-        break;
-
-      case "sutdentNameInBangla":
-        if (!value) error = "Student name is required.";
-        break;
-
-      case "birthCertificate":
-        if (!value) error = "Birth Certificate is required.";
-        break;
-
-      case "bloodGroup":
-        if (!value) error = "Blood group information is mandatory.";
-        break;
-
-      case "religion":
-        if (!value) error = "Religion is required.";
-        break;
-
-      case "fatherName":
-        if (!value) error = "Father name is required.";
-        break;
-
-      case "fatherNID": {
-        const nidRegExp = /^(?:\d{10}|\d{13}|\d{17})$/;
-
-        if (!value) {
-          error = "Father's NID is required.";
-        } else if (!nidRegExp.test(value)) {
-          error = "Invalid NID. Must be 10, 13, or 17 digits.";
-        }
-        break;
-      }
-
-      case "fatherPhoneNo": {
-        const phoneNoRegExp = /^(?:\+88|88)?01[3-9]\d{8}$/;
-
-        if (!value) {
-          error = "Father's Mobile No is required.";
-        } else if (!phoneNoRegExp.test(value)) {
-          error = "Invalid Bangladeshi phone number.";
-        }
-        break;
-      }
-
-      case "motherName":
-        if (!value) error = "Mother name is required.";
-        break;
-
-      case "motherNID": {
-        const nidRegExp = /^(?:\d{10}|\d{13}|\d{17})$/;
-
-        if (!value) {
-          error = "NID is required.";
-        } else if (!nidRegExp.test(value)) {
-          error = "Invalid NID";
-        }
-        break;
-      }
-
-      case "motherPhoneNo":
-        if (!value) error = "Mobile No is required.";
-        break;
-
-      default:
-        break;
-    }
-    setWarn((prev) => ({ ...prev, [name]: error }));
-  };
-
   const reset = () => {
     formRef.current.reset();
     setAdmissionNumber("");
@@ -278,52 +167,67 @@ const AddNewStudentPages = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!admissionNumber) {
-      return;
-    }
+    const payload = {
+      admissionNumber,
+      admissionDate,
+      studentRoll,
+      studentName,
+      nameBangla,
+      birthCertificate,
+      bloodGroup: bloodGroup ? bloodGroup.value : null,
+      religion,
+      fatherName,
+      fatherNID,
+      fatherPhoneNo,
+      motherName,
+      motherNID,
+      motherPhoneNo,
+      presentAddress,
+      permanentAddress,
+      guardian,
+      guardianPhone,
+      dob,
+      studentGender: studentGender ? studentGender.value : null,
+      studentEmail,
+      smsStatus: smsStatus ? smsStatus.value : null,
+      registrationDate,
+      className: className ? className.value : null,
+      shift: shift ? shift.value : null,
+      section: section ? section.value : null,
+      session: session ? session.value : null,
+      group: group ? group.value : null,
+    };
 
-    const formData = new FormData();
-    formData.append("admissionNumber", admissionNumber);
-    formData.append("admissionDate", admissionDate);
-    formData.append("studentRoll", studentRoll);
-    formData.append("studentName", studentName);
-    formData.append("nameBangla", nameBangla);
-    formData.append("birthCertificate", birthCertificate);
-    formData.append("bloodGroup", bloodGroup ? bloodGroup.value : null);
-    formData.append("religion", religion);
-    formData.append("fatherName", fatherName);
-    formData.append("fatherNID", fatherNID);
-    formData.append("fatherPhoneNo", fatherPhoneNo);
-    formData.append("motherName", motherName);
-    formData.append("motherNID", motherNID);
-    formData.append("motherPhoneNo", motherPhoneNo);
-    formData.append("presentAddress", presentAddress);
-    formData.append("permanentAddress", permanentAddress);
-    formData.append("guardian", guardian);
-    formData.append("guardianPhone", guardianPhone);
-    formData.append("dob", dob);
-    formData.append(
-      "studentGender",
-      studentGender ? studentGender.value : null,
-    );
-    formData.append("studentEmail", studentEmail);
-    formData.append("smsStatus", smsStatus ? smsStatus.value : null);
-    formData.append("registrationDate", registrationDate);
-    formData.append("className", className ? className.value : null);
-    formData.append("shift", shift ? shift.value : null);
-    formData.append("section", section ? section.value : null);
-    formData.append("session", session ? session.value : null);
-    formData.append("group", group ? group.value : null);
+    console.log("payload : ", payload);
 
-    if (imgFile) {
-      formData.append("avatar", imgFile);
-    }
-
-    // for (const [key, value] of formData.entries()) {
-    //   console.log(`${key} -> ${value}`);
-    // }
-
-    addStudent(formData);
+    addStudent(payload);
+    formRef.current.reset();
+    setAdmissionNumber("");
+    setStudentRoll("");
+    setStudentName("");
+    setNameBangla("");
+    setBirthCertificate("");
+    setBloodGroup(null);
+    setReligion("");
+    setFatherName("");
+    setFatherNID("");
+    setFatherPhoneNo("");
+    setMotherName("");
+    setMotherNID("");
+    setMotherPhoneNo("");
+    setPresentAddress("");
+    setPermanentAddress("");
+    setGuardian("");
+    setGuardianPhone("");
+    setStudentGender("");
+    setStudentEmail("");
+    setSmsStatus("");
+    setRegistrationDate("");
+    setClassName(null);
+    setShift(null);
+    setSection(null);
+    setSession(null);
+    setGroup(null);
   };
 
   if (
@@ -331,7 +235,8 @@ const AddNewStudentPages = () => {
     isshiftPending ||
     isSectionPending ||
     isSessionPending ||
-    isGroupsPending 
+    isStudentsPending ||
+    isGroupsPending
   )
     return <Shimmer count={10} />;
 
@@ -340,6 +245,7 @@ const AddNewStudentPages = () => {
     isShiftError ||
     isSectionError ||
     isSessionError ||
+    isStudentsError ||
     isGroupsError
   ) {
     let errorMsg = "Something went wrong. Please try again later!";
@@ -361,6 +267,12 @@ const AddNewStudentPages = () => {
     if (isSessionError && sessionError instanceof Error) {
       console.log("Session Error: ", sessionError);
       errorMsg = sessionError?.response?.data?.message || sessionError?.message;
+    }
+
+    if (isStudentsError && studentsError instanceof Error) {
+      console.log("Students Error: ", studentsError);
+      errorMsg =
+        studentsError?.response?.data?.message || studentsError?.message;
     }
 
     if (isGroupsError && groupsError instanceof Error) {
@@ -395,14 +307,8 @@ const AddNewStudentPages = () => {
                           id="admission-number"
                           placeholder="Enter admission number"
                           value={admissionNumber}
-                          onChange={(e) => {
-                            setAdmissionNumber(e.target.value);
-                            validateField("admissionNumber", e.target.value);
-                          }}
+                          onChange={(e) => setAdmissionNumber(e.target.value)}
                         />
-                        {warn.admissionNumber && (
-                          <p style={{ color: "red" }}>{warn.admissionNumber}</p>
-                        )}
                       </div>
 
                       <DatepickerComponent
@@ -420,14 +326,8 @@ const AddNewStudentPages = () => {
                           id="student-roll"
                           placeholder="Enter student's Roll Number"
                           value={studentRoll}
-                          onChange={(e) => {
-                            setStudentRoll(e.target.value);
-                            validateField("studentRoll", e.target.value);
-                          }}
+                          onChange={(e) => setStudentRoll(e.target.value)}
                         />
-                        {warn.studentRoll && (
-                          <p style={{ color: "red" }}>{warn.studentRoll}</p>
-                        )}
                       </div>
 
                       <div className="form-group col-lg-4">
@@ -437,10 +337,7 @@ const AddNewStudentPages = () => {
                           id="student-name"
                           placeholder="Enter student's name"
                           value={studentName}
-                          onChange={(e) => {
-                            setStudentName(e.target.value);
-                            validateField("sutdentName", e.target.value);
-                          }}
+                          onChange={(e) => setStudentName(e.target.value)}
                         />
                       </div>
 
@@ -451,13 +348,7 @@ const AddNewStudentPages = () => {
                           id="name-bangla"
                           placeholder="বাংলায় নাম লিখুন"
                           value={nameBangla}
-                          onChange={(e) => {
-                            setNameBangla(e.target.value);
-                            validateField(
-                              "sutdentNameInBangla",
-                              e.target.value,
-                            );
-                          }}
+                          onChange={(e) => setNameBangla(e.target.value)}
                         />
                       </div>
 
@@ -470,10 +361,7 @@ const AddNewStudentPages = () => {
                           id="birth-certificate"
                           placeholder="Enter birth certificate number"
                           value={birthCertificate}
-                          onChange={(e) => {
-                            setBirthCertificate(e.target.value);
-                            validateField("birthCertificate", e.target.value);
-                          }}
+                          onChange={(e) => setBirthCertificate(e.target.value)}
                         />
                       </div>
                     </div>
@@ -484,7 +372,6 @@ const AddNewStudentPages = () => {
                         <Select
                           options={bloodGroupOptions}
                           onChange={setBloodGroup}
-                          value={bloodGroup}
                           placeholder="Select Blood Group"
                         />
                       </div>
@@ -494,53 +381,40 @@ const AddNewStudentPages = () => {
                         <div className="upload-profile">
                           <div className="item">
                             <div className="img-box">
-                              {preview ? (
-                                <img
-                                  src={preview}
-                                  alt="preview"
-                                  width={76}
-                                  height={68}
-                                  style={{
-                                    borderRadius: "6px",
-                                    objectFit: "fit",
-                                  }}
+                              <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 50 50"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                              >
+                                <rect
+                                  width="50"
+                                  height="50"
+                                  fill="url(#pattern0_1204_6)"
+                                  fillOpacity="0.5"
                                 />
-                              ) : (
-                                <svg
-                                  width="32"
-                                  height="32"
-                                  viewBox="0 0 50 50"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                                >
-                                  <rect
-                                    width="50"
-                                    height="50"
-                                    fill="url(#pattern0_1204_6)"
-                                    fillOpacity="0.5"
-                                  />
-                                  <defs>
-                                    <pattern
-                                      id="pattern0_1204_6"
-                                      patternContentUnits="objectBoundingBox"
-                                      width="1"
-                                      height="1"
-                                    >
-                                      <use
-                                        xlinkHref="#image0_1204_6"
-                                        transform="scale(0.005)"
-                                      />
-                                    </pattern>
-                                    <image
-                                      id="image0_1204_6"
-                                      width="200"
-                                      height="200"
-                                      xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAMsklEQVR4Ae2daYwtRRmG34uAIF5RDMTlYkABvSJuP1BccMHgRtyiqNG4EI1bcCOBaDCaKEYMYlwIEBRRf7j9UHFBRBJQEgyIIJtKLmiAXGVRUAT35bzDNH40M13Vc/qcqT71VHLS1dN9znQ99T1dvVR3SSQIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCECgCAIbJD1G0islHSHpg5I+wmdUDFxnrrtDJe0ryXVKmpLAQZK+JOnmiRT/5bNQDG6SdJqkZ04ZI1V+/WBJFyHEQgnRtYO7UJJ3hqQEgZ0lfQUxqhGjLY2PFjYmYqTaxXtL2oIc1crRyPIrSXtWa8EqBd8s6QbkqF6ORpKtkrzDJEl6kKRrkQM5WjHwG0m71m7INpLOboFp9iJMuXJ3Ru2Xg9+6BjlundwP+aWky/mMioHrzHXXd8f3hlpbkfv2uL/xJ0kflfToWmEtULl9w/fYyU3D2zJl+f1k/R0XqPzZRfFd1Zy9iQ/BfJ5CWiwCmyT9ODMGDl+soueVxk1uSpDTJW2X93OsNUIC95Z0ZkYcXDrCsk21yftlQLlakg/DSItN4P6Srs+Ih30WG8PdS/fODCDu1Eaqg8DrM+LBF3SqSacmgPim4b2qoUFBt5d0SyImTqoJ07kJGO6PRaqLgM83u85Jf1gTjksSMPysB6kuAscnYuKCmnCkrmAdXRMMyrpEwDvFrhbkspo4ucdmFwwEqSka7ixrShD3nKgmIUg1VZ1dUAQJqBAkwCC7RABBQiAgSIBBFkHaMYAgbSLM04KEGECQAIPsEgEECYGAIAEGWQRpxwCCtIkwTwsSYgBBAgyySwQQJAQCggQYZBGkHQMI0ibCPC1IiIExCbKbpGdIetny50BeRxNqcrgsggSWpQvy4Mm2fmj57Smr9Rm7QtIHJFkg0vQEECQwLFUQPyN9jKS/JTpTRmnumKzrV/v7oR/S2gkgSGBXoiC7S7q4hxhREuf9vMJDQhnJ9iOAIIFXaYLsIem6KeRoZPHrMh8aykk2nwCCBFYlCeI3p6Qe4GoEyJn6ackdQlnJ5hFAkMCpJEFOHKDlaIvziVBWsnkEECRwKkUQv8r03zMQ5J+ToeMeHspLNk0AQQKjUgT53AzkaFqTT4fykk0TQJDAqARB/EpTvxS7CeihpzfW/ur+UN85WQQJlEoQ5IAZytHI9rhQZrLdBBAk8ClBkDfPQZDXhDKT7SaAIIFPCYL41ULNnn5W0/eGMpPtJoAggU8Jgrh7yKzEaH73yFBmst0EECTwKUGQd81BEB/GkfIIIEjgVIIgz5+DIO4mT8ojgCCBUwmCeOCWf81Qkr/XOrZeqOc+WQQJtEoQxJvjV+o35wtDT78ZyjumrLv87y3paZKeN+ml/AJJz5LkS9YPmGFBECTALUWQF81QkOeE8pac3VXS6yR9YbnTZqrrjUed/Z4kX4DwiLVDJQQJJEsRZIOk82YgyVmhrCVmt5H0EklnDHCY6bq0LA+csqAIEgCWIog36VGS/jKgJLcW3FHRO4RXTz6/HrC8zaHp7ZI+PsVhGIIUKog3y3vTIU7Y3YvXV8dKTD4cOn8GYjSCNNObJb1xDQAQJEArqQVpNstvLfnrFAHkVuiQ5scKm75Hkq+qNUE8j+m3e7YmCBKCpkRBvHmPXeNz6RdK2hzKV0rWTzZ+dc5iRPmulOQ3xOQkBAmUShXEm+jhpz1ud84LHCyGOyT6pLe0tFHSOesoRyPKVZI2ZcBBkACpZEHCZi7dD3iTJD9C+0VJp0k6TtJhBZ+Ie/t3ntP5RiNBanqNJN+Y7UoIEuiMRZCwyaPJ7jI5F/pZAS1HWxpfLexKCBLoIEiAMWDWN/1+UaAclgVBelQ0gvSAlbmqT4Z9Utzec5cyjyCZFenVEKQHrIxVfRLsk+FSZFhpOxAkoyKbVRCkITH91G+F9EnwSkFZ0t8QpEddI0gPWB2r7jW5onbtCOSwqAjSUZHtRQjSJtJ/3jcmt45EDgTpWb8I0hNYa/X9JN0wIjkQpFWBqVkESRFaffkTJLlDYEnnFznbwiHW6nV6jyVjEmQnSQdJ8it8PiXp1MkQB6dMHqc9VpJfyuCAnVdXkydJumWEctCC3EOB7j+ULoifm/Cjpt/KHG3KhzufkfTI7mJPtdSPwP55pHIgSM+qL1mQp0v6+RoD8T+SvtyjB2sutmcP/FBXziHR0OtwiJVb24XeKNx2uVOig3za4PjDpMvHS3vw6FrVD2BN85zKtGUZ6vspQTwgatf/cv+yalJpLYhHmTozUUFdlbfSMot21JQ1+uJ1eNBppbIM8beUIM9N8D9hSpaj+npJgsy6a/iH11gzL5fkR3iHCM4SfiMliM/7frJKeT1MxZ5r5DjKr5UiiLuGX7RKpQwZVL7i1ScdumBymGVKEPNxfXy3VR9bJD25D7xFWLcEQXaTdGmrMoaUov1bx2dW3KsGeoFE+/+v93yOIA0iv7jOh5cWw094VpfWWxCPZz7kyLa5wffZxKhTfiXPEG9Xyd2eea7XR5DqhGgXeD0FeZgkN9vzDI74v05eRRI/276ocrj8CNK2oGN+vQTxyLO/XUc5GlG+HgLGz2q/f0aj7Tb/r4QpgnQI0V60HoLsI+n6AuSIwbpIV6liuVbKI0jbgo75eQuyr6TfFSbHSkG0yH9DkA4h2ovmKYg7E96EHOt2ztVIjyBtCzrm5yXI/pL+iBzrLoclQZAOIdqL5iHIUyX5DmyzB2O6viwQpG1Bx/ysBfGISEMOaYBc08uFIB1CtBfNUhB3eruDlqO4lhNB2hZ0zM9KEA+pNu/X/NO65LUuCNIhRHvRLAR5xeSG2z9oOYprOZodSB9Bdlw+qZ92WLd23I1mfmhBXrvg3TSaIBvzNEcQj7D7ydYhskcirqqruy0eUhAPT5AamXXMgbUo254jyDdWOQJwDwi/mLuaNJQg75A0xCOyixKEJZcjJchTVpGjKdPHqrFjoBbkiATQBizTvJPoWXNKCfK+RH3+FEH+X5FHJ2C44+GsK5TfH5ZxShAG0AlBP+0hloc0JoDHxQBBggCpLIKMK7iH2BkhSMqKsBxBECSEw1KWQ6xABEEQJIQDgrRhIAiCtGOCFiQQQRAECeGwlEWQQARBECSEA4K0YSAIgrRjghYkEEEQBAnhsJRFkEAEQRAkhAOCtGEgCIK0Y4IWJBBBEAQJ4bCURZBABEEQJIQDgrRhIAiCtGOCFiQQQRAECeGwlEWQQGRaQTbT3X103f33CvW/UhZBApVpBblP5vjlQ3TT5jemb+1ul7R9qP+VsggSqEwriH/qFFqR0bQiHlkrlRAkEBpCkI2S/Jwye/iyGXjk2p1C3a+WRZBAJjU+YOqZ9Oan3GwfLulsSZdJupxPEQxcF2dJepuk7ZrKSkxTgvg3q0mXJPb8x1RDgoI2BPzCuK6jgQuaFWuYnpOA8bUaIFDGuxH4TiIm/IbFatLnEzBulLRtNTQoqF85mhrL5cSaMPm8oas59TKPGU6qg8BhGfHwljpQ3FlKD6qZEsTDNd+vJiiVlnUXSVsz4iF1o3Hh8F2RAeX7GTeYFg5MRQXaQdKPMuLg4oqY3FXUd2eAcStzrqRNd32LzKIQ2EPS+Zkx8PZFKXSfcvjmkU/GU4daXn6bpOMkPV7Shj7/hHWLIuC6e+LyGCDufpJT9z78cktTZfLYHjmQ4joGu2X5DfG+I89nHAyulpQrRaxvD45UbfIe5QdrkCQCJN9/JzMWZqdXa0YouEcOugZJerekYwnytW7nVZJ8hYskyZfwci71rRU23xtXK3NdjeMSpvYEvqpxJS1J9S2JOyXungqWWpf7ylaqGwqtwbhag9z68liTJ0vyw3CkBIEDJZ1Ha1JNa+J7XR7Ek9STwAGSTpLkYYBz90SsNw5WPs84QdL+PWOC1Vch8AhJhyw/hHOUJD9UxWc8DI5crrsXcgK+SoTzZwhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIrAeB/wGvKkLooomNCAAAAABJRU5ErkJggg=="
+                                <defs>
+                                  <pattern
+                                    id="pattern0_1204_6"
+                                    patternContentUnits="objectBoundingBox"
+                                    width="1"
+                                    height="1"
+                                  >
+                                    <use
+                                      xlinkHref="#image0_1204_6"
+                                      transform="scale(0.005)"
                                     />
-                                  </defs>
-                                </svg>
-                              )}
+                                  </pattern>
+                                  <image
+                                    id="image0_1204_6"
+                                    width="200"
+                                    height="200"
+                                    xlinkHref="data:image/png;base64,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"
+                                  />
+                                </defs>
+                              </svg>
                             </div>
 
                             <div className="profile-wrapper">
@@ -548,10 +422,7 @@ const AddNewStudentPages = () => {
                                 <input
                                   type="file"
                                   className="custom-file-input"
-                                  name="avatar"
                                   aria-label="Upload Photo"
-                                  onChange={handleFileChange}
-                                  accept="image/png,image/jpg, image/jpeg ,'image/gif'"
                                 />
                               </label>
                               <p>PNG,JPEG or GIF (up to 1 MB)</p>
@@ -570,10 +441,7 @@ const AddNewStudentPages = () => {
                           id="religion"
                           placeholder="Enter religion"
                           value={religion}
-                          onChange={(e) => {
-                            setReligion(e.target.value);
-                            validateField("religion", e.target.value);
-                          }}
+                          onChange={(e) => setReligion(e.target.value)}
                         />
                       </div>
 
@@ -584,10 +452,7 @@ const AddNewStudentPages = () => {
                           id="father-name"
                           placeholder="Enter father's name"
                           value={fatherName}
-                          onChange={(e) => {
-                            setFatherName(e.target.value);
-                            validateField("fatherName", e.target.value);
-                          }}
+                          onChange={(e) => setFatherName(e.target.value)}
                         />
                       </div>
                       <div className="form-group col-lg-4">
@@ -597,10 +462,7 @@ const AddNewStudentPages = () => {
                           id="father-nid"
                           placeholder="Enter father's NID"
                           value={fatherNID}
-                          onChange={(e) => {
-                            setFatherNID(e.target.value);
-                            validateField("fatherNID", e.target.value);
-                          }}
+                          onChange={(e) => setFatherNID(e.target.value)}
                         />
                       </div>
                     </div>
@@ -616,10 +478,7 @@ const AddNewStudentPages = () => {
                           id="father-mobile"
                           placeholder="Enter father's mobile number"
                           value={fatherPhoneNo}
-                          onChange={(e) => {
-                            setFatherPhoneNo(e.target.value);
-                            validateField("fatherPhoneNo", e.target.value);
-                          }}
+                          onChange={(e) => setFatherPhoneNo(e.target.value)}
                         />
                       </div>
 
@@ -630,10 +489,7 @@ const AddNewStudentPages = () => {
                           id="mother-name"
                           placeholder="Enter mother's name"
                           value={motherName}
-                          onChange={(e) => {
-                            setMotherName(e.target.value);
-                            validateField("motherName", e.target.value);
-                          }}
+                          onChange={(e) => setMotherName(e.target.value)}
                         />
                       </div>
                       <div className="form-group col-lg-4">
@@ -643,10 +499,7 @@ const AddNewStudentPages = () => {
                           id="mother-nid"
                           placeholder="Enter mother's NID"
                           value={motherNID}
-                          onChange={(e) => {
-                            setMotherNID(e.target.value);
-                            validateField("motherNID", e.target.value);
-                          }}
+                          onChange={(e) => setMotherNID(e.target.value)}
                         />
                       </div>
                     </div>
@@ -662,10 +515,7 @@ const AddNewStudentPages = () => {
                           id="mother-mobile"
                           placeholder="Enter mother's mobile number"
                           value={motherPhoneNo}
-                          onChange={(e) => {
-                            setMotherPhoneNo(e.target.value);
-                            validateField("motherPhoneNo", e.target.value);
-                          }}
+                          onChange={(e) => setMotherPhoneNo(e.target.value)}
                         />
                       </div>
 
@@ -678,10 +528,7 @@ const AddNewStudentPages = () => {
                           id="present-address"
                           placeholder="Enter present address"
                           value={presentAddress}
-                          onChange={(e) => {
-                            setPresentAddress(e.target.value);
-                            validateField("presentAddress", e.target.value);
-                          }}
+                          onChange={(e) => setPresentAddress(e.target.value)}
                         />
                       </div>
                       <div className="form-group col-lg-4">
@@ -693,10 +540,7 @@ const AddNewStudentPages = () => {
                           id="permanent-address"
                           placeholder="Enter permanent address"
                           value={permanentAddress}
-                          onChange={(e) => {
-                            setPermanentAddress(e.target.value);
-                            validateField("permanentAddress", e.target.value);
-                          }}
+                          onChange={(e) => setPermanentAddress(e.target.value)}
                         />
                       </div>
                     </div>
@@ -712,10 +556,7 @@ const AddNewStudentPages = () => {
                           id="guardian"
                           placeholder="Enter guardian's name"
                           value={guardian}
-                          onChange={(e) => {
-                            setGuardian(e.target.value);
-                            validateField("guardian", e.target.value);
-                          }}
+                          onChange={(e) => setGuardian(e.target.value)}
                         />
                       </div>
 
@@ -728,10 +569,7 @@ const AddNewStudentPages = () => {
                           id="guardian-mobile"
                           placeholder="Enter guardian's mobile number"
                           value={guardianPhone}
-                          onChange={(e) => {
-                            setGuardianPhone(e.target.value);
-                            validateField("guardianPhone", e.target.value);
-                          }}
+                          onChange={(e) => setGuardianPhone(e.target.value)}
                         />
                       </div>
 
@@ -750,9 +588,7 @@ const AddNewStudentPages = () => {
                           <Select
                             options={genderOPtions}
                             onChange={setStudentGender}
-                            value={studentGender}
                             placeholder="Select Gender"
-                            menuPlacement="top"
                           />
                         </div>
                       </div>
@@ -764,10 +600,7 @@ const AddNewStudentPages = () => {
                           id="student-email"
                           placeholder="Enter student email"
                           value={studentEmail}
-                          onChange={(e) => {
-                            setStudentEmail(e.target.value);
-                            validateField("studentEmail", e.target.value);
-                          }}
+                          onChange={(e) => setStudentEmail(e.target.value)}
                         />
                       </div>
                       <div className="form-group select-input-box col-lg-4">
@@ -776,9 +609,7 @@ const AddNewStudentPages = () => {
                         <Select
                           options={smsStatusOPtions}
                           onChange={setSmsStatus}
-                          value={smsStatus}
                           placeholder="Select Status"
-                          menuPlacement="top"
                         />
                       </div>
                     </div>
@@ -795,9 +626,7 @@ const AddNewStudentPages = () => {
                         <Select
                           options={classOptions}
                           onChange={setClassName}
-                          value={className}
                           placeholder="Select Class"
-                          menuPlacement="top"
                         />
                       </div>
 
@@ -806,9 +635,7 @@ const AddNewStudentPages = () => {
                         <Select
                           options={shiftOptions}
                           onChange={setShift}
-                          value={shift}
                           placeholder="Select Shift"
-                          menuPlacement="top"
                         />
                       </div>
                     </div>
@@ -820,9 +647,7 @@ const AddNewStudentPages = () => {
                         <Select
                           options={sectionOptions}
                           onChange={setSection}
-                          value={section}
                           placeholder="Enter section name"
-                          menuPlacement="top"
                         />
                       </div>
 
@@ -832,9 +657,7 @@ const AddNewStudentPages = () => {
                         <Select
                           options={sessionOPtions}
                           onChange={setSession}
-                          value={session}
                           placeholder="Enter section name"
-                          menuPlacement="top"
                         />
                       </div>
 
@@ -844,9 +667,7 @@ const AddNewStudentPages = () => {
                         <Select
                           options={groupOPtions}
                           onChange={setGroup}
-                          value={group}
                           placeholder="Enter group name"
-                          menuPlacement="top"
                         />
                       </div>
                     </div>
@@ -868,7 +689,7 @@ const AddNewStudentPages = () => {
                         Reset
                       </button>
                       <button type="submit" className="button save">
-                        Save
+                        Update
                       </button>
                     </div>
                   </form>
@@ -883,4 +704,4 @@ const AddNewStudentPages = () => {
     </>
   );
 };
-export default AddNewStudentPages;
+export default EditStudentProfilePages;

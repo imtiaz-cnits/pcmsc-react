@@ -12,7 +12,6 @@ import {
   fetchAllStudentsAPI,
   updateStudentAPI,
 } from "../api/student-management/studentInfoAPI";
-import toast from "react-hot-toast";
 
 // ✅  POST - method
 export const useAddSutdent = () => {

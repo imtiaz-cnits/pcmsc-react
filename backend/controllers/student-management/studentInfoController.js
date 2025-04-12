@@ -10,6 +10,7 @@ const Student = require("../../models/studentModel");
 async function addStudentInfo(req, res, next) {
   try {
     console.log("📥 Received student info body: ", req.body);
+    console.log("📥 Received student info image: ", req.file);
 
     const {
       admissionNumber,
@@ -46,10 +47,10 @@ async function addStudentInfo(req, res, next) {
     const existingStudentInfo = await Student.findOne({
       studentID: admissionNumber,
     });
-//todo
-    // if (existingStudentInfo) {
-    //   return next(createError(403, "Student already exists!"));
-    // }
+    // todo
+    if (existingStudentInfo) {
+      return next(createError(403, "Student already exists!"));
+    }
 
     const newStudentInfo = new Student({
       studentID: admissionNumber,
@@ -60,6 +61,15 @@ async function addStudentInfo(req, res, next) {
       nameInBangla: nameBangla,
       birthCertificate,
       bloodGroup,
+      avatar: {
+        fieldname: req.file?.fieldname,
+        originalname: req.file?.originalname,
+        mimetype: req.file?.mimetype,
+        destination: req.file?.destination,
+        filename: req.file?.filename,
+        path: req.file?.path,
+        size: req.file?.size,
+      },
       religion,
       fatherName,
       fatherNID,
@@ -167,7 +177,6 @@ async function updateStudent(req, res, next) {
     //   const existingStudent = await Student.find({
     //     studentID: payload.admissionNumber,
     //   });
-
 
     // }
     console.log("🚀 updated student : ", updatedStudent);

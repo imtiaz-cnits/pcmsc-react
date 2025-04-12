@@ -4,11 +4,12 @@ const createError = require("http-errors");
 function errorHandler(err, req, res, next) {
   console.log("other : ", err);
   if (res.headersSent) {
-    next(err);
+    return next(err);
   }
 
   // 🎯 Handle Multer Errors
   if (err instanceof multer.MulterError) {
+    console.log("multer error : ", err);
     return res.status(400).json({
       success: false,
       error: "MulterError",

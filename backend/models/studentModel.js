@@ -48,6 +48,16 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
+    avatar: {
+      fieldname: { type: String },
+      originalname: { type: String },
+      mimetype: { type: String },
+      destination: { type: String },
+      filename: { type: String },
+      path: { type: String },
+      size: { type: Number },
+    },
+
     religion: {
       type: String,
       trim: true,
@@ -128,7 +138,6 @@ const studentSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
       unique: true,
-
     },
 
     smsStatus: {

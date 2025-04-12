@@ -4,10 +4,10 @@ import axiosPrivate from "../../utils/axiosPrivate";
 
 // POST - method
 
-export const addStudentInfoAPI = async (payload) => {
+export const addStudentInfoAPI = async (formData) => {
   const res = await axiosPrivate.post(
     "/student-management/student-info",
-    payload,
+    formData,
   );
   // console.log('addStudentInfoAPI : ',res.data)
   return res.data?.success ? res.data : [];

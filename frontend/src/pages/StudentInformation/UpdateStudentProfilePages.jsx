@@ -1,13 +1,5 @@
-const UpdateStudentProfilePages = ()=>{
-
-
-    return(
-
-        <>
-        UpdateStudentProfilePages
-        
-        </>
-    )
-}
+const UpdateStudentProfilePages = () => {
+  return <>UpdateStudentProfilePages</>;
+};
 
 export default UpdateStudentProfilePages;

@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import Select from "react-select";
 import "../../assets/css/all-modal.css";
 
 import productMemberPng from "../../assets/img/projuct-member-img-3.png";
-import DatepickerComponent from "../../components/DatepickerComponent ";
 import ActionButtons from "../../components/ActionButtons";
+import DatepickerComponent from "../../components/DatepickerComponent ";
 import Shimmer from "../../components/Shimmer";
 import { useFetchClasses } from "../../hook/useClass";
+import { useFetchGroups } from "../../hook/useGroup";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
@@ -16,7 +18,6 @@ import {
   useFetchStudents,
   useUpdateStudent,
 } from "../../hook/useStudentInfo";
-import { useFetchGroups } from "../../hook/useGroup";
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -503,14 +504,15 @@ const Test = () => {
           <div className="bredcam">
             <div className="bredcam-title">
               <h1>Student Information</h1>
-              <button
+              <Link
+                to="/student-management/new-student-profile"
                 id="studentModalBtn"
                 type="button"
                 className="create-invoice"
                 onClick={() => setIsModalOpen(!isModalOpen)}
               >
                 + Add New Student
-              </button>
+              </Link>
             </div>
           </div>
           <div className="data-table">
