@@ -9,7 +9,7 @@ function uploader(
   allowed_file_types,
   error_msg,
 ) {
-  const UPLOADS_FOLDER = path.resolve(__dirname, `../${subfolder_path}`);
+  const UPLOADS_FOLDER = path.resolve(__dirname, `../public/${subfolder_path}`);
 
   // check if folder exists or not
   if (!fs.existsSync(UPLOADS_FOLDER)) {

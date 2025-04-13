@@ -331,7 +331,7 @@ const AddNewStudentPages = () => {
     isshiftPending ||
     isSectionPending ||
     isSessionPending ||
-    isGroupsPending 
+    isGroupsPending
   )
     return <Shimmer count={10} />;
 

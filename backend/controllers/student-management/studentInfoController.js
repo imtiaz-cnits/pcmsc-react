@@ -52,6 +52,7 @@ async function addStudentInfo(req, res, next) {
       return next(createError(403, "Student already exists!"));
     }
 
+    const imageURL = `${process.env.BACKEND_URL}${process.env.PORT || 4000}/uploads/avatar/${req.file.filename}`;
     const newStudentInfo = new Student({
       studentID: admissionNumber,
       admissionNumber,
@@ -62,6 +63,7 @@ async function addStudentInfo(req, res, next) {
       birthCertificate,
       bloodGroup,
       avatar: {
+        imageURL,
         fieldname: req.file?.fieldname,
         originalname: req.file?.originalname,
         mimetype: req.file?.mimetype,

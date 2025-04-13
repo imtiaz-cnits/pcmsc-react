@@ -20,21 +20,17 @@ export const fetchAllStudentsAPI = async () => {
   return res.data?.success ? res.data : [];
 };
 
-
 // ✅  GET - method (id)
-export const fetchStudentByIDAPI = async (id)=>{
-
-  console.log('id -> ' ,id)
-  if(!id){
-  return 'ID is required'
+export const fetchStudentByIDAPI = async (id) => {
+  console.log("id -> ", id);
+  if (!id) {
+    return "ID is required";
   }
 
-  const res = await axiosPrivate.get(`/student-management/student/${id}`)
+  const res = await axiosPrivate.get(`/student-management/student/${id}`);
   console.log("🚀 fetchStudentByIDAPI : ", res.data);
-  return res.data?.success ? res.data : []
-
-  
-}
+  return res.data?.success ? res.data : [];
+};
 
 // ✅ PATCH - method
 export const updateStudentAPI = async ({ studentID, payload }) => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Datepicker } from "vanillajs-datepicker";
 
-const DatepickerComponent = ({ title,selectedDate, setSelectedDate }) => {
+const DatepickerComponent = ({ title, selectedDate, setSelectedDate }) => {
   const dateInputRef = useRef(null);
 
   useEffect(() => {
@@ -31,12 +31,12 @@ const DatepickerComponent = ({ title,selectedDate, setSelectedDate }) => {
     }
   }, [setSelectedDate]); // Keep dependencies minimal
 
-    // ✅ Pre-fill the input field when selectedDate changes
-    useEffect(() => {
-      if (dateInputRef.current && selectedDate) {
-        dateInputRef.current.value = selectedDate;
-      }
-    }, [selectedDate]);
+  // ✅ Pre-fill the input field when selectedDate changes
+  useEffect(() => {
+    if (dateInputRef.current && selectedDate) {
+      dateInputRef.current.value = selectedDate;
+    }
+  }, [selectedDate]);
 
   return (
     <div className="form-group col-lg-4">

@@ -49,6 +49,7 @@ const studentSchema = new mongoose.Schema(
     },
 
     avatar: {
+      imageURL: { type: String },
       fieldname: { type: String },
       originalname: { type: String },
       mimetype: { type: String },

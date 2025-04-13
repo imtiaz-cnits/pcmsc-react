@@ -4,7 +4,7 @@ import {
   keepPreviousData,
   useMutation,
   useQuery,
-  useQueryClient
+  useQueryClient,
 } from "@tanstack/react-query";
 import {
   addStudentInfoAPI,
@@ -42,22 +42,19 @@ export const useFetchStudents = () => {
     queryFn: fetchAllStudentsAPI,
     placeholderData: keepPreviousData,
 
-    refetchOnWindowFocus:true
+    refetchOnWindowFocus: true,
   });
 };
 
-
 // ✅  GET - method (id)
-export const useFetchStudentByID=(id)=>{
+export const useFetchStudentByID = (id) => {
   return useQuery({
-    queryKey: ['students'],
-    queryFn: ()=> fetchStudentByIDAPI(id),
+    queryKey: ["students"],
+    queryFn: () => fetchStudentByIDAPI(id),
     refetchOnWindowFocus: true,
     enabled: !!id,
-    
-  })
-}
-
+  });
+};
 
 //✅  PATCH - method
 export const useUpdateStudent = () => {

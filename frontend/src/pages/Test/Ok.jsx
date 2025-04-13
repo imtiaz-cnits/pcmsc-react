@@ -6,12 +6,12 @@ const Ok = () => {
 
   const Options = [{ value: "Try", label: "Try" }];
 
- const testvalue = 'Try'
-  useEffect(()=>{
-    const matched= Options.find((option)=> option.value === testvalue)
-    console.log('matched : ', matched)
-    setO(matched)
-  },[Options])
+  const testvalue = "Try";
+  useEffect(() => {
+    const matched = Options.find((option) => option.value === testvalue);
+    console.log("matched : ", matched);
+    setO(matched);
+  }, [Options]);
 
   return (
     <>

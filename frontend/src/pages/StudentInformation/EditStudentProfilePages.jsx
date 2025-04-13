@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import Select from "react-select";
 import "../../assets/css/all-modal.css";
 import DatepickerComponent from "../../components/DatepickerComponent ";
-import Shimmer from '../../components/Shimmer';
+import Shimmer from "../../components/Shimmer";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchGroups } from "../../hook/useGroup";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useFetchStudentByID } from "../../hook/useStudentInfo";
-
 
 const EditStudentProfilePages = () => {
   const [admissionNumber, setAdmissionNumber] = useState("");
@@ -45,13 +44,8 @@ const EditStudentProfilePages = () => {
   const [avatar, setAvatar] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const formRef = useRef(null);
-  const {id} = useParams()
-    const {data:students , isPending , isError , error} = useFetchStudentByID(id)
-
-
-
-
-
+  const { id } = useParams();
+  const { data: students, isPending, isError, error } = useFetchStudentByID(id);
 
   const {
     data: classes,
@@ -86,53 +80,49 @@ const EditStudentProfilePages = () => {
     error: groupsError,
   } = useFetchGroups();
 
-    // selector option
-    const bloodGroupOptions = [
-      { value: "A+", label: "A+" },
-      { value: "A-", label: "A-" },
-      { value: "B+", label: "B+" },
-      { value: "B-", label: "B-" },
-      { value: "AB+", label: "AB+" },
-      { value: "AB-", label: "AB-" },
-      { value: "O+", label: "O+" },
-      { value: "O-", label: "O-" },
-    ]
+  // selector option
+  const bloodGroupOptions = [
+    { value: "A+", label: "A+" },
+    { value: "A-", label: "A-" },
+    { value: "B+", label: "B+" },
+    { value: "B-", label: "B-" },
+    { value: "AB+", label: "AB+" },
+    { value: "AB-", label: "AB-" },
+    { value: "O+", label: "O+" },
+    { value: "O-", label: "O-" },
+  ];
 
-  useEffect(()=>{
-    setAdmissionNumber(students?.data?.admissionNumber || '')
-    setAdmissionDate(students?.data?.admissionDate || '')
-    setStudentRoll(students?.data?.studentRoll || '')
-    setStudentName(students?.data?.name || '')
-    setNameBangla(students?.data?.nameInBangla || '')
-    setBirthCertificate(students?.data?.birthCertificate || '')
-    setReligion(students?.data?.religion || '')
-    setFatherName(students?.data?.fatherName || '')
-    setFatherNID(students?.data?.fatherNID || '')
-    setFatherPhoneNo(students?.data?.fatherPhone || '')
-    setMotherName(students?.data?.motherName || '')
-    setMotherNID(students?.data?.motherNID || '')
-    setMotherPhoneNo(students?.data?.motherPhone || '')
-    setPresentAddress(students?.data?.presentAddress || '')
-    setPermanentAddress(students?.data?.permanentAddress || '')
-    setGuardian(students?.data?.guardianName || '')
-    setGuardianPhone(students?.data?.guardianPhone || '')
-    setDOB(students?.data?.dateOfBirth || '')
-    setStudentGender(students?.data?.studentGender || null)
-    setStudentEmail(students?.data?.studentEmail || '')
-    setSmsStatus(students?.data?.smsStatus || null)
-    setRegistrationDate(students?.data?.registrationDate || '')
-    setClassName(students?.data?.className?.nameLabel || null)
-    setSection(students?.data?.section?.nameLabel || null)
-    setSession(students?.data?.session?.nameLabel || null)
+  useEffect(() => {
+    setAdmissionNumber(students?.data?.admissionNumber || "");
+    setAdmissionDate(students?.data?.admissionDate || "");
+    setStudentRoll(students?.data?.studentRoll || "");
+    setStudentName(students?.data?.name || "");
+    setNameBangla(students?.data?.nameInBangla || "");
+    setBirthCertificate(students?.data?.birthCertificate || "");
+    setReligion(students?.data?.religion || "");
+    setFatherName(students?.data?.fatherName || "");
+    setFatherNID(students?.data?.fatherNID || "");
+    setFatherPhoneNo(students?.data?.fatherPhone || "");
+    setMotherName(students?.data?.motherName || "");
+    setMotherNID(students?.data?.motherNID || "");
+    setMotherPhoneNo(students?.data?.motherPhone || "");
+    setPresentAddress(students?.data?.presentAddress || "");
+    setPermanentAddress(students?.data?.permanentAddress || "");
+    setGuardian(students?.data?.guardianName || "");
+    setGuardianPhone(students?.data?.guardianPhone || "");
+    setDOB(students?.data?.dateOfBirth || "");
+    setStudentGender(students?.data?.studentGender || null);
+    setStudentEmail(students?.data?.studentEmail || "");
+    setSmsStatus(students?.data?.smsStatus || null);
+    setRegistrationDate(students?.data?.registrationDate || "");
+    setClassName(students?.data?.className?.nameLabel || null);
+    setSection(students?.data?.section?.nameLabel || null);
+    setSession(students?.data?.session?.nameLabel || null);
     setShift({
       value: students?.data?.shiftName?.name,
       label: students?.data?.shiftName?.nameLabel,
-    })
-
-    
-  },[students])
-
-
+    });
+  }, [students]);
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -267,18 +257,15 @@ const EditStudentProfilePages = () => {
     setGroup(null);
   };
 
-  if (
-    isPending
-  )
-    return <Shimmer />
+  if (isPending) return <Shimmer />;
 
-
-    if(isError && error instanceof Error){
-      const errorMsg = error?.response?.data?.message || error?.message || "Something went wrong. Please try again later!"
-      return <p>{errorMsg}</p>
-    }
-
- 
+  if (isError && error instanceof Error) {
+    const errorMsg =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Something went wrong. Please try again later!";
+    return <p>{errorMsg}</p>;
+  }
 
   return (
     <>
