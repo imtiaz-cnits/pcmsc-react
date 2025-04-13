@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 
 const Ok = () => {
@@ -6,15 +6,16 @@ const Ok = () => {
 
   const Options = [{ value: "Try", label: "Try" }];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted .. ", o);
-    setO(null);
-  };
+ const testvalue = 'Try'
+  useEffect(()=>{
+    const matched= Options.find((option)=> option.value === testvalue)
+    console.log('matched : ', matched)
+    setO(matched)
+  },[Options])
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form>
         <Select
           options={Options}
           onChange={setO}

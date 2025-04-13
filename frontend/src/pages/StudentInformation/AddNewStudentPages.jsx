@@ -737,6 +737,7 @@ const AddNewStudentPages = () => {
 
                       <DatepickerComponent
                         title={"Date of Birth *"}
+                        selectedDate={dob}
                         setSelectedDate={setDOB}
                       />
                     </div>
@@ -787,6 +788,7 @@ const AddNewStudentPages = () => {
                     <div className="form-row row">
                       <DatepickerComponent
                         title={" Registration Date *"}
+                        selectedDate={registrationDate}
                         setSelectedDate={setRegistrationDate}
                       />
 

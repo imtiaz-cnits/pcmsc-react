@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Shimmer from "../../components/Shimmer";
-import { useFetchStudents } from "../../hook/useStudentInfo";
+import { useDeleteStudent, useFetchStudents } from "../../hook/useStudentInfo";
 
 const StudentProfilePages = () => {
+  const [itemToDelete, setItemToDelete] = useState(null);
   const { data: students, isPending, isError, error } = useFetchStudents();
-
+  const [isDeleteModalOpen , setIsDeleteModalOpen] = useState(false)
+  const {mutate: deleteStudent}= useDeleteStudent()
 
 
 
@@ -80,6 +82,9 @@ const StudentProfilePages = () => {
   };
 
   useEffect(() => {
+
+  
+
     const table = document.querySelector("#printTable");
     const entriesSelect = document.querySelector("#entries");
     const displayInfo = document.querySelector("#display-info");
@@ -104,10 +109,10 @@ const StudentProfilePages = () => {
             : "none";
       });
 
-      displayInfo.textContent = `Showing ${Math.min(
+      displayInfo.textContent = totalEntries ?  `Showing ${Math.min(
         entriesPerPage * currentPage,
         totalEntries,
-      )} of ${totalEntries} entries`;
+      )} of ${totalEntries} entries` : 'Loading Entries....';
     }
 
     function updatePagination() {
@@ -185,6 +190,24 @@ const StudentProfilePages = () => {
   }, [students?.data.length]);
 
 
+  const handleDeleteClick = (e, item) => {
+    e.preventDefault();
+    setItemToDelete(item?._id);
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+
+    console.log("item to delete : ", itemToDelete);
+    deleteStudent(itemToDelete);
+    setIsDeleteModalOpen(false);
+  };
+
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    setIsDeleteModalOpen(false);
+  };
  
   if(isError && error instanceof Error){
 
@@ -541,7 +564,7 @@ const StudentProfilePages = () => {
                                   }}
                                 >
                                   {/* Edit Button */}
-                                  <button
+                                  <Link to={`/student-management/edit-studdent-profile/${item?._id}`}
                                     style={{
                                       background: "none",
                                       border: "none",
@@ -563,10 +586,12 @@ const StudentProfilePages = () => {
                                     }}
                                   >
                                     <FaRegEdit style={{ fontSize: "18px" }} />
-                                  </button>
+                                  </Link>
 
                                   {/* Delete Button */}
                                   <button
+            onClick={() => setIsDeleteModalOpen(true)}
+
                                     style={{
                                       background: "none",
                                       border: "none",
@@ -588,6 +613,8 @@ const StudentProfilePages = () => {
                                         color: "lightcoral",
                                         fontSize: "18px",
                                       }}
+              onClick={(e) => handleDeleteClick(e, item)}
+
                                     />
                                   </button>
                                 </div>
@@ -678,15 +705,25 @@ const StudentProfilePages = () => {
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
-              </div>
+        {isDeleteModalOpen && (
+        <div
+          id="confirmationModal"
+          className="modal"
+          style={{ display: "flex" }}
+        >
+          <div className="modal-content">
+            <p>Are you sure you want to delete this item?</p>
+            <div className="modal-buttons">
+              <button id="confirmYes" onClick={handleDelete}>
+                Yes
+              </button>
+              <button id="confirmNo" onClick={handleClose}>
+                No
+              </button>
             </div>
           </div>
+        </div>
+      )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">

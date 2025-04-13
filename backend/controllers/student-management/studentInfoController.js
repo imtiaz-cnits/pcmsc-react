@@ -156,6 +156,34 @@ async function getAllStudents(req, res, next) {
   }
 }
 
+// 📝 get all students (id)
+async function getStudentByID(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const student = await Student.findOne({ _id: id })
+      .populate("className")
+      .populate("shiftName")
+      .populate("sectionName")
+      .populate("sessionName")
+      .populate("groupName");
+
+    if (!student) {
+      return next(createError(404, "Student not found"));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Student fetched successfully!",
+      data: student,
+    });
+  } catch (error) {
+    console.error("❌ Error getStudentByID ", error);
+
+    return next(error);
+  }
+}
+
 // 📝 update student
 async function updateStudent(req, res, next) {
   try {
@@ -226,6 +254,7 @@ async function deleteStudent(req, res, next) {
 module.exports = {
   addStudentInfo,
   getAllStudents,
+  getStudentByID,
   updateStudent,
   deleteStudent,
 };

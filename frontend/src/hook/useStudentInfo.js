@@ -4,12 +4,13 @@ import {
   keepPreviousData,
   useMutation,
   useQuery,
-  useQueryClient,
+  useQueryClient
 } from "@tanstack/react-query";
 import {
   addStudentInfoAPI,
   deleteStudentInfoAPI,
   fetchAllStudentsAPI,
+  fetchStudentByIDAPI,
   updateStudentAPI,
 } from "../api/student-management/studentInfoAPI";
 
@@ -39,11 +40,24 @@ export const useFetchStudents = () => {
   return useQuery({
     queryKey: ["students"],
     queryFn: fetchAllStudentsAPI,
-    gcTime: 1000 * 60 * 15,
-    staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
+
+    refetchOnWindowFocus:true
   });
 };
+
+
+// ✅  GET - method (id)
+export const useFetchStudentByID=(id)=>{
+  return useQuery({
+    queryKey: ['students'],
+    queryFn: ()=> fetchStudentByIDAPI(id),
+    refetchOnWindowFocus: true,
+    enabled: !!id,
+    
+  })
+}
+
 
 //✅  PATCH - method
 export const useUpdateStudent = () => {
