@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { Toaster } from "sonner";
 import Shimmer from "../../components/Shimmer.jsx";
 import {
   useAddClass,
   useDeleteClass,
   useFetchPaginatedClasses,
-  useUpdateShift,
+  useUpdateClass,
 } from "../../hook/useClass.js";
 
-const ClassPages = () => {
+const ClassPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+
   const [className, setClassName] = useState("");
   const [classStatus, setClassStatus] = useState("");
   const [editClassId, setEditClassId] = useState("");
@@ -22,10 +25,19 @@ const ClassPages = () => {
     isPending,
     isError,
     error,
-  } = useFetchPaginatedClasses(page);
+  } = useFetchPaginatedClasses({ page, limit, keyword });
   const { mutate: addClass } = useAddClass();
   const { mutate: deleteClass } = useDeleteClass();
-  const { mutate: updateClass } = useUpdateShift();
+  const { mutate: updateClass } = useUpdateClass();
+
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
 
   // ✅ Enable-Disable scrolling when modal is open-close
   useEffect(() => {
@@ -76,7 +88,7 @@ const ClassPages = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleEditSubmit = async (e) => {
+  const handleEditSubmit =(e) => {
     e.preventDefault();
 
     if (!className) {
@@ -112,6 +124,12 @@ const ClassPages = () => {
     });
   };
 
+  const handleSearchQuery = (e) => {
+    e.preventDefault();
+    setPage(1);
+    setKeyword(e.target.value);
+  };
+
   if (isError) {
     console.log("inside class list error : ", error);
     if (error instanceof Error) {
@@ -126,6 +144,10 @@ const ClassPages = () => {
 
   return (
     <>
+      <Toaster
+        position="top-center" 
+        richColors
+      />
       {/* <!-- Hero Main Content Start --> */}
 
       {/* Sidebar */}
@@ -170,13 +192,20 @@ const ClassPages = () => {
                               <select
                                 id="entries"
                                 className="form-control"
+                                value={limit}
+                                onChange={(e) => {
+                                  e.preventDefault();
+                                  setLimit(Number(e.target.value));
+                                  setPage(1);
+                                  setKeyword('')
+                                }}
                                 style={{ width: "auto" }}
                               >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
+                                {entriesOptions.map((item, index) => (
+                                  <option key={index} value={item.value}>
+                                    {item.label}
+                                  </option>
+                                ))}
                               </select>
                               <span className="dropdown-icon">&#9662;</span>
                               {/* <!-- Dropdown icon --> */}
@@ -190,6 +219,8 @@ const ClassPages = () => {
                             id="searchInput"
                             className="form-control"
                             placeholder="Search Class..."
+                            value={keyword}
+                            onChange={handleSearchQuery}
                           />
                         </div>
                       </div>
@@ -216,16 +247,13 @@ const ClassPages = () => {
                             classes?.data?.length > 0 &&
                             classes?.data?.map((item, index) => (
                               <tr key={item?._id}>
-                                <td>{(page - 1) * 5 + index + 1}</td>
-                                <td
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    gap: "20px",
-                                  }}
-                                >
-                                  {item?.nameLabel}
+                                <td>
+                                  {String((page - 1) * 5 + index + 1).padStart(
+                                    2,
+                                    "0",
+                                  )}
                                 </td>
+                                <td>{item?.nameLabel}</td>
                                 <td>{item?.label}</td>
                                 <td
                                   style={{
@@ -257,7 +285,10 @@ const ClassPages = () => {
                                       padding: 0,
                                     }}
                                     onClick={(e) =>
-                                      handleClassDelete(e, item?._id)
+                                    {
+                                      handleClassDelete(e, item?._id);
+                                      setKeyword('')
+                                    }
                                     }
                                   >
                                     <FaRegTrashAlt
@@ -276,7 +307,7 @@ const ClassPages = () => {
                     </div>
                     {/* <!-- Pagination and Display Info --> */}
                     <div className="my-3">
-                      <span id="display-info"></span>
+                      <span id="display-info">{`Showing ${Math.min(limit * page, classes?.total)} of ${classes?.total} entries`}</span>
                     </div>
 
                     <div id="pagination" className="pagination">
@@ -503,9 +534,8 @@ const ClassPages = () => {
       </div>
 
       {/* <!-- Hero Main Content End --> */}
-      <Toaster />
     </>
   );
 };
 
-export default ClassPages;
+export default ClassPage;

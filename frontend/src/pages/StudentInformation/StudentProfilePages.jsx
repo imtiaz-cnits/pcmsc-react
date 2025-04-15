@@ -1,16 +1,82 @@
 import { useEffect, useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Shimmer from "../../components/Shimmer";
+import '../../assets/css/all-modal.css';
+import '../../assets/css/style.css';
+import Shimmer from '../../components/Shimmer';
 import { useDeleteStudent, useFetchStudents } from "../../hook/useStudentInfo";
 
+
 const StudentProfilePages = () => {
+
+  const [filterChecker , setFilterChecker] = useState('')
+  const [visibleData , setVisibleData]=useState([])
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [itemToDelete, setItemToDelete] = useState(null);
+
+   
   const { data: students, isPending, isError, error } = useFetchStudents();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { mutate: deleteStudent } = useDeleteStudent();
 
+
+
  
+  const filterOptions = [
+    {value:'all' , label: 'All time'},
+    {value:'today', label:'Today'},
+    {value: '7', label: 'Last 7 Days'},
+    {value: '30', label: 'Last Month'},
+    {value: '365', label: 'Last Year'}
+  ] 
+
+  useEffect(()=>{
+
+   if(students?.data){
+    const filtered = students?.data?.filter((item)=>{
+
+      const today = new Date(); 
+      const [d,m,y] = item.admissionDate.split('-').map(Number)
+      console.log('d , m , y ' , d , m ,y)
+      const rowDate = new Date(y , m-1 , d)
+
+      switch (filterChecker){
+
+        case 'all':
+          return true
+        case 'today':
+          return today.toDateString() === rowDate.toDateString();
+
+          case '7':
+            return  (today - rowDate) / (1000 * 60 * 60 * 24) <= 7;
+
+            case "30":
+          return (today - rowDate) / (1000 * 60 * 60 * 24) <= 30;
+        case "365":
+          return (today - rowDate) / (1000 * 60 * 60 * 24) <= 365; 
+
+          default:
+            return true
+      }
+
+
+
+    })
+
+    setVisibleData(filtered)
+   }
+    
+    
+  },[filterChecker,students])
+
+
+  useEffect(()=>{
+    console.log('visible data: ',visibleData)
+    console.log(typeof visibleData)
+    console.log('student type : ', typeof students?.data)
+    console.log('students length ' , students?.data?.length)
+    console.log('visible data length ' , visibleData?.length)
+  },[visibleData, students])
 
   useEffect(() => {
     $(document).ready(function () {
@@ -92,7 +158,7 @@ const StudentProfilePages = () => {
     let currentPage = 1;
     let entriesPerPage = parseInt(entriesSelect.value);
     // let totalEntries = table.querySelectorAll("tbody tr").length;
-    let totalEntries = students?.data.length;
+    let totalEntries = students?.data?.length;
     let totalPages = Math.ceil(totalEntries / entriesPerPage);
     const pageLinksToShow = 3;
 
@@ -186,7 +252,7 @@ const StudentProfilePages = () => {
     // Initial setup
     updateTable();
     updatePagination();
-  }, [students?.data.length]);
+  }, [students]);
 
   const handleDeleteClick = (e, item) => {
     e.preventDefault();
@@ -205,6 +271,22 @@ const StudentProfilePages = () => {
     e.preventDefault();
     setIsDeleteModalOpen(false);
   };
+
+  const handleOutSideClick = (e)=>{
+    if(e.target.classList.contains("filterModal")){
+      setIsFilterModalOpen(false)
+    }
+  }
+
+  useEffect(()=>{
+
+    document.addEventListener('click',handleOutSideClick)
+
+    return()=>{
+      document.removeEventListener('click',handleOutSideClick)
+    }
+
+  },[isFilterModalOpen])
 
   if (isError && error instanceof Error) {
     console.log("Student Profile Page Error : ", error);
@@ -279,8 +361,8 @@ const StudentProfilePages = () => {
                         </div>
 
                         <div className="input-group-append">
-                          <div className="dropdown-custom">
-                            <button className="dropdown-button">
+                          <div className="dropdown-custom" id='filterModal'>
+                            <button className="dropdown-button"  onClick={()=> setIsFilterModalOpen(!isFilterModalOpen)}>
                               <svg
                                 width="32"
                                 height="32"
@@ -316,23 +398,23 @@ const StudentProfilePages = () => {
                               </svg>
                               <span>Filter</span>
                             </button>
-                            <div className="dropdown-menus">
-                              <a href="#" data-filter="all">
-                                All time
-                              </a>
-                              <a href="#" data-filter="today">
-                                Today
-                              </a>
-                              <a href="#" data-filter="7">
-                                Last 7 Days
-                              </a>
-                              <a href="#" data-filter="30">
-                                Last Month
-                              </a>
-                              <a href="#" data-filter="365">
-                                Last Year
-                              </a>
-                            </div>
+                            {isFilterModalOpen && <div className="dropdown-menus" style={{display: 'block'}}>
+
+{filterOptions.map((item)=>  <a key={item.value} href="#"
+
+onClick={(e)=>{
+  e.preventDefault();
+  setFilterChecker(item.value)
+  setIsFilterModalOpen(false)
+
+}}
+
+data-filter={item.value} >
+                               {item.label}
+                              </a>)}
+
+                            
+                            </div>}
                           </div>
                         </div>
                       </div>
@@ -532,11 +614,11 @@ const StudentProfilePages = () => {
                     </thead>
                     <tbody>
                       {isPending ? (
-                        <Shimmer count={10} />
+                        <Shimmer count={10}/>
                       ) : (
-                        students?.data?.length > 0 &&
-                        students?.data?.map((item, index) => (
-                          <tr key={item?._id} data-date="2024-08-05">
+                        visibleData?.length > 0 &&
+                        visibleData?.map((item, index) => (
+                          <tr key={item?._id} data-date={item?.admissionDate}>
                             <td> {String(index + 1).padStart(2, "0")} </td>
                             <td>
                               <div

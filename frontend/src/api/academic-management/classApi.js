@@ -18,11 +18,12 @@ export const fetchedClassesAPI = async () => {
 };
 
 // ✅  GET - method (paginated)
-export const fetchedPaginatedClasses = async (page) => {
-  const res = await axiosPrivate.get(
-    `/academic-management/class-paginated?page=${page}`,
-  );
-  // console.log("paginated value and total", res.data);
+export const fetchedPaginatedClasses = async (page, limit, keyword) => {
+  console.log("fetchedPaginatedClasses api : ", page, limit);
+  const res = await axiosPrivate.get(`/academic-management/class-paginated`, {
+    params: { page, limit, keyword },
+  });
+  console.log("paginated value and total", res.data);
   return res.data?.success ? res.data : [];
 };
 

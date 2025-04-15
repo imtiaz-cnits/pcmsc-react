@@ -10,6 +10,7 @@ const {
   updateClass,
   deleteClass,
   getAllPaginatedClasses,
+  getAllTestPaginatedClasses,
 } = require("../controllers/academicManagement/classController");
 const {
   addShift,

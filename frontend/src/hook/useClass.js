@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   addClassAPI,
   deleteClassAPI,
@@ -33,12 +33,13 @@ export const useAddClass = () => {
       );
     },
     onSuccess: async (data) => {
-      console.log("🚀 Shifts added successfully: ", data);
-
+      console.log("🚀 Class added successfully: ", data);
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
 
       if (data?.success) {
-        toast(data?.message);
+        
+      toast.success(data?.message);
+
       }
     },
 
@@ -61,20 +62,20 @@ export const useFetchClasses = () => {
 };
 
 //✅  GET - method (paginated)
-export const useFetchPaginatedClasses = (page) => {
+export const useFetchPaginatedClasses = ({ page, limit, keyword }) => {
   return useQuery({
-    queryKey: ["classes", page],
-    queryFn: () => fetchedPaginatedClasses(page),
+    queryKey: ["classes", { page, limit, keyword }],
+    queryFn: () => fetchedPaginatedClasses(page, limit, keyword),
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
     retry: 4,
   });
 };
 
 //✅  PATCH - method
-export const useUpdateShift = () => {
+export const useUpdateClass = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateClassAPI,
@@ -83,7 +84,7 @@ export const useUpdateShift = () => {
       console.log("⚙️ error updating class variables : ", variables);
 
       if (error?.response) {
-        toast(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred while updating the class. Please try again.",
         );
@@ -97,15 +98,15 @@ export const useUpdateShift = () => {
       );
     },
 
-    onSuccess: async (data, { classID, payload }) => {
+    onSuccess: async (data,{ classID, payload }) => {
       console.log("🚀 update class onSuccess data value :", data);
       console.log("🚀 update  :", payload, classID);
 
       if (data?.success) {
-        toast(data?.message);
+        toast.success(data?.message);
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
+      await queryClient.invalidateQueries({ queryKey: ["classes",classID] });
     },
 
     onSettled: async () => {
@@ -124,7 +125,7 @@ export const useDeleteClass = () => {
     onError: (error) => {
       console.log("⚙️  error deleting class : ", error);
       if (error?.response) {
-        toast(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred !. Please try again",
         );

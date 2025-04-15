@@ -1,31 +1,13 @@
-import { useEffect, useState } from "react";
-import Select from "react-select";
+import YouTubeShimmer from "../../components/shimmer/YouTubeShimmer";
 
-const Ok = () => {
-  const [o, setO] = useState(null);
+const  Ok = ()=>{
 
-  const Options = [{ value: "Try", label: "Try" }];
+  return(
 
-  const testvalue = "Try";
-  useEffect(() => {
-    const matched = Options.find((option) => option.value === testvalue);
-    console.log("matched : ", matched);
-    setO(matched);
-  }, [Options]);
-
-  return (
     <>
-      <form>
-        <Select
-          options={Options}
-          onChange={setO}
-          value={o}
-          placeholder="Enter tester ... "
-        />
+<YouTubeShimmer />
 
-        <input type="submit" value="Submit" />
-      </form>
     </>
-  );
-};
-export default Ok;
+  )
+}
+export default Ok; 

@@ -49,6 +49,8 @@ app.use("/api/v1/academic-management", academicRouter);
 app.use("/api/v1/student-management", studentRouter);
 // app.use('/api/v1/users', userRouter);
 
+// test case
+app.use("/api/v1/test", testRouter);
 // 404 not found handler
 app.use(notFoundHandler);
 

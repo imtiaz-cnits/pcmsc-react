@@ -90,16 +90,27 @@ async function getAllClasses(req, res, next) {
   }
 }
 
-// 📝 Get all shifts with pagination
+// 📝 Get all class with pagination
 async function getAllPaginatedClasses(req, res, next) {
   try {
-    // console.log("📥 Received request for shifts: ", req.query);
+    console.log("📥 Received request for class : ", req.query);
 
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 5;
     const skip = (page - 1) * limit;
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
 
-    const classes = await ClassModel.find({}).skip(skip).limit(limit);
+    const classes = await ClassModel.find(searchQuery).skip(skip).limit(limit);
 
     const total = await ClassModel.countDocuments();
 
@@ -123,16 +134,10 @@ async function getAllPaginatedClasses(req, res, next) {
 // 📝 update
 async function updateClass(req, res, next) {
   try {
-    // console.log("class params : ", req.params);
-    // console.log("class body : ", req.body);
+    console.log("class params : ", req.params);
+    console.log("class body : ", req.body);
     const { id: classId } = req.params;
     const classData = req.body;
-
-    const existingClass = await ClassModel.find({ name: classData.name });
-
-    if (existingClass) {
-      return next(403, "Already exits!");
-    }
 
     const updatedClass = await ClassModel.findByIdAndUpdate(
       classId,
