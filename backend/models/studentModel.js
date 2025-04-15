@@ -172,7 +172,7 @@ const studentSchema = new mongoose.Schema(
 
     sessionName: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Section",
+      ref: "Session",
       required: true,
     },
     groupName: {

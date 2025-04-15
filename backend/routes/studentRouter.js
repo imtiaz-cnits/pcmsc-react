@@ -20,7 +20,7 @@ const avatarUpload = require("../middlewares/upload/students/avatarUpload");
 router.post("/student-info", avatarUpload, addStudentInfo);
 router.get("/students", getAllStudents);
 router.get("/student/:id", getStudentByID);
-router.patch("/student/:id", updateStudent);
+router.patch("/student/:id", avatarUpload, updateStudent);
 router.delete("/student/:id", deleteStudent);
 
 // 🛠️ exports

@@ -9,7 +9,7 @@ import { useFetchGroups } from "../../hook/useGroup";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
-import { useFetchStudentByID } from "../../hook/useStudentInfo";
+import { useFetchStudentByID, useUpdateStudent } from "../../hook/useStudentInfo";
 
 const EditStudentProfilePages = () => {
   const [admissionNumber, setAdmissionNumber] = useState("");
@@ -35,7 +35,7 @@ const EditStudentProfilePages = () => {
   const [studentEmail, setStudentEmail] = useState("");
   const [smsStatus, setSmsStatus] = useState(null);
   const [registrationDate, setRegistrationDate] = useState("");
-  const [className, setClassName] = useState("");
+  const [className, setClassName] = useState(null);
   const [shift, setShift] = useState(null);
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
@@ -46,6 +46,7 @@ const EditStudentProfilePages = () => {
   const formRef = useRef(null);
   const { id } = useParams();
   const { data: students, isPending, isError, error } = useFetchStudentByID(id);
+    const { mutate: updateStudent } = useUpdateStudent()
 
   const {
     data: classes,
@@ -114,15 +115,49 @@ const EditStudentProfilePages = () => {
     setStudentGender(students?.data?.studentGender || null);
     setStudentEmail(students?.data?.studentEmail || "");
     setSmsStatus(students?.data?.smsStatus || null);
-    setRegistrationDate(students?.data?.registrationDate || "");
-    setClassName(students?.data?.className?.nameLabel || null);
-    setSection(students?.data?.section?.nameLabel || null);
-    setSession(students?.data?.session?.nameLabel || null);
+    setRegistrationDate(students?.data?.registrationDate || "")
+    setClassName({
+      value: students?.data?.className?.name,
+      label: students?.data?.className?.nameLabel
+    })
     setShift({
       value: students?.data?.shiftName?.name,
       label: students?.data?.shiftName?.nameLabel,
     });
+    setSection({
+      value: students?.data?.sectionName?.name,
+      label: students?.data?.sectionName?.nameLabel
+    });
+    setSession({
+      value: students?.data?.sessionName?.name,
+      label: students?.data?.sessionName?.nameLabel
+    });
+    setBloodGroup({
+      value: students?.data?.bloodGroup,
+      label: students?.data?.bloodGroup
+    })
+    setStudentGender({
+      value: students?.data?.studentGender,
+      label: students?.data?.studentGender
+    })
+   
+    setSmsStatus({
+      value: students?.data?.smsStatus,
+      label: students?.data?.smsStatus
+    })
+   
+ 
+  
+
+    setGroup({
+      value: students?.data?.groupName?.name,
+      label: students?.data?.groupName?.nameLabel
+    })
   }, [students]);
+
+  useEffect(()=>{
+    console.log('drop',shift )
+  },[shift])
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -182,8 +217,8 @@ const EditStudentProfilePages = () => {
     setSection(null);
     setSession(null);
     setGroup(null);
-    setImgFile(null);
-    setPreview(null);
+    setAvatar(null);
+    setPreviewImage(null);
   };
 
   const handleReset = (e) => {
@@ -191,70 +226,76 @@ const EditStudentProfilePages = () => {
     reset();
   };
 
-  const handleSubmit = (e) => {
+  const MAX_FILE_SIZE_MB = 1;
+  const allowedTypes = ["image/gif", "image/jpeg", "image/png"];
+  const handleFileChange = (e)=>{
+    e.preventDefault(); 
+    console.log("img button clicked");
+    const file = e.target.files[0]
+    if(!file) return
+    if(!allowedTypes.includes(file.type)){
+      alert("Only GIF, JPEG, and PNG files are allowed.");
+      return;
+    }
+    const fileSizeMB = file.size / (1024 * 1024);
+    if(fileSizeMB > MAX_FILE_SIZE_MB){
+      alert("File size should not exceed 2MB.");
+      return;
+    }
+
+    const previewURL = URL.createObjectURL(file)
+    console.log("Selected file:", file);
+    console.log("Preview URL:", previewURL);
+    setPreviewImage(previewURL)
+    setAvatar(file)
+  }
+
+  const handleEditSubmit = (e) => {
     e.preventDefault();
 
-    const payload = {
-      admissionNumber,
-      admissionDate,
-      studentRoll,
-      studentName,
-      nameBangla,
-      birthCertificate,
-      bloodGroup: bloodGroup ? bloodGroup.value : null,
-      religion,
-      fatherName,
-      fatherNID,
-      fatherPhoneNo,
-      motherName,
-      motherNID,
-      motherPhoneNo,
-      presentAddress,
-      permanentAddress,
-      guardian,
-      guardianPhone,
-      dob,
-      studentGender: studentGender ? studentGender.value : null,
-      studentEmail,
-      smsStatus: smsStatus ? smsStatus.value : null,
-      registrationDate,
-      className: className ? className.value : null,
-      shift: shift ? shift.value : null,
-      section: section ? section.value : null,
-      session: session ? session.value : null,
-      group: group ? group.value : null,
-    };
+    const formData = new FormData();
+    formData.append("admissionNumber", admissionNumber);
+    formData.append("admissionDate", admissionDate);
+    formData.append("studentRoll", studentRoll);
+    formData.append("studentName", studentName);
+    formData.append("nameBangla", nameBangla);
+    formData.append("birthCertificate", birthCertificate);
+    formData.append("bloodGroup", bloodGroup ? bloodGroup.value : null);
+    formData.append("religion", religion);
+    formData.append("fatherName", fatherName);
+    formData.append("fatherNID", fatherNID);
+    formData.append("fatherPhoneNo", fatherPhoneNo);
+    formData.append("motherName", motherName);
+    formData.append("motherNID", motherNID);
+    formData.append("motherPhoneNo", motherPhoneNo);
+    formData.append("presentAddress", presentAddress);
+    formData.append("permanentAddress", permanentAddress);
+    formData.append("guardian", guardian);
+    formData.append("guardianPhone", guardianPhone);
+    formData.append("dob", dob);
+    formData.append(
+      "studentGender",
+      studentGender ? studentGender.value : null,
+    );
+    formData.append("studentEmail", studentEmail);
+    formData.append("smsStatus", smsStatus ? smsStatus.value : null);
+    formData.append("registrationDate", registrationDate);
+    formData.append("className", className ? className.value : null);
+    formData.append("shift", shift ? shift.value : null);
+    formData.append("section", section ? section.value : null);
+    formData.append("session", session ? session.value : null);
+    formData.append("group", group ? group.value : null);
 
-    console.log("payload : ", payload);
+    if (avatar) {
+      formData.append("avatar", avatar);
+    }
 
-    addStudent(payload);
-    formRef.current.reset();
-    setAdmissionNumber("");
-    setStudentRoll("");
-    setStudentName("");
-    setNameBangla("");
-    setBirthCertificate("");
-    setBloodGroup(null);
-    setReligion("");
-    setFatherName("");
-    setFatherNID("");
-    setFatherPhoneNo("");
-    setMotherName("");
-    setMotherNID("");
-    setMotherPhoneNo("");
-    setPresentAddress("");
-    setPermanentAddress("");
-    setGuardian("");
-    setGuardianPhone("");
-    setStudentGender("");
-    setStudentEmail("");
-    setSmsStatus("");
-    setRegistrationDate("");
-    setClassName(null);
-    setShift(null);
-    setSection(null);
-    setSession(null);
-    setGroup(null);
+    for(const [key,value] of formData.entries()){
+      console.log(`${key} -> ${value}`);
+    }
+    // todo: update functionality not working
+    updateStudent({studentID:id,formData});
+    
   };
 
   if (isPending) return <Shimmer />;
@@ -279,7 +320,7 @@ const EditStudentProfilePages = () => {
               <div id="popup-modal">
                 <div className="form-container">
                   <h3>Update Student Information</h3>
-                  <form ref={formRef} onSubmit={handleSubmit}>
+                  <form ref={formRef} onSubmit={handleEditSubmit}>
                     {/* <!-- Row 1 --> */}
                     <div className="form-row row">
                       <div className="form-group col-lg-4">
@@ -356,6 +397,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={bloodGroupOptions}
                           onChange={setBloodGroup}
+                          value={bloodGroup}
                           placeholder="Select Blood Group"
                         />
                       </div>
@@ -365,7 +407,12 @@ const EditStudentProfilePages = () => {
                         <div className="upload-profile">
                           <div className="item">
                             <div className="img-box">
-                              <svg
+                              {previewImage ? (
+                                <img src={previewImage} alt="preview" width={76} height={68}  style={{
+                                  borderRadius: "6px",
+                                  objectFit: "fit",
+                                }}/>
+                              ) : (<svg
                                 width="32"
                                 height="32"
                                 viewBox="0 0 50 50"
@@ -398,7 +445,7 @@ const EditStudentProfilePages = () => {
                                     xlinkHref="data:image/png;base64,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"
                                   />
                                 </defs>
-                              </svg>
+                              </svg>)}
                             </div>
 
                             <div className="profile-wrapper">
@@ -407,6 +454,9 @@ const EditStudentProfilePages = () => {
                                   type="file"
                                   className="custom-file-input"
                                   aria-label="Upload Photo"
+                                  name="avatar"
+                                  onChange={handleFileChange}
+                                  accept="image/png,image/jpg, image/jpeg ,'image/gif'"
                                 />
                               </label>
                               <p>PNG,JPEG or GIF (up to 1 MB)</p>
@@ -573,6 +623,7 @@ const EditStudentProfilePages = () => {
                           <Select
                             options={genderOPtions}
                             onChange={setStudentGender}
+                            value={studentGender}
                             placeholder="Select Gender"
                           />
                         </div>
@@ -594,6 +645,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={smsStatusOPtions}
                           onChange={setSmsStatus}
+                          value={smsStatus}
                           placeholder="Select Status"
                         />
                       </div>
@@ -612,6 +664,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={classOptions}
                           onChange={setClassName}
+                          value={className}
                           placeholder="Select Class"
                         />
                       </div>
@@ -621,6 +674,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={shiftOptions}
                           onChange={setShift}
+                          value={shift}
                           placeholder="Select Shift"
                         />
                       </div>
@@ -633,6 +687,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={sectionOptions}
                           onChange={setSection}
+                          value={section}
                           placeholder="Enter section name"
                         />
                       </div>
@@ -643,6 +698,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={sessionOPtions}
                           onChange={setSession}
+                          value={session}
                           placeholder="Enter section name"
                         />
                       </div>
@@ -653,6 +709,7 @@ const EditStudentProfilePages = () => {
                         <Select
                           options={groupOPtions}
                           onChange={setGroup}
+                          value={group}
                           placeholder="Enter group name"
                         />
                       </div>

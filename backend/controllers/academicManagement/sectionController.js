@@ -6,7 +6,7 @@ async function addSection(req, res, next) {
   try {
     console.log("📥 Received section data: ", req.body);
 
-    const { section: name, status, label } = req.body;
+    const { name, status, label } = req.body;
 
     // check if already exists
 

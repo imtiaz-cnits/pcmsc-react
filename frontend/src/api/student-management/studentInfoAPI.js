@@ -33,10 +33,12 @@ export const fetchStudentByIDAPI = async (id) => {
 };
 
 // ✅ PATCH - method
-export const updateStudentAPI = async ({ studentID, payload }) => {
+export const updateStudentAPI = async ({ studentID, formData }) => {
+  console.log('form data ',formData)
+  console.log('form data id',studentID)
   const res = await axiosPrivate.patch(
     `/student-management/student/${studentID}`,
-    payload,
+    formData,
   );
 
   console.log("⚙️ updateStudentAPI api :", res.data);

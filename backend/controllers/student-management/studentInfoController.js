@@ -193,9 +193,9 @@ async function updateStudent(req, res, next) {
     console.log(" 🚀  student body : ", req.body);
 
     const { id } = req.params;
-    const payload = req.body;
+    const formData = req.body;
 
-    const updatedStudent = await Student.findByIdAndUpdate(id, payload, {
+    const updatedStudent = await Student.findByIdAndUpdate(id, formData, {
       new: true,
     });
 

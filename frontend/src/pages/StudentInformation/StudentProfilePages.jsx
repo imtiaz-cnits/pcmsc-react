@@ -30,44 +30,44 @@ const StudentProfilePages = () => {
     {value: '365', label: 'Last Year'}
   ] 
 
-  useEffect(()=>{
+  // useEffect(()=>{
 
-   if(students?.data){
-    const filtered = students?.data?.filter((item)=>{
+  //  if(students?.data){
+  //   const filtered = students?.data?.filter((item)=>{
 
-      const today = new Date(); 
-      const [d,m,y] = item.admissionDate.split('-').map(Number)
-      console.log('d , m , y ' , d , m ,y)
-      const rowDate = new Date(y , m-1 , d)
+  //     const today = new Date(); 
+  //     const [d,m,y] = item.admissionDate.split('-').map(Number)
+  //     console.log('d , m , y ' , d , m ,y)
+  //     const rowDate = new Date(y , m-1 , d)
 
-      switch (filterChecker){
+  //     switch (filterChecker){
 
-        case 'all':
-          return true
-        case 'today':
-          return today.toDateString() === rowDate.toDateString();
+  //       case 'all':
+  //         return true
+  //       case 'today':
+  //         return today.toDateString() === rowDate.toDateString();
 
-          case '7':
-            return  (today - rowDate) / (1000 * 60 * 60 * 24) <= 7;
+  //         case '7':
+  //           return  (today - rowDate) / (1000 * 60 * 60 * 24) <= 7;
 
-            case "30":
-          return (today - rowDate) / (1000 * 60 * 60 * 24) <= 30;
-        case "365":
-          return (today - rowDate) / (1000 * 60 * 60 * 24) <= 365; 
+  //           case "30":
+  //         return (today - rowDate) / (1000 * 60 * 60 * 24) <= 30;
+  //       case "365":
+  //         return (today - rowDate) / (1000 * 60 * 60 * 24) <= 365; 
 
-          default:
-            return true
-      }
+  //         default:
+  //           return true
+  //     }
 
 
 
-    })
+  //   })
 
-    setVisibleData(filtered)
-   }
+  //   setVisibleData(filtered)
+  //  }
     
     
-  },[filterChecker,students])
+  // },[filterChecker,students])
 
 
   useEffect(()=>{
@@ -616,8 +616,8 @@ data-filter={item.value} >
                       {isPending ? (
                         <Shimmer count={10}/>
                       ) : (
-                        visibleData?.length > 0 &&
-                        visibleData?.map((item, index) => (
+                        students?.data?.length > 0 &&
+                        students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>
                             <td> {String(index + 1).padStart(2, "0")} </td>
                             <td>

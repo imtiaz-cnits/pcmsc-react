@@ -64,7 +64,7 @@ const Section = () => {
       sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
 
     const payload = {
-      section,
+      name: section,
       status: sectionStatus || "active",
       label: label || "Active",
     };

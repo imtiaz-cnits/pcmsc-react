@@ -80,9 +80,9 @@ export const useUpdateStudent = () => {
       );
     },
 
-    onSuccess: async (data, { studentID, payload }) => {
+    onSuccess: async (data, { studentID, formData }) => {
       console.log("🚀 update student onSuccess data value :", data);
-      console.log("🚀 update  :", payload, studentID);
+      console.log("🚀 update  :", formData, studentID);
 
       await queryClient.invalidateQueries({
         queryKey: ["students", studentID],

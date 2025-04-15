@@ -23,38 +23,38 @@ export const useAddShifts = () => {
     mutationFn: addShiftAPI,
 
     // 📝 Optimistic Update: Before API Call
-    onMutate: async (variables) => {
-      console.log("⏳ [Shift] Attempting to add shift:", variables);
+    // onMutate: async (variables) => {
+    //   console.log("⏳ [Shift] Attempting to add shift:", variables);
 
-      await queryClient.cancelQueries({ queryKey: ["shifts"] });
+    //   await queryClient.cancelQueries({ queryKey: ["shifts"] });
 
-      const prevShifts = queryClient.getQueryData(["shifts"]);
+    //   const prevShifts = queryClient.getQueryData(["shifts"]);
 
-      console.log("🔍 Before Update (Cache Data):", prevShifts);
+    //   console.log("🔍 Before Update (Cache Data):", prevShifts);
 
-      const afterOptimistic = queryClient.setQueryData(
-        ["shifts"],
-        (oldData) => {
-          console.log("inside optimistic old data : ", oldData);
+    //   const afterOptimistic = queryClient.setQueryData(
+    //     ["shifts"],
+    //     (oldData) => {
+    //       console.log("inside optimistic old data : ", oldData);
 
-          return [
-            ...(Array.isArray(oldData) ? oldData : []),
-            { ...variables, id: Date.now() },
-          ];
-        },
-      );
+    //       return [
+    //         ...(Array.isArray(oldData) ? oldData : []),
+    //         { ...variables, id: Date.now() },
+    //       ];
+    //     },
+    //   );
 
-      console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
+    //   console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
 
-      return { prevShifts };
-    },
+    //   return { prevShifts };
+    // },
 
-    onError: (error, _, context) => {
+    onError: (error) => {
       console.log("error adding session : ", error);
       // ⚙️ rollback cache
-      if (context?.prevShifts) {
-        queryClient.setQueryData(["shifts"], context.prevShifts);
-      }
+      // if (context?.prevShifts) {
+      //   queryClient.setQueryData(["shifts"], context.prevShifts);
+      // }
 
       if (error.response) {
         toast(
@@ -77,14 +77,15 @@ export const useAddShifts = () => {
         toast("Shifts added successfully");
       }
 
-      queryClient.setQueryData(["shifts"], (oldData) => {
-        return [...oldData, data];
-      });
+      // queryClient.setQueryData(["shifts"], (oldData) => {
+      //   return [...oldData, data];
+      // });
       // await queryClient.invalidateQueries({ queryKey: ["shifts"] });
-      console.log(
-        "✅ After Backend Response (Cache Data): ",
-        queryClient.getQueryData(["shifts"]),
-      );
+      // console.log(
+      //   "✅ After Backend Response (Cache Data): ",
+      //   queryClient.getQueryData(["shifts"]),
+      // );
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] }); 
     },
 
     onSettled: async () => {

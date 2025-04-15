@@ -3,16 +3,36 @@ import Select from "react-select";
 import "../../assets/css/all-modal.css";
 import DatepickerComponent from "../../components/DatepickerComponent ";
 import Shimmer from "../../components/Shimmer";
-import { useFetchClasses } from "../../hook/useClass";
-import { useFetchGroups } from "../../hook/useGroup";
-import { useFetchSections } from "../../hook/useSection";
-import { useFetchSessions } from "../../hook/useSession";
-import { useFetchShifts } from "../../hook/useShift";
+import { useAddClass, useFetchClasses } from "../../hook/useClass";
+import { useAddGroup, useFetchGroups } from "../../hook/useGroup";
+import { useAddSections, useFetchSections } from "../../hook/useSection";
+import { useAddSession, useFetchSessions } from "../../hook/useSession";
+import { useAddShifts, useFetchShifts } from "../../hook/useShift";
 import { useAddSutdent } from "../../hook/useStudentInfo";
 
 import { useEffect } from "react";
 
 const AddNewStudentPages = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isShiftModalOpen, setIsShiftModalOpen] = useState(false)
+  const [isSectionModalOpen , setIsSectionModalOpen]= useState(false)
+  const [isSessionModalOpen , setIsSessionModalOpen]= useState(false)
+  const [isGroupModalOpen , setIsGroupModalOpen]= useState(false)
+
+
+  const [newClassName, setNewClassName] = useState("");
+  const [newShift , sestNewShift]=useState('')
+  const [newSection, sestNewSection]=useState('')
+  const [newSession, sestNewSession]=useState('')
+  const [newGroup, sestNewGroup]=useState('')
+
+
+  const [classStatus, setClassStatus] = useState("");
+  const [shiftStatus, setShiftStatus] = useState("");
+  const [sectionStatus, setSectionStatus] = useState("");
+  const [sessionStatus, setSessionStatus] = useState("");
+  const [groupStatus, setGroupStatus] = useState("");
+
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [admissionDate, setAdmissionDate] = useState("");
   const [studentRoll, setStudentRoll] = useState("");
@@ -43,10 +63,18 @@ const AddNewStudentPages = () => {
   const [group, setGroup] = useState(null);
   const [imgFile, setImgFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [warn, setWarn] = useState({});
+  const [warn, setWarn] = useState('');
   const formRef = useRef(null);
 
   const { mutate: addStudent } = useAddSutdent();
+    const { mutate: addClass } = useAddClass()
+      const { mutate: addShift } = useAddShifts()
+        const { mutate: addSection } = useAddSections()
+          const { mutate: addSession } = useAddSession()
+            const { mutate: addGroup } = useAddGroup()
+          
+      
+    
 
   const {
     data: classes,
@@ -99,6 +127,44 @@ const AddNewStudentPages = () => {
     { value: "O-", label: "O-" },
   ];
 
+  
+  const classNameOptions = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  const shiftStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  const sectionStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  const sessionStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+
+  const groupStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+
+
+  useEffect(()=>{
+    console.log('session api : ',sessions)
+    console.log('session value : ',session)
+  },[session,sessions])
+
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
   });
@@ -128,6 +194,8 @@ const AddNewStudentPages = () => {
     { value: "Active", label: "Active" },
     { value: "Inactive", label: "Inactive" },
   ];
+
+
 
   const MAX_FILE_SIZE_MB = 2; // Limit to 2MB
   const allowedTypes = ["image/gif", "image/jpeg", "image/png"];
@@ -326,6 +394,125 @@ const AddNewStudentPages = () => {
     addStudent(formData);
   };
 
+  const handleAddClass = () => {
+    if (!newClassName ) {
+      setWarn("Please fill out all fields.");
+      return;
+    }
+
+
+    const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
+    console.log("status : ", classStatus);
+    console.log("class name ", newClassName);
+    const payload = {
+      name: newClassName,
+      label: label || "Active",
+      status: classStatus || "active",
+    };
+
+   addClass(payload)
+   setWarn("");
+    setNewClassName ("");
+    setClassStatus("");
+   setIsAddModalOpen(false);
+  };
+
+
+  const handleAddShift = (e)=>{
+    e.preventDefault();
+
+    if (!newShift) {
+      setWarn("Shift name is required and cannot be empty");
+      return;
+    }
+
+    const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
+    console.log("status : ", shiftStatus);
+    console.log("shift name ", newShift);
+    const payload = {
+      name:newShift,
+      status: shiftStatus || "active",
+      label: label || "Active",
+    };
+
+    console.log("payload", payload);
+    addShift(payload);
+    setWarn("");
+    sestNewShift("");
+    setShiftStatus("");
+  
+  }
+
+  const handleAddSection =(e)=>{
+    e.preventDefault()
+    if (!newSection) {
+      setWarn("section is required and cannot be empty");
+      return;
+    }
+
+    const label =
+      sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
+
+    const payload = {
+      name: newSection,
+      status: sectionStatus || "active",
+      label: label || "Active",
+    };
+
+    console.log("before payload : ", payload);
+
+    console.log("payload", payload);
+    addSection(payload);
+    setWarn("");
+    sestNewSection("");
+    setSectionStatus("");
+  }
+
+  const handleAddSession = (e) => {
+    e.preventDefault();
+
+    if (!newSession ) {
+      setWarn("Session name is required and cannot be empty");
+      return;
+    }
+
+    const label =
+      sessionStatus?.charAt(0).toUpperCase() + sessionStatus.slice(1);
+    console.log("session status : ", sessionStatus);
+    const payload = {
+      name: newSession,
+      label: label || "Active",
+      status: sessionStatus || "active",
+    };
+    console.log("payload", payload);
+    addSession(payload);
+    setWarn("");
+    sestNewSession("");
+    setSessionStatus("");
+  };
+
+
+  const handleAddGroup = (e)=>{
+    e.preventDefault(); 
+    if (!newGroup ) {
+      setWarn("Group name is required and cannot be empty");
+      return;
+    }
+    const label =
+    groupStatus?.charAt(0).toUpperCase() + groupStatus.slice(1);
+  console.log("group status : ", groupStatus);
+  const payload = {
+    name: newGroup,
+    label: label || "Active",
+    status: groupStatus || "active",
+  };
+  console.log("payload", payload);
+  addGroup(payload);
+  setWarn("");
+  sestNewGroup("");
+  setGroupStatus("");
+  }
+
   if (
     isclassPending ||
     isshiftPending ||
@@ -400,9 +587,7 @@ const AddNewStudentPages = () => {
                             validateField("admissionNumber", e.target.value);
                           }}
                         />
-                        {warn.admissionNumber && (
-                          <p style={{ color: "red" }}>{warn.admissionNumber}</p>
-                        )}
+                      
                       </div>
 
                       <DatepickerComponent
@@ -425,9 +610,7 @@ const AddNewStudentPages = () => {
                             validateField("studentRoll", e.target.value);
                           }}
                         />
-                        {warn.studentRoll && (
-                          <p style={{ color: "red" }}>{warn.studentRoll}</p>
-                        )}
+                        
                       </div>
 
                       <div className="form-group col-lg-4">
@@ -792,7 +975,7 @@ const AddNewStudentPages = () => {
                         setSelectedDate={setRegistrationDate}
                       />
 
-                      <div className="form-group select-input-box col-lg-4">
+                      {/* <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Class Name</label>
                         <Select
                           options={classOptions}
@@ -801,7 +984,29 @@ const AddNewStudentPages = () => {
                           placeholder="Select Class"
                           menuPlacement="top"
                         />
-                      </div>
+                      </div> */}
+
+<div className="form-group select-input-box col-lg-4">
+      <label htmlFor="select-to">Class Name</label>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Select
+          options={classOptions}
+          onChange={setClassName}
+          value={className}
+          placeholder="Select Class"
+          menuPlacement="top"
+        />
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          className="btn-add-class"
+          style={{ marginLeft: "10px" }}
+        >
+          Add Class
+        </button>
+      </div>
+      </div>
+
 
                       <div className="form-group select-input-box col-lg-4">
                         <label htmlFor="select-to">Shift Name</label>
@@ -812,6 +1017,14 @@ const AddNewStudentPages = () => {
                           placeholder="Select Shift"
                           menuPlacement="top"
                         />
+                        <button
+          type="button"
+          onClick={() => setIsShiftModalOpen(true)}
+          className="btn-add-class"
+          style={{ marginLeft: "10px" }}
+        >
+          Add Shift
+        </button>
                       </div>
                     </div>
 
@@ -826,6 +1039,14 @@ const AddNewStudentPages = () => {
                           placeholder="Enter section name"
                           menuPlacement="top"
                         />
+                        <button
+          type="button"
+          onClick={() => setIsSectionModalOpen(true)}
+          className="btn-add-class"
+          style={{ marginLeft: "10px" }}
+        >
+          Add Section
+        </button>
                       </div>
 
                       <div className="form-group col-lg-4">
@@ -838,6 +1059,14 @@ const AddNewStudentPages = () => {
                           placeholder="Enter section name"
                           menuPlacement="top"
                         />
+                        <button
+          type="button"
+          onClick={() => setIsSessionModalOpen(true)}
+          className="btn-add-class"
+          style={{ marginLeft: "10px" }}
+        >
+          Add Session
+        </button>
                       </div>
 
                       <div className="form-group col-lg-4">
@@ -850,8 +1079,18 @@ const AddNewStudentPages = () => {
                           placeholder="Enter group name"
                           menuPlacement="top"
                         />
+                         <button
+          type="button"
+          onClick={() => setIsGroupModalOpen(true)}
+          className="btn-add-class"
+          style={{ marginLeft: "10px" }}
+        >
+          Add Group
+        </button>
                       </div>
                     </div>
+
+                    
 
                     {/* <!-- Actions --> */}
                     <div className="form-actions">
@@ -882,6 +1121,385 @@ const AddNewStudentPages = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
+      <div className="createClassModal">
+        {isAddModalOpen && (
+          <section id="createClassModal" className="modal show">
+            <div className="modal-content">
+              <div id="popup-modal">
+                <div className="form-container">
+                  <h3>Add Class</h3>
+                  <form>
+                    {/* Row 1 */}
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="class-name">Class Name *</label>
+                        <input
+                          type="text"
+                          id="class-name"
+                          placeholder="Class Name"
+                          value={newClassName}
+                          onChange={(e) => setNewClassName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                  
+
+                    {/* Row 2 */}
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="class-status">Status *</label>
+                        <select
+                          id="class-status"
+                          value={classStatus}
+                          onChange={(e) => setClassStatus(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select Status
+                          </option>
+                          {classNameOptions.map((option, index) => (
+                            <option key={index} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="form-actions">
+                      <button
+                        type="button"
+                        className="button close closeBtn"
+                        onClick={() => setIsAddModalOpen(false)}
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="button"
+                        className="button save"
+                        onClick={handleAddClass}
+                       
+                      >
+                       save
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* // shift modal  */}
+
+      <div className="shift-modal">
+            {isShiftModalOpen && (
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Shift</h3>
+                      <form>
+                        {/* ✅ Shift Name Input */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Shift Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Shift Name"
+                              value={newShift}
+                              onChange={(e) => sestNewShift(e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+
+                        {/* ✅ Shift Status Input */}
+
+                        <div className="form-group">
+                          <label htmlFor="search-students">Status *</label>
+                          <select
+                            value={shiftStatus}
+                            onChange={(e) => setShiftStatus(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Select status
+                            </option>
+                            {shiftStatusOptions.map((option, index) => (
+                              <option key={index} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* ✅ Buttons for modal actions */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            className="button close closeBtn"
+                            onClick={() => setIsShiftModalOpen(false)} // ✅ Close modal on click
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleAddShift}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+          </div>
+
+
+          {/* <!-- Section Add Pop Up Modal Start -->  */}
+          <div className="section-modal">
+            {isSectionModalOpen && (
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Section</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div
+                          className="form-row"
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Section Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Section Name"
+                              value={newSection}
+                              onChange={(e) => sestNewSection(e.target.value)}
+                            />
+                            
+                          </div>
+
+                         
+
+                          <div className="form-group">
+                            <label htmlFor="search-students">Status *</label>
+                            <select
+                              value={sectionStatus}
+                              onChange={(e) => setSectionStatus(e.target.value)}
+                            >
+                              <option value="" disabled>
+                                Select status
+                              </option>
+                              {sectionStatusOptions.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            id="classBtn"
+                            className="button close closeBtn"
+                            onClick={() => setIsSectionModalOpen(!isSectionModalOpen)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleAddSection}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+          </div>
+          {/* <!-- Section Add Pop Up Modal Start --> */}
+
+
+          {/* <!-- Session Pop Up Modal Start -->  */}
+
+          <div className="session-modal">
+            {isSessionModalOpen && (
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Create Session</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div
+                          className="form-row"
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Session Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Session Name"
+                              value={newSession}
+                              onChange={(e) => sestNewSession(e.target.value)}
+                            />
+                             
+                          </div>
+                        
+                          <div className="form-group">
+                            <label htmlFor="search-students">Status *</label>
+                            <select
+                              id="search-students"
+                              placeholder="Class"
+                              value={sessionStatus}
+                              onChange={(e) => setSessionStatus(e.target.value)}
+                            >
+                              <option value="" disabled>
+                                Select Status
+                              </option>
+
+                              {sessionStatusOptions?.map((option, index) => (
+                                <option key={index} value={option?.value}>
+                                  {option?.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            id="classBtn"
+                            className="button close closeBtn"
+                            onClick={() => setIsSessionModalOpen(!isSessionModalOpen)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleAddSession}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+          </div>
+          {/* <!-- Session Pop Up Modal Start --> */}
+
+           {/*  <!-- Table Action Button Modal Start --> 
+
+        <!-- Group Pop Up Modal Start --> */}
+      <div className="shift-modal">
+        {isGroupModalOpen && (
+          <section id="createClassModal" className="modal migrateModal show">
+            <div className="modal-content">
+              <div id="popup-modal">
+                <div className="form-container">
+                  <h3>Add Group </h3>
+                  <form>
+                    {/* <!-- Row 1 --> */}
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="search-students"> Group Name *</label>
+                        <input
+                          type="text"
+                          id="search-students"
+                          value={newGroup}
+                          onChange={(e) => sestNewGroup(e.target.value)}
+                          placeholder={`Group Name`}
+                        />
+
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="search-students">Status Name *</label>
+                        <select
+                          id="search-students"
+                          placeholder="Class"
+                          value={groupStatus}
+                          onChange={(e) => setGroupStatus(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select Status
+                          </option>
+
+                          {groupStatusOptions?.map((option, index) => (
+                            <option key={index} value={option?.value}>
+                              {option?.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* <!-- Actions --> */}
+                    <div className="form-actions">
+                      <button
+                        type="button"
+                        id="classBtn"
+                        className="button close closeBtn"
+                        onClick={() => setIsGroupModalOpen(false)}
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="button"
+                        className="button save"
+                        onClick={handleAddGroup}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
+      {/* <!-- Group Pop Up Modal Start --> */}
     </>
   );
 };

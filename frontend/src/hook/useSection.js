@@ -22,38 +22,36 @@ export const useAddSections = () => {
     mutationFn: addSectionAPI,
 
     // 📝 Optimistic Update: Before API Call
-    onMutate: async (variables) => {
-      console.log("⏳ [Section] Attempting to add shift:", variables);
+    // onMutate: async (variables) => {
+    //   console.log("⏳ [Section] Attempting to add shift:", variables);
 
-      await queryClient.cancelQueries({ queryKey: ["sections"] });
+    //   await queryClient.cancelQueries({ queryKey: ["sections"] });
 
-      const prevSections = queryClient.getQueryData(["sections"]);
+    //   const prevSections = queryClient.getQueryData(["sections"]);
 
-      console.log("🔍 Before Update (Cache Data):", prevSections);
+    //   console.log("🔍 Before Update (Cache Data):", prevSections);
 
-      const afterOptimistic = queryClient.setQueryData(
-        ["sections"],
-        (oldData) => {
-          console.log("inside optimistic old dat : ", oldData);
+    //   const afterOptimistic = queryClient.setQueryData(
+    //     ["sections"],
+    //     (oldData) => {
+    //       console.log("inside optimistic old dat : ", oldData);
 
-          return [
-            ...(Array.isArray(oldData) ? oldData : []),
-            { ...variables, id: Date.now() },
-          ];
-        },
-      );
+    //       return [
+    //         ...(Array.isArray(oldData) ? oldData : []),
+    //         { ...variables, id: Date.now() },
+    //       ];
+    //     },
+    //   );
 
-      console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
+    //   console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
 
-      return { prevSections };
-    },
+    //   return { prevSections };
+    // },
 
-    onError: (error, _, context) => {
+    onError: (error) => {
       console.log("error adding section : ", error);
       // ⚙️ rollback cache
-      if (context?.prevShifts) {
-        queryClient.setQueryData(["sections"], context.prevSections);
-      }
+    
 
       if (error.response) {
         toast(
@@ -76,10 +74,8 @@ export const useAddSections = () => {
         toast("Sections added successfully");
       }
 
-      queryClient.setQueryData(["sections"], (oldData) => {
-        return [...oldData, data];
-      });
-      // await queryClient.invalidateQueries({ queryKey: ["shifts"] });
+    
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
       console.log(
         "✅ After Backend Response (Cache Data): ",
         queryClient.getQueryData(["sections"]),
