@@ -193,7 +193,21 @@ async function updateStudent(req, res, next) {
     console.log(" 🚀  student body : ", req.body);
 
     const { id } = req.params;
-    const formData = req.body;
+    const formData = { ...req.body };
+
+    if (req.file) {
+      const imageURL = `${process.env.BACKEND_URL}${process.env.PORT || 4000}/uploads/avatar/${req.file.filename}`;
+      formData.avatar = {
+        imageURL,
+        fieldname: req.file?.fieldname,
+        originalname: req.file?.originalname,
+        mimetype: req.file?.mimetype,
+        destination: req.file?.destination,
+        filename: req.file?.filename,
+        path: req.file?.path,
+        size: req.file?.size,
+      };
+    }
 
     const updatedStudent = await Student.findByIdAndUpdate(id, formData, {
       new: true,

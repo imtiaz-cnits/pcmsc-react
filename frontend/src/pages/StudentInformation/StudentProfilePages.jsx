@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import '../../assets/css/all-modal.css';
@@ -9,11 +9,13 @@ import { useDeleteStudent, useFetchStudents } from "../../hook/useStudentInfo";
 
 const StudentProfilePages = () => {
 
+  const [isQuickViewModalOpen , setIsQuickViewModalOpen]= useState(false)
   const [filterChecker , setFilterChecker] = useState('')
   const [visibleData , setVisibleData]=useState([])
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [itemToDelete, setItemToDelete] = useState(null);
-
+  const [selectedStudent , setSelectedStudent] = useState(null); 
+  const quickViewBtnRef = useRef()
    
   const { data: students, isPending, isError, error } = useFetchStudents();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -69,6 +71,9 @@ const StudentProfilePages = () => {
     
   // },[filterChecker,students])
 
+
+
+  
 
   useEffect(()=>{
     console.log('visible data: ',visibleData)
@@ -282,11 +287,17 @@ const StudentProfilePages = () => {
 
     document.addEventListener('click',handleOutSideClick)
 
+
     return()=>{
       document.removeEventListener('click',handleOutSideClick)
     }
 
-  },[isFilterModalOpen])
+  },[isFilterModalOpen , isQuickViewModalOpen])
+
+
+useEffect(()=>{
+  console.log('ref : ', quickViewBtnRef)
+})
 
   if (isError && error instanceof Error) {
     console.log("Student Profile Page Error : ", error);
@@ -296,6 +307,8 @@ const StudentProfilePages = () => {
       '"Something went wrong. Please try again later!";';
     return <p>{errorMsg}</p>;
   }
+
+
 
   return (
     <>
@@ -702,6 +715,12 @@ data-filter={item.value} >
                                 {/* Quick View Button */}
                                 <button
                                   title="Quick View"
+                                  onClick={(e)=> {
+                                    e.preventDefault();
+                                    setSelectedStudent(item);
+                                    setIsQuickViewModalOpen(!isQuickViewModalOpen)
+                                  }}
+
                                   style={{
                                     backgroundColor: "#f9f9f9",
                                     border: "1px solid #ddd",
@@ -723,7 +742,8 @@ data-filter={item.value} >
                                     e.currentTarget.style.boxShadow = "none";
                                   }}
                                 >
-                                  <i className="fa-regular fa-eye" />
+                                  <i className="fa-regular fa-eye" 
+                                  />
                                 </button>
                               </div>
                             </td>
@@ -817,8 +837,8 @@ data-filter={item.value} >
           </div>
           {/* <!-- Edit Modal End -->
         <!-- Quick View Modal Start --> */}
-          <div id="quickViewModal" className="modal">
-            <div className="modal-content">
+       {isQuickViewModalOpen &&    <div id="quickViewModal" className="modal" style={{display: 'flex'}}>
+            <div ref={quickViewBtnRef} className="modal-content">
               <p>Quick View</p>
               <div className="items">
                 <div className="row">
@@ -826,97 +846,108 @@ data-filter={item.value} >
                     <div className="item">
                       <div className="profile-img">
                         <img
-                          src="./assets/img/projuct-member-img-3.png"
+                          src={selectedStudent.avatar?.imageURL}
                           alt=""
                         />
+                      <img src={students?.data?.avatar?.imageURL} alt="avatar"/>
+
                       </div>
                       <h3>
-                        Student Name: <span>Shanto</span>
+                        Student Name: <span>{selectedStudent.name}</span>
                       </h3>
                       <h3>
-                        Student ID: <span>121777</span>
+                        Student ID: <span>{selectedStudent.studentID}</span>
                       </h3>
                       <h3>
-                        Blood Group: <span>A+</span>
+                        Blood Group: <span>{selectedStudent.bloodGroup}</span>
                       </h3>
                       <h3>
-                        Birth Certificate: <span>3453453435445</span>
+                        Birth Certificate: <span>{selectedStudent.birthCertificate}</span>
                       </h3>
                       <h3>
-                        Father Name: <span>Jahangir</span>
+                        Father Name: <span>{selectedStudent.fatherName}</span>
                       </h3>
                       <h3>
-                        Father NID: <span>12132323424</span>
+                        Father NID: <span>{selectedStudent.fatherNID}</span>
                       </h3>
                       <h3>
-                        Father Mobile: <span>01713223424</span>
+                        Father Mobile: <span>{selectedStudent.fatherPhone}</span>
                       </h3>
                       <h3>
-                        Mother Name: <span>shithi</span>
+                        Mother Name: <span>{selectedStudent.motherName}</span>
                       </h3>
                       <h3>
-                        Mother NID: <span>12132323424</span>
+                        Mother NID: <span>{selectedStudent.motherNID}</span>
                       </h3>
                       <h3>
-                        Mother Mobile: <span>01732323424</span>
+                        Mother Mobile: <span>{selectedStudent.motherPhone}</span>
                       </h3>
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="item">
                       <h3>
-                        Admission Number: <span>232434545</span>
+                        Admission Number: <span>{selectedStudent.admissionNumber}</span>
                       </h3>
                       <h3>
-                        Admission Date: <span>2024-11-22</span>
+                        Admission Date: <span>{selectedStudent.admissionDate}</span>
                       </h3>
                       <h3>
-                        Present Address: <span>Pabna</span>
+                        Present Address: <span>{selectedStudent.presentAddress}</span>
                       </h3>
                       <h3>
-                        Permanent Address: <span>Pabna</span>
+                        Permanent Address: <span>{selectedStudent.permanentAddress}</span>
                       </h3>
                       <h3>
-                        Guardian (In Absence of F/M): <span>Riyad</span>
+                        Guardian (In Absence of F/M): <span>{selectedStudent.guardianName}</span>
                       </h3>
                       <h3>
-                        Guardian Mobile: <span>01832424343</span>
+                        Guardian Mobile: <span>{selectedStudent.guardianPhone}</span>
                       </h3>
                       <h3>
-                        Date of Birth: <span>2024-12-1</span>
+                        Date of Birth: <span>{selectedStudent.dateOfBirth}</span>
                       </h3>
                       <h3>
-                        Student Email: <span>info@gmail.com</span>
+                        Student Email: <span>{selectedStudent.studentEmail}</span>
                       </h3>
                       <h3>
-                        SMS Status: <span>Active</span>
+                        Student Gender: <span>{selectedStudent.studentGender}</span>
                       </h3>
                       <h3>
-                        Registration Date: <span>2023-12-22</span>
+                        SMS Status: <span>{selectedStudent.smsStatus}</span>
                       </h3>
                       <h3>
-                        Shift Name: <span>Day</span>
+                        Registration Date: <span>{selectedStudent.registrationDate}</span>
                       </h3>
                       <h3>
-                        Session Name: <span>1st Semester</span>
+                        Class Name: <span>{selectedStudent.className.nameLabel}</span>
                       </h3>
                       <h3>
-                        Student Gender: <span>Male</span>
+                        Section Name: <span>{selectedStudent.sectionName.nameLabel}</span>
                       </h3>
                       <h3>
-                        Section Name: <span>Science</span>
+                        Group Name: <span>{selectedStudent.groupName.nameLabel}</span>
                       </h3>
+                      <h3>
+                        Shift Name: <span>{selectedStudent.shiftName.nameLabel}</span>
+                      </h3>
+
+                      <h3>
+                        Session Name: <span>{selectedStudent.sessionName.nameLabel}</span>
+                      </h3>
+                     
+                      
                     </div>
                   </div>
                 </div>
               </div>
               <div className="modal-buttons">
-                <button id="quickClose">
+                <button id="quickClose" onClick={()=> setIsQuickViewModalOpen(!isQuickViewModalOpen)}>
                   <i className="fa-solid fa-x"></i>
                 </button>
               </div>
             </div>
-          </div>
+          </div>}
           {/* <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 

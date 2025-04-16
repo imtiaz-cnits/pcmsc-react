@@ -13,12 +13,12 @@ function avatarUpload(req, res, next) {
   upload.single("avatar")(req, res, (err) => {
     if (err) return next(err); // 🔁 delegate to global error handler
 
-    if (!req.file) {
-      const noFileErr = new Error("No valid image uploaded.");
-      noFileErr.status = 400;
-      noFileErr.name = "NoFileError";
-      return next(noFileErr); // 🔁 also goes to global handler
-    }
+    // if (!req.file) {
+    //   const noFileErr = new Error("No valid image uploaded.");
+    //   noFileErr.status = 400;
+    //   noFileErr.name = "NoFileError";
+    //   return next(noFileErr); // 🔁 also goes to global handler
+    // }
 
     return next(); // ✅ Success
   });

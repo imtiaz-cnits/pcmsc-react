@@ -40,12 +40,11 @@ const EditStudentProfilePages = () => {
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
   const [group, setGroup] = useState(null);
-  const [warn, setWarn] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const formRef = useRef(null);
   const { id } = useParams();
-  const { data: students, isPending, isError, error } = useFetchStudentByID(id);
+  const { data: students, isPending: isStudentsPending, isError : isStudentsError, error:studentsError } = useFetchStudentByID(id);
     const { mutate: updateStudent } = useUpdateStudent()
 
   const {
@@ -100,6 +99,10 @@ const EditStudentProfilePages = () => {
     setStudentName(students?.data?.name || "");
     setNameBangla(students?.data?.nameInBangla || "");
     setBirthCertificate(students?.data?.birthCertificate || "");
+    setBloodGroup(students?.data?.bloodGroup ? {
+      value: students?.data?.bloodGroup,
+      label: students?.data?.bloodGroup
+    } : null)
     setReligion(students?.data?.religion || "");
     setFatherName(students?.data?.fatherName || "");
     setFatherNID(students?.data?.fatherNID || "");
@@ -112,52 +115,51 @@ const EditStudentProfilePages = () => {
     setGuardian(students?.data?.guardianName || "");
     setGuardianPhone(students?.data?.guardianPhone || "");
     setDOB(students?.data?.dateOfBirth || "");
-    setStudentGender(students?.data?.studentGender || null);
-    setStudentEmail(students?.data?.studentEmail || "");
-    setSmsStatus(students?.data?.smsStatus || null);
-    setRegistrationDate(students?.data?.registrationDate || "")
-    setClassName({
-      value: students?.data?.className?.name,
-      label: students?.data?.className?.nameLabel
-    })
-    setShift({
-      value: students?.data?.shiftName?.name,
-      label: students?.data?.shiftName?.nameLabel,
-    });
-    setSection({
-      value: students?.data?.sectionName?.name,
-      label: students?.data?.sectionName?.nameLabel
-    });
-    setSession({
-      value: students?.data?.sessionName?.name,
-      label: students?.data?.sessionName?.nameLabel
-    });
-    setBloodGroup({
-      value: students?.data?.bloodGroup,
-      label: students?.data?.bloodGroup
-    })
-    setStudentGender({
+    setStudentGender(students?.data?.studentGender ? ({
       value: students?.data?.studentGender,
       label: students?.data?.studentGender
-    })
-   
-    setSmsStatus({
+    }) : null);
+    setStudentEmail(students?.data?.studentEmail || "");
+    setSmsStatus(students?.data?.smsStatus ? ({
       value: students?.data?.smsStatus,
       label: students?.data?.smsStatus
-    })
-   
- 
-  
+    }) : null);
+    setRegistrationDate(students?.data?.registrationDate || "")
+    setClassName(students?.data?.className ? ({
+      value: students?.data?.className?._id,
+      label: students?.data?.className?.nameLabel
 
-    setGroup({
-      value: students?.data?.groupName?.name,
+    }) : null)
+  
+    setShift(students?.data?.shiftName ? ({
+      value: students?.data?.shiftName?._id,
+      label: students?.data?.shiftName?.nameLabel
+    }) : null)
+    
+    setSection(students?.data?.sectionName ? ({
+      value: students?.data?.sectionName?._id,
+      label: students?.data?.sectionName?.nameLabel
+    }) : null)
+
+    setSession(students?.data?.sessionName ? ({
+      value: students?.data?.sessionName?._id,
+      label: students?.data?.sessionName?.nameLabel
+    }) : null)
+
+    setGroup(students?.data?.groupName ? ({
+      value: students?.data?.groupName?._id,
       label: students?.data?.groupName?.nameLabel
-    })
+    }) : null)
+
+
+    setPreviewImage(students?.data?.avatar ? students?.data?.avatar?.imageURL : null)
+
   }, [students]);
 
   useEffect(()=>{
     console.log('drop',shift )
   },[shift])
+
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -287,6 +289,7 @@ const EditStudentProfilePages = () => {
     formData.append("group", group ? group.value : null);
 
     if (avatar) {
+      console.log('avtar is clicked ' , avatar)
       formData.append("avatar", avatar);
     }
 
@@ -298,13 +301,61 @@ const EditStudentProfilePages = () => {
     
   };
 
-  if (isPending) return <Shimmer />;
 
-  if (isError && error instanceof Error) {
-    const errorMsg =
-      error?.response?.data?.message ||
-      error?.message ||
-      "Something went wrong. Please try again later!";
+  useEffect(()=>{
+    console.log('avatar  : ',avatar)
+  },[avatar,students])
+
+   if (
+
+      isclassPending ||
+      isshiftPending ||
+      isSectionPending ||
+      isSessionPending ||
+      isGroupsPending ||
+      isStudentsPending
+    )
+      return <Shimmer count={10} />;
+
+  if (
+    isClassError ||
+    isShiftError ||
+    isSectionError ||
+    isSessionError ||
+    isGroupsError ||
+    isStudentsError
+  ) {
+    let errorMsg = "Something went wrong. Please try again later!";
+
+    if (isClassError && classError instanceof Error) {
+      console.log("Class Error: ", classError);
+      errorMsg = classError?.response?.data?.message || classError?.message;
+    }
+    if (isShiftError && shiftError instanceof Error) {
+      console.log("Shift Error: ", shiftError);
+      errorMsg = shiftError?.response?.data?.message || shiftError?.message;
+    }
+
+    if (isSectionError && sectionError instanceof Error) {
+      console.log("Section Error: ", sectionError);
+      errorMsg = sectionError?.response?.data?.message || sectionError?.message;
+    }
+
+    if (isSessionError && sessionError instanceof Error) {
+      console.log("Session Error: ", sessionError);
+      errorMsg = sessionError?.response?.data?.message || sessionError?.message;
+    }
+
+    if (isGroupsError && groupsError instanceof Error) {
+      console.log("Students Error: ", groupsError);
+      errorMsg = groupsError?.response?.data?.message || groupsError?.message;
+    }
+
+    if (isStudentsError && studentsError instanceof Error) {
+      console.log("Students Error: ", studentsError);
+      errorMsg = studentsError?.response?.data?.message || studentsError?.message;
+    }
+
     return <p>{errorMsg}</p>;
   }
 
