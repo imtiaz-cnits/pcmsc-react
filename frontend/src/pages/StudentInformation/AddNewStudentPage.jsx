@@ -8,11 +8,11 @@ import { useAddGroup, useFetchGroups } from "../../hook/useGroup";
 import { useAddSections, useFetchSections } from "../../hook/useSection";
 import { useAddSession, useFetchSessions } from "../../hook/useSession";
 import { useAddShifts, useFetchShifts } from "../../hook/useShift";
-import { useAddSutdent } from "../../hook/useStudentInfo";
+import { useAddSutdent } from "../../hook/useStudent";
 
 import { useEffect } from "react";
 
-const AddNewStudentPages = () => {
+const AddNewStudentPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isShiftModalOpen, setIsShiftModalOpen] = useState(false);
   const [isSectionModalOpen, setIsSectionModalOpen] = useState(false);
@@ -61,6 +61,7 @@ const AddNewStudentPages = () => {
   const [group, setGroup] = useState(null);
   const [imgFile, setImgFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [warn , setWarn] = useState('')
   const formRef = useRef(null);
 
   const { mutate: addStudent } = useAddSutdent();
@@ -291,7 +292,8 @@ const AddNewStudentPages = () => {
       default:
         break;
     }
-    setWarn((prev) => ({ ...prev, [name]: error }));
+    // setWarn((prev) => ({ ...prev, [name]: error }));
+
   };
 
   const reset = () => {
@@ -1459,4 +1461,4 @@ const AddNewStudentPages = () => {
     </>
   );
 };
-export default AddNewStudentPages;
+export default AddNewStudentPage;

@@ -14,7 +14,7 @@ const {
   updateStudent,
   getStudentByID,
   getAllPaginatedStudents,
-} = require("../controllers/student-management/studentInfoController");
+} = require("../controllers/student-management/studentController");
 const avatarUpload = require("../middlewares/upload/students/avatarUpload");
 
 // 🚀  Student Information - CRUD

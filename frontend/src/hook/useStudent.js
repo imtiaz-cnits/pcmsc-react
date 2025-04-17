@@ -52,6 +52,8 @@ export const useFetchStudentByID = (id) => {
   return useQuery({
     queryKey: ["students", id],
     queryFn: () => fetchStudentByIDAPI(id),
+    placeholderData: keepPreviousData,
+
     refetchOnWindowFocus: true,
     enabled: !!id,
   });

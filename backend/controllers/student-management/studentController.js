@@ -237,7 +237,7 @@ async function getAllPaginatedStudents(req, res, next) {
       searchQuery,
     );
 
-    const query = { ...dateFilterQuery, ...searchQuery };
+    const query = { $and: [dateFilterQuery, searchQuery].filter(Boolean) };
 
     const students = await Student.find(query)
       .sort({ admissionNumber: -1 })
@@ -249,7 +249,7 @@ async function getAllPaginatedStudents(req, res, next) {
       .populate("session")
       .populate("group");
 
-    const totalFilteredStudents = await Student.countDocuments(dateFilterQuery);
+    const totalFilteredStudents = await Student.countDocuments(query);
 
     const totalPages = Math.ceil(totalFilteredStudents / limit);
 

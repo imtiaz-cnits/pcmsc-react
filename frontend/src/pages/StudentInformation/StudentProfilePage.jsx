@@ -7,7 +7,7 @@ import Shimmer from "../../components/Shimmer";
 import {
   useDeleteStudent,
   useFetchPaginatedStudent,
-} from "../../hook/useStudentInfo";
+} from "../../hook/useStudent";
 
 const StudentProfilePage = () => {
   const [isQuickViewModalOpen, setIsQuickViewModalOpen] = useState(false);
@@ -21,6 +21,8 @@ const StudentProfilePage = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const quickViewBtnRef = useRef(null);
   const filterRef = useRef(null);
+  const isSearchActive = keyword.trim() !== '';
+
 
   const { mutate: deleteStudent } = useDeleteStudent();
   const {
@@ -57,8 +59,12 @@ const StudentProfilePage = () => {
 
   const handleSearchQuery = (e) => {
     e.preventDefault();
-    setKeyword(e.target.value);
+    const value = e.target.value; 
+    setKeyword(value);
     setPage(1);
+
+   
+
   };
 
   const handleDeleteClick = (e, item) => {
@@ -159,6 +165,11 @@ const StudentProfilePage = () => {
       document.removeEventListener("mousedown", handleOutSideClick);
     };
   }, [isFilterModalOpen, isQuickViewModalOpen]);
+
+
+  useEffect(()=>{
+    console.log('limit : ', limit)
+  },[limit])
 
   if (isError && error instanceof Error) {
     console.log("Student Profile Page Error : ", error);
@@ -508,7 +519,10 @@ const StudentProfilePage = () => {
                         students?.data?.length > 0 &&
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>
-                            <td> {String(index + 1).padStart(2, "0")} </td>
+                            <td> {String((page - 1) * limit + index + 1).padStart(
+                                    2,
+                                    "0",
+                                  )} </td>
                             <td>
                               <div
                                 style={{
@@ -661,8 +675,8 @@ const StudentProfilePage = () => {
                       : "Loading Entries...."}
                   </span>
                 </div>
-
-                <div id="pagination" className="pagination">
+{limit  <= 5 && 
+          <div id="pagination" className="pagination">
                   {page > 1 && (
                     <button
                       id="prevBtn"
@@ -701,7 +715,10 @@ const StudentProfilePage = () => {
                       Next
                     </button>
                   )}
-                </div>
+                </div>}
+
+
+
               </div>
             </div>
           </div>

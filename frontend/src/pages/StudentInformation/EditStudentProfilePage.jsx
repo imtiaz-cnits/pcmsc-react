@@ -12,9 +12,9 @@ import { useFetchShifts } from "../../hook/useShift";
 import {
   useFetchStudentByID,
   useUpdateStudent,
-} from "../../hook/useStudentInfo";
+} from "../../hook/useStudent";
 
-const EditStudentProfilePages = () => {
+const EditStudentProfilePage = () => {
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [admissionDate, setAdmissionDate] = useState("");
   const [studentRoll, setStudentRoll] = useState("");
@@ -99,6 +99,149 @@ const EditStudentProfilePages = () => {
     { value: "O+", label: "O+" },
     { value: "O-", label: "O-" },
   ];
+
+  const classOptions = classes?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const shiftOptions = shifts?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sectionOptions = sections?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sessionOPtions = sessions?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const groupOPtions = groups?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const genderOPtions = [
+    { value: "Male", label: "Male" },
+    { value: "Female", label: "Female" },
+  ];
+
+  const smsStatusOPtions = [
+    { value: "Active", label: "Active" },
+    { value: "Inactive", label: "Inactive" },
+  ];
+
+
+  const reset = () => {
+    formRef.current.reset();
+    setAdmissionNumber("");
+    setStudentRoll("");
+    setStudentName("");
+    setNameBangla("");
+    setBirthCertificate("");
+    setBloodGroup(null);
+    setReligion("");
+    setFatherName("");
+    setFatherNID("");
+    setFatherPhoneNo("");
+    setMotherName("");
+    setMotherNID("");
+    setMotherPhoneNo("");
+    setPresentAddress("");
+    setPermanentAddress("");
+    setGuardian("");
+    setGuardianPhone("");
+    setStudentGender(null);
+    setStudentEmail("");
+    setSmsStatus(null);
+    setRegistrationDate("");
+    setClassName(null);
+    setShift(null);
+    setSection(null);
+    setSession(null);
+    setGroup(null);
+    setAvatar(null);
+    setPreviewImage(null);
+  };
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    reset();
+  };
+
+  const MAX_FILE_SIZE_MB = 1;
+  const allowedTypes = ["image/gif", "image/jpeg", "image/png"];
+  const handleFileChange = (e) => {
+    e.preventDefault();
+    console.log("img button clicked");
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only GIF, JPEG, and PNG files are allowed.");
+      return;
+    }
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > MAX_FILE_SIZE_MB) {
+      alert("File size should not exceed 2MB.");
+      return;
+    }
+
+    const previewURL = URL.createObjectURL(file);
+    console.log("Selected file:", file);
+    console.log("Preview URL:", previewURL);
+    setPreviewImage(previewURL);
+    setAvatar(file);
+  };
+
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("admissionNumber", admissionNumber);
+    formData.append("admissionDate", admissionDate);
+    formData.append("studentRoll", studentRoll);
+    formData.append("studentName", studentName);
+    formData.append("nameBangla", nameBangla);
+    formData.append("birthCertificate", birthCertificate);
+    formData.append("bloodGroup", bloodGroup ? bloodGroup.value : null);
+    formData.append("religion", religion);
+    formData.append("fatherName", fatherName);
+    formData.append("fatherNID", fatherNID);
+    formData.append("fatherPhoneNo", fatherPhoneNo);
+    formData.append("motherName", motherName);
+    formData.append("motherNID", motherNID);
+    formData.append("motherPhoneNo", motherPhoneNo);
+    formData.append("presentAddress", presentAddress);
+    formData.append("permanentAddress", permanentAddress);
+    formData.append("guardian", guardian);
+    formData.append("guardianPhone", guardianPhone);
+    formData.append("dob", dob);
+    formData.append(
+      "studentGender",
+      studentGender ? studentGender.value : null,
+    );
+    formData.append("studentEmail", studentEmail);
+    formData.append("smsStatus", smsStatus ? smsStatus.value : null);
+    formData.append("registrationDate", registrationDate);
+    formData.append("className", className ? className.value : null);
+    formData.append("shift", shift ? shift.value : null);
+    formData.append("section", section ? section.value : null);
+    formData.append("session", session ? session.value : null);
+    formData.append("group", group ? group.value : null);
+
+    if (avatar) {
+      console.log("avtar is clicked ", avatar);
+      formData.append("avatar", avatar);
+    }
+
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key} -> ${value}`);
+    }
+   
+    updateStudent({ studentID: id, formData });
+  };
+
+
 
   useEffect(() => {
     setAdmissionNumber(students?.data?.admissionNumber || "");
@@ -206,148 +349,17 @@ const EditStudentProfilePages = () => {
     console.log("section  drop id value : ", section);
   }, [className, shift, group, session, section]);
 
-  const classOptions = classes?.data.map((item) => {
-    return { value: item._id, label: item.nameLabel };
-  });
+  
 
-  const shiftOptions = shifts?.data.map((item) => {
-    return { value: item._id, label: item.nameLabel };
-  });
 
-  const sectionOptions = sections?.data.map((item) => {
-    return { value: item._id, label: item.nameLabel };
-  });
 
-  const sessionOPtions = sessions?.data.map((item) => {
-    return { value: item._id, label: item.nameLabel };
-  });
 
-  const groupOPtions = groups?.data.map((item) => {
-    return { value: item._id, label: item.nameLabel };
-  });
+ 
 
-  const genderOPtions = [
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
-  ];
-
-  const smsStatusOPtions = [
-    { value: "Active", label: "Active" },
-    { value: "Inactive", label: "Inactive" },
-  ];
-
-  const reset = () => {
-    formRef.current.reset();
-    setAdmissionNumber("");
-    setStudentRoll("");
-    setStudentName("");
-    setNameBangla("");
-    setBirthCertificate("");
-    setBloodGroup(null);
-    setReligion("");
-    setFatherName("");
-    setFatherNID("");
-    setFatherPhoneNo("");
-    setMotherName("");
-    setMotherNID("");
-    setMotherPhoneNo("");
-    setPresentAddress("");
-    setPermanentAddress("");
-    setGuardian("");
-    setGuardianPhone("");
-    setStudentGender(null);
-    setStudentEmail("");
-    setSmsStatus(null);
-    setRegistrationDate("");
-    setClassName(null);
-    setShift(null);
-    setSection(null);
-    setSession(null);
-    setGroup(null);
-    setAvatar(null);
-    setPreviewImage(null);
-  };
-
-  const handleReset = (e) => {
-    e.preventDefault();
-    reset();
-  };
-
-  const MAX_FILE_SIZE_MB = 1;
-  const allowedTypes = ["image/gif", "image/jpeg", "image/png"];
-  const handleFileChange = (e) => {
-    e.preventDefault();
-    console.log("img button clicked");
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!allowedTypes.includes(file.type)) {
-      alert("Only GIF, JPEG, and PNG files are allowed.");
-      return;
-    }
-    const fileSizeMB = file.size / (1024 * 1024);
-    if (fileSizeMB > MAX_FILE_SIZE_MB) {
-      alert("File size should not exceed 2MB.");
-      return;
-    }
-
-    const previewURL = URL.createObjectURL(file);
-    console.log("Selected file:", file);
-    console.log("Preview URL:", previewURL);
-    setPreviewImage(previewURL);
-    setAvatar(file);
-  };
-
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("admissionNumber", admissionNumber);
-    formData.append("admissionDate", admissionDate);
-    formData.append("studentRoll", studentRoll);
-    formData.append("studentName", studentName);
-    formData.append("nameBangla", nameBangla);
-    formData.append("birthCertificate", birthCertificate);
-    formData.append("bloodGroup", bloodGroup ? bloodGroup.value : null);
-    formData.append("religion", religion);
-    formData.append("fatherName", fatherName);
-    formData.append("fatherNID", fatherNID);
-    formData.append("fatherPhoneNo", fatherPhoneNo);
-    formData.append("motherName", motherName);
-    formData.append("motherNID", motherNID);
-    formData.append("motherPhoneNo", motherPhoneNo);
-    formData.append("presentAddress", presentAddress);
-    formData.append("permanentAddress", permanentAddress);
-    formData.append("guardian", guardian);
-    formData.append("guardianPhone", guardianPhone);
-    formData.append("dob", dob);
-    formData.append(
-      "studentGender",
-      studentGender ? studentGender.value : null,
-    );
-    formData.append("studentEmail", studentEmail);
-    formData.append("smsStatus", smsStatus ? smsStatus.value : null);
-    formData.append("registrationDate", registrationDate);
-    formData.append("className", className ? className.value : null);
-    formData.append("shift", shift ? shift.value : null);
-    formData.append("section", section ? section.value : null);
-    formData.append("session", session ? session.value : null);
-    formData.append("group", group ? group.value : null);
-
-    if (avatar) {
-      console.log("avtar is clicked ", avatar);
-      formData.append("avatar", avatar);
-    }
-
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key} -> ${value}`);
-    }
-    // todo: update functionality not working
-    updateStudent({ studentID: id, formData });
-  };
 
   useEffect(() => {
-    console.log("avatar  : ", avatar);
-  }, [avatar, students]);
+    console.log('pending ',  isclassPending , isshiftPending, isSectionPending, isSessionPending, isGroupsPending,isStudentsPending)
+  }, [ isclassPending , isshiftPending, isSectionPending, isSessionPending, isGroupsPending,isStudentsPending]);
 
   if (
     isclassPending ||
@@ -409,7 +421,7 @@ const EditStudentProfilePages = () => {
         <div className="page-content">
           {/* <!-- Table Start --> */}
           {/* <!-- Add Students - Pop Up Modal Start -->  */}
-          <section id="studentModal" className=" studentModal ">
+         {isStudentsPending ? 'loading.....' : ( <section id="studentModal" className=" studentModal ">
             <div className="modal-content">
               <div id="popup-modal">
                 <div className="form-container">
@@ -841,7 +853,7 @@ const EditStudentProfilePages = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section>)}
           {/* <!-- Add Students - Pop Up Modal Start --> */}
         </div>
       </div>
@@ -849,4 +861,4 @@ const EditStudentProfilePages = () => {
     </>
   );
 };
-export default EditStudentProfilePages;
+export default EditStudentProfilePage;

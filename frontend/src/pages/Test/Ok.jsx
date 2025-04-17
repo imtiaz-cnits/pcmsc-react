@@ -5,7 +5,7 @@ import Shimmer from "../../components/Shimmer.jsx";
 import {
   useDeleteStudent,
   useFetchPaginatedStudent,
-} from "../../hook/useStudentInfo.js";
+} from "../../hook/useStudent.js";
 
 const Ok = () => {
   const [isQuickViewModalOpen, setIsQuickViewModalOpen] = useState(false);

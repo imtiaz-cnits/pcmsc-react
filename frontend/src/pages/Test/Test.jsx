@@ -17,7 +17,7 @@ import {
   useDeleteStudent,
   useFetchStudents,
   useUpdateStudent,
-} from "../../hook/useStudentInfo";
+} from "../../hook/useStudent";
 
 const Test = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

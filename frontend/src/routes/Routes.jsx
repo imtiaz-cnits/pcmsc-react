@@ -26,9 +26,9 @@ import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
 import Shift from "../pages/Shift/Shift.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
-import AddNewStudentPages from "../pages/StudentInformation/AddNewStudentPages";
-import EditStudentProfilePages from "../pages/StudentInformation/EditStudentProfilePages";
-import StudentProfilePages from "../pages/StudentInformation/StudentProfilePages";
+import AddNewStudentPage from "../pages/StudentInformation/AddNewStudentPage.jsx";
+import EditStudentProfilePage from "../pages/StudentInformation/EditStudentProfilePage.jsx";
+import StudentProfilePage from "../pages/StudentInformation/StudentProfilePage.jsx";
 import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
@@ -82,15 +82,15 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "student-information",
-            element: <StudentProfilePages />,
+            element: <StudentProfilePage />,
           },
           {
             path: "new-student-profile",
-            element: <AddNewStudentPages />,
+            element: <AddNewStudentPage />,
           },
           {
             path: "edit-studdent-profile/:id",
-            element: <EditStudentProfilePages />,
+            element: <EditStudentProfilePage />,
           },
           {
             path: "class-wise-student",
