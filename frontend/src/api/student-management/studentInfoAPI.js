@@ -32,6 +32,20 @@ export const fetchStudentByIDAPI = async (id) => {
   return res.data?.success ? res.data : [];
 };
 
+
+// ✅  GET - method (paginated)
+export const fetchPaginatedStudentAPI = async(page,limit , filterChecker)=>{
+  const res = await axiosPrivate.get(`/student-management/students-paginated`,
+    {
+      params: {page,limit , filterChecker}
+    }
+  )
+
+  console.log("🚀 fetchPaginatedStudentAPI", res.data);
+  return res.data?.success ? res.data : []
+
+}
+
 // ✅ PATCH - method
 export const updateStudentAPI = async ({ studentID, formData }) => {
   console.log('form data ',formData)

@@ -10,8 +10,9 @@ import {
   addStudentInfoAPI,
   deleteStudentInfoAPI,
   fetchAllStudentsAPI,
+  fetchPaginatedStudentAPI,
   fetchStudentByIDAPI,
-  updateStudentAPI,
+  updateStudentAPI
 } from "../api/student-management/studentInfoAPI";
 
 // ✅  POST - method
@@ -49,12 +50,27 @@ export const useFetchStudents = () => {
 // ✅  GET - method (id)
 export const useFetchStudentByID = (id) => {
   return useQuery({
-    queryKey: ["students"],
+    queryKey: ["students",id],
     queryFn: () => fetchStudentByIDAPI(id),
     refetchOnWindowFocus: true,
     enabled: !!id,
   });
 };
+
+// ✅  GET - method (paginated)
+export const useFetchPaginatedStudent=({page,limit,filterChecker})=>{
+  console.log('useFetchPaginatedStudent value : ',filterChecker)
+  return useQuery({
+    queryKey: ['students', page,limit , filterChecker],
+    queryFn: ()=> fetchPaginatedStudentAPI(page,limit , filterChecker),
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+
+  })
+}
+
 
 //✅  PATCH - method
 export const useUpdateStudent = () => {

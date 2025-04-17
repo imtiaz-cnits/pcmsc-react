@@ -13,6 +13,7 @@ const {
   deleteStudent,
   updateStudent,
   getStudentByID,
+  getAllPaginatedStudents,
 } = require("../controllers/student-management/studentInfoController");
 const avatarUpload = require("../middlewares/upload/students/avatarUpload");
 
@@ -20,6 +21,7 @@ const avatarUpload = require("../middlewares/upload/students/avatarUpload");
 router.post("/student-info", avatarUpload, addStudentInfo);
 router.get("/students", getAllStudents);
 router.get("/student/:id", getStudentByID);
+router.get("/students-paginated/", getAllPaginatedStudents);
 router.patch("/student/:id", avatarUpload, updateStudent);
 router.delete("/student/:id", deleteStudent);
 

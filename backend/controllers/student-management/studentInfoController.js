@@ -5,6 +5,7 @@ const createError = require("http-errors");
 
 // 👉 internal imports
 const Student = require("../../models/studentModel");
+const getFilteredDate = require("../../utilities/dateFilter");
 
 // 📝 do add student information
 async function addStudentInfo(req, res, next) {
@@ -89,10 +90,10 @@ async function addStudentInfo(req, res, next) {
       smsStatus,
       registrationDate,
       className,
-      shiftName: shift,
-      sectionName: section,
-      sessionName: session,
-      groupName: group,
+      shift,
+      section,
+      session,
+      group,
     });
 
     console.log("🚀  Adding Student Info into DB : ", newStudentInfo);
@@ -134,10 +135,10 @@ async function getAllStudents(req, res, next) {
   try {
     const students = await Student.find({})
       .populate("className")
-      .populate("shiftName")
-      .populate("sectionName")
-      .populate("sessionName")
-      .populate("groupName");
+      .populate("shift")
+      .populate("section")
+      .populate("session")
+      .populate("group");
 
     if (!students) {
       return next(createError(404, "Student not found!"));
@@ -165,10 +166,10 @@ async function getStudentByID(req, res, next) {
 
     const student = await Student.findOne({ _id: id })
       .populate("className")
-      .populate("shiftName")
-      .populate("sectionName")
-      .populate("sessionName")
-      .populate("groupName");
+      .populate("shift")
+      .populate("section")
+      .populate("session")
+      .populate("group");
 
     if (!student) {
       return next(createError(404, "Student not found"));
@@ -186,6 +187,60 @@ async function getStudentByID(req, res, next) {
   }
 }
 
+// 📝 Get all paginated students
+async function getAllPaginatedStudents(req, res, next) {
+  try {
+    console.log("📥 Incoming request | Query Params:", req.query);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+    const skip = (page - 1) * limit;
+    const { filterChecker } = req.query;
+
+    const dateFilterQuery = filterChecker ? getFilteredDate(filterChecker) : {};
+
+    console.log(
+      "📅 Applied Filter:",
+      filterChecker || "none",
+      "| MongoDB Query:",
+      dateFilterQuery,
+    );
+
+    const students = await Student.find(dateFilterQuery)
+      .sort({ admissionNumber: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("className")
+      .populate("shift")
+      .populate("section")
+      .populate("session")
+      .populate("group");
+
+    const totalFilteredStudents = await Student.countDocuments(dateFilterQuery);
+
+    const totalPages = Math.ceil(totalFilteredStudents / limit);
+
+    if (!students || students.length === 0) {
+      return next(
+        createError(404, "No students found for the given criteria."),
+      );
+    }
+
+    console.log("📦 Total filtered students:", totalFilteredStudents);
+    console.log("👨‍🎓 Students data:", students.length);
+
+    return res.status(200).json({
+      success: true,
+      totalPages,
+      currentPage: page,
+      totalEntries: totalFilteredStudents,
+      data: students,
+    });
+  } catch (error) {
+    console.log("❌  getAllPaginatedStudents API : ", error);
+    return next(error);
+  }
+}
+
 // 📝 update student
 async function updateStudent(req, res, next) {
   try {
@@ -194,6 +249,8 @@ async function updateStudent(req, res, next) {
 
     const { id } = req.params;
     const formData = { ...req.body };
+
+    console.log("fordata : ", formData);
 
     if (req.file) {
       const imageURL = `${process.env.BACKEND_URL}${process.env.PORT || 4000}/uploads/avatar/${req.file.filename}`;
@@ -271,6 +328,7 @@ module.exports = {
   addStudentInfo,
   getAllStudents,
   getStudentByID,
+  getAllPaginatedStudents,
   updateStudent,
   deleteStudent,
 };

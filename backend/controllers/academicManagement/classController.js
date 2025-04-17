@@ -93,7 +93,7 @@ async function getAllClasses(req, res, next) {
 // 📝 Get all class with pagination
 async function getAllPaginatedClasses(req, res, next) {
   try {
-    console.log("📥 Received request for class : ", req.query);
+    // console.log("📥 Received request for class : ", req.query);
 
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 5;

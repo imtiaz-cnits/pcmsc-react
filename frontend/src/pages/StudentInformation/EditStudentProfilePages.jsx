@@ -131,24 +131,24 @@ const EditStudentProfilePages = () => {
 
     }) : null)
   
-    setShift(students?.data?.shiftName ? ({
-      value: students?.data?.shiftName?._id,
-      label: students?.data?.shiftName?.nameLabel
+    setShift(students?.data?.shift ? ({
+      value: students?.data?.shift?._id,
+      label: students?.data?.shift?.nameLabel
     }) : null)
     
-    setSection(students?.data?.sectionName ? ({
-      value: students?.data?.sectionName?._id,
-      label: students?.data?.sectionName?.nameLabel
+    setSection(students?.data?.section ? ({
+      value: students?.data?.section?._id,
+      label: students?.data?.section?.nameLabel
     }) : null)
 
-    setSession(students?.data?.sessionName ? ({
-      value: students?.data?.sessionName?._id,
-      label: students?.data?.sessionName?.nameLabel
+    setSession(students?.data?.session ? ({
+      value: students?.data?.session?._id,
+      label: students?.data?.session?.nameLabel
     }) : null)
 
-    setGroup(students?.data?.groupName ? ({
-      value: students?.data?.groupName?._id,
-      label: students?.data?.groupName?.nameLabel
+    setGroup(students?.data?.group ? ({
+      value: students?.data?.group?._id,
+      label: students?.data?.group?.nameLabel
     }) : null)
 
 
@@ -157,8 +157,18 @@ const EditStudentProfilePages = () => {
   }, [students]);
 
   useEffect(()=>{
-    console.log('drop',shift )
-  },[shift])
+    console.log('class drop  id value : ',className )
+    console.log('shift drop id value : ',shift )
+
+    console.log(' group drop id value : ', group )
+
+    console.log('session drop id value : ',session )
+
+    console.log('section  drop id value : ',section )
+
+
+
+  },[className , shift , group , session , section])
 
 
   const classOptions = classes?.data.map((item) => {

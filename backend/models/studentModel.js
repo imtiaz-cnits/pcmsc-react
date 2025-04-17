@@ -158,24 +158,24 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    shiftName: {
+    shift: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shift",
       required: true,
     },
 
-    sectionName: {
+    section: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section",
       required: true,
     },
 
-    sessionName: {
+    session: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Session",
       required: true,
     },
-    groupName: {
+    group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Group",
       required: true,

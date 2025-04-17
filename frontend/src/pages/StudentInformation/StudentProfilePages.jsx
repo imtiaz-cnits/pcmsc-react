@@ -765,7 +765,7 @@ data-filter={item.value} >
                               </div>
                             </td>
                             <td>{item?.className?.nameLabel}</td>
-                            <td>{item?.groupName?.nameLabel}</td>
+                            <td>{item?.group?.nameLabel}</td>
                             <td>{item?.studentRoll}</td>
                           </tr>
                         ))
@@ -923,17 +923,17 @@ data-filter={item.value} >
                         Class Name: <span>{selectedStudent.className.nameLabel}</span>
                       </h3>
                       <h3>
-                        Section Name: <span>{selectedStudent.sectionName.nameLabel}</span>
+                        Section Name: <span>{selectedStudent.section.nameLabel}</span>
                       </h3>
                       <h3>
-                        Group Name: <span>{selectedStudent.groupName.nameLabel}</span>
+                        Group Name: <span>{selectedStudent.group.nameLabel}</span>
                       </h3>
                       <h3>
-                        Shift Name: <span>{selectedStudent.shiftName.nameLabel}</span>
+                        Shift Name: <span>{selectedStudent.shift.nameLabel}</span>
                       </h3>
 
                       <h3>
-                        Session Name: <span>{selectedStudent.sessionName.nameLabel}</span>
+                        Session Name: <span>{selectedStudent.session.nameLabel}</span>
                       </h3>
                      
                       
