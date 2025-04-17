@@ -257,9 +257,7 @@ async function getAllPaginatedStudents(req, res, next) {
     console.log("👨‍🎓 Students data:", students.length);
 
     if (!students || students.length === 0) {
-      return next(
-        createError(404, "No students found for the given criteria."),
-      );
+      return next(createError(404, "No students found."));
     }
 
     return res.status(200).json({

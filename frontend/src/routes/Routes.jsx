@@ -28,7 +28,7 @@ import Shift from "../pages/Shift/Shift.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
 import AddNewStudentPage from "../pages/StudentInformation/AddNewStudentPage.jsx";
 import EditStudentProfilePage from "../pages/StudentInformation/EditStudentProfilePage.jsx";
-import StudentProfilePage from "../pages/StudentInformation/StudentProfilePage.jsx";
+import StudentProfilePage from "../pages/StudentInformation/StudentProfilePage";
 import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";

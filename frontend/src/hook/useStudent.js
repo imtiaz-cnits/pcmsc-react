@@ -13,7 +13,7 @@ import {
   fetchPaginatedStudentAPI,
   fetchStudentByIDAPI,
   updateStudentAPI,
-} from "../api/student-management/studentInfoAPI";
+} from "../api/student-management/studentAPI";
 
 // ✅  POST - method
 export const useAddSutdent = () => {
@@ -66,7 +66,7 @@ export const useFetchPaginatedStudent = ({
   filterChecker,
   keyword,
 }) => {
-  console.log("useFetchPaginatedStudent value : ", filterChecker);
+  console.log('useFetchPaginatedStudent filter value : ', filterChecker)
   return useQuery({
     queryKey: ["students", page, limit, filterChecker, keyword],
     queryFn: () =>
@@ -75,6 +75,7 @@ export const useFetchPaginatedStudent = ({
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
+    retry:1
   });
 };
 

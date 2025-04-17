@@ -3,7 +3,7 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
-import Shimmer from "../../components/Shimmer";
+import Shimmer from '../../components/Shimmer';
 import {
   useDeleteStudent,
   useFetchPaginatedStudent,
@@ -21,8 +21,6 @@ const StudentProfilePage = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const quickViewBtnRef = useRef(null);
   const filterRef = useRef(null);
-  const isSearchActive = keyword.trim() !== '';
-
 
   const { mutate: deleteStudent } = useDeleteStudent();
   const {
@@ -167,18 +165,8 @@ const StudentProfilePage = () => {
   }, [isFilterModalOpen, isQuickViewModalOpen]);
 
 
-  useEffect(()=>{
-    console.log('limit : ', limit)
-  },[limit])
 
-  if (isError && error instanceof Error) {
-    console.log("Student Profile Page Error : ", error);
-    const errorMsg =
-      error?.response?.data?.message ||
-      error?.message ||
-      '"Something went wrong. Please try again later!";';
-    return <p>{errorMsg}</p>;
-  }
+
 
   return (
     <>
@@ -513,10 +501,15 @@ const StudentProfilePage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isPending ? (
-                        <Shimmer count={10} />
-                      ) : (
-                        students?.data?.length > 0 &&
+                      {isError ? (
+                         <tr>
+                         <td colSpan="11" style={{ textAlign: "center", color: "#1f4529" }}>
+                           {error?.response?.data?.message || 
+      error?.message || "Something went wrong. Please try again!"}
+                         </td>
+                       </tr>
+                      ) : isPending ? (<Shimmer count={10 } />) : (
+                        students?.data?.length > 0 ?
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>
                             <td> {String((page - 1) * limit + index + 1).padStart(
@@ -658,13 +651,19 @@ const StudentProfilePage = () => {
                             <td>{item?.group?.nameLabel}</td>
                             <td>{item?.studentRoll}</td>
                           </tr>
-                        ))
+                        )) :  (
+                          <tr>
+                            <td colSpan="11" style={{ textAlign: "center" }}>
+                              No students found.
+                            </td>
+                          </tr>
+                        )
                       )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
+               {!isError &&  <div className="my-3">
                   <span id="display-info">
                     {" "}
                     {students?.totalEntries
@@ -674,8 +673,8 @@ const StudentProfilePage = () => {
                         )} of ${students?.totalEntries} entries`
                       : "Loading Entries...."}
                   </span>
-                </div>
-{limit  <= 5 && 
+                </div>}
+{limit  <= 5 && !isError && 
           <div id="pagination" className="pagination">
                   {page > 1 && (
                     <button
@@ -901,6 +900,11 @@ const StudentProfilePage = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
+      {students?.data?.length === 0 && !isPending && (
+  <div className="text-center text-muted my-4">
+    No students found for the selected filter/search.
+  </div>
+)}
     </>
   );
 };
