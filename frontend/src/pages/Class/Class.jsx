@@ -88,7 +88,7 @@ const ClassPage = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleEditSubmit =(e) => {
+  const handleEditSubmit = (e) => {
     e.preventDefault();
 
     if (!className) {
@@ -144,10 +144,7 @@ const ClassPage = () => {
 
   return (
     <>
-      <Toaster
-        position="top-center" 
-        richColors
-      />
+      <Toaster position="top-center" richColors />
       {/* <!-- Hero Main Content Start --> */}
 
       {/* Sidebar */}
@@ -197,7 +194,7 @@ const ClassPage = () => {
                                   e.preventDefault();
                                   setLimit(Number(e.target.value));
                                   setPage(1);
-                                  setKeyword('')
+                                  setKeyword("");
                                 }}
                                 style={{ width: "auto" }}
                               >
@@ -284,12 +281,10 @@ const ClassPage = () => {
                                       cursor: "pointer",
                                       padding: 0,
                                     }}
-                                    onClick={(e) =>
-                                    {
+                                    onClick={(e) => {
                                       handleClassDelete(e, item?._id);
-                                      setKeyword('')
-                                    }
-                                    }
+                                      setKeyword("");
+                                    }}
                                   >
                                     <FaRegTrashAlt
                                       style={{

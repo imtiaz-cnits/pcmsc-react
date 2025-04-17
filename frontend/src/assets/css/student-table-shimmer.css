@@ -2,7 +2,7 @@
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
@@ -31,7 +31,7 @@
 }
 
 .shimmer-box::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -150px;

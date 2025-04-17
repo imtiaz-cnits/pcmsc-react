@@ -37,9 +37,7 @@ export const useAddClass = () => {
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
 
       if (data?.success) {
-        
-      toast.success(data?.message);
-
+        toast.success(data?.message);
       }
     },
 
@@ -98,7 +96,7 @@ export const useUpdateClass = () => {
       );
     },
 
-    onSuccess: async (data,{ classID, payload }) => {
+    onSuccess: async (data, { classID, payload }) => {
       console.log("🚀 update class onSuccess data value :", data);
       console.log("🚀 update  :", payload, classID);
 
@@ -106,7 +104,7 @@ export const useUpdateClass = () => {
         toast.success(data?.message);
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["classes",classID] });
+      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
     },
 
     onSettled: async () => {

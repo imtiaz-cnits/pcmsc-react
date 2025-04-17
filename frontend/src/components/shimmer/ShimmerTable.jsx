@@ -1,8 +1,6 @@
-import '../../assets/css/shimmer/shimmer-table.css';
+import "../../assets/css/shimmer/shimmer-table.css";
 
 const ShimmerTable = ({ row = 5, col = 11 }) => {
- 
-
   return (
     <tbody>
       {Array.from({ length: row }).map((_, rowIndex) => (

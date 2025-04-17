@@ -85,7 +85,7 @@ export const useAddShifts = () => {
       //   "✅ After Backend Response (Cache Data): ",
       //   queryClient.getQueryData(["shifts"]),
       // );
-      await queryClient.invalidateQueries({ queryKey: ["shifts"] }); 
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
     },
 
     onSettled: async () => {

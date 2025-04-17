@@ -1,87 +1,87 @@
 import { useEffect, useRef, useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import '../../assets/css/all-modal.css';
-import '../../assets/css/style.css';
-import Shimmer from '../../components/Shimmer';
-import { useDeleteStudent, useFetchStudents } from "../../hook/useStudentInfo";
+import "../../assets/css/all-modal.css";
+import "../../assets/css/style.css";
+import Shimmer from "../../components/Shimmer";
+import {
+  useDeleteStudent,
+  useFetchPaginatedStudent,
+} from "../../hook/useStudentInfo";
 
-
-const StudentProfilePages = () => {
-
-  const [isQuickViewModalOpen , setIsQuickViewModalOpen]= useState(false)
-  const [filterChecker , setFilterChecker] = useState('')
-  const [visibleData , setVisibleData]=useState([])
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
-  const [itemToDelete, setItemToDelete] = useState(null);
-  const [selectedStudent , setSelectedStudent] = useState(null); 
-  const quickViewBtnRef = useRef()
-   
-  const { data: students, isPending, isError, error } = useFetchStudents();
+const StudentProfilePage = () => {
+  const [isQuickViewModalOpen, setIsQuickViewModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [filterChecker, setFilterChecker] = useState("");
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const quickViewBtnRef = useRef(null);
+  const filterRef = useRef(null);
+
   const { mutate: deleteStudent } = useDeleteStudent();
+  const {
+    data: students,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedStudent({ page, limit, filterChecker, keyword });
 
-
-
- 
   const filterOptions = [
-    {value:'all' , label: 'All time'},
-    {value:'today', label:'Today'},
-    {value: '7', label: 'Last 7 Days'},
-    {value: '30', label: 'Last Month'},
-    {value: '365', label: 'Last Year'}
-  ] 
+    { value: "all", label: "All time" },
+    { value: "today", label: "Today" },
+    { value: "7", label: "Last 7 Days" },
+    { value: "30", label: "Last Month" },
+    { value: "365", label: "Last Year" },
+  ];
 
-  // useEffect(()=>{
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
 
-  //  if(students?.data){
-  //   const filtered = students?.data?.filter((item)=>{
+  const handleFilterChange = (e, item) => {
+    e.preventDefault();
+    setFilterChecker(item.value);
+    setPage(1);
+    setIsFilterModalOpen(false);
+    console.log("filter value : ", item.value);
+  };
 
-  //     const today = new Date(); 
-  //     const [d,m,y] = item.admissionDate.split('-').map(Number)
-  //     console.log('d , m , y ' , d , m ,y)
-  //     const rowDate = new Date(y , m-1 , d)
+  const handleSearchQuery = (e) => {
+    e.preventDefault();
+    setKeyword(e.target.value);
+    setPage(1);
+  };
 
-  //     switch (filterChecker){
+  const handleDeleteClick = (e, item) => {
+    e.preventDefault();
+    setItemToDelete(item?._id);
+  };
 
-  //       case 'all':
-  //         return true
-  //       case 'today':
-  //         return today.toDateString() === rowDate.toDateString();
+  const handleDelete = (e) => {
+    e.preventDefault();
+    deleteStudent(itemToDelete);
+    setIsDeleteModalOpen(false);
+  };
 
-  //         case '7':
-  //           return  (today - rowDate) / (1000 * 60 * 60 * 24) <= 7;
+  const handleClose = (e) => {
+    e.preventDefault();
+    setIsDeleteModalOpen(false);
+  };
 
-  //           case "30":
-  //         return (today - rowDate) / (1000 * 60 * 60 * 24) <= 30;
-  //       case "365":
-  //         return (today - rowDate) / (1000 * 60 * 60 * 24) <= 365; 
-
-  //         default:
-  //           return true
-  //     }
-
-
-
-  //   })
-
-  //   setVisibleData(filtered)
-  //  }
-    
-    
-  // },[filterChecker,students])
-
-
-
-  
-
-  useEffect(()=>{
-    console.log('visible data: ',visibleData)
-    console.log(typeof visibleData)
-    console.log('student type : ', typeof students?.data)
-    console.log('students length ' , students?.data?.length)
-    console.log('visible data length ' , visibleData?.length)
-  },[visibleData, students])
+  const handleOutSideClick = (e) => {
+    if (filterRef.current && !filterRef.current.contains(e.target)) {
+      setIsFilterModalOpen(false);
+    }
+  };
 
   useEffect(() => {
     $(document).ready(function () {
@@ -153,151 +153,12 @@ const StudentProfilePages = () => {
   };
 
   useEffect(() => {
-    const table = document.querySelector("#printTable");
-    const entriesSelect = document.querySelector("#entries");
-    const displayInfo = document.querySelector("#display-info");
-    const prevBtn = document.querySelector("#prevBtn");
-    const nextBtn = document.querySelector("#nextBtn");
-    const paginationContainer = document.querySelector("#pagination");
+    document.addEventListener("mousedown", handleOutSideClick);
 
-    let currentPage = 1;
-    let entriesPerPage = parseInt(entriesSelect.value);
-    // let totalEntries = table.querySelectorAll("tbody tr").length;
-    let totalEntries = students?.data?.length;
-    let totalPages = Math.ceil(totalEntries / entriesPerPage);
-    const pageLinksToShow = 3;
-
-    function updateTable() {
-      const rows = table.querySelectorAll("tbody tr");
-      rows.forEach((row, index) => {
-        row.style.display =
-          index >= (currentPage - 1) * entriesPerPage &&
-          index < currentPage * entriesPerPage
-            ? ""
-            : "none";
-      });
-
-      displayInfo.textContent = totalEntries
-        ? `Showing ${Math.min(
-            entriesPerPage * currentPage,
-            totalEntries,
-          )} of ${totalEntries} entries`
-        : "Loading Entries....";
-    }
-
-    function updatePagination() {
-      totalPages = Math.ceil(totalEntries / entriesPerPage);
-      paginationContainer.innerHTML = "";
-
-      const startPage = Math.max(
-        1,
-        currentPage - Math.floor(pageLinksToShow / 2),
-      );
-      const endPage = Math.min(totalPages, startPage + pageLinksToShow - 1);
-
-      if (totalPages > 1) {
-        if (currentPage > 1) {
-          paginationContainer.innerHTML +=
-            '<button id="prevBtn" class="btn">Prev</button>';
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-          paginationContainer.innerHTML += `<a href="#" class="page-link page-link--${i}">${i}</a>`;
-        }
-
-        if (currentPage < totalPages) {
-          paginationContainer.innerHTML +=
-            '<button id="nextBtn" class="btn">Next</button>';
-        }
-      }
-
-      // Add event listeners for new pagination links
-      document.querySelectorAll(".page-link").forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          currentPage = parseInt(e.target.textContent);
-          updateTable();
-          updatePagination();
-        });
-      });
-
-      document.querySelector("#prevBtn")?.addEventListener("click", () => {
-        if (currentPage > 1) {
-          currentPage--;
-          updateTable();
-          updatePagination();
-        }
-      });
-
-      document.querySelector("#nextBtn")?.addEventListener("click", () => {
-        if (currentPage < totalPages) {
-          currentPage++;
-          updateTable();
-          updatePagination();
-        }
-      });
-
-      // Highlight active page link
-      document.querySelectorAll(".page-link").forEach((link) => {
-        link.classList.toggle(
-          "active",
-          parseInt(link.textContent) === currentPage,
-        );
-      });
-    }
-
-    entriesSelect.addEventListener("change", (e) => {
-      entriesPerPage = parseInt(e.target.value);
-      totalEntries = table.querySelectorAll("tbody tr").length;
-      currentPage = 1; // Reset to the first page
-      updateTable();
-      updatePagination();
-    });
-
-    // Initial setup
-    updateTable();
-    updatePagination();
-  }, [students]);
-
-  const handleDeleteClick = (e, item) => {
-    e.preventDefault();
-    setItemToDelete(item?._id);
-  };
-
-  const handleDelete = (e) => {
-    e.preventDefault();
-
-    console.log("item to delete : ", itemToDelete);
-    deleteStudent(itemToDelete);
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleClose = (e) => {
-    e.preventDefault();
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleOutSideClick = (e)=>{
-    if(e.target.classList.contains("filterModal")){
-      setIsFilterModalOpen(false)
-    }
-  }
-
-  useEffect(()=>{
-
-    document.addEventListener('click',handleOutSideClick)
-
-
-    return()=>{
-      document.removeEventListener('click',handleOutSideClick)
-    }
-
-  },[isFilterModalOpen , isQuickViewModalOpen])
-
-
-useEffect(()=>{
-  console.log('ref : ', quickViewBtnRef)
-})
+    return () => {
+      document.removeEventListener("mousedown", handleOutSideClick);
+    };
+  }, [isFilterModalOpen, isQuickViewModalOpen]);
 
   if (isError && error instanceof Error) {
     console.log("Student Profile Page Error : ", error);
@@ -307,8 +168,6 @@ useEffect(()=>{
       '"Something went wrong. Please try again later!";';
     return <p>{errorMsg}</p>;
   }
-
-
 
   return (
     <>
@@ -342,6 +201,8 @@ useEffect(()=>{
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Student..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
                       />
                       {/* <!-- Entries per page --> */}
                       <div
@@ -361,12 +222,18 @@ useEffect(()=>{
                               id="entries"
                               className="form-control"
                               style={{ width: "auto" }}
+                              value={limit}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                setPage(1);
+                                setLimit(Number(e.target.value));
+                              }}
                             >
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="25">25</option>
-                              <option value="50">50</option>
-                              <option value="100">100</option>
+                              {entriesOptions.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                  {item.label}
+                                </option>
+                              ))}
                             </select>
                             <span className="dropdown-icon">&#9662;</span>
                             {/* <!-- Dropdown icon --> */}
@@ -374,8 +241,17 @@ useEffect(()=>{
                         </div>
 
                         <div className="input-group-append">
-                          <div className="dropdown-custom" id='filterModal'>
-                            <button className="dropdown-button"  onClick={()=> setIsFilterModalOpen(!isFilterModalOpen)}>
+                          <div
+                            className="dropdown-custom"
+                            id="filterModal"
+                            ref={filterRef}
+                          >
+                            <button
+                              className="dropdown-button"
+                              onClick={() =>
+                                setIsFilterModalOpen(!isFilterModalOpen)
+                              }
+                            >
                               <svg
                                 width="32"
                                 height="32"
@@ -411,23 +287,23 @@ useEffect(()=>{
                               </svg>
                               <span>Filter</span>
                             </button>
-                            {isFilterModalOpen && <div className="dropdown-menus" style={{display: 'block'}}>
-
-{filterOptions.map((item)=>  <a key={item.value} href="#"
-
-onClick={(e)=>{
-  e.preventDefault();
-  setFilterChecker(item.value)
-  setIsFilterModalOpen(false)
-
-}}
-
-data-filter={item.value} >
-                               {item.label}
-                              </a>)}
-
-                            
-                            </div>}
+                            {isFilterModalOpen && (
+                              <div
+                                className="dropdown-menus"
+                                style={{ display: "block" }}
+                              >
+                                {filterOptions.map((item) => (
+                                  <a
+                                    key={item.value}
+                                    href="#"
+                                    onClick={(e) => handleFilterChange(e, item)}
+                                    data-filter={item.value}
+                                  >
+                                    {item.label}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -627,7 +503,7 @@ data-filter={item.value} >
                     </thead>
                     <tbody>
                       {isPending ? (
-                        <Shimmer count={10}/>
+                        <Shimmer count={10} />
                       ) : (
                         students?.data?.length > 0 &&
                         students?.data?.map((item, index) => (
@@ -715,12 +591,13 @@ data-filter={item.value} >
                                 {/* Quick View Button */}
                                 <button
                                   title="Quick View"
-                                  onClick={(e)=> {
+                                  onClick={(e) => {
                                     e.preventDefault();
                                     setSelectedStudent(item);
-                                    setIsQuickViewModalOpen(!isQuickViewModalOpen)
+                                    setIsQuickViewModalOpen(
+                                      !isQuickViewModalOpen,
+                                    );
                                   }}
-
                                   style={{
                                     backgroundColor: "#f9f9f9",
                                     border: "1px solid #ddd",
@@ -742,8 +619,7 @@ data-filter={item.value} >
                                     e.currentTarget.style.boxShadow = "none";
                                   }}
                                 >
-                                  <i className="fa-regular fa-eye" 
-                                  />
+                                  <i className="fa-regular fa-eye" />
                                 </button>
                               </div>
                             </td>
@@ -775,25 +651,56 @@ data-filter={item.value} >
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
                 <div className="my-3">
-                  <span id="display-info"></span>
+                  <span id="display-info">
+                    {" "}
+                    {students?.totalEntries
+                      ? `Showing ${Math.min(
+                          limit * students?.currentPage,
+                          students?.totalEntries,
+                        )} of ${students?.totalEntries} entries`
+                      : "Loading Entries...."}
+                  </span>
                 </div>
 
                 <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
+                  {page > 1 && (
+                    <button
+                      id="prevBtn"
+                      className="btn"
+                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    >
+                      Prev
+                    </button>
+                  )}
+                  {[...Array(students?.totalPages)].map((_, index) => {
+                    const pageNumber = index + 1;
+                    return (
+                      <a
+                        href="#"
+                        key={pageNumber}
+                        className={`page-link page-link--${pageNumber} ${pageNumber === page ? "active" : ""}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPage(pageNumber);
+                        }}
+                      >
+                        {pageNumber}
+                      </a>
+                    );
+                  })}
+                  {page < students?.totalPages && (
+                    <button
+                      id="nextBtn"
+                      className="btn"
+                      onClick={() =>
+                        setPage((prev) =>
+                          Math.min(prev + 1, students?.totalPages),
+                        )
+                      }
+                    >
+                      Next
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -837,523 +744,143 @@ data-filter={item.value} >
           </div>
           {/* <!-- Edit Modal End -->
         <!-- Quick View Modal Start --> */}
-       {isQuickViewModalOpen &&    <div id="quickViewModal" className="modal" style={{display: 'flex'}}>
-            <div ref={quickViewBtnRef} className="modal-content">
-              <p>Quick View</p>
-              <div className="items">
-                <div className="row">
-                  <div className="col-6">
-                    <div className="item">
-                      <div className="profile-img">
-                        <img
-                          src={selectedStudent.avatar?.imageURL}
-                          alt=""
-                        />
-                      <img src={students?.data?.avatar?.imageURL} alt="avatar"/>
-
+          {isQuickViewModalOpen && (
+            <div
+              id="quickViewModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div ref={quickViewBtnRef} className="modal-content">
+                <p>Quick View</p>
+                <div className="items">
+                  <div className="row">
+                    <div className="col-6">
+                      <div className="item">
+                        <div className="profile-img">
+                          <img src={selectedStudent.avatar?.imageURL} alt="" />
+                          <img
+                            src={students?.data?.avatar?.imageURL}
+                            alt="avatar"
+                          />
+                        </div>
+                        <h3>
+                          Student Name: <span>{selectedStudent.name}</span>
+                        </h3>
+                        <h3>
+                          Student ID: <span>{selectedStudent.studentID}</span>
+                        </h3>
+                        <h3>
+                          Blood Group: <span>{selectedStudent.bloodGroup}</span>
+                        </h3>
+                        <h3>
+                          Birth Certificate:{" "}
+                          <span>{selectedStudent.birthCertificate}</span>
+                        </h3>
+                        <h3>
+                          Father Name: <span>{selectedStudent.fatherName}</span>
+                        </h3>
+                        <h3>
+                          Father NID: <span>{selectedStudent.fatherNID}</span>
+                        </h3>
+                        <h3>
+                          Father Mobile:{" "}
+                          <span>{selectedStudent.fatherPhone}</span>
+                        </h3>
+                        <h3>
+                          Mother Name: <span>{selectedStudent.motherName}</span>
+                        </h3>
+                        <h3>
+                          Mother NID: <span>{selectedStudent.motherNID}</span>
+                        </h3>
+                        <h3>
+                          Mother Mobile:{" "}
+                          <span>{selectedStudent.motherPhone}</span>
+                        </h3>
                       </div>
-                      <h3>
-                        Student Name: <span>{selectedStudent.name}</span>
-                      </h3>
-                      <h3>
-                        Student ID: <span>{selectedStudent.studentID}</span>
-                      </h3>
-                      <h3>
-                        Blood Group: <span>{selectedStudent.bloodGroup}</span>
-                      </h3>
-                      <h3>
-                        Birth Certificate: <span>{selectedStudent.birthCertificate}</span>
-                      </h3>
-                      <h3>
-                        Father Name: <span>{selectedStudent.fatherName}</span>
-                      </h3>
-                      <h3>
-                        Father NID: <span>{selectedStudent.fatherNID}</span>
-                      </h3>
-                      <h3>
-                        Father Mobile: <span>{selectedStudent.fatherPhone}</span>
-                      </h3>
-                      <h3>
-                        Mother Name: <span>{selectedStudent.motherName}</span>
-                      </h3>
-                      <h3>
-                        Mother NID: <span>{selectedStudent.motherNID}</span>
-                      </h3>
-                      <h3>
-                        Mother Mobile: <span>{selectedStudent.motherPhone}</span>
-                      </h3>
                     </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="item">
-                      <h3>
-                        Admission Number: <span>{selectedStudent.admissionNumber}</span>
-                      </h3>
-                      <h3>
-                        Admission Date: <span>{selectedStudent.admissionDate}</span>
-                      </h3>
-                      <h3>
-                        Present Address: <span>{selectedStudent.presentAddress}</span>
-                      </h3>
-                      <h3>
-                        Permanent Address: <span>{selectedStudent.permanentAddress}</span>
-                      </h3>
-                      <h3>
-                        Guardian (In Absence of F/M): <span>{selectedStudent.guardianName}</span>
-                      </h3>
-                      <h3>
-                        Guardian Mobile: <span>{selectedStudent.guardianPhone}</span>
-                      </h3>
-                      <h3>
-                        Date of Birth: <span>{selectedStudent.dateOfBirth}</span>
-                      </h3>
-                      <h3>
-                        Student Email: <span>{selectedStudent.studentEmail}</span>
-                      </h3>
-                      <h3>
-                        Student Gender: <span>{selectedStudent.studentGender}</span>
-                      </h3>
-                      <h3>
-                        SMS Status: <span>{selectedStudent.smsStatus}</span>
-                      </h3>
-                      <h3>
-                        Registration Date: <span>{selectedStudent.registrationDate}</span>
-                      </h3>
-                      <h3>
-                        Class Name: <span>{selectedStudent.className.nameLabel}</span>
-                      </h3>
-                      <h3>
-                        Section Name: <span>{selectedStudent.section.nameLabel}</span>
-                      </h3>
-                      <h3>
-                        Group Name: <span>{selectedStudent.group.nameLabel}</span>
-                      </h3>
-                      <h3>
-                        Shift Name: <span>{selectedStudent.shift.nameLabel}</span>
-                      </h3>
+                    <div className="col-6">
+                      <div className="item">
+                        <h3>
+                          Admission Number:{" "}
+                          <span>{selectedStudent.admissionNumber}</span>
+                        </h3>
+                        <h3>
+                          Admission Date:{" "}
+                          <span>{selectedStudent.admissionDate}</span>
+                        </h3>
+                        <h3>
+                          Present Address:{" "}
+                          <span>{selectedStudent.presentAddress}</span>
+                        </h3>
+                        <h3>
+                          Permanent Address:{" "}
+                          <span>{selectedStudent.permanentAddress}</span>
+                        </h3>
+                        <h3>
+                          Guardian (In Absence of F/M):{" "}
+                          <span>{selectedStudent.guardianName}</span>
+                        </h3>
+                        <h3>
+                          Guardian Mobile:{" "}
+                          <span>{selectedStudent.guardianPhone}</span>
+                        </h3>
+                        <h3>
+                          Date of Birth:{" "}
+                          <span>{selectedStudent.dateOfBirth}</span>
+                        </h3>
+                        <h3>
+                          Student Email:{" "}
+                          <span>{selectedStudent.studentEmail}</span>
+                        </h3>
+                        <h3>
+                          Student Gender:{" "}
+                          <span>{selectedStudent.studentGender}</span>
+                        </h3>
+                        <h3>
+                          SMS Status: <span>{selectedStudent.smsStatus}</span>
+                        </h3>
+                        <h3>
+                          Registration Date:{" "}
+                          <span>{selectedStudent.registrationDate}</span>
+                        </h3>
+                        <h3>
+                          Class Name:{" "}
+                          <span>{selectedStudent.className.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Section Name:{" "}
+                          <span>{selectedStudent.section.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Group Name:{" "}
+                          <span>{selectedStudent.group.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Shift Name:{" "}
+                          <span>{selectedStudent.shift.nameLabel}</span>
+                        </h3>
 
-                      <h3>
-                        Session Name: <span>{selectedStudent.session.nameLabel}</span>
-                      </h3>
-                     
-                      
+                        <h3>
+                          Session Name:{" "}
+                          <span>{selectedStudent.session.nameLabel}</span>
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="modal-buttons">
-                <button id="quickClose" onClick={()=> setIsQuickViewModalOpen(!isQuickViewModalOpen)}>
-                  <i className="fa-solid fa-x"></i>
-                </button>
-              </div>
-            </div>
-          </div>}
-          {/* <!-- Quick View Modal End -->
-        <!-- Table Action Button Modal Start -->
-
-        <!-- Add Students - Pop Up Modal Start --> */}
-          <section id="studentModal" className="modal studentModal">
-            <div className="modal-content">
-              <div id="popup-modal">
-                <div className="form-container">
-                  <h3>New Student Admission</h3>
-                  <form>
-                    {/* <!-- Row 1 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="admission-number">
-                          Admission Number
-                        </label>
-                        <input
-                          type="text"
-                          id="admission-number"
-                          placeholder="Enter admission number"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Admission Date *
-                        </label>
-                        <div className="input-datepicker-wrapper">
-                          <input
-                            type="text"
-                            className="datepicker-input"
-                            placeholder="dd/mm/yyyy"
-                          />
-                          <i className="fas fa-calendar-alt icon"></i>
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="student-name">Student's Name *</label>
-                        <input
-                          type="text"
-                          id="student-name"
-                          placeholder="Enter student's name"
-                        />
-                      </div>
-
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="name-bangla">Name in Bangla</label>
-                        <input
-                          type="text"
-                          id="name-bangla"
-                          placeholder="বাংলায় নাম লিখুন"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="birth-certificate">
-                          Birth Certificate
-                        </label>
-                        <input
-                          type="text"
-                          id="birth-certificate"
-                          placeholder="Enter birth certificate number"
-                        />
-                      </div>
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Blood Group</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Blood Group</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">A</div>
-                            <div className="option">B</div>
-                            <div className="option">AB</div>
-                            <div className="option">B+</div>
-                            <div className="option">O+</div>
-                            <div className="option">AB-</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* <!-- Row 3 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="religion">Religion</label>
-                        <input
-                          type="text"
-                          id="religion"
-                          placeholder="Enter religion"
-                        />
-                      </div>
-                      <div className="form-group col-lg-8">
-                        <label htmlFor="photo">Photo</label>
-                        <div className="upload-profile">
-                          <div className="item">
-                            <div className="img-box">
-                              <svg
-                                width="32"
-                                height="32"
-                                viewBox="0 0 50 50"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                              >
-                                <rect
-                                  width="50"
-                                  height="50"
-                                  fill="url(#pattern0_1204_6)"
-                                  fillOpacity="0.5"
-                                />
-                                <defs>
-                                  <pattern
-                                    id="pattern0_1204_6"
-                                    patternContentUnits="objectBoundingBox"
-                                    width="1"
-                                    height="1"
-                                  >
-                                    <use
-                                      xlinkHref="#image0_1204_6"
-                                      transform="scale(0.005)"
-                                    />
-                                  </pattern>
-                                  <image
-                                    id="image0_1204_6"
-                                    width="200"
-                                    height="200"
-                                    xlinkHref="data:image/png;base64,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"
-                                  />
-                                </defs>
-                              </svg>
-                            </div>
-
-                            <div className="profile-wrapper">
-                              <label className="custom-file-input-wrapper m-0">
-                                <input
-                                  type="file"
-                                  className="custom-file-input"
-                                  aria-label="Upload Photo"
-                                />
-                              </label>
-                              <p>PNG,JPEG or GIF (up to 1 MB)</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 4 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="father-name">Father's Name *</label>
-                        <input
-                          type="text"
-                          id="father-name"
-                          placeholder="Enter father's name"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="father-nid">Father's NID</label>
-                        <input
-                          type="text"
-                          id="father-nid"
-                          placeholder="Enter father's NID"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="father-mobile">
-                          Father's Mobile No *
-                        </label>
-                        <input
-                          type="text"
-                          id="father-mobile"
-                          placeholder="Enter father's mobile number"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 5 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="mother-name">Mother's Name *</label>
-                        <input
-                          type="text"
-                          id="mother-name"
-                          placeholder="Enter mother's name"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="mother-nid">Mother's NID</label>
-                        <input
-                          type="text"
-                          id="mother-nid"
-                          placeholder="Enter mother's NID"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="mother-mobile">
-                          Mother's Mobile No *
-                        </label>
-                        <input
-                          type="text"
-                          id="mother-mobile"
-                          placeholder="Enter mother's mobile number"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 6 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="present-address">
-                          Present Address *
-                        </label>
-                        <input
-                          type="text"
-                          id="present-address"
-                          placeholder="Enter present address"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="permanent-address">
-                          Permanent Address *
-                        </label>
-                        <input
-                          type="text"
-                          id="permanent-address"
-                          placeholder="Enter permanent address"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="guardian">
-                          Guardian (In Absence of F/M)
-                        </label>
-                        <input
-                          type="text"
-                          id="guardian"
-                          placeholder="Enter guardian's name"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 7 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="guardian-mobile">
-                          Guardian Mobile *
-                        </label>
-                        <input
-                          type="text"
-                          id="guardian-mobile"
-                          placeholder="Enter guardian's mobile number"
-                        />
-                      </div>
-
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Date of Birth *
-                        </label>
-                        <div className="input-datepicker-wrapper">
-                          <input
-                            type="text"
-                            className="datepicker-input"
-                            placeholder="dd/mm/yyyy"
-                          />
-                          <i className="fas fa-calendar-alt icon"></i>
-                        </div>
-                      </div>
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Student Gender</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Gender</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">Male</div>
-                            <div className="option">Female</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 8 --> */}
-                    <div className="form-row row">
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="student-email">Student Email</label>
-                        <input
-                          type="email"
-                          id="student-email"
-                          placeholder="Enter student email"
-                        />
-                      </div>
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">SMS Status</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Status</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">Active</div>
-                            <div className="option">Inactive</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="vanilla-datepicker">
-                          Registration Date *
-                        </label>
-                        <div className="input-datepicker-wrapper">
-                          <input
-                            type="text"
-                            className="datepicker-input"
-                            placeholder="dd/mm/yyyy"
-                          />
-                          <i className="fas fa-calendar-alt icon"></i>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <!-- Row 9 --> */}
-                    <div className="form-row row">
-                      <div className="form-group select-input-box col-lg-4">
-                        <label htmlFor="select-to">Shift Name</label>
-                        <div className="select-box-dropdown">
-                          <div className="select-dropdown-selected">
-                            <span>Select Shift</span>
-                            <span className="icon">
-                              <i className="fas fa-angle-down"></i>
-                            </span>
-                            {/* <!-- Font Awesome angle-down icon --> */}
-                          </div>
-                          <div className="select-dropdown-items">
-                            <input
-                              type="text"
-                              className="select-search-box"
-                              placeholder="Search..."
-                            />
-                            <div className="option">Morning</div>
-                            <div className="option">Evening</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="section">Section Name</label>
-                        <input
-                          type="text"
-                          id="section"
-                          placeholder="Enter section name"
-                        />
-                      </div>
-                      <div className="form-group col-lg-4">
-                        <label htmlFor="session">Session Name</label>
-                        <input
-                          type="text"
-                          id="session"
-                          placeholder="Enter session name"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <!-- Actions --> */}
-                    <div className="form-actions">
-                      <button
-                        type="button"
-                        id="closBtn"
-                        className="button close"
-                      >
-                        Close
-                      </button>
-                      <button type="reset" className="button reset">
-                        Reset
-                      </button>
-                      <button type="submit" className="button save">
-                        Save
-                      </button>
-                    </div>
-                  </form>
+                <div className="modal-buttons">
+                  <button
+                    id="quickClose"
+                    onClick={() =>
+                      setIsQuickViewModalOpen(!isQuickViewModalOpen)
+                    }
+                  >
+                    <i className="fa-solid fa-x"></i>
+                  </button>
                 </div>
               </div>
             </div>
-          </section>
-          {/* <!-- Add Students - Pop Up Modal Start --> */}
+          )}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
@@ -1361,4 +888,4 @@ data-filter={item.value} >
   );
 };
 
-export default StudentProfilePages;
+export default StudentProfilePage;

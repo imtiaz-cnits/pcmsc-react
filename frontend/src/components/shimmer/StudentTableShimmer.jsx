@@ -1,4 +1,4 @@
-import '../../assets/css/student-table-shimmer.css';
+import "../../assets/css/student-table-shimmer.css";
 
 const StudentTableShimmer = ({ count = 5 }) => {
   const columns = [

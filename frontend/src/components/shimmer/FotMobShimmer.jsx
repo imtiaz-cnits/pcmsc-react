@@ -1,4 +1,4 @@
-import '../../assets/css/shimmer/fotmob-shimmer.css';
+import "../../assets/css/shimmer/fotmob-shimmer.css";
 
 const FotMobShimmer = () => (
   <div className="fotmob-shimmer">

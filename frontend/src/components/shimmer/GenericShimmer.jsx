@@ -1,4 +1,4 @@
-import '../../assets/css/shimmer/generic-shimmer.css';
+import "../../assets/css/shimmer/generic-shimmer.css";
 
 const GenericShimmer = ({ limit = 5, columns = 4 }) => {
   const createShimmerRows = () => {
@@ -18,7 +18,9 @@ const GenericShimmer = ({ limit = 5, columns = 4 }) => {
       <thead>
         <tr>
           {Array.from({ length: columns }).map((_, idx) => (
-            <th key={idx}><div className="shimmer-box" /></th>
+            <th key={idx}>
+              <div className="shimmer-box" />
+            </th>
           ))}
         </tr>
       </thead>

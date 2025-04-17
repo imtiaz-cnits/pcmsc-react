@@ -224,7 +224,6 @@ async function getAllPaginatedStudents(req, res, next) {
             { studentEmail: { $regex: keyword, $options: "i" } },
             { smsStatus: { $regex: keyword, $options: "i" } },
             { registrationDate: { $regex: keyword, $options: "i" } },
-            { shift: { $regex: keyword, $options: "i" } },
           ],
         }
       : {};

@@ -53,7 +53,6 @@ const Test = () => {
   const [section, setSection] = useState(null);
   const [session, setSession] = useState(null);
   const [group, setGroup] = useState(null);
-  const [warn, setWarn] = useState("");
   const formRef = useRef(null);
   const { mutate: addStudent } = useAddSutdent();
   const { mutate: deleteStudent } = useDeleteStudent();

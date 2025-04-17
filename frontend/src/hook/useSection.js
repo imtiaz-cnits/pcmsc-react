@@ -51,7 +51,6 @@ export const useAddSections = () => {
     onError: (error) => {
       console.log("error adding section : ", error);
       // ⚙️ rollback cache
-    
 
       if (error.response) {
         toast(
@@ -74,7 +73,6 @@ export const useAddSections = () => {
         toast("Sections added successfully");
       }
 
-    
       await queryClient.invalidateQueries({ queryKey: ["shifts"] });
       console.log(
         "✅ After Backend Response (Cache Data): ",

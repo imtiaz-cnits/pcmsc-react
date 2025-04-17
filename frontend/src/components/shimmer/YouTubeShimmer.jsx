@@ -1,4 +1,4 @@
-import '../../assets/css/shimmer/youtube-shimmer.css';
+import "../../assets/css/shimmer/youtube-shimmer.css";
 
 const YouTubeShimmer = () => (
   <div className="youtube-shimmer">
