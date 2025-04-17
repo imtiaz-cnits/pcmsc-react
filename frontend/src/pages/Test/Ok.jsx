@@ -19,7 +19,7 @@ const Ok = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const quickViewBtnRef = useRef();
 
-  const { data: students, isPending, isError, error } = useFetchPaginatedStudent({page,limit , filterChecker})
+  const { data: students, isPending, isError, error } = useFetchPaginatedStudent({page,limit , filterChecker , keyword})
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { mutate: deleteStudent } = useDeleteStudent();
@@ -48,9 +48,25 @@ const Ok = () => {
  
       e.preventDefault();
       setFilterChecker(item.value);
+      setPage(1)
       setIsFilterModalOpen(false);
       console.log('filter value : ',item.value)
   }
+
+
+  const handleSearchQuery = (e)=>{
+    e.preventDefault(); 
+    setKeyword(e.target.value)
+    setPage(1); 
+    
+  }
+
+
+  useEffect(()=>{
+    console.log('handle keyword value : ', keyword)
+  },[keyword])
+
+
   // useEffect(()=>{
 
   //  if(students?.data){
@@ -348,6 +364,8 @@ const Ok = () => {
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Student..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
                       />
                       {/* <!-- Entries per page --> */}
                       <div
@@ -783,7 +801,7 @@ const Ok = () => {
                               </div>
                             </td>
                             <td>{item?.className?.nameLabel}</td>
-                            <td>{item?.groupName?.nameLabel}</td>
+                            <td>{item?.group?.nameLabel}</td>
                             <td>{item?.studentRoll}</td>
                           </tr>
                         ))
@@ -990,20 +1008,20 @@ const Ok = () => {
                         </h3>
                         <h3>
                           Section Name:{" "}
-                          <span>{selectedStudent.sectionName.nameLabel}</span>
+                          <span>{selectedStudent.section.nameLabel}</span>
                         </h3>
                         <h3>
                           Group Name:{" "}
-                          <span>{selectedStudent.groupName.nameLabel}</span>
+                          <span>{selectedStudent.group.nameLabel}</span>
                         </h3>
                         <h3>
                           Shift Name:{" "}
-                          <span>{selectedStudent.shiftName.nameLabel}</span>
+                          <span>{selectedStudent.shift.nameLabel}</span>
                         </h3>
 
                         <h3>
                           Session Name:{" "}
-                          <span>{selectedStudent.sessionName.nameLabel}</span>
+                          <span>{selectedStudent.session.nameLabel}</span>
                         </h3>
                       </div>
                     </div>

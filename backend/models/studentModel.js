@@ -9,11 +9,13 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
 
     admissionNumber: {
       type: String,
       unique: true,
+      trim: true,
       required: true,
     },
     admissionDate: {
@@ -22,6 +24,8 @@ const studentSchema = new mongoose.Schema(
     },
     studentRoll: {
       type: String,
+      unique: true,
+      trim: true,
       required: true,
     },
 

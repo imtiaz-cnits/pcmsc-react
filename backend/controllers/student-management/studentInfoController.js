@@ -191,21 +191,56 @@ async function getStudentByID(req, res, next) {
 async function getAllPaginatedStudents(req, res, next) {
   try {
     console.log("📥 Incoming request | Query Params:", req.query);
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 5;
+    const page = Math.max(Number(req.query.page) || 1, 1); // always ≥ 1
+    const limit = Math.max(Number(req.query.limit) || 10, 1); // always ≥ 1
     const skip = (page - 1) * limit;
-    const { filterChecker } = req.query;
+    const { filterChecker, keyword } = req.query;
 
     const dateFilterQuery = filterChecker ? getFilteredDate(filterChecker) : {};
+
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { admissionNumber: { $regex: keyword, $options: "i" } },
+            { admissionDate: { $regex: keyword, $options: "i" } },
+            { studentRoll: { $regex: keyword, $options: "i" } },
+            { name: { $regex: keyword, $options: "i" } },
+            { nameInBangla: { $regex: keyword, $options: "i" } },
+            { birthCertificate: { $regex: keyword, $options: "i" } },
+            { bloodGroup: { $regex: keyword, $options: "i" } },
+            { religion: { $regex: keyword, $options: "i" } },
+            { fatherName: { $regex: keyword, $options: "i" } },
+            { fatherNID: { $regex: keyword, $options: "i" } },
+            { fatherPhone: { $regex: keyword, $options: "i" } },
+            { motherName: { $regex: keyword, $options: "i" } },
+            { motherNID: { $regex: keyword, $options: "i" } },
+            { motherPhone: { $regex: keyword, $options: "i" } },
+            { presentAddress: { $regex: keyword, $options: "i" } },
+            { permanentAddress: { $regex: keyword, $options: "i" } },
+            { guardianName: { $regex: keyword, $options: "i" } },
+            { guardianPhone: { $regex: keyword, $options: "i" } },
+            { dateOfBirth: { $regex: keyword, $options: "i" } },
+            { studentGender: { $regex: keyword, $options: "i" } },
+            { studentEmail: { $regex: keyword, $options: "i" } },
+            { smsStatus: { $regex: keyword, $options: "i" } },
+            { registrationDate: { $regex: keyword, $options: "i" } },
+            { shift: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
 
     console.log(
       "📅 Applied Filter:",
       filterChecker || "none",
       "| MongoDB Query:",
       dateFilterQuery,
+      "| Search Query:",
+      searchQuery,
     );
 
-    const students = await Student.find(dateFilterQuery)
+    const query = { ...dateFilterQuery, ...searchQuery };
+
+    const students = await Student.find(query)
       .sort({ admissionNumber: -1 })
       .skip(skip)
       .limit(limit)
@@ -219,14 +254,14 @@ async function getAllPaginatedStudents(req, res, next) {
 
     const totalPages = Math.ceil(totalFilteredStudents / limit);
 
+    console.log("📦 Total filtered students:", totalFilteredStudents);
+    console.log("👨‍🎓 Students data:", students.length);
+
     if (!students || students.length === 0) {
       return next(
         createError(404, "No students found for the given criteria."),
       );
     }
-
-    console.log("📦 Total filtered students:", totalFilteredStudents);
-    console.log("👨‍🎓 Students data:", students.length);
 
     return res.status(200).json({
       success: true,

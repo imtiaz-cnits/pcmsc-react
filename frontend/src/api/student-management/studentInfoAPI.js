@@ -34,10 +34,10 @@ export const fetchStudentByIDAPI = async (id) => {
 
 
 // ✅  GET - method (paginated)
-export const fetchPaginatedStudentAPI = async(page,limit , filterChecker)=>{
+export const fetchPaginatedStudentAPI = async(page,limit , filterChecker , keyword)=>{
   const res = await axiosPrivate.get(`/student-management/students-paginated`,
     {
-      params: {page,limit , filterChecker}
+      params: {page,limit , filterChecker , keyword}
     }
   )
 
