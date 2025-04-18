@@ -39,7 +39,7 @@ export const fetchPaginatedStudentAPI = async (
   filterChecker,
   keyword,
 ) => {
-  console.log('fetchPaginatedStudentAPI value : ', filterChecker)
+  console.log("fetchPaginatedStudentAPI value : ", filterChecker);
   const res = await axiosPrivate.get(`/student-management/students-paginated`, {
     params: { page, limit, filterChecker, keyword },
   });

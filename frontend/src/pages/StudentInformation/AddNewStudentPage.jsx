@@ -61,7 +61,7 @@ const AddNewStudentPage = () => {
   const [group, setGroup] = useState(null);
   const [imgFile, setImgFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [warn , setWarn] = useState('')
+  const [warn, setWarn] = useState("");
   const formRef = useRef(null);
 
   const { mutate: addStudent } = useAddSutdent();
@@ -293,7 +293,6 @@ const AddNewStudentPage = () => {
         break;
     }
     // setWarn((prev) => ({ ...prev, [name]: error }));
-
   };
 
   const reset = () => {

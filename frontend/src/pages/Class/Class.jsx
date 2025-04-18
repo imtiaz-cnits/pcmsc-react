@@ -245,10 +245,9 @@ const ClassPage = () => {
                             classes?.data?.map((item, index) => (
                               <tr key={item?._id}>
                                 <td>
-                                  {String((page - 1) * limit + index + 1).padStart(
-                                    2,
-                                    "0",
-                                  )}
+                                  {String(
+                                    (page - 1) * limit + index + 1,
+                                  ).padStart(2, "0")}
                                 </td>
                                 <td>{item?.nameLabel}</td>
                                 <td>{item?.label}</td>

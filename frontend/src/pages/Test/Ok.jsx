@@ -63,8 +63,6 @@ const Ok = () => {
     console.log("handle keyword value : ", keyword);
   }, [keyword]);
 
-
-
   useEffect(() => {
     $(document).ready(function () {
       // Copy table to clipboard
@@ -276,8 +274,6 @@ const Ok = () => {
   useEffect(() => {
     console.log("ref : ", quickViewBtnRef);
   });
-
-
 
   return (
     <>
@@ -609,13 +605,18 @@ const Ok = () => {
                     </thead>
                     <tbody>
                       {isError ? (
-    <tr>
-      <td colSpan="11" style={{ textAlign: "center", color: "#1f4529" }}>
-        {error?.response?.data?.message || "Something went wrong. Please try again!"}
-      </td>
-    </tr>
-  ) : isPending ? (<Shimmer count={10 } />) :  (
-                        students?.data?.length > 0 ?
+                        <tr>
+                          <td
+                            colSpan="11"
+                            style={{ textAlign: "center", color: "#1f4529" }}
+                          >
+                            {error?.response?.data?.message ||
+                              "Something went wrong. Please try again!"}
+                          </td>
+                        </tr>
+                      ) : isPending ? (
+                        <Shimmer count={10} />
+                      ) : students?.data?.length > 0 ? (
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>
                             <td> {String(index + 1).padStart(2, "0")} </td>
@@ -754,13 +755,13 @@ const Ok = () => {
                             <td>{item?.group?.nameLabel}</td>
                             <td>{item?.studentRoll}</td>
                           </tr>
-                        )) :  (
-                          <tr>
-                            <td colSpan="11" style={{ textAlign: "center" }}>
-                              No students found.
-                            </td>
-                          </tr>
-                        )
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="11" style={{ textAlign: "center" }}>
+                            No students found.
+                          </td>
+                        </tr>
                       )}
                     </tbody>
                   </table>

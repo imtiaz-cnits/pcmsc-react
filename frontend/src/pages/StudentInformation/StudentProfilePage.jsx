@@ -3,7 +3,7 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
-import Shimmer from '../../components/Shimmer';
+import Shimmer from "../../components/Shimmer";
 import {
   useDeleteStudent,
   useFetchPaginatedStudent,
@@ -57,12 +57,9 @@ const StudentProfilePage = () => {
 
   const handleSearchQuery = (e) => {
     e.preventDefault();
-    const value = e.target.value; 
+    const value = e.target.value;
     setKeyword(value);
     setPage(1);
-
-   
-
   };
 
   const handleDeleteClick = (e, item) => {
@@ -163,10 +160,6 @@ const StudentProfilePage = () => {
       document.removeEventListener("mousedown", handleOutSideClick);
     };
   }, [isFilterModalOpen, isQuickViewModalOpen]);
-
-
-
-
 
   return (
     <>
@@ -502,20 +495,28 @@ const StudentProfilePage = () => {
                     </thead>
                     <tbody>
                       {isError ? (
-                         <tr>
-                         <td colSpan="11" style={{ textAlign: "center", color: "#1f4529" }}>
-                           {error?.response?.data?.message || 
-      error?.message || "Something went wrong. Please try again!"}
-                         </td>
-                       </tr>
-                      ) : isPending ? (<Shimmer count={10 } />) : (
-                        students?.data?.length > 0 ?
+                        <tr>
+                          <td
+                            colSpan="11"
+                            style={{ textAlign: "center", color: "#1f4529" }}
+                          >
+                            {error?.response?.data?.message ||
+                              error?.message ||
+                              "Something went wrong. Please try again!"}
+                          </td>
+                        </tr>
+                      ) : isPending ? (
+                        <Shimmer count={10} />
+                      ) : students?.data?.length > 0 ? (
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>
-                            <td> {String((page - 1) * limit + index + 1).padStart(
-                                    2,
-                                    "0",
-                                  )} </td>
+                            <td>
+                              {" "}
+                              {String((page - 1) * limit + index + 1).padStart(
+                                2,
+                                "0",
+                              )}{" "}
+                            </td>
                             <td>
                               <div
                                 style={{
@@ -651,73 +652,73 @@ const StudentProfilePage = () => {
                             <td>{item?.group?.nameLabel}</td>
                             <td>{item?.studentRoll}</td>
                           </tr>
-                        )) :  (
-                          <tr>
-                            <td colSpan="11" style={{ textAlign: "center" }}>
-                              No students found.
-                            </td>
-                          </tr>
-                        )
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="11" style={{ textAlign: "center" }}>
+                            No students found.
+                          </td>
+                        </tr>
                       )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-               {!isError &&  <div className="my-3">
-                  <span id="display-info">
-                    {" "}
-                    {students?.totalEntries
-                      ? `Showing ${Math.min(
-                          limit * students?.currentPage,
-                          students?.totalEntries,
-                        )} of ${students?.totalEntries} entries`
-                      : "Loading Entries...."}
-                  </span>
-                </div>}
-{limit  <= 5 && !isError && 
-          <div id="pagination" className="pagination">
-                  {page > 1 && (
-                    <button
-                      id="prevBtn"
-                      className="btn"
-                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    >
-                      Prev
-                    </button>
-                  )}
-                  {[...Array(students?.totalPages)].map((_, index) => {
-                    const pageNumber = index + 1;
-                    return (
-                      <a
-                        href="#"
-                        key={pageNumber}
-                        className={`page-link page-link--${pageNumber} ${pageNumber === page ? "active" : ""}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setPage(pageNumber);
-                        }}
+                {!isError && (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {" "}
+                      {students?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * students?.currentPage,
+                            students?.totalEntries,
+                          )} of ${students?.totalEntries} entries`
+                        : "Loading Entries...."}
+                    </span>
+                  </div>
+                )}
+                {limit <= 5 && !isError && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                       >
-                        {pageNumber}
-                      </a>
-                    );
-                  })}
-                  {page < students?.totalPages && (
-                    <button
-                      id="nextBtn"
-                      className="btn"
-                      onClick={() =>
-                        setPage((prev) =>
-                          Math.min(prev + 1, students?.totalPages),
-                        )
-                      }
-                    >
-                      Next
-                    </button>
-                  )}
-                </div>}
-
-
-
+                        Prev
+                      </button>
+                    )}
+                    {[...Array(students?.totalPages)].map((_, index) => {
+                      const pageNumber = index + 1;
+                      return (
+                        <a
+                          href="#"
+                          key={pageNumber}
+                          className={`page-link page-link--${pageNumber} ${pageNumber === page ? "active" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(pageNumber);
+                          }}
+                        >
+                          {pageNumber}
+                        </a>
+                      );
+                    })}
+                    {page < students?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, students?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -901,10 +902,10 @@ const StudentProfilePage = () => {
       </div>
       {/* <!-- Hero Main Content End --> */}
       {students?.data?.length === 0 && !isPending && (
-  <div className="text-center text-muted my-4">
-    No students found for the selected filter/search.
-  </div>
-)}
+        <div className="text-center text-muted my-4">
+          No students found for the selected filter/search.
+        </div>
+      )}
     </>
   );
 };
