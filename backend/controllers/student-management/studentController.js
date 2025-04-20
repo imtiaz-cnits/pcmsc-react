@@ -194,7 +194,8 @@ async function getAllPaginatedStudents(req, res, next) {
     const page = Math.max(Number(req.query.page) || 1, 1); // always ≥ 1
     const limit = Math.max(Number(req.query.limit) || 10, 1); // always ≥ 1
     const skip = (page - 1) * limit;
-    const { filterChecker, keyword } = req.query;
+    const { filterChecker, keyword, className, session, section, shift } =
+      req.query;
 
     const dateFilterQuery = filterChecker ? getFilteredDate(filterChecker) : {};
 
@@ -228,6 +229,11 @@ async function getAllPaginatedStudents(req, res, next) {
         }
       : {};
 
+    const classWiseFilterQuery =
+      className && session && section && shift
+        ? { className, session, section, shift }
+        : {};
+
     console.log(
       "📅 Applied Filter:",
       filterChecker || "none",
@@ -237,7 +243,11 @@ async function getAllPaginatedStudents(req, res, next) {
       searchQuery,
     );
 
-    const query = { $and: [dateFilterQuery, searchQuery].filter(Boolean) };
+    const query = {
+      $and: [dateFilterQuery, searchQuery, classWiseFilterQuery].filter(
+        Boolean,
+      ),
+    };
 
     const students = await Student.find(query)
       .sort({ admissionNumber: -1 })

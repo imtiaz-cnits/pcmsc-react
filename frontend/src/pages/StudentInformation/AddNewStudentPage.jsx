@@ -213,87 +213,87 @@ const AddNewStudentPage = () => {
     setPreview(previewURL);
   };
 
-  const validateField = (name, value) => {
-    let error = "";
-    switch (name) {
-      case "admissionNumber":
-        if (!value) error = "Admission number is required.";
-        break;
+  // const validateField = (name, value) => {
+  //   let error = "";
+  //   switch (name) {
+  //     case "admissionNumber":
+  //       if (!value) error = "Admission number is required.";
+  //       break;
 
-      case "studentRoll":
-        if (!value) error = "Student's Roll is required.";
-        break;
+  //     case "studentRoll":
+  //       if (!value) error = "Student's Roll is required.";
+  //       break;
 
-      case "sutdentName":
-        if (!value) error = "Student name is required.";
-        break;
+  //     case "sutdentName":
+  //       if (!value) error = "Student name is required.";
+  //       break;
 
-      case "sutdentNameInBangla":
-        if (!value) error = "Student name is required.";
-        break;
+  //     case "sutdentNameInBangla":
+  //       if (!value) error = "Student name is required.";
+  //       break;
 
-      case "birthCertificate":
-        if (!value) error = "Birth Certificate is required.";
-        break;
+  //     case "birthCertificate":
+  //       if (!value) error = "Birth Certificate is required.";
+  //       break;
 
-      case "bloodGroup":
-        if (!value) error = "Blood group information is mandatory.";
-        break;
+  //     case "bloodGroup":
+  //       if (!value) error = "Blood group information is mandatory.";
+  //       break;
 
-      case "religion":
-        if (!value) error = "Religion is required.";
-        break;
+  //     case "religion":
+  //       if (!value) error = "Religion is required.";
+  //       break;
 
-      case "fatherName":
-        if (!value) error = "Father name is required.";
-        break;
+  //     case "fatherName":
+  //       if (!value) error = "Father name is required.";
+  //       break;
 
-      case "fatherNID": {
-        const nidRegExp = /^(?:\d{10}|\d{13}|\d{17})$/;
+  //     case "fatherNID": {
+  //       const nidRegExp = /^(?:\d{10}|\d{13}|\d{17})$/;
 
-        if (!value) {
-          error = "Father's NID is required.";
-        } else if (!nidRegExp.test(value)) {
-          error = "Invalid NID. Must be 10, 13, or 17 digits.";
-        }
-        break;
-      }
+  //       if (!value) {
+  //         error = "Father's NID is required.";
+  //       } else if (!nidRegExp.test(value)) {
+  //         error = "Invalid NID. Must be 10, 13, or 17 digits.";
+  //       }
+  //       break;
+  //     }
 
-      case "fatherPhoneNo": {
-        const phoneNoRegExp = /^(?:\+88|88)?01[3-9]\d{8}$/;
+  //     case "fatherPhoneNo": {
+  //       const phoneNoRegExp = /^(?:\+88|88)?01[3-9]\d{8}$/;
 
-        if (!value) {
-          error = "Father's Mobile No is required.";
-        } else if (!phoneNoRegExp.test(value)) {
-          error = "Invalid Bangladeshi phone number.";
-        }
-        break;
-      }
+  //       if (!value) {
+  //         error = "Father's Mobile No is required.";
+  //       } else if (!phoneNoRegExp.test(value)) {
+  //         error = "Invalid Bangladeshi phone number.";
+  //       }
+  //       break;
+  //     }
 
-      case "motherName":
-        if (!value) error = "Mother name is required.";
-        break;
+  //     case "motherName":
+  //       if (!value) error = "Mother name is required.";
+  //       break;
 
-      case "motherNID": {
-        const nidRegExp = /^(?:\d{10}|\d{13}|\d{17})$/;
+  //     case "motherNID": {
+  //       const nidRegExp = /^(?:\d{10}|\d{13}|\d{17})$/;
 
-        if (!value) {
-          error = "NID is required.";
-        } else if (!nidRegExp.test(value)) {
-          error = "Invalid NID";
-        }
-        break;
-      }
+  //       if (!value) {
+  //         error = "NID is required.";
+  //       } else if (!nidRegExp.test(value)) {
+  //         error = "Invalid NID";
+  //       }
+  //       break;
+  //     }
 
-      case "motherPhoneNo":
-        if (!value) error = "Mobile No is required.";
-        break;
+  //     case "motherPhoneNo":
+  //       if (!value) error = "Mobile No is required.";
+  //       break;
 
-      default:
-        break;
-    }
-    // setWarn((prev) => ({ ...prev, [name]: error }));
-  };
+  //     default:
+  //       break;
+  //   }
+  //   // setWarn((prev) => ({ ...prev, [name]: error }));
+  // };
 
   const reset = () => {
     formRef.current.reset();

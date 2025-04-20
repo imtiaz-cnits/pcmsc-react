@@ -6,7 +6,7 @@ import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Signup from "../pages/Auth/Signup/Signup";
 import ClassPages from "../pages/Class/Class";
-import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
+import ClassWiseStudentPage from "../pages/ClassWiseStudent/ClassWiseStudentPage";
 import CombineResult from "../pages/CombineResult/CombineResult";
 import Dahsboard from "../pages/Dashboard/Dashboard";
 import ExamManagement from "../pages/Exam Management/ExamManagement";
@@ -94,7 +94,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "class-wise-student",
-            element: <ClassWiseStudent />,
+            element: <ClassWiseStudentPage />,
           },
           {
             path: "migration",

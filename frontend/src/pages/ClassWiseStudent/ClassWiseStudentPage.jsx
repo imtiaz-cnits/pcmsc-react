@@ -1,11 +1,135 @@
-import { useEffect, useState } from "react";
-import productMemberImg from "../../assets/img/projuct-member-img-3.png";
+import { useEffect, useRef, useState } from "react";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Select from "react-select";
+import Shimmer from "../../components/Shimmer";
+import { useFetchClasses } from "../../hook/useClass";
+import { useFetchSections } from "../../hook/useSection";
+import { useFetchSessions } from "../../hook/useSession";
+import { useFetchShifts } from "../../hook/useShift";
+import { useFetchPaginatedStudent } from "../../hook/useStudent";
 
-const ClassWiseStudent = () => {
-  const [sclass, setSclass] = useState("");
-  const [session, setSession] = useState("");
-  const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState("");
+const ClassWiseStudentPage = () => {
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isQuickViewModal, setIsQuickViewModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [keyword, setKeyword] = useState("");
+  const [filterChecker, setFilterChecker] = useState("");
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSection, setSelectedSsection] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [searchFilters, setSearchFilters] = useState({
+    className: null,
+    session: null,
+    section: null,
+    shift: null,
+  });
+
+  const filterRef = useRef(null);
+  const { data: classes } = useFetchClasses();
+  const { data: sessions } = useFetchSessions();
+  const { data: sections } = useFetchSections();
+  const { data: shifts } = useFetchShifts();
+  const {
+    data: students,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedStudent({
+    page,
+    limit,
+    filterChecker,
+    keyword,
+    ...searchFilters,
+  });
+
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
+
+  const filterOptions = [
+    { value: "all", label: "All time" },
+    { value: "today", label: "Today" },
+    { value: "7", label: "Last 7 Days" },
+    { value: "30", label: "Last Month" },
+    { value: "365", label: "Last Year" },
+  ];
+
+  const classOPtions = classes?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const sessionOptions = sessions?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const sectionOptions = sections?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const shiftOptions = shifts?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const handleOutSideClick = (e) => {
+    if (filterRef.current && !filterRef.current.contains(e.target)) {
+      setIsFilterModalOpen(false);
+    }
+  };
+
+  const handleSearchQuery = (e) => {
+    e.preventDefault();
+    setKeyword(e.target.value);
+    setPage(1);
+  };
+
+  const handleFilterChange = (e, item) => {
+    e.preventDefault();
+    console.log("filter checker value : ", item.value);
+    setFilterChecker(item.value);
+    setIsFilterModalOpen(false);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    setSearchFilters({
+      className: selectedClass ? selectedClass.value : null,
+      session: selectedSession ? selectedSession.value : null,
+      section: selectedSection ? selectedSection.value : null,
+      shift: selectedShift ? selectedShift.value : null,
+    });
+  };
+
+  useEffect(() => {
+    console.log(
+      "drop down value :  ",
+      selectedClass,
+      selectedSession,
+      selectedSection,
+      selectedShift,
+    );
+  }, [selectedClass, selectedSession, selectedSection, selectedShift]);
+
+  useEffect(() => {
+    console.log("search filter  value : ", searchFilters);
+  }, [searchFilters]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutSideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutSideClick);
+    };
+  }, [isFilterModalOpen]);
 
   useEffect(() => {
     $(document).ready(function () {
@@ -79,6 +203,9 @@ const ClassWiseStudent = () => {
     location.reload();
   };
 
+  const isButtonDisabled =
+    !selectedClass || !selectedShift || !selectedSection || !selectedSession;
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -94,63 +221,49 @@ const ClassWiseStudent = () => {
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Class*</label>
 
-                      <select
+                      <Select
                         id="shift"
-                        value={sclass}
-                        onChange={(e) => setSclass(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Class
-                        </option>
-                        <option value="morning">One</option>
-                        <option value="evening">Two</option>
-                      </select>
+                        options={classOPtions}
+                        value={selectedClass}
+                        onChange={setSelectedClass}
+                        placeholder="Select Class"
+                      ></Select>
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Session*</label>
-                      <select
-                        id=""
-                        value={session}
-                        onChange={(e) => setSession(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Session
-                        </option>
-                        <option value="morning">2024</option>
-                        <option value="evening">2025</option>
-                      </select>
+                      <Select
+                        options={sessionOptions}
+                        value={selectedSession}
+                        onChange={setSelectedSession}
+                        placeholder="Select Session"
+                      ></Select>
                     </div>
-
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Section*</label>
-                      <select
-                        id=""
-                        value={ssection}
-                        onChange={(e) => setSsection(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Section
-                        </option>
-                        <option value="morning">Science</option>
-                        <option value="evening">Commerce</option>
-                      </select>
+                      <Select
+                        options={sectionOptions}
+                        value={selectedSection}
+                        onChange={setSelectedSsection}
+                        placeholder="Select Section"
+                      ></Select>
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Shift*</label>
-                      <select
-                        id=""
-                        value={shift}
-                        onChange={(e) => setShift(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Shift
-                        </option>
-                        <option value="morning">Morning</option>
-                        <option value="evening">Evening</option>
-                      </select>
+                      <Select
+                        options={shiftOptions}
+                        value={selectedShift}
+                        onChange={setSelectedShift}
+                        placeholder="Select Shift"
+                      ></Select>
                     </div>
                   </form>
-                  <button className="search-btn">Search</button>
+                  <button
+                    className="search-btn"
+                    disabled={isButtonDisabled}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </button>
                 </div>
                 {/* <!-- Class Wise Form Start -->
 
@@ -164,6 +277,8 @@ const ClassWiseStudent = () => {
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Student..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
                       />
                       {/* <!-- Entries per page --> */}
                       <div
@@ -183,12 +298,18 @@ const ClassWiseStudent = () => {
                               id="entries"
                               className="form-control"
                               style={{ width: "auto" }}
+                              value={limit}
+                              onChange={(e) => {
+                                e.preventDefault;
+                                setPage(1);
+                                setLimit(Number(e.target.value));
+                              }}
                             >
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="25">25</option>
-                              <option value="50">50</option>
-                              <option value="100">100</option>
+                              {entriesOptions.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                  {item.value}
+                                </option>
+                              ))}
                             </select>
                             <span className="dropdown-icon">&#9662;</span>
                             {/* <!-- Dropdown icon --> */}
@@ -197,7 +318,12 @@ const ClassWiseStudent = () => {
 
                         <div className="input-group-append">
                           <div className="dropdown-custom">
-                            <button className="dropdown-button">
+                            <button
+                              className="dropdown-button"
+                              onClick={() =>
+                                setIsFilterModalOpen(!isFilterModalOpen)
+                              }
+                            >
                               <svg
                                 width="32"
                                 height="32"
@@ -233,23 +359,24 @@ const ClassWiseStudent = () => {
                               </svg>
                               <span>Filter</span>
                             </button>
-                            <div className="dropdown-menus">
-                              <a href="#" data-filter="all">
-                                All time
-                              </a>
-                              <a href="#" data-filter="today">
-                                Today
-                              </a>
-                              <a href="#" data-filter="7">
-                                Last 7 Days
-                              </a>
-                              <a href="#" data-filter="30">
-                                Last Month
-                              </a>
-                              <a href="#" data-filter="365">
-                                Last Year
-                              </a>
-                            </div>
+                            {isFilterModalOpen && (
+                              <div
+                                ref={filterRef}
+                                className="dropdown-menus"
+                                style={{ display: "block" }}
+                              >
+                                {filterOptions.map((item, index) => (
+                                  <a
+                                    key={index}
+                                    href="#"
+                                    data-filter={item.value}
+                                    onClick={(e) => handleFilterChange(e, item)}
+                                  >
+                                    {item.label}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -448,451 +575,225 @@ const ClassWiseStudent = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr data-date="2024-08-05">
-                        <td>01</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
+                      {isError ? (
+                        <tr>
+                          <td
+                            colSpan="11"
+                            style={{ textAlign: "center", color: "#1f4529" }}
+                          >
+                            {error?.response?.data?.message ||
+                              error?.message ||
+                              "Something went wrong. Please try agina!"}
+                          </td>
+                        </tr>
+                      ) : isPending ? (
+                        <Shimmer count={10} />
+                      ) : students?.data?.length > 0 ? (
+                        students?.data?.map((item, index) => (
+                          <tr key={item?._id} data-date={item?.createdAt}>
+                            <td>
+                              {String((page - 1) * limit + index + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </td>
+                            <td>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                {/* Action State */}
+                                <div
+                                  style={{
+                                    backgroundColor: "#ffffff",
+                                    borderRadius: "12px",
+                                    padding: "8px 12px",
+                                    boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                    border: "1px solid #e0e0e0",
+                                  }}
+                                >
+                                  {/* Edit Button */}
+                                  <Link
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      color: "#0a84ff",
+                                      cursor: "pointer",
+                                      fontSize: "15px",
+                                      fontWeight: 500,
+                                      padding: "4px 8px",
+                                      borderRadius: "8px",
+                                    }}
+                                    onMouseOver={(e) => {
+                                      e.currentTarget.style.background =
+                                        "#eaf4ff";
+                                      e.currentTarget.style.color = "#006ae6";
+                                    }}
+                                    onMouseOut={(e) => {
+                                      e.currentTarget.style.background = "none";
+                                      e.currentTarget.style.color = "#0a84ff";
+                                    }}
+                                  >
+                                    <FaRegEdit style={{ fontSize: "18px" }} />
+                                  </Link>
+
+                                  {/* Delete Button */}
+                                  <button
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      padding: "4px",
+                                      borderRadius: "8px",
+                                    }}
+                                    onMouseOver={(e) =>
+                                      (e.currentTarget.style.background =
+                                        "#fff0f0")
+                                    }
+                                    onMouseOut={(e) =>
+                                      (e.currentTarget.style.background =
+                                        "none")
+                                    }
+                                  >
+                                    <FaRegTrashAlt
+                                      style={{
+                                        color: "lightcoral",
+                                        fontSize: "18px",
+                                      }}
+                                    />
+                                  </button>
+                                </div>
+
+                                {/* Quick View Button */}
+                                <button
+                                  title="Quick View"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setSelectedStudent(item);
+                                    setIsQuickViewModal(!isQuickViewModal);
+                                  }}
+                                  style={{
+                                    backgroundColor: "#f9f9f9",
+                                    border: "1px solid #ddd",
+                                    padding: "6px 10px",
+                                    borderRadius: "12px",
+                                    cursor: "pointer",
+                                    fontSize: "16px",
+                                    color: "#333",
+                                  }}
+                                  onMouseOver={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#f1f1f1";
+                                    e.currentTarget.style.boxShadow =
+                                      "0 2px 8px rgba(0,0,0,0.06)";
+                                  }}
+                                  onMouseOut={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#f9f9f9";
+                                    e.currentTarget.style.boxShadow = "none";
+                                  }}
+                                >
+                                  <i className="fa-regular fa-eye" />
+                                </button>
                               </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                            </td>
+                            <td>{item?.admissionNumber}</td>
+                            <td>{item?.name}</td>
+                            <td>{item?.fatherName}</td>
+                            <td>{item?.motherName}</td>
+                            <td>{item?.guardianPhone}</td>
+                            <td>
+                              <div className="client-item">
+                                <div className="image">
+                                  <img
+                                    src={item?.avatar?.imageURL}
+                                    alt="client"
+                                    className="rounded-circle mr-2"
+                                    width="30"
+                                  />
                                 </div>
                               </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222101</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>1</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>02</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222102</td>
-                        <td>Khandaker Shanto</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Shilpi Khatun</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>2</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>03</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222103</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>3</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>04</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222104</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>4</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>05</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222105</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>5</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>06</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222106</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>6</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>07</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222107</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemberImg}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>7</td>
-                      </tr>
+                            </td>
+                            <td>{item?.className?.nameLabel}</td>
+                            <td>{item?.group?.nameLabel}</td>
+                            <td>{item?.studentRoll}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="11" style={{ textAlign: "center" }}>
+                            No Students found.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                {!isError && (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {students?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * students?.currentPage,
+                            students?.totalEntries,
+                          )} of ${students?.totalEntries} entries`
+                        : "Loading Entries...."}
+                    </span>
+                  </div>
+                )}
 
-                <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
-                </div>
+                {limit <= 5 && !isError && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                      >
+                        Prev
+                      </button>
+                    )}
+
+                    {[...Array(students?.totalPages)].map((_, index) => {
+                      const pageNumber = index + 1;
+                      return (
+                        <a
+                          href="#"
+                          key={pageNumber}
+                          className={`page-link page-number-link ${page} ${page === pageNumber ? "active" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(pageNumber);
+                          }}
+                        >
+                          {pageNumber}
+                        </a>
+                      );
+                    })}
+
+                    {page < students?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, students?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -925,103 +826,139 @@ const ClassWiseStudent = () => {
           </div>
           {/* <!-- Edit Modal End -->
         <!-- Quick View Modal Start --> */}
-          <div id="quickViewModal" className="modal">
-            <div className="modal-content">
-              <p>Quick View</p>
-              <div className="items">
-                <div className="row">
-                  <div className="col-6">
-                    <div className="item">
-                      <div className="profile-img">
-                        <img src={productMemberImg} alt="" />
+          {isQuickViewModal && (
+            <div
+              id="quickViewModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Quick View</p>
+                <div className="items">
+                  <div className="row">
+                    <div className="col-6">
+                      <div className="item">
+                        <div className="profile-img">
+                          <img src={selectedStudent?.avatar?.imageURL} alt="" />
+                        </div>
+                        <h3>
+                          Student Name: <span>{selectedStudent?.name}</span>
+                        </h3>
+                        <h3>
+                          Student ID: <span>{selectedStudent?.studentID}</span>
+                        </h3>
+                        <h3>
+                          Blood Group:{" "}
+                          <span>{selectedStudent?.bloodGroup}</span>
+                        </h3>
+                        <h3>
+                          Birth Certificate:{" "}
+                          <span>{selectedStudent?.birthCertificate}</span>
+                        </h3>
+                        <h3>
+                          Father Name:{" "}
+                          <span>{selectedStudent?.fatherName}</span>
+                        </h3>
+                        <h3>
+                          Father NID: <span>{selectedStudent?.fatherNID}</span>
+                        </h3>
+                        <h3>
+                          Father Mobile:{" "}
+                          <span>{selectedStudent?.fatherPhone}</span>
+                        </h3>
+                        <h3>
+                          Mother Name:{" "}
+                          <span>{selectedStudent?.motherName}</span>
+                        </h3>
+                        <h3>
+                          Mother NID: <span>{selectedStudent?.motherNID}</span>
+                        </h3>
+                        <h3>
+                          Mother Mobile:{" "}
+                          <span>{selectedStudent?.motherPhone}</span>
+                        </h3>
                       </div>
-                      <h3>
-                        Student Name: <span>Shanto</span>
-                      </h3>
-                      <h3>
-                        Student ID: <span>121777</span>
-                      </h3>
-                      <h3>
-                        Blood Group: <span>A+</span>
-                      </h3>
-                      <h3>
-                        Birth Certificate: <span>3453453435445</span>
-                      </h3>
-                      <h3>
-                        Father Name: <span>Jahangir</span>
-                      </h3>
-                      <h3>
-                        Father NID: <span>12132323424</span>
-                      </h3>
-                      <h3>
-                        Father Mobile: <span>01713223424</span>
-                      </h3>
-                      <h3>
-                        Mother Name: <span>shithi</span>
-                      </h3>
-                      <h3>
-                        Mother NID: <span>12132323424</span>
-                      </h3>
-                      <h3>
-                        Mother Mobile: <span>01732323424</span>
-                      </h3>
                     </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="item">
-                      <h3>
-                        Admission Number: <span>232434545</span>
-                      </h3>
-                      <h3>
-                        Admission Date: <span>2024-11-22</span>
-                      </h3>
-                      <h3>
-                        Present Address: <span>Pabna</span>
-                      </h3>
-                      <h3>
-                        Permanent Address: <span>Pabna</span>
-                      </h3>
-                      <h3>
-                        Guardian (In Absence of F/M): <span>Riyad</span>
-                      </h3>
-                      <h3>
-                        Guardian Mobile: <span>01832424343</span>
-                      </h3>
-                      <h3>
-                        Date of Birth: <span>2024-12-1</span>
-                      </h3>
-                      <h3>
-                        Student Email: <span>info@gmail.com</span>
-                      </h3>
-                      <h3>
-                        SMS Status: <span>Active</span>
-                      </h3>
-                      <h3>
-                        Registration Date: <span>2023-12-22</span>
-                      </h3>
-                      <h3>
-                        Shift Name: <span>Day</span>
-                      </h3>
-                      <h3>
-                        Session Name: <span>1st Semester</span>
-                      </h3>
-                      <h3>
-                        Student Gender: <span>Male</span>
-                      </h3>
-                      <h3>
-                        Section Name: <span>Science</span>
-                      </h3>
+                    <div className="col-6">
+                      <div className="item">
+                        <h3>
+                          Admission Number:{" "}
+                          <span>{selectedStudent?.admissionNumber}</span>
+                        </h3>
+                        <h3>
+                          Admission Date:{" "}
+                          <span>{selectedStudent?.admissionDate}</span>
+                        </h3>
+                        <h3>
+                          Present Address:{" "}
+                          <span>{selectedStudent?.presentAddress}</span>
+                        </h3>
+                        <h3>
+                          Permanent Address:{" "}
+                          <span>{selectedStudent?.permanentAddress}</span>
+                        </h3>
+                        <h3>
+                          Guardian (In Absence of F/M):{" "}
+                          <span>{selectedStudent?.guardianName}</span>
+                        </h3>
+                        <h3>
+                          Guardian Mobile:{" "}
+                          <span>{selectedStudent?.guardianPhone}</span>
+                        </h3>
+                        <h3>
+                          Date of Birth:{" "}
+                          <span>{selectedStudent?.dateOfBirth}</span>
+                        </h3>
+                        <h3>
+                          Student Email:{" "}
+                          <span>{selectedStudent?.studentEmail}</span>
+                        </h3>
+                        <h3>
+                          Student Gender:{" "}
+                          <span>{selectedStudent?.studentGender}</span>
+                        </h3>
+                        <h3>
+                          SMS Status: <span>{selectedStudent?.smsStatus}</span>
+                        </h3>
+                        <h3>
+                          Registration Date:{" "}
+                          <span>{selectedStudent?.registrationDate}</span>
+                        </h3>
+                        <h3>
+                          Class :
+                          <span>{selectedStudent?.className?.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Section:{" "}
+                          <span>{selectedStudent?.section?.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Group:
+                          <span>{selectedStudent?.group?.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Shift:{" "}
+                          <span>{selectedStudent?.shift?.nameLabel}</span>
+                        </h3>
+                        <h3>
+                          Session:{" "}
+                          <span>{selectedStudent?.session?.nameLabel}</span>
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="modal-buttons">
-                <button id="quickClose">
-                  <i className="fa-solid fa-x"></i>
-                </button>
+                <div className="modal-buttons">
+                  <button
+                    id="quickClose"
+                    onClick={() => setIsQuickViewModal(false)}
+                  >
+                    <i className="fa-solid fa-x"></i>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start --> */}
         </div>
@@ -1031,4 +968,4 @@ const ClassWiseStudent = () => {
   );
 };
 
-export default ClassWiseStudent;
+export default ClassWiseStudentPage;

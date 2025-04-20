@@ -151,6 +151,9 @@ const StudentProfilePage = () => {
 
     // Restore the original content
     document.body.innerHTML = originalContent;
+
+    //reload the page to restore functionality
+    location.reload();
   };
 
   useEffect(() => {
@@ -511,11 +514,10 @@ const StudentProfilePage = () => {
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>
                             <td>
-                              {" "}
                               {String((page - 1) * limit + index + 1).padStart(
                                 2,
                                 "0",
-                              )}{" "}
+                              )}
                             </td>
                             <td>
                               <div
@@ -667,7 +669,6 @@ const StudentProfilePage = () => {
                 {!isError && (
                   <div className="my-3">
                     <span id="display-info">
-                      {" "}
                       {students?.totalEntries
                         ? `Showing ${Math.min(
                             limit * students?.currentPage,
@@ -861,24 +862,24 @@ const StudentProfilePage = () => {
                           <span>{selectedStudent.registrationDate}</span>
                         </h3>
                         <h3>
-                          Class Name:{" "}
+                          Class :
                           <span>{selectedStudent.className.nameLabel}</span>
                         </h3>
                         <h3>
-                          Section Name:{" "}
+                          Section:
                           <span>{selectedStudent.section.nameLabel}</span>
                         </h3>
                         <h3>
-                          Group Name:{" "}
+                          Group:
                           <span>{selectedStudent.group.nameLabel}</span>
                         </h3>
                         <h3>
-                          Shift Name:{" "}
+                          Shift:
                           <span>{selectedStudent.shift.nameLabel}</span>
                         </h3>
 
                         <h3>
-                          Session Name:{" "}
+                          Session:
                           <span>{selectedStudent.session.nameLabel}</span>
                         </h3>
                       </div>

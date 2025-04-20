@@ -65,12 +65,43 @@ export const useFetchPaginatedStudent = ({
   limit,
   filterChecker,
   keyword,
+  className,
+  session,
+  section,
+  shift,
 }) => {
-  console.log("useFetchPaginatedStudent filter value : ", filterChecker);
+  console.log(
+    "useFetchPaginatedStudent search value : ",
+    className,
+    session,
+    section,
+    shift,
+  );
   return useQuery({
-    queryKey: ["students", page, limit, filterChecker, keyword],
+    queryKey: [
+      "students",
+      {
+        page,
+        limit,
+        filterChecker,
+        keyword,
+        className,
+        session,
+        section,
+        shift,
+      },
+    ],
     queryFn: () =>
-      fetchPaginatedStudentAPI(page, limit, filterChecker, keyword),
+      fetchPaginatedStudentAPI(
+        page,
+        limit,
+        filterChecker,
+        keyword,
+        className,
+        session,
+        section,
+        shift,
+      ),
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,

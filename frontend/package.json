@@ -15,7 +15,6 @@
     "@tanstack/react-query-devtools": "^5.69.0",
     "axios": "^1.8.2",
     "bootstrap": "^5.3.3",
-    "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.488.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
