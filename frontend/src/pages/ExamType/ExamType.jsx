@@ -1,43 +1,54 @@
-import { useEffect } from "react";
+import { FilePenLine, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Toaster } from "sonner";
+import Shimmer from "../../components/Shimmer";
+import {
+  useAddExamType,
+  useFetchPaginatedExamTypes,
+} from "../../hook/useExamType";
+
 const ExamType = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [examTypeName, setExamTypeName] = useState("");
+  const [examTypeStatus, setExamTypeStatus] = useState("");
+
+  const { mutate: addExamType } = useAddExamType();
+  const {
+    data: examTypes,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedExamTypes({ page, limit });
+
   useEffect(() => {
-    const exmModal = document.getElementById("exmModal");
-    const exmModalBtn = document.getElementById("exmModalBtn");
-    const exmClose = document.getElementById("exmClose");
+    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+  }, [isAddModalOpen]);
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+  const handleAddSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      examTypeName: examTypeName,
+      label: examTypeStatus || "Active",
+      status: examTypeStatus || "active",
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    console.log("payload : ", payload);
+    console.log(addExamType);
+    addExamType(payload);
+  };
 
-    // Open the migrate modal and hide scroll
-    exmModalBtn.addEventListener("click", () => {
-      exmModal.classList.add("show");
-      disableScroll();
-    });
-
-    // Close the migrate modal and show scroll
-    exmClose.addEventListener("click", () => {
-      exmModal.classList.remove("show");
-      enableScroll();
-    });
-
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === exmModal) {
-        exmModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-  }, []);
+  useEffect(() => {
+    console.log("exam types data : ", examTypes);
+  }, [examTypes]);
 
   return (
     <>
+      <Toaster position="top-center" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
@@ -47,7 +58,11 @@ const ExamType = () => {
                 {/* <!-- Class heading Start --> */}
                 <div className="exam-heading">
                   <h3 className="heading">Exam List</h3>
-                  <button className="create-cls-btn" id="exmModalBtn">
+                  <button
+                    className="create-cls-btn"
+                    id="exmModalBtn"
+                    onClick={() => setIsAddModalOpen(!isAddModalOpen)}
+                  >
                     Add Exam Type
                   </button>
                 </div>
@@ -107,114 +122,107 @@ const ExamType = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td style={{ textAlign: "center" }}>1st Semester</td>
-                        <td>Active</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                      {isError ? (
+                        { error }
+                      ) : isPending ? (
+                        <Shimmer count={5} />
+                      ) : examTypes?.data?.length > 0 ? (
+                        examTypes?.data?.map((item, index) => (
+                          <tr key={item?._id}>
+                            <td>
+                              {String((page - 1) * limit + index + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                              {item?.examTypeName}
+                            </td>
+                            <td>{item?.label}</td>
+                            <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
+                                  <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
+                                  >
+                                    <FilePenLine style={{ color: "#1f4529" }} />
+                                  </button>
+
+                                  <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
+                                  >
+                                    <Trash style={{ color: "lightcoral" }} />
+                                  </button>
                                 </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
+
+                                {/* <!-- <button class="quick-view quickButton">
                             <i class="fa-regular fa-eye"></i>
                           </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>02</td>
-                        <td style={{ textAlign: "center" }}>2nd Semester</td>
-                        <td>Active</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
                               </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button class="quick-view quickButton">
-                            <i class="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        "not found"
+                      )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
                 <div className="my-3">
-                  <span id="display-info"></span>
+                  <span id="display-info">
+                    {examTypes?.totalEntries
+                      ? `Showing ${examTypes?.count} of ${examTypes?.totalEntries} entries`
+                      : "Loading Entries...."}
+                  </span>
                 </div>
 
                 <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
+                  {page > 1 && (
+                    <button
+                      id="prevBtn"
+                      className="btn"
+                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    >
+                      Prev
+                    </button>
+                  )}
+
+                  {[...Array(examTypes?.totalPages)].map((_, index) => {
+                    const pageNumber = index + 1;
+
+                    return (
+                      <Link
+                        key={index}
+                        href="#"
+                        className={`page-link page-link--${pageNumber} ${page === pageNumber ? "active" : ""}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPage(pageNumber);
+                        }}
+                      >
+                        {pageNumber}
+                      </Link>
+                    );
+                  })}
+
+                  {page < examTypes?.totalPages && (
+                    <button
+                      id="nextBtn"
+                      className="btn"
+                      onClick={() =>
+                        setPage((prev) =>
+                          Math.min(prev + 1, examTypes?.totalPages),
+                        )
+                      }
+                    >
+                      Next
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -260,57 +268,72 @@ const ExamType = () => {
         <!-- Table Action Button Modal Start -->
 
         <!-- Exam Type Pop Up Modal Start --> */}
-          <div className="exam-type">
-            <section id="exmModal" className="modal">
-              <div className="modal-content">
-                <div id="popup-modal">
-                  <div className="form-container">
-                    <h3>Add Exam Type</h3>
-                    <form>
-                      {/* <!-- Row 1 --> */}
-                      <div className="form-row">
-                        <div className="form-group">
-                          <label htmlFor="search-students">
-                            Exam Type Name *
-                          </label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Exam Type Name"
-                          />
+          {isAddModalOpen && (
+            <div className="exam-type">
+              <section id="exmModal" className="modal show">
+                <div className="modal-content">
+                  <div id="popup-modal">
+                    <div className="form-container">
+                      <h3>Add Exam Type</h3>
+                      <form>
+                        {/* <!-- Row 1 --> */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Exam Type Name *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Exam Type Name"
+                              value={examTypeName}
+                              onChange={(e) => setExamTypeName(e.target.value)}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      {/* <!-- Row 2 --> */}
-                      <div className="form-row">
-                        <div className="form-group">
-                          <label htmlFor="search-students">Exam Status *</label>
-                          <input
-                            type="text"
-                            id="search-students"
-                            placeholder="Exam Status"
-                          />
+                        {/* <!-- Row 2 --> */}
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label htmlFor="search-students">
+                              Exam Status *
+                            </label>
+                            <input
+                              type="text"
+                              id="search-students"
+                              placeholder="Exam Status"
+                              value={examTypeStatus}
+                              onChange={(e) =>
+                                setExamTypeStatus(e.target.value)
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
 
-                      {/* <!-- Actions --> */}
-                      <div className="form-actions">
-                        <button
-                          type="button"
-                          id="exmClose"
-                          className="button close closeBtn"
-                        >
-                          Close
-                        </button>
-                        <button type="button" className="button save">
-                          Save
-                        </button>
-                      </div>
-                    </form>
+                        {/* <!-- Actions --> */}
+                        <div className="form-actions">
+                          <button
+                            type="button"
+                            id="exmClose"
+                            className="button close closeBtn"
+                            onClick={() => setIsAddModalOpen(false)}
+                          >
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            className="button save"
+                            onClick={handleAddSubmit}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          </div>
+              </section>
+            </div>
+          )}
           {/* <!-- Create Class Pop Up Modal Start --> */}
         </div>
       </div>
