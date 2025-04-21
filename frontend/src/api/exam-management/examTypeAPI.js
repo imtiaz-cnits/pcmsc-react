@@ -18,19 +18,19 @@ export const fetchedPaginatedExamTypesAPI = async (page, limit, keyword) => {
   const res = await axiosPrivate.get("/exam-management/exam-types-paginated", {
     params: { page, limit, keyword },
   });
-  console.log(" 🚀 fetchedPaginatedExamTypesAPI: ", res.data);
+  // console.log(" 🚀 fetchedPaginatedExamTypesAPI: ", res.data);
   return res.data?.success ? res.data : [];
 };
 
 // ✅ PATCH
 export const updateExamTypeAPI = async ({ id, payload }) => {
-  console.log("updateExamTypeAPI inside before check : ", id, payload);
+  // console.log(" 🚀 updateExamTypeAPI inside before check : ", id, payload);
   const res = await axiosPrivate.patch(
     `/exam-management/update-exam-types/${id}`,
     payload,
   );
 
-  console.log(" updateExamTypeAPI : ", res.data);
+  // console.log(" 🚀 updateExamTypeAPI : ", res.data);
 
   return res.data?.success ? res.data : [];
 };
@@ -39,6 +39,6 @@ export const updateExamTypeAPI = async ({ id, payload }) => {
 export const deleteExamTypeAPI = async (id) => {
   const res = await axiosPrivate.delete(`/exam-management/exam-type/${id}`);
 
-  console.log(" 🚀 deleteExamTypeAPI : ", res.data);
+  // console.log(" 🚀 deleteExamTypeAPI : ", res.data);
   return res.data?.success ? res.data : [];
 };

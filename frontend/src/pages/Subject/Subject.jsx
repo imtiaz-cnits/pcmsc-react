@@ -8,11 +8,14 @@ import {
   useAddSubject,
   useDeleteSubjects,
   useFetchPaginatedSubject,
+  useUpdateSubject,
 } from "../../hook/useSubject";
+import EditSubject from "./EditSubject";
 
 const Subject = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isShimmering, setIsShimmering] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
@@ -25,10 +28,11 @@ const Subject = () => {
   const [writtenMark, setWrittenMark] = useState("");
   const [oralMark, setOralMark] = useState("");
   const [passMark, setPassMark] = useState("");
+  const [editClickID, setEditClickID] = useState("");
   const [deletedID, setDeletedID] = useState("");
-
   const { data: classes } = useFetchClasses();
   const { mutate: addSubject } = useAddSubject();
+  const { mutate: updateSubject } = useUpdateSubject();
   const { mutate: deleteSubject } = useDeleteSubjects();
 
   const {
@@ -83,6 +87,73 @@ const Subject = () => {
     setOralMark("");
     setPassMark("");
     setClassName(null);
+    setSelectedStatus(null);
+  };
+
+  const handleUpdateModalClose = (e) => {
+    e.preventDefault();
+    setIsEditModalOpen(false);
+    setSubjectCode("");
+    setSubjectName("");
+    setTotalMark("");
+    setWrittenMark("");
+    setOralMark("");
+    setPassMark("");
+    setClassName(null);
+    setSelectedStatus(null);
+  };
+
+  const handleEditClickID = (e, item) => {
+    e.preventDefault();
+    console.log("edited click id : ", item);
+    setEditClickID(item?._id);
+    setClassName(
+      item?.className
+        ? { value: item?.className?._id, label: item?.className?.nameLabel }
+        : null,
+    );
+    setSubjectCode(item?.subjectCode);
+    setSubjectName(item?.subjectName);
+    setTotalMark(item?.totalMark);
+    setWrittenMark(item?.writtenMark);
+    setOralMark(item?.oralMark);
+    setPassMark(item?.passMark);
+    setSelectedStatus(
+      item?.status ? { value: item?.status, label: item?.status } : null,
+    );
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
+      subjectCode,
+      subjectName,
+      totalMark,
+      writtenMark,
+      oralMark,
+      passMark,
+      className: className.value,
+      status: selectedStatus.value || "Active",
+    };
+
+    updateSubject(
+      { id: editClickID, payload },
+      {
+        onSuccess: () => {
+          setSubjectCode("");
+          setSubjectName("");
+          setTotalMark("");
+          setWrittenMark("");
+          setOralMark("");
+          setPassMark("");
+          setClassName(null);
+          setSelectedStatus(null);
+        },
+      },
+    );
+
+    console.log("handle pyaload : ", payload, editClickID);
   };
 
   const handleDeletedID = (e, item) => {
@@ -178,6 +249,7 @@ const Subject = () => {
                         onChange={(e) => {
                           e.preventDefault;
                           setKeyword(e.target.value);
+                          setPage(1);
                         }}
                       />
                     </div>
@@ -249,6 +321,7 @@ const Subject = () => {
                                     href="#"
                                     className="link editButton"
                                     data-modal="action-editmodal"
+                                    onClick={(e) => handleEditClickID(e, item)}
                                   >
                                     <FilePenLine style={{ color: "#1f4529" }} />
                                   </button>
@@ -285,7 +358,7 @@ const Subject = () => {
                             limit * subjects?.currentPage,
                             subjects?.totalEntries,
                           )} of ${subjects?.totalEntries} entries`
-                        : "Loading Entries...."}
+                        : ""}
                     </span>
                   </div>
                 )}
@@ -493,7 +566,32 @@ const Subject = () => {
               </section>
             </div>
           )}
-          {/* <!-- Subject Pop Up Modal Start --> */}
+          {/* <!-- Subject Pop Up Modal End --> */}
+
+          {/* <!-- Subject Edit Pop Up Modal Start --> */}
+          <EditSubject
+            isEditModalOpen={isEditModalOpen}
+            classOptions={classOptions}
+            setClassName={setClassName}
+            className={className}
+            subjectCode={subjectCode}
+            setSubjectCode={setSubjectCode}
+            statusOptions={statusOptions}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            passMark={passMark}
+            setPassMark={setPassMark}
+            oralMark={oralMark}
+            setOralMark={setOralMark}
+            writtenMark={writtenMark}
+            setWrittenMark={setWrittenMark}
+            totalMark={totalMark}
+            setTotalMark={setTotalMark}
+            subjectName={subjectName}
+            setSubjectName={setSubjectName}
+            handleUpdateModalClose={handleUpdateModalClose}
+            handleEditSubmit={handleEditSubmit}
+          />
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

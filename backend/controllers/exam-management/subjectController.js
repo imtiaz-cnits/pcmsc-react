@@ -112,6 +112,8 @@ async function getAllPaginatedSubjects(req, res, next) {
       .limit(limit)
       .populate("className");
 
+    console.log("subjects : ", subjects);
+
     const totalEntries = await Subject.countDocuments(query);
 
     const totalPages = Math.ceil(totalEntries / limit);
@@ -127,6 +129,58 @@ async function getAllPaginatedSubjects(req, res, next) {
     });
   } catch (error) {
     console.log(" <UNK> Error fetching getSubjects :", error);
+    return next(error);
+  }
+}
+
+// 📝 update
+async function updateSubject(req, res, next) {
+  try {
+    console.log("📥 Received subject params: ", req.params);
+    console.log("📥 Received subject body: ", req.body);
+
+    const { id } = req.params;
+    const { subjectCode } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid exam type ID."));
+    }
+
+    const existingObject = await Subject.findById(id);
+
+    if (!existingObject || existingObject.length === 0) {
+      return next(createError(404, "No subjects found."));
+    }
+
+    const duplicateObject = await Subject.findOne({
+      subjectCode,
+      _id: { $ne: id },
+    });
+
+    console.log("duplocaton", duplicateObject);
+
+    if (duplicateObject) {
+      console.log("click");
+      return next(createError(409, "Already exists."));
+    }
+
+    const updatedData = await Subject.findByIdAndUpdate(
+      id,
+      req.body,
+
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Updated successfully !.",
+      updatedData,
+    });
+  } catch (error) {
+    console.error("❌ updateSubject ", error);
     return next(error);
   }
 }
@@ -165,5 +219,6 @@ module.exports = {
   addSubject,
   getAllSubjects,
   getAllPaginatedSubjects,
+  updateSubject,
   deleteSubject,
 };

@@ -8,6 +8,7 @@ import {
   addSubjectAPI,
   deleteSubjectAPI,
   fetchedPaginatedSubjectsAPI,
+  updateSubjectAPI,
 } from "../api/exam-management/subjectAPI";
 
 //📌  POST - method
@@ -52,6 +53,45 @@ export const useFetchPaginatedSubject = ({ page, limit, keyword }) => {
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
+  });
+};
+
+//✅  PATCH - method
+export const useUpdateSubject = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateSubjectAPI,
+
+    onError: (error) => {
+      console.log("⚙️ error useUpdateSubject : ", error);
+      if (error?.response) {
+        alert(
+          error.response?.data?.message ||
+            error.message ||
+            '"An error occurred !. Please try again"',
+        );
+      }
+
+      console.log(
+        "❌ An error occurred useUpdateSubject. Please try again. : ",
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update subject . Try again!",
+      );
+    },
+
+    onSuccess: async (data) => {
+      console.log("🚀 useUpdateSubject data : ", data);
+
+      await queryClient.invalidateQueries({ queryKey: ["subjects"] });
+      if (data?.success) {
+        alert(data?.message);
+      }
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["subjects"] });
+    },
   });
 };
 

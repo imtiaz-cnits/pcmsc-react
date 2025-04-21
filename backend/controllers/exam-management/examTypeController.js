@@ -126,10 +126,6 @@ async function updateExamTypes(req, res, next) {
       runValidators: true,
     });
 
-    if (!updateExamTypes || updateExamTypes.length === 0) {
-      return next(createError(404, "No exam types found."));
-    }
-
     return res.status(200).json({
       success: true,
       message: "Exam type updated successfully.",

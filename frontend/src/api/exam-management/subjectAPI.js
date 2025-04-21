@@ -24,6 +24,19 @@ export const fetchedPaginatedSubjectsAPI = async (page, limit, keyword) => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅ PATCH
+export const updateSubjectAPI = async ({ id, payload }) => {
+  console.log(" 🚀 updateSubjectAPI inside before check : ", id, payload);
+  const res = await axiosPrivate.patch(
+    `/exam-management/update-subject/${id}`,
+    payload,
+  );
+
+  console.log(" 🚀 updateExamTypeAPI : ", res.data);
+
+  return res.data?.success ? res.data : [];
+};
+
 // ✅  Delete - method
 export const deleteSubjectAPI = async (id) => {
   const res = await axiosPrivate.delete(`/exam-management/subject/${id}`);

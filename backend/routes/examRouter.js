@@ -17,6 +17,7 @@ const {
   getAllSubjects,
   getAllPaginatedSubjects,
   deleteSubject,
+  updateSubject,
 } = require("../controllers/exam-management/subjectController");
 
 // 🚀  Exam Type - CRUD
@@ -30,7 +31,7 @@ router.delete("/exam-type/:id", deleteExamTypes);
 router.post("/add-subject", addSubject);
 router.get("/subjects", getAllSubjects);
 router.get("/subjects-paginated", getAllPaginatedSubjects);
-router.patch("/update-exam-types/:id", updateExamTypes);
+router.patch("/update-subject/:id", updateSubject);
 router.delete("/subject/:id", deleteSubject);
 
 // 🛠️ exports
