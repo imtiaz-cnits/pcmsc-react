@@ -15,8 +15,8 @@ const examTypeSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["active", "pending", "inactive"],
-    default: "active",
+    enum: ["Active", "Pending", "Inactive"],
+    default: "Active",
   },
 });
 

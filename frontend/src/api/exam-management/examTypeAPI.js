@@ -24,13 +24,13 @@ export const fetchedPaginatedExamTypesAPI = async (page, limit, keyword) => {
 
 // ✅ PATCH
 export const updateExamTypeAPI = async ({ id, payload }) => {
-  // console.log(" 🚀 updateExamTypeAPI inside before check : ", id, payload);
+  console.log(" 🚀 updateExamTypeAPI inside before check : ", id, payload);
   const res = await axiosPrivate.patch(
-    `/exam-management/update-exam-types/${id}`,
+    `/exam-management/exam-type/${id}`,
     payload,
   );
 
-  // console.log(" 🚀 updateExamTypeAPI : ", res.data);
+  console.log(" 🚀 updateExamTypeAPI : ", res.data);
 
   return res.data?.success ? res.data : [];
 };

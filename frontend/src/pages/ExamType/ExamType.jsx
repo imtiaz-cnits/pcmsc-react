@@ -53,7 +53,7 @@ const ExamType = () => {
     const payload = {
       examTypeName: examTypeName,
       label: examTypeStatus || "Active",
-      status: examTypeStatus || "active",
+      status: examTypeStatus || "Active",
     };
 
     console.log("payload : ", payload);
@@ -192,6 +192,7 @@ const ExamType = () => {
                         onChange={(e) => {
                           e.preventDefault();
                           setKeyword(e.target.value);
+                          setPage(1);
                         }}
                       />
                     </div>
@@ -280,7 +281,7 @@ const ExamType = () => {
                     <span id="display-info">
                       {examTypes?.totalEntries
                         ? `Showing ${Math.min(limit * examTypes?.currentPage, examTypes?.totalEntries)} of ${examTypes?.totalEntries} entries`
-                        : "Loading Entries...."}
+                        : ""}
                     </span>
                   </div>
                 )}
