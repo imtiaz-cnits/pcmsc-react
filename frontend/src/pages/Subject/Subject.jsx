@@ -285,7 +285,7 @@ const Subject = () => {
                             limit * subjects?.currentPage,
                             subjects?.totalEntries,
                           )} of ${subjects?.totalEntries} entries`
-                        : "Loading Entries...."}
+                        : ""}
                     </span>
                   </div>
                 )}

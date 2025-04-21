@@ -192,6 +192,7 @@ const ExamType = () => {
                         onChange={(e) => {
                           e.preventDefault();
                           setKeyword(e.target.value);
+                          setPage(1)
                         }}
                       />
                     </div>
