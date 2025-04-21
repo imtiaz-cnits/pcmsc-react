@@ -1,18 +1,24 @@
-import "../../assets/css/shimmer/shimmer-table.css";
+import "../../assets/css/shimmer/shimmer-table.css"; // You'll create this CSS below
 
-const ShimmerTable = ({ row = 5, col = 11 }) => {
+const ShimmerRow = ({ cols = 4 }) => {
   return (
-    <tbody>
-      {Array.from({ length: row }).map((_, rowIndex) => (
-        <tr key={rowIndex}>
-          {Array.from({ length: col }).map((_, colIndex) => (
-            <td key={colIndex}>
-              <div className="shimmer-box" />
-            </td>
-          ))}
-        </tr>
+    <tr className="shimmer-row">
+      {[...Array(cols)].map((_, index) => (
+        <td key={index}>
+          <div className="shimmer-box"></div>
+        </td>
       ))}
-    </tbody>
+    </tr>
+  );
+};
+
+const ShimmerTable = ({ rows = 5, cols = 4 }) => {
+  return (
+    <>
+      {[...Array(rows)].map((_, index) => (
+        <ShimmerRow key={index} cols={cols} />
+      ))}
+    </>
   );
 };
 

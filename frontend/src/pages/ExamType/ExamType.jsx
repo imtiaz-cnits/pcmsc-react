@@ -2,30 +2,50 @@ import { FilePenLine, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Toaster } from "sonner";
-import Shimmer from "../../components/Shimmer";
+import ShimmerTable from "../../components/shimmer/ShimmerTable";
 import {
   useAddExamType,
+  useDeleteExamType,
   useFetchPaginatedExamTypes,
+  useUpdateExamType,
 } from "../../hook/useExamType";
+import EditExamType from "./EditExamType";
 
 const ExamType = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [isPageShifting, setIsPageShifting] = useState(false);
+  const [editClickID, setEditClickID] = useState("");
+  const [deletedID, setDeletedID] = useState("");
   const [examTypeName, setExamTypeName] = useState("");
   const [examTypeStatus, setExamTypeStatus] = useState("");
-
   const { mutate: addExamType } = useAddExamType();
+  const { mutate: updateExamType } = useUpdateExamType();
+  const { mutate: deleteExamType } = useDeleteExamType();
+
   const {
     data: examTypes,
     isPending,
     isError,
     error,
-  } = useFetchPaginatedExamTypes({ page, limit });
+  } = useFetchPaginatedExamTypes({ page, limit, keyword });
 
   useEffect(() => {
     document.body.style.overflow = isAddModalOpen ? "hidden" : "";
   }, [isAddModalOpen]);
+
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
 
   const handleAddSubmit = (e) => {
     e.preventDefault();
@@ -39,6 +59,66 @@ const ExamType = () => {
     console.log("payload : ", payload);
     console.log(addExamType);
     addExamType(payload);
+
+    setExamTypeName("");
+    setExamTypeStatus("");
+  };
+
+  const handleEditModalClose = (e) => {
+    e.preventDefault();
+    setExamTypeName("");
+    setExamTypeStatus("");
+    setIsEditModalOpen(false);
+  };
+
+  const handleEditClickID = (e, item) => {
+    e.preventDefault();
+    console.log(
+      "edited click id : ",
+      item?._id,
+      item?.examTypeName,
+      item?.label,
+    );
+    setEditClickID(item?._id);
+    setExamTypeName(item?.examTypeName);
+    setExamTypeStatus(item?.status);
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
+      examTypeName: examTypeName,
+      label: examTypeStatus || "Active",
+      status: examTypeStatus || "Active",
+    };
+    console.log("handle pyaload : ", payload, editClickID);
+    updateExamType({ id: editClickID, payload });
+    setExamTypeName("");
+    setExamTypeStatus("");
+  };
+
+  const handleDeleteClick = (e, item) => {
+    e.preventDefault();
+    console.log("item id : ", item);
+    setDeletedID(item?._id);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  };
+
+  const handleDeleteSubmit = (e) => {
+    e.preventDefault();
+    deleteExamType(deletedID, {
+      onSuccess: () => {
+        if (examTypes?.count === 1 && page > 1) {
+          setIsPageShifting(true);
+          setTimeout(() => {
+            setIsPageShifting(false);
+            setPage((prev) => Math.max(prev - 1, 1));
+          }, 500);
+        }
+      },
+    });
+    setIsDeleteModalOpen(false);
   };
 
   useEffect(() => {
@@ -83,12 +163,18 @@ const ExamType = () => {
                             id="entries"
                             className="form-control"
                             style={{ width: "auto" }}
+                            value={limit}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setLimit(e.target.value);
+                              setPage(1);
+                            }}
                           >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
+                            {entriesOptions.map((item, index) => (
+                              <option key={index} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
                           </select>
                           <span className="dropdown-icon">&#9662;</span>
                           {/* <!-- Dropdown icon --> */}
@@ -102,6 +188,11 @@ const ExamType = () => {
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Exam..."
+                        value={keyword}
+                        onChange={(e) => {
+                          e.preventDefault();
+                          setKeyword(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
@@ -122,11 +213,21 @@ const ExamType = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isError ? (
-                        { error }
-                      ) : isPending ? (
-                        <Shimmer count={5} />
-                      ) : examTypes?.data?.length > 0 ? (
+                      {isError && examTypes?.totalEntries <= 0 ? (
+                        <tr>
+                          <td
+                            colSpan={4}
+                            style={{ textAlign: "center", color: "#1f4529" }}
+                          >
+                            {error?.response?.data?.message ||
+                              error?.message ||
+                              "Something went wrong. Please try again!"}
+                          </td>
+                        </tr>
+                      ) : isPending || isPageShifting ? (
+                        <ShimmerTable rows={5} cols={4} />
+                      ) : (
+                        examTypes?.totalEntries > 0 &&
                         examTypes?.data?.map((item, index) => (
                           <tr key={item?._id}>
                             <td>
@@ -139,6 +240,7 @@ const ExamType = () => {
                               {item?.examTypeName}
                             </td>
                             <td>{item?.label}</td>
+
                             <td>
                               <div id="action_btn">
                                 <div style={{ display: "flex", gap: "8px" }}>
@@ -146,6 +248,7 @@ const ExamType = () => {
                                     href="#"
                                     className="link editButton"
                                     data-modal="action-editmodal"
+                                    onClick={(e) => handleEditClickID(e, item)}
                                   >
                                     <FilePenLine style={{ color: "#1f4529" }} />
                                   </button>
@@ -154,6 +257,7 @@ const ExamType = () => {
                                     href="#"
                                     className="link custom-open-modal-btn openModalBtn deleteButton"
                                     data-modal="action-deletemodal"
+                                    onClick={(e) => handleDeleteClick(e, item)}
                                   >
                                     <Trash style={{ color: "lightcoral" }} />
                                   </button>
@@ -166,64 +270,66 @@ const ExamType = () => {
                             </td>
                           </tr>
                         ))
-                      ) : (
-                        "not found"
                       )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info">
-                    {examTypes?.totalEntries
-                      ? `Showing ${examTypes?.count} of ${examTypes?.totalEntries} entries`
-                      : "Loading Entries...."}
-                  </span>
-                </div>
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {examTypes?.totalEntries
+                        ? `Showing ${Math.min(limit * examTypes?.currentPage, examTypes?.totalEntries)} of ${examTypes?.totalEntries} entries`
+                        : "Loading Entries...."}
+                    </span>
+                  </div>
+                )}
 
-                <div id="pagination" className="pagination">
-                  {page > 1 && (
-                    <button
-                      id="prevBtn"
-                      className="btn"
-                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    >
-                      Prev
-                    </button>
-                  )}
-
-                  {[...Array(examTypes?.totalPages)].map((_, index) => {
-                    const pageNumber = index + 1;
-
-                    return (
-                      <Link
-                        key={index}
-                        href="#"
-                        className={`page-link page-link--${pageNumber} ${page === pageNumber ? "active" : ""}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setPage(pageNumber);
-                        }}
+                {examTypes?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                       >
-                        {pageNumber}
-                      </Link>
-                    );
-                  })}
+                        Prev
+                      </button>
+                    )}
 
-                  {page < examTypes?.totalPages && (
-                    <button
-                      id="nextBtn"
-                      className="btn"
-                      onClick={() =>
-                        setPage((prev) =>
-                          Math.min(prev + 1, examTypes?.totalPages),
-                        )
-                      }
-                    >
-                      Next
-                    </button>
-                  )}
-                </div>
+                    {[...Array(examTypes?.totalPages)].map((_, index) => {
+                      const pageNumber = index + 1;
+
+                      return (
+                        <Link
+                          key={index}
+                          href="#"
+                          className={`page-link page-link--${pageNumber} ${page === pageNumber ? "active" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(pageNumber);
+                          }}
+                        >
+                          {pageNumber}
+                        </Link>
+                      );
+                    })}
+
+                    {page < examTypes?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, examTypes?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -234,15 +340,28 @@ const ExamType = () => {
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleDeleteSubmit}>
+                    Yes
+                  </button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -315,7 +434,12 @@ const ExamType = () => {
                             type="button"
                             id="exmClose"
                             className="button close closeBtn"
-                            onClick={() => setIsAddModalOpen(false)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setExamTypeName("");
+                              setExamTypeStatus("");
+                              setIsAddModalOpen(false);
+                            }}
                           >
                             Close
                           </button>
@@ -335,6 +459,17 @@ const ExamType = () => {
             </div>
           )}
           {/* <!-- Create Class Pop Up Modal Start --> */}
+
+          {/* Edit MOdal Start  */}
+          <EditExamType
+            examTypeName={examTypeName}
+            setExamTypeName={setExamTypeName}
+            examTypeStatus={examTypeStatus}
+            setExamTypeStatus={setExamTypeStatus}
+            isEditModalOpen={isEditModalOpen}
+            handleEditModalClose={handleEditModalClose}
+            handleEditSubmit={handleEditSubmit}
+          />
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

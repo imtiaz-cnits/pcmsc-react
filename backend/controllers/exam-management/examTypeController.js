@@ -43,7 +43,7 @@ async function addExamType(req, res, next) {
 // 📝 get all exam-types
 async function getAllExamType(req, res, next) {
   try {
-    const exmatypes = await ExamType.find({}).lean();
+    const exmatypes = await ExamType.find({});
 
     if (!exmatypes || exmatypes.length === 0) {
       return next(createError(404, "No exam types found."));
@@ -67,9 +67,16 @@ async function getAllPaginatedExamTypes(req, res, next) {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 5;
     const skip = Number(page - 1) * limit;
+    const { keyword } = req.query;
 
-    const examtypes = await ExamType.find({}).skip(skip).limit(limit);
-    const totalExamTypes = await ExamType.countDocuments();
+    const searchQuery = keyword
+      ? { examTypeName: { $regex: keyword.trim(), $options: "i" } }
+      : {};
+
+    const query = { $and: [searchQuery].filter(Boolean) };
+
+    const examtypes = await ExamType.find(query).skip(skip).limit(limit);
+    const totalExamTypes = await ExamType.countDocuments(query);
 
     console.log("📦 Total exam - types :", totalExamTypes);
     console.log("👨‍🎓 Exam types data:", examtypes.length);
@@ -83,6 +90,7 @@ async function getAllPaginatedExamTypes(req, res, next) {
     return res.status(200).json({
       success: true,
       message: "Fetched Successfully!",
+      currentPage: page,
       totalPages,
       count: examtypes.length,
       totalEntries: totalExamTypes,

@@ -168,7 +168,7 @@ const ClassPage = () => {
                 {classes?.total <= 0 ? (
                   <tr>
                     <td colSpan="4" style={{ textAlign: "center" }}>
-                      No Sessions Found
+                      No Classes Found
                     </td>
                   </tr>
                 ) : (

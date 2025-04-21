@@ -68,7 +68,7 @@ export const useFetchPaginatedClasses = ({ page, limit, keyword }) => {
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
-    retry: 4,
+    retry: 1,
   });
 };
 
@@ -139,7 +139,7 @@ export const useDeleteClass = () => {
 
     onSuccess: async (data) => {
       console.log("🚀 Class deleted successfully: ", data);
-      toast.success(data?.message || "Class deleted successfully!");
+      alert(data?.message || "Class deleted successfully!");
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
     },
 

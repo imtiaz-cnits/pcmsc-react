@@ -72,7 +72,7 @@ export const useFetchPaginatedSessions = (page) => {
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
-    retry: 4,
+    retry: 2,
   });
 };
 
@@ -85,7 +85,7 @@ export const useFetchEntriesSessions = (limit) => {
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
-    retry: 4,
+    retry: 2,
   });
 };
 

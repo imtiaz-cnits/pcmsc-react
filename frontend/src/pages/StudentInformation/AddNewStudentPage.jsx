@@ -151,11 +151,6 @@ const AddNewStudentPage = () => {
     { value: "inactive", label: "Inactive" },
   ];
 
-  useEffect(() => {
-    console.log("session api : ", sessions);
-    console.log("session value : ", session);
-  }, [session, sessions]);
-
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
   });
@@ -568,7 +563,7 @@ const AddNewStudentPage = () => {
                           value={admissionNumber}
                           onChange={(e) => {
                             setAdmissionNumber(e.target.value);
-                            validateField("admissionNumber", e.target.value);
+                            // validateField("admissionNumber", e.target.value);
                           }}
                         />
                       </div>
@@ -590,7 +585,7 @@ const AddNewStudentPage = () => {
                           value={studentRoll}
                           onChange={(e) => {
                             setStudentRoll(e.target.value);
-                            validateField("studentRoll", e.target.value);
+                            // validateField("studentRoll", e.target.value);
                           }}
                         />
                       </div>
@@ -604,7 +599,7 @@ const AddNewStudentPage = () => {
                           value={studentName}
                           onChange={(e) => {
                             setStudentName(e.target.value);
-                            validateField("sutdentName", e.target.value);
+                            // validateField("sutdentName", e.target.value);
                           }}
                         />
                       </div>
@@ -618,10 +613,10 @@ const AddNewStudentPage = () => {
                           value={nameBangla}
                           onChange={(e) => {
                             setNameBangla(e.target.value);
-                            validateField(
-                              "sutdentNameInBangla",
-                              e.target.value,
-                            );
+                            // validateField(
+                            //   "sutdentNameInBangla",
+                            //   e.target.value,
+                            // );
                           }}
                         />
                       </div>
@@ -637,7 +632,7 @@ const AddNewStudentPage = () => {
                           value={birthCertificate}
                           onChange={(e) => {
                             setBirthCertificate(e.target.value);
-                            validateField("birthCertificate", e.target.value);
+                            // validateField("birthCertificate", e.target.value);
                           }}
                         />
                       </div>
@@ -737,7 +732,7 @@ const AddNewStudentPage = () => {
                           value={religion}
                           onChange={(e) => {
                             setReligion(e.target.value);
-                            validateField("religion", e.target.value);
+                            // validateField("religion", e.target.value);
                           }}
                         />
                       </div>
@@ -751,7 +746,7 @@ const AddNewStudentPage = () => {
                           value={fatherName}
                           onChange={(e) => {
                             setFatherName(e.target.value);
-                            validateField("fatherName", e.target.value);
+                            // validateField("fatherName", e.target.value);
                           }}
                         />
                       </div>
@@ -764,7 +759,7 @@ const AddNewStudentPage = () => {
                           value={fatherNID}
                           onChange={(e) => {
                             setFatherNID(e.target.value);
-                            validateField("fatherNID", e.target.value);
+                            // validateField("fatherNID", e.target.value);
                           }}
                         />
                       </div>
@@ -783,7 +778,7 @@ const AddNewStudentPage = () => {
                           value={fatherPhoneNo}
                           onChange={(e) => {
                             setFatherPhoneNo(e.target.value);
-                            validateField("fatherPhoneNo", e.target.value);
+                            // validateField("fatherPhoneNo", e.target.value);
                           }}
                         />
                       </div>
@@ -797,7 +792,7 @@ const AddNewStudentPage = () => {
                           value={motherName}
                           onChange={(e) => {
                             setMotherName(e.target.value);
-                            validateField("motherName", e.target.value);
+                            // validateField("motherName", e.target.value);
                           }}
                         />
                       </div>
@@ -810,7 +805,7 @@ const AddNewStudentPage = () => {
                           value={motherNID}
                           onChange={(e) => {
                             setMotherNID(e.target.value);
-                            validateField("motherNID", e.target.value);
+                            // validateField("motherNID", e.target.value);
                           }}
                         />
                       </div>
@@ -829,7 +824,7 @@ const AddNewStudentPage = () => {
                           value={motherPhoneNo}
                           onChange={(e) => {
                             setMotherPhoneNo(e.target.value);
-                            validateField("motherPhoneNo", e.target.value);
+                            // validateField("motherPhoneNo", e.target.value);
                           }}
                         />
                       </div>
@@ -845,7 +840,7 @@ const AddNewStudentPage = () => {
                           value={presentAddress}
                           onChange={(e) => {
                             setPresentAddress(e.target.value);
-                            validateField("presentAddress", e.target.value);
+                            // validateField("presentAddress", e.target.value);
                           }}
                         />
                       </div>
@@ -860,7 +855,7 @@ const AddNewStudentPage = () => {
                           value={permanentAddress}
                           onChange={(e) => {
                             setPermanentAddress(e.target.value);
-                            validateField("permanentAddress", e.target.value);
+                            // validateField("permanentAddress", e.target.value);
                           }}
                         />
                       </div>
@@ -879,7 +874,7 @@ const AddNewStudentPage = () => {
                           value={guardian}
                           onChange={(e) => {
                             setGuardian(e.target.value);
-                            validateField("guardian", e.target.value);
+                            // validateField("guardian", e.target.value);
                           }}
                         />
                       </div>
@@ -895,7 +890,7 @@ const AddNewStudentPage = () => {
                           value={guardianPhone}
                           onChange={(e) => {
                             setGuardianPhone(e.target.value);
-                            validateField("guardianPhone", e.target.value);
+                            // validateField("guardianPhone", e.target.value);
                           }}
                         />
                       </div>
@@ -932,7 +927,7 @@ const AddNewStudentPage = () => {
                           value={studentEmail}
                           onChange={(e) => {
                             setStudentEmail(e.target.value);
-                            validateField("studentEmail", e.target.value);
+                            // validateField("studentEmail", e.target.value);
                           }}
                         />
                       </div>
