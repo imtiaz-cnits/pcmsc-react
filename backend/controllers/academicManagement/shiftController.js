@@ -10,7 +10,7 @@ async function addShift(req, res, next) {
   try {
     console.log("📥 Received shift data: ", req.body);
 
-    const { shift: name, status, label } = req.body;
+    const { name, status, label } = req.body;
 
     // frontend required field check
     // if (!name || name.trim() === "") {

@@ -12,12 +12,17 @@ const {
   getAllStudents,
   deleteStudent,
   updateStudent,
-} = require("../controllers/student-management/studentInfoController");
+  getStudentByID,
+  getAllPaginatedStudents,
+} = require("../controllers/student-management/studentController");
+const avatarUpload = require("../middlewares/upload/students/avatarUpload");
 
 // 🚀  Student Information - CRUD
-router.post("/student-info", addStudentInfo);
+router.post("/student-info", avatarUpload, addStudentInfo);
 router.get("/students", getAllStudents);
-router.patch("/student/:id", updateStudent);
+router.get("/student/:id", getStudentByID);
+router.get("/students-paginated/", getAllPaginatedStudents);
+router.patch("/student/:id", avatarUpload, updateStudent);
 router.delete("/student/:id", deleteStudent);
 
 // 🛠️ exports

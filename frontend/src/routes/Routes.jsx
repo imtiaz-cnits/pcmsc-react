@@ -6,7 +6,7 @@ import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Signup from "../pages/Auth/Signup/Signup";
 import ClassPages from "../pages/Class/Class";
-import ClassWiseStudent from "../pages/ClassWiseStudent/ClassWiseStudent";
+import ClassWiseStudentPage from "../pages/ClassWiseStudent/ClassWiseStudentPage";
 import CombineResult from "../pages/CombineResult/CombineResult";
 import Dahsboard from "../pages/Dashboard/Dashboard";
 import ExamManagement from "../pages/Exam Management/ExamManagement";
@@ -26,7 +26,9 @@ import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
 import Shift from "../pages/Shift/Shift.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
-import StudentInformation from "../pages/StudentInformation/StudentInformation";
+import AddNewStudentPage from "../pages/StudentInformation/AddNewStudentPage.jsx";
+import EditStudentProfilePage from "../pages/StudentInformation/EditStudentProfilePage.jsx";
+import StudentProfilePage from "../pages/StudentInformation/StudentProfilePage";
 import StudentManagement from "../pages/StudentManagement/StudentManagement";
 import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
@@ -80,11 +82,19 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "student-information",
-            element: <StudentInformation />,
+            element: <StudentProfilePage />,
+          },
+          {
+            path: "new-student-profile",
+            element: <AddNewStudentPage />,
+          },
+          {
+            path: "edit-studdent-profile/:id",
+            element: <EditStudentProfilePage />,
           },
           {
             path: "class-wise-student",
-            element: <ClassWiseStudent />,
+            element: <ClassWiseStudentPage />,
           },
           {
             path: "migration",

@@ -2,18 +2,36 @@ const mongoose = require("mongoose");
 
 const gradeSchema = new mongoose.Schema(
   {
-    minMarks: {
+    gradeName: {
       type: String,
       required: true,
+      enum: ["A+", "A", "A-", "B", "C", "D", "F"],
+      uppercase: true,
+      trim: true,
     },
 
-    maxMarks: {
-      type: String,
+    gradePoint: {
+      type: Number,
       required: true,
+      min: 0,
+      max: 5,
     },
-    grade: {
-      type: String,
+    totalSubjectMark: {
+      type: Number,
       required: true,
+      default: 100,
+    },
+    markFrom: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 100,
+    },
+    markUpTo: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 100,
     },
   },
   { timestamps: true },

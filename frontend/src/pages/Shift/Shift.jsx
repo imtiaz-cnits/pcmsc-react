@@ -71,7 +71,7 @@ const Shift = () => {
     const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
 
     const payload = {
-      shift,
+      name: shift,
       status: shiftStatus || "active",
       label: label || "Active",
     };

@@ -4,19 +4,13 @@ import { useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const ActionButtons = ({
-  isEditModalOpen,
-  setIsEditModalOpen,
   isDeleteModalOpen,
   setIsDeleteModalOpen,
   item,
   deleteAcademic,
   setWarn,
-  stateValue,
-  setStateValue,
-  status,
-  setStatus,
-  setEditId,
-                           handleEdit
+
+  handleEdit,
 }) => {
   const [itemToDelete, setItemToDelete] = useState(null);
 
@@ -72,7 +66,7 @@ const ActionButtons = ({
         >
           {/* Edit Button */}
           <button
-            onClick={(e)=> handleEdit(e,item)}
+            onClick={(e) => handleEdit(e, item)}
             style={{
               background: "none",
               border: "none",

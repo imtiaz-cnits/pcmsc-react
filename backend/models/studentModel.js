@@ -9,11 +9,13 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
 
     admissionNumber: {
       type: String,
       unique: true,
+      trim: true,
       required: true,
     },
     admissionDate: {
@@ -22,6 +24,8 @@ const studentSchema = new mongoose.Schema(
     },
     studentRoll: {
       type: String,
+      unique: true,
+      trim: true,
       required: true,
     },
 
@@ -46,6 +50,17 @@ const studentSchema = new mongoose.Schema(
       type: String,
       enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Other"],
       required: true,
+    },
+
+    avatar: {
+      imageURL: { type: String },
+      fieldname: { type: String },
+      originalname: { type: String },
+      mimetype: { type: String },
+      destination: { type: String },
+      filename: { type: String },
+      path: { type: String },
+      size: { type: Number },
     },
 
     religion: {
@@ -128,7 +143,6 @@ const studentSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
       unique: true,
-
     },
 
     smsStatus: {
@@ -148,24 +162,24 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
-    shiftName: {
+    shift: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shift",
       required: true,
     },
 
-    sectionName: {
+    section: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section",
       required: true,
     },
 
-    sessionName: {
+    session: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Section",
+      ref: "Session",
       required: true,
     },
-    groupName: {
+    group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Group",
       required: true,

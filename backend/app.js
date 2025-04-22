@@ -1,13 +1,14 @@
 // 🚀 Importing Required Modules
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 // 🔗 internal imports
 const connectDB = require("./config/database/db");
 const authRouter = require("./routes/authRouter");
-const testRouter = require("./routes/testRouter");
 const academicRouter = require("./routes/academicRouter");
 const studentRouter = require("./routes/studentRouter");
+const examRouter = require("./routes/examRouter");
 const {
   notFoundHandler,
   errorHandler,
@@ -27,6 +28,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Serve static files from 'public' folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // 🔌 database connection with mongoose
 connectDB().then((r) => r);
@@ -37,12 +40,16 @@ app.get("/", (req, res) => {
 });
 
 // basic routing
-app.use("/api/v1", testRouter);
-
+app.get("/test", (req, res) => {
+  res.status(200).json({
+    message: "test route",
+  });
+});
 // application routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/academic-management", academicRouter);
 app.use("/api/v1/student-management", studentRouter);
+app.use("/api/v1/exam-management", examRouter);
 // app.use('/api/v1/users', userRouter);
 
 // 404 not found handler
