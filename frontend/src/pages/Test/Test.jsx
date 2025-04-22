@@ -1,27 +1,24 @@
 import { FilePenLine, Trash } from "lucide-react";
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Select from "react-select";
 import ShimmerTable from "../../components/shimmer/ShimmerTable";
 import { useFetchClasses } from "../../hook/useClass";
 import {
   useAddSubject,
   useDeleteSubjects,
-  useFetchPaginatedSubject
+  useFetchPaginatedSubject,
 } from "../../hook/useSubject";
 
-
-
 const Test = () => {
-
-  const [searchParams , setSearchParams] = useSearchParams(); 
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isShimmering, setIsShimmering] = useState(false);
-  const [page, setPage] = useState(Number(searchParams.get('page')) || 1); // Initialize page from URL search params
-  const [limit, setLimit] = useState(Number(searchParams.get('limit')) || 5); // Initialize limit from URL search params
-  const [keyword, setKeyword] = useState(searchParams.get('keyword') || "");
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1); // Initialize page from URL search params
+  const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5); // Initialize limit from URL search params
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
   const [className, setClassName] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
@@ -90,11 +87,6 @@ const Test = () => {
     setSelectedStatus(null);
   };
 
-  
-
-
-
-  
   const handleDeletedID = (e, item) => {
     e.preventDefault();
     console.log("deleted id : ", item?._id);
@@ -132,7 +124,7 @@ const Test = () => {
       }
       return params;
     });
-  }, [page, limit, keyword, setSearchParams]); 
+  }, [page, limit, keyword, setSearchParams]);
 
   useEffect(() => {
     console.log("searchparams  value : ", searchParams);
@@ -522,7 +514,6 @@ const Test = () => {
           {/* <!-- Subject Pop Up Modal End --> */}
 
           {/* <!-- Subject Edit Pop Up Modal Start --> */}
-          
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
@@ -530,4 +521,4 @@ const Test = () => {
   );
 };
 
-export default Test
+export default Test;

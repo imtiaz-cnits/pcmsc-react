@@ -19,6 +19,10 @@ const {
   deleteSubject,
   updateSubject,
 } = require("../controllers/exam-management/subjectController");
+const {
+  getMigratedStudents,
+  migrateStudent,
+} = require("../controllers/exam-management/migrationController");
 
 // 🚀  Exam Type - CRUD
 router.post("/add-exam-type", addExamType);
@@ -33,6 +37,10 @@ router.get("/subjects", getAllSubjects);
 router.get("/subjects-paginated", getAllPaginatedSubjects);
 router.patch("/update-subject/:id", updateSubject);
 router.delete("/subject/:id", deleteSubject);
+
+// 🚀  Student Migration - CRUD
+router.post("/migrate-student", migrateStudent);
+router.get("/student-id", getMigratedStudents);
 
 // 🛠️ exports
 module.exports = router;

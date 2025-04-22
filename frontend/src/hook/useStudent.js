@@ -14,6 +14,7 @@ import {
   fetchStudentByIDAPI,
   updateStudentAPI,
 } from "../api/student-management/studentAPI";
+import { fetchStudentBySIdAPI } from "../api/exam-management/migrationAPI.js";
 
 // ✅  POST - method
 export const useAddSutdent = () => {
@@ -51,7 +52,7 @@ export const useFetchStudents = () => {
 export const useFetchStudentByID = (id) => {
   return useQuery({
     queryKey: ["students", id],
-    queryFn: () => fetchStudentByIDAPI(id),
+    queryFn: () => fetchStudentBySIdAPI(id),
     placeholderData: keepPreviousData,
 
     refetchOnWindowFocus: true,

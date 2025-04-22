@@ -2,7 +2,7 @@ const createError = require("http-errors");
 const mongoose = require("mongoose");
 const Subject = require("../../models/subjectModel");
 
-// 📝 do add exam-type
+// 📝 do add subject
 async function addSubject(req, res, next) {
   try {
     // console.log("payloads ", req.body);

@@ -1,12 +1,121 @@
 import { useEffect, useState } from "react";
+import Select from "react-select";
 
 import productMemeberIMG from "../../assets/img/projuct-member-img-3.png";
+import { useFetchClasses } from "../../hook/useClass.js";
+import { useFetchSessions } from "../../hook/useSession.js";
+import { useFetchSections } from "../../hook/useSection.js";
+import { useFetchShifts } from "../../hook/useShift.js";
+import { Link } from "react-router-dom";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { useFetchPaginatedStudent } from "../../hook/useStudent.js";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
+import { useFetchStudentByStudentID, useMigrateStudent } from "../../hook/useMigration.js";
+import DatepickerComponent from "../../components/DatepickerComponent .jsx";
 
-const Migration = () => {
-  const [sclass, setSclass] = useState("");
-  const [session, setSession] = useState("");
-  const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState("");
+const MigrationPage = () => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [filterChecker, setFilterChecker] = useState("");
+  const [studentSearchID, setStudenSearchtID] = useState("");
+  const [studentName, setStudentName] = useState('');
+  const [studentID , setStudentID]=useState('')
+  const [registrationDate, setRegistrationDate] = useState('');
+  const [classRoll, setClassRoll] = useState('');
+  const [migrateClassName, setMigrateClassName] = useState('');
+  const [migrateShiftName, setMigrateShiftName] = useState('');
+  const [migrateSectionName, setMigrateSectionName] = useState('');
+  const [migrateSession, setMigrateSession] = useState('');
+
+
+
+
+
+  const [isQuickViewModal, setIsQuickViewModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSection, setSelectedSsection] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [searchFilters, setSearchFilters] = useState({
+    className: null,
+    session: null,
+    section: null,
+    shift: null,
+  });
+
+  const { data: classes } = useFetchClasses();
+  const { data: sessions } = useFetchSessions();
+  const { data: sections } = useFetchSections();
+  const { data: shifts } = useFetchShifts();
+  const {mutate:migratedStudent}=useMigrateStudent()
+
+  const {
+    data: students,
+    isPending,
+    isError,
+    error,
+  } = useFetchPaginatedStudent({
+    page,
+    limit,
+    filterChecker,
+    keyword,
+    ...searchFilters,
+  });
+
+  const {
+    data: studentship,
+    isPending: isstudentidPending,
+    isError: isstudentidError,
+    error: studentiderror,
+  } = useFetchStudentByStudentID({ sid: studentSearchID });
+
+
+
+  const classOPtions = classes?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const sessionOptions = sessions?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const sectionOptions = sections?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const shiftOptions = shifts?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    setSearchFilters({
+      className: selectedClass ? selectedClass.value : null,
+      session: selectedSession ? selectedSession.value : null,
+      section: selectedSection ? selectedSection.value : null,
+      shift: selectedShift ? selectedShift.value : null,
+    });
+  };
+
+
+  const handleMigrateSubmit = (e)=>{
+    e.preventDefault(); 
+    const payload={
+      studentName,
+      registrationDate,
+      classRoll,
+      className: migrateClassName ? migrateClassName?.value : null,
+      shift: migrateShiftName ? migrateShiftName?.value : null,
+      section: migrateSectionName ? migrateSectionName?.value : null,
+      session: migrateSession ? migrateSession?.value  : null
+    }
+
+    migratedStudent(payload)
+    console.log('migration payload : ',payload)
+  }
 
   useEffect(() => {
     const migrateModal = document.getElementById("migrateModal");
@@ -124,6 +233,19 @@ const Migration = () => {
     location.reload();
   };
 
+
+  useEffect(()=>{
+
+    setStudentName(studentship?.data?.name)
+   setStudentID(studentship?.data?.admissionNumber)
+
+
+  },[studentship,studentSearchID])
+
+
+  const isButtonDisabled =
+    !selectedClass || !selectedShift || !selectedSection || !selectedSession;
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -149,63 +271,49 @@ const Migration = () => {
                   <form className="form-wrapper">
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Class*</label>
-                      <select
+                      <Select
                         id="shift"
-                        value={sclass}
-                        onChange={(e) => setSclass(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Class
-                        </option>
-                        <option value="morning">One</option>
-                        <option value="evening">Two</option>
-                      </select>
+                        options={classOPtions}
+                        value={selectedClass}
+                        onChange={setSelectedClass}
+                      />
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Session*</label>
-                      <select
-                        id=""
-                        value={session}
-                        onChange={(e) => setSession(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Session
-                        </option>
-                        <option value="morning">2024</option>
-                        <option value="evening">2025</option>
-                      </select>
+                      <Select
+                        options={sessionOptions}
+                        value={selectedSession}
+                        onChange={setSelectedSession}
+                        placeholder="Select Session"
+                      ></Select>
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Section*</label>
-                      <select
-                        id=""
-                        value={ssection}
-                        onChange={(e) => setSsection(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Section
-                        </option>
-                        <option value="morning">Science</option>
-                        <option value="evening">Commerce</option>
-                      </select>
+                      <Select
+                        options={sectionOptions}
+                        value={selectedSection}
+                        onChange={setSelectedSsection}
+                        placeholder="Select Section"
+                      ></Select>
                     </div>
                     <div className="form-group ">
                       <label htmlFor="shift">Shift Name*</label>
 
-                      <select
-                        id="shift"
-                        value={shift}
-                        onChange={(e) => setShift(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Shift
-                        </option>
-                        <option value="morning">Morning</option>
-                        <option value="evening">Evening</option>
-                      </select>
+                      <Select
+                        options={shiftOptions}
+                        value={selectedShift}
+                        onChange={setSelectedShift}
+                        placeholder="Select Shift"
+                      ></Select>
                     </div>
                   </form>
-                  <button className="search-btn">Search</button>
+                  <button
+                    className="search-btn"
+                    disabled={isButtonDisabled}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </button>
                 </div>
                 {/* <!-- Class Wise Form End --> */}
 
@@ -503,438 +611,192 @@ const Migration = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr data-date="2024-08-05">
-                        <td>01</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
+                      {isError ? (
+                        <tr>
+                          <td
+                            colSpan="11"
+                            style={{ textAlign: "center", color: "#1f4529" }}
+                          >
+                            {error?.response?.data?.message ||
+                              error?.message ||
+                              "Something went wrong. Please try agina!"}
+                          </td>
+                        </tr>
+                      ) : isPending ? (
+                        <ShimmerTable cols={11} rows={5} />
+                      ) : students?.data?.length > 0 ? (
+                        students?.data?.map((item, index) => (
+                          <tr key={item?._id} data-date={item?.createdAt}>
+                            <td>
+                              {String((page - 1) * limit + index + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </td>
+                            <td>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                {/* Action State */}
+                                <div
+                                  style={{
+                                    backgroundColor: "#ffffff",
+                                    borderRadius: "12px",
+                                    padding: "8px 12px",
+                                    boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                    border: "1px solid #e0e0e0",
+                                  }}
+                                >
+                                  {/* Edit Button */}
+                                  <Link
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      color: "#0a84ff",
+                                      cursor: "pointer",
+                                      fontSize: "15px",
+                                      fontWeight: 500,
+                                      padding: "4px 8px",
+                                      borderRadius: "8px",
+                                    }}
+                                    onMouseOver={(e) => {
+                                      e.currentTarget.style.background =
+                                        "#eaf4ff";
+                                      e.currentTarget.style.color = "#006ae6";
+                                    }}
+                                    onMouseOut={(e) => {
+                                      e.currentTarget.style.background = "none";
+                                      e.currentTarget.style.color = "#0a84ff";
+                                    }}
+                                  >
+                                    <FaRegEdit style={{ fontSize: "18px" }} />
+                                  </Link>
+
+                                  {/* Delete Button */}
+                                  <button
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                      padding: "4px",
+                                      borderRadius: "8px",
+                                    }}
+                                    onMouseOver={(e) =>
+                                      (e.currentTarget.style.background =
+                                        "#fff0f0")
+                                    }
+                                    onMouseOut={(e) =>
+                                      (e.currentTarget.style.background =
+                                        "none")
+                                    }
+                                  >
+                                    <FaRegTrashAlt
+                                      style={{
+                                        color: "lightcoral",
+                                        fontSize: "18px",
+                                      }}
+                                    />
+                                  </button>
+                                </div>
+
+                                {/* Quick View Button */}
+                                <button
+                                  title="Quick View"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setSelectedStudent(item);
+                                    setIsQuickViewModal(!isQuickViewModal);
+                                  }}
+                                  style={{
+                                    backgroundColor: "#f9f9f9",
+                                    border: "1px solid #ddd",
+                                    padding: "6px 10px",
+                                    borderRadius: "12px",
+                                    cursor: "pointer",
+                                    fontSize: "16px",
+                                    color: "#333",
+                                  }}
+                                  onMouseOver={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#f1f1f1";
+                                    e.currentTarget.style.boxShadow =
+                                      "0 2px 8px rgba(0,0,0,0.06)";
+                                  }}
+                                  onMouseOut={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#f9f9f9";
+                                    e.currentTarget.style.boxShadow = "none";
+                                  }}
+                                >
+                                  <i className="fa-regular fa-eye" />
+                                </button>
                               </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                            </td>
+                            <td>{item?.admissionNumber}</td>
+                            <td>{item?.name}</td>
+                            <td>{item?.fatherName}</td>
+                            <td>{item?.motherName}</td>
+                            <td>{item?.guardianPhone}</td>
+                            <td>
+                              <div className="client-item">
+                                <div className="image">
+                                  <img
+                                    src={item?.avatar?.imageURL}
+                                    alt="client"
+                                    className="rounded-circle mr-2"
+                                    width="30"
+                                  />
                                 </div>
                               </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222101</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>1</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>02</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222102</td>
-                        <td>Khandaker Shanto</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Shilpi Khatun</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>2</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>03</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn migrateModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222103</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>3</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>04</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222104</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>4</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>05</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222105</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>5</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>06</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222106</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>6</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>07</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222107</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>7</td>
-                      </tr>
+                            </td>
+                            <td>{item?.className?.nameLabel}</td>
+                            <td>{item?.group?.nameLabel}</td>
+                            <td>{item?.studentRoll}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="11" style={{ textAlign: "center" }}>
+                            No Students found.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                {!isError && (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {students?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * students?.currentPage,
+                            students?.totalEntries,
+                          )} of ${students?.totalEntries} entries`
+                        : "Loading Entries...."}
+                    </span>
+                  </div>
+                )}
 
                 <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
+                  {page > 1 && (
+                    <button
+                      id="prevBtn"
+                      className="btn"
+                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                      disabled={page === 1}
+                    >
+                      Prev
+                    </button>
+                  )}
                   <a href="#" className="page-link page-link--1">
                     1
                   </a>
@@ -944,9 +806,19 @@ const Migration = () => {
                   <a href="#" className="page-link page-link--3">
                     3
                   </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
+                  {page < students?.totalPages && (
+                    <button
+                      id="nextBtn"
+                      className="btn"
+                      onClick={() =>
+                        setPage((prev) =>
+                          Math.min(prev + 1, students?.totalPages),
+                        )
+                      }
+                    >
+                      Next
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1097,6 +969,8 @@ const Migration = () => {
                           type="text"
                           id="search-students"
                           placeholder="Student Search..."
+                          value={studentSearchID}
+                          onChange={(e) => setStudenSearchtID(e.target.value)}
                         />
                       </div>
                     </div>
@@ -1109,6 +983,8 @@ const Migration = () => {
                           type="text"
                           id="name"
                           placeholder="Enter Name..."
+                          value={studentName}
+                          onChange={(e)=> setStudentName(e.target.value)}
                         />
                       </div>
                       <div className="form-group">
@@ -1119,37 +995,42 @@ const Migration = () => {
                           type="text"
                           id="birth-certificate"
                           placeholder="Enter ID"
+                          value={studentID}
+                          onChange={(e)=> setStudentID(e.target.value)}
                         />
                       </div>
                     </div>
 
+                          
                     {/* <!-- Row 3 --> */}
                     <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="Registration">
-                          Registration Date *
-                        </label>
-                        <input
-                          type="text"
-                          id="Registration"
-                          placeholder="Registration..."
-                        />
-                      </div>
+                    <DatepickerComponent
+                        title={"Registration Date *"}
+                        selectedDate={registrationDate}
+                        setSelectedDate={setRegistrationDate}
+                      />
+
+
+
                       <div className="form-group">
                         <label htmlFor="Roll">Class Roll *</label>
                         <input
                           type="text"
                           id="Roll"
                           placeholder="Enter Class Roll"
+                          value={classRoll}
+                          onChange={(e)=> setClassRoll(e.target.value)}
                         />
                       </div>
                       <div className="form-group">
                         <label htmlFor="Class">Class Name*</label>
-                        <select id="shift">
-                          <option value="">Select Class</option>
-                          <option value="morning">One</option>
-                          <option value="evening">Two</option>
-                        </select>
+                        <Select
+                            options={classOPtions}
+                            onChange={setMigrateClassName}
+                            value={migrateClassName}
+                            placeholder="Select Class"
+                            menuPlacement="top"
+                          />
                       </div>
                     </div>
 
@@ -1157,27 +1038,33 @@ const Migration = () => {
                     <div className="form-row">
                       <div className="form-group">
                         <label htmlFor="shift">Shift Name*</label>
-                        <select id="shift">
-                          <option value="">Select Shift</option>
-                          <option value="morning">Morning</option>
-                          <option value="evening">Evening</option>
-                        </select>
+                        <Select
+                          options={shiftOptions}
+                          onChange={setMigrateShiftName}
+                          value={migrateShiftName}
+                          placeholder="Select Shift"
+                          menuPlacement="top"
+                        />
                       </div>
                       <div className="form-group">
                         <label htmlFor="shift">Section Name*</label>
-                        <select id="shift">
-                          <option value="">Select Section</option>
-                          <option value="morning">Science</option>
-                          <option value="evening">Commerce</option>
-                        </select>
+                        <Select
+                          options={sectionOptions}
+                          onChange={setMigrateSectionName}
+                          value={migrateSectionName}
+                          placeholder="Enter section name"
+                          menuPlacement="top"
+                        />
                       </div>
                       <div className="form-group">
                         <label htmlFor="shift">Session*</label>
-                        <select id="shift">
-                          <option value="">Select Session</option>
-                          <option value="morning">2024</option>
-                          <option value="evening">2025</option>
-                        </select>
+                        <Select
+                          options={sessionOptions}
+                          onChange={setMigrateSession}
+                          value={migrateSession}
+                          placeholder="Enter section name"
+                          menuPlacement="top"
+                        />
                       </div>
                     </div>
 
@@ -1193,7 +1080,11 @@ const Migration = () => {
                       <button type="reset" className="button reset">
                         Reset
                       </button>
-                      <button type="submit" className="button save">
+                      <button type="submit" className="button save"
+                      
+                      onClick={handleMigrateSubmit}
+
+                      >
                         Save
                       </button>
                     </div>
@@ -1210,4 +1101,4 @@ const Migration = () => {
   );
 };
 
-export default Migration;
+export default MigrationPage;
