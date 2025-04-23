@@ -107,7 +107,7 @@ async function getAllPaginatedSubjects(req, res, next) {
     const query = { $and: [searchQuery].filter(Boolean) };
 
     const subjects = await Subject.find(query)
-      .sort({ subjectCode: 1 })
+      .sort({ subjectCode: -1 })
       .skip(skip)
       .limit(limit)
       .populate("className");

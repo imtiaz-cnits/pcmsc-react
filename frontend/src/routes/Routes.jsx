@@ -15,10 +15,11 @@ import ExamType from "../pages/ExamType/ExamType";
 import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
 import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
-import Grade from "../pages/Grade/Grade";
+import GradePage from "../pages/Grade/GradePage";
 import GroupPage from "../pages/Group/GroupPage";
 import MarkEntry from "../pages/MarkEntry/MarkEntry";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
+import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 import Result from "../pages/Result/Result";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
 import Section from "../pages/Section/Section";
@@ -35,7 +36,6 @@ import Ok from "../pages/Test/Ok";
 import Test from "../pages/Test/Test";
 import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
-import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -116,7 +116,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "grade",
-            element: <Grade />,
+            element: <GradePage />,
           },
           {
             path: "exam-assign",
