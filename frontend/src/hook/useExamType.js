@@ -7,6 +7,7 @@ import {
 import {
   addExamTypeAPI,
   deleteExamTypeAPI,
+  fetchedExamTypesAPI,
   fetchedPaginatedExamTypesAPI,
   updateExamTypeAPI,
 } from "../api/exam-management/examTypeAPI";
@@ -44,6 +45,18 @@ export const useAddExamType = () => {
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exam-types"] });
     },
+  });
+};
+
+//✅  GET - method
+export const useFetchExamTypes = () => {
+  return useQuery({
+    queryKey: ["exam-types"],
+    queryFn: fetchedExamTypesAPI,
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
   });
 };
 

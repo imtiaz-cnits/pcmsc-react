@@ -15,7 +15,6 @@ export const addSessionAPI = async (payload) => {
 export const fetchSessionAPI = async () => {
   const res = await axiosPrivate.get("/academic-management/sessions");
 
-  // console.log("full response api : ", res);
   console.log("fetchSessionAPI api: ", res.data);
   return res.data?.success ? res.data : [];
 };

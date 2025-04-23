@@ -1,44 +1,99 @@
 import { useEffect, useState } from "react";
+import { useFetchSessions } from "../../hook/useSession";
+import { useFetchExamTypes } from "../../hook/useExamType";
+import { useFetchClasses } from "../../hook/useClass";
+import Select from "react-select";
+import DatepickerComponent from "../../components/DatepickerComponent ";
+import { useAddExamAssign, useFetchPaginatedAssignedExam } from "../../hook/useExamAssign";
+import ShimmerTable from "../../components/shimmer/ShimmerTable";
+import { FilePenLine, Trash } from "lucide-react";
+
+
 
 const ExamAssignToclassName = () => {
-  const [session, setSession] = useState("");
-  const [semesterName, setSemesterName] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [editClickID, setEditClickID] = useState("");
+  const [deletedID, setDeletedID] = useState("");
+  const [examDate, setExamDate] = useState("");
+  const [resultDateTime,setResultDateTime]=useState('')
+  const [session, setSession] = useState(null);
+  const [semesterName, setSemesterName] = useState(null);
+   const [className, setClassName] = useState(null);
+  const {mutate: addExam}=useAddExamAssign()
 
-  useEffect(() => {
-    const exmModal = document.getElementById("exmModal");
-    const exmModalBtn = document.getElementById("exmModalBtn");
-    const exmClose = document.getElementById("exmClose");
+   const {
+      data: sessions,
+     
+    } = useFetchSessions();
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
-    };
+    const {data: exams}=useFetchExamTypes(); 
+  const {
+    data: classes,
+   
+  } = useFetchClasses()
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
 
-    // Open the migrate modal and hide scroll
-    exmModalBtn.addEventListener("click", () => {
-      exmModal.classList.add("show");
-      disableScroll();
+  const {data:assignedExam , isPending, isError , error}=useFetchPaginatedAssignedExam({ page, limit, keyword })
+
+
+
+
+
+  useEffect(()=>{
+    console.log('examoptions value : ',examOptions)
+  })
+
+
+
+    // ✅ Enable-Disable scrolling when modal is open-close
+    useEffect(() => {
+      document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+    }, [isAddModalOpen]);
+  
+    useEffect(() => {
+      document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+    }, [isEditModalOpen]);
+  
+
+    const sessionOPtions = sessions?.data.map((item) => {
+      return { value: item._id, label: item.nameLabel };
     });
 
-    // Close the migrate modal and show scroll
-    exmClose.addEventListener("click", () => {
-      exmModal.classList.remove("show");
-      enableScroll();
+    const examOptions = exams?.data?.map((item)=>{
+      return {value:item?._id , label:item?.examTypeName}
+    })
+
+    const classOptions = classes?.data.map((item) => {
+      return { value: item._id, label: item.nameLabel };
     });
 
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === exmModal) {
-        exmModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-  }, []);
+   const  handleSubmit=(e)=>{
+    e.preventDefault(); 
+
+    if(!examDate || !session || !semesterName || !className || !examDate || !resultDateTime ){
+      alert('fill all the required fields')
+      return
+    }
+
+    const payload ={
+
+      session: session ? session.value : null,
+      examName: semesterName ? semesterName.value : null,
+      className: className ? className.value : null,
+      examDate,
+      resultDateTime
+    }
+
+    addExam(payload)
+
+    console.log('payload : ',payload)
+   }
+ 
 
   useEffect(() => {
     // Initialize Vanilla Datepicker
@@ -86,6 +141,12 @@ const ExamAssignToclassName = () => {
     });
   }, []);
 
+
+
+
+
+
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -97,7 +158,11 @@ const ExamAssignToclassName = () => {
                 {/* <!-- className heading Start --> */}
                 <div className="exam-heading">
                   <h3 className="heading">Exam Assign To Class List</h3>
-                  <button className="create-cls-btn" id="exmModalBtn">
+                  <button className="create-cls-btn" id="exmModalBtn"
+                  
+                  onClick={() => setIsAddModalOpen(!isAddModalOpen)}
+                  
+                  >
                     Add Exam
                   </button>
                 </div>
@@ -160,96 +225,86 @@ const ExamAssignToclassName = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>2024</td>
-                        <td>1st Semester</td>
-                        <td>One</td>
-                        <td>2024-12-04</td>
-                        <td>2024-12-04 12:45:53</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
+
+
+
+                   {isPending ? (
+                        <ShimmerTable rows={limit} cols={10} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="10">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
                             </div>
-                            {/* <!-- <button className="quick-view quickButton">
-                            <i className="fa-regular fa-eye"></i>
-                          </button> --> */}
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>0</td>
-                        <td>2024</td>
-                        <td>2st Semester</td>
-                        <td>Two</td>
-                        <td>2024-02-04</td>
-                        <td>2024-12-04 12:45:53</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                          </td>
+                        </tr>
+                      ) : assignedExam?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={10} style={{ textAlign: "center" }}>
+                            No Subjects found
+                          </td>
+                        </tr>
+                      ) : assignedExam?.data?.length > 0 && assignedExam?.data?.map((item,idx)=>(
+
+                        <tr key={item._id}>
+                        <td> {String((page - 1) * limit + idx + 1).padStart(
+                                2,
+                                "0",
+                              )}</td>
+                        <td>{item?.session?.nameLabel}</td>
+                        <td>{item?.examName?.examTypeName}</td>
+                        <td>{item?.className?.nameLabel}</td>
+                        <td>{item?.examDate}</td>
+                        <td>{new Date(item?.resultDateTime).toLocaleString('en-BD', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).replaceAll('/','-')}</td>
+
+
+                    
+<td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
+                                  <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
+                                  >
+                                    <FilePenLine style={{ color: "#1f4529" }} />
+                                  </button>
+
+                                  <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
+                                  >
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                    />
+                                  </button>
                                 </div>
-                              </div>
-                            </div>
-                            {/* <!-- <button className="quick-view quickButton">
-                            <i className="fa-regular fa-eye"></i>
+
+                                {/* <!-- <button class="quick-view quickButton">
+                            <i class="fa-regular fa-eye"></i>
                           </button> --> */}
-                          </div>
-                        </td>
+                              </div>
+                            </td>
+
+
                       </tr>
+
+                      ))}
+
+
+
+               
+
+
                     </tbody>
                   </table>
                 </div>
@@ -319,89 +374,108 @@ const ExamAssignToclassName = () => {
         <!-- Table Action Button Modal Start -->
 
         <!-- Exam Assign Pop Up Modal Start --> */}
-          <div className="exam-assign">
-            <section id="exmModal" className="modal">
-              <div className="modal-content">
-                <div id="popup-modal">
-                  <div className="form-container">
-                    <h3>Add Exam</h3>
-                    <form>
-                      {/* <!-- Row 1 --> */}
-                      <div className="form-row row">
-                        <div className="form-group select-input-box col-12">
-                          <label htmlFor="select-to">Session Name*</label>
+         {isAddModalOpen && (
 
-                          <select
-                            name=""
-                            id=""
-                            value={session}
-                            onChange={(e) => setSession(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Session
-                            </option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                          </select>
-                        </div>
-                        <div className="form-group select-input-box col-12">
-                          <label htmlFor="select-to">Exam Name*</label>
+<div className="exam-assign">
+<section id="exmModal" className="modal show">
+  <div className="modal-content">
+    <div id="popup-modal">
+      <div className="form-container">
+        <h3>Add Exam</h3>
+        <form onSubmit={handleSubmit}>
+          {/* <!-- Row 1 --> */}
+          <div className="form-row row">
+            <div className="form-group select-input-box col-12">
+              <label htmlFor="select-to">Session Name*</label>
 
-                          <select
-                            name=""
-                            id=""
-                            value={semesterName}
-                            onChange={(e) => setSemesterName(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Name
-                            </option>
-                            <option value="1st Semester">1st Semester</option>
-                            <option value="2nd Semester">2nd Semester</option>
-                          </select>
-                        </div>
-                        <div className="form-group col-12">
-                          <label htmlFor="shift">Class Name*</label>
-                          <input type="text" placeholder="Type Name" />
-                        </div>
-                        <div className="form-group col-12">
-                          <label htmlFor="vanilla-datepicker">
-                            Date of Birth *
-                          </label>
-                          <div className="input-datepicker-wrapper">
-                            <input
-                              type="text"
-                              className="datepicker-input"
-                              placeholder="dd/mm/yyyy"
-                            />
-                            <i className="fas fa-calendar-alt icon"></i>
-                          </div>
-                        </div>
-                        <div className="form-group col-12">
-                          <label htmlFor="dob">Date of Birth</label>
-                          <input type="datetime-local" id="dob" />
-                        </div>
-                      </div>
+              <Select
+                name=""
+                id=""
+                options={sessionOPtions}
+                          onChange={setSession}
+                          value={session}
+                          placeholder='Select Name'
+              >
+                
+              </Select>
+            </div>
+            <div className="form-group select-input-box col-12">
+              <label htmlFor="select-to">Exam Name*</label>
+              
 
-                      {/* <!-- Actions --> */}
-                      <div className="form-actions">
-                        <button
-                          type="button"
-                          id="exmClose"
-                          className="button close closeBtn"
-                        >
-                          Close
-                        </button>
-                        <button type="button" className="button save">
-                          Save
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </section>
+              <Select
+                
+                options={examOptions}
+                onChange={setSemesterName}
+                value={semesterName}
+                placeholder='Select Name'
+              >
+               
+              </Select>
+            </div>
+            <div className="form-group col-12">
+              <label htmlFor="shift">Class Name*</label>
+              <Select
+                
+                options={classOptions}
+                value={className}
+                onChange={setClassName}
+                placeholder='Type Name'
+              >
+               
+              </Select>
+              
+            </div>
+            <div className="form-group col-12">
+            <DatepickerComponent
+                        title={"Exam Date *"}
+                        selectedDate={examDate}
+                        setSelectedDate={setExamDate}
+                      />
+
+              {/* <label htmlFor="vanilla-datepicker">
+                Date of Birth *
+              </label>
+              <div className="input-datepicker-wrapper">
+                <input
+                  type="text"
+                  className="datepicker-input"
+                  placeholder="dd/mm/yyyy"
+                />
+                <i className="fas fa-calendar-alt icon"></i>
+              </div> */}
+            </div>
+            <div className="form-group col-12">
+              <label htmlFor="dob">Result Date*</label>
+              <input type="datetime-local" id="dob" 
+              value={resultDateTime}
+              onChange={(e)=> setResultDateTime(e.target.value)}
+              
+              />
+            </div>
           </div>
+
+          {/* <!-- Actions --> */}
+          <div className="form-actions">
+            <button
+              type="button"
+              id="exmClose"
+              className="button close closeBtn"
+              onClick={()=> setIsAddModalOpen(false)}
+            >
+              Close
+            </button>
+            <button type="submit" className="button save">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+         )}
 
           {/* <!-- Exam Assign Pop Up Modal Start --> */}
         </div>

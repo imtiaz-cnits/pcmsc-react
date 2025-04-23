@@ -32,6 +32,12 @@ const {
   updateGrading,
 } = require("../controllers/exam-management/gradeController");
 
+const {
+  addExam,
+  getAllAssignedExam,
+  getAllPaginatedAssignedExams,
+} = require("../controllers/exam-management/examAssignController");
+
 // 🚀  Exam Type - CRUD
 router.post("/add-exam-type", addExamType);
 router.get("/exam-types", getAllExamType);
@@ -57,6 +63,12 @@ router.post("/add-grading-system", addGradingSystem);
 router.get("/grading-system-paginated", getAllGrades);
 router.patch("/grading-system/:id", updateGrading);
 router.delete("/grading-system/:id", deleteGrade);
+
+// 🚀  Exam Assign To Class  List - CRUD
+router.post("/assigned-exam", addExam);
+router.get('/all-assigned-exams',getAllAssignedExam)
+router.get('/assigned-exams-paginated',getAllPaginatedAssignedExams)
+
 
 // 🛠️ exports
 module.exports = router;

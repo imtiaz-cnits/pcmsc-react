@@ -1,5 +1,5 @@
 import { FilePenLine, Trash } from "lucide-react";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import ShimmerTable from "../../components/shimmer/ShimmerTable";
 import {
   useAddGrade,
@@ -16,7 +16,6 @@ const GradePage = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [keyword, setKeyword] = useState("");
-  const [isPageShifting, setIsPageShifting] = useState(false);
   const [editClickID, setEditClickID] = useState("");
   const [deletedID, setDeletedID] = useState("");
   const [gradeName, setGradeName] = useState("");
@@ -35,6 +34,18 @@ const GradePage = () => {
     isError,
     error,
   } = useFetchPaginatedGrade({ page, limit, keyword });
+
+
+    // ✅ Enable-Disable scrolling when modal is open-close
+    useEffect(() => {
+      document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+    }, [isAddModalOpen]);
+  
+    useEffect(() => {
+      document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+    }, [isEditModalOpen]);
+  
+
 
   const entriesOptions = [
     { value: 5, label: "5" },

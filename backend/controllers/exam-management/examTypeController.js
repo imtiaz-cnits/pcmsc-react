@@ -51,7 +51,7 @@ async function getAllExamType(req, res, next) {
 
     return res.status(200).json({
       success: true,
-      message: "Fetched Successfully!",
+      message: "Exam Types Fetched Successfully!",
       count: exmatypes.length,
       data: exmatypes,
     });
