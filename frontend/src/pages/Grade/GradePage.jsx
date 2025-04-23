@@ -1,7 +1,13 @@
 import { FilePenLine, Trash } from "lucide-react";
 import { useState } from "react";
 import ShimmerTable from "../../components/shimmer/ShimmerTable";
-import { useAddGrade, useFetchPaginatedGrade } from "../../hook/useGrade";
+import {
+  useAddGrade,
+  useDeleteGrading,
+  useFetchPaginatedGrade,
+  useUpdateGrading,
+} from "../../hook/useGrade";
+import EditGradePage from "./EditGradePage";
 
 const GradePage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -18,9 +24,11 @@ const GradePage = () => {
   const [totalSubjectMark, setTotalSubjectMark] = useState("");
   const [markFrom, setMarkFrom] = useState("");
   const [markUpTo, setMarkUpTo] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
 
   const { mutate: addGrading } = useAddGrade();
+  const {mutate: updateGrading}=useUpdateGrading()
+  const { mutate: deleteGrade, isPending: isDeletePending } =
+    useDeleteGrading();
   const {
     data: grades,
     isPending,
@@ -39,6 +47,17 @@ const GradePage = () => {
 
   const handleAddSubmit = (e) => {
     e.preventDefault();
+
+    if (
+      isNaN(gradePoint) ||
+      isNaN(totalSubjectMark) ||
+      isNaN(markFrom) ||
+      isNaN(markUpTo)
+    ) {
+      alert("Grade point and total marks must be valid numbers.");
+      return;
+    }
+
     const payload = {
       gradeName: gradeName,
       totalSubjectMark: Number(totalSubjectMark),
@@ -54,6 +73,71 @@ const GradePage = () => {
     setMarkFrom("");
     setMarkUpTo("");
     setGradePoint("");
+  };
+
+  const handleEditClickID = (e, item) => {
+    e.preventDefault();
+    console.log("edited click id : ", item);
+    setEditClickID(item?._id);
+    setGradeName(item?.gradeName);
+    setGradePoint(item?.gradePoint);
+    setMarkFrom(item?.markFrom);
+    setMarkUpTo(item?.markUpTo);
+    setTotalSubjectMark(item?.totalSubjectMark);
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      isNaN(gradePoint) ||
+      isNaN(totalSubjectMark) ||
+      isNaN(markFrom) ||
+      isNaN(markUpTo)
+    ) {
+      alert("Grade point and total marks must be valid numbers.");
+      return;
+    }
+
+    const payload = {
+      gradeName: gradeName,
+      totalSubjectMark: Number(totalSubjectMark),
+      markFrom: Number(markFrom),
+      markUpTo: Number(markUpTo),
+      gradePoint: Number(gradePoint),
+
+    
+    };
+    updateGrading(
+      { id: editClickID, payload },{
+        onSuccess: ()=>{
+          setGradeName('')
+          setTotalSubjectMark('')
+          setMarkFrom('')
+          setMarkUpTo('')
+          setGradePoint('')
+          setIsEditModalOpen(false)
+        }
+      }
+      
+    );
+
+    console.log("handle pyaload : ", payload, editClickID);
+  };
+
+  const handleDeletedID = (e, item) => {
+    e.preventDefault();
+    console.log("deleted id : ", item?._id);
+    setDeletedID(item?._id);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  };
+
+  const handleDeleteSubject = (e) => {
+    e.preventDefault();
+    console.log("deleted id : ", deletedID);
+    deleteGrade(deletedID);
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -146,7 +230,7 @@ const GradePage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isPending ? (
+                      {isPending || isDeletePending ? (
                         <ShimmerTable rows={limit} cols={7} />
                       ) : isError ? (
                         <tr>
@@ -188,6 +272,7 @@ const GradePage = () => {
                                     href="#"
                                     className="link editButton"
                                     data-modal="action-editmodal"
+                                    onClick={(e) => handleEditClickID(e, item)}
                                   >
                                     <FilePenLine style={{ color: "#1f4529" }} />
                                   </button>
@@ -197,7 +282,10 @@ const GradePage = () => {
                                     className="link custom-open-modal-btn openModalBtn deleteButton"
                                     data-modal="action-deletemodal"
                                   >
-                                    <Trash style={{ color: "lightcoral" }} />
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) => handleDeletedID(e, item)}
+                                    />
                                   </button>
                                 </div>
 
@@ -213,11 +301,19 @@ const GradePage = () => {
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
-
-                <div id="pagination" className="pagination">
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {grades?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * grades?.currentPage,
+                            grades?.totalEntries,
+                          )} of ${grades?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
+                {/* <div id="pagination" className="pagination">
                   <button id="prevBtn" className="btn">
                     Prev
                   </button>
@@ -233,7 +329,7 @@ const GradePage = () => {
                   <button id="nextBtn" className="btn">
                     Next
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -253,8 +349,33 @@ const GradePage = () => {
             </div>
           </div>
         </div>
+
+        
         <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
+
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleDeleteSubject}>
+                    Yes
+                  </button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           <div id="editModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -373,6 +494,22 @@ const GradePage = () => {
             </div>
           )}
           {/* <!-- Grade Pop Up Modal Start --> */}
+          {/* <!-- Grade Edit Pop Up Modal Start --> */}
+          <EditGradePage
+            isEditModalOpen={isEditModalOpen}
+            gradeName={gradeName}
+            setGradeName={setGradeName}
+            gradePoint={gradePoint}
+            setGradePoint={setGradePoint}
+            markFrom={markFrom}
+            setMarkFrom={setMarkFrom}
+            markUpTo={markUpTo}
+            setMarkUpTo={setMarkUpTo}
+            totalSubjectMark={totalSubjectMark}
+            setTotalSubjectMark={setTotalSubjectMark}
+            setIsEditModalOpen={setIsEditModalOpen}
+            handleEditSubmit={handleEditSubmit}
+          />
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}

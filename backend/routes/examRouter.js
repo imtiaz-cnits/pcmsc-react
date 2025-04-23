@@ -27,7 +27,9 @@ const {
 } = require("../controllers/exam-management/migrationController");
 const {
   addGradingSystem,
-  getAllPaginatedGrades,
+  deleteGrade,
+  getAllGrades,
+  updateGrading,
 } = require("../controllers/exam-management/gradeController");
 
 // 🚀  Exam Type - CRUD
@@ -52,6 +54,9 @@ router.delete("/migrate-student/:id", deleteMigrationStudent);
 
 // 🚀  Grade List - CRUD
 router.post("/add-grading-system", addGradingSystem);
-router.get("/grading-system-paginated", getAllPaginatedGrades);
+router.get("/grading-system-paginated", getAllGrades);
+router.patch("/grading-system/:id", updateGrading);
+router.delete("/grading-system/:id", deleteGrade);
+
 // 🛠️ exports
 module.exports = router;

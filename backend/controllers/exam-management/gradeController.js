@@ -46,32 +46,20 @@ async function addGradingSystem(req, res, next) {
 }
 
 // 📝 Get all paginated grading system
-async function getAllPaginatedGrades(req, res, next) {
+async function getAllGrades(req, res, next) {
   try {
-    console.log("📥 Received request for getAllPaginatedGrades : ", req.query);
+    console.log("📥 Received request for getAllGrades : ", req.query);
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.max(1, Number(req.query.limit) || 5);
-    const skip = (page - 1) * limit;
     const keyword = req.query.keyword?.trim();
 
     const searchQuery = keyword
-      ? {
-          $or: [
-            { gradeName: { $regex: keyword, $options: "i" } },
-            { gradePoint: Number(keyword) },
-            { totalSubjectMark: Number(keyword) },
-            { markFrom: Number(keyword) },
-            { markUpTo: Number(keyword) },
-          ],
-        }
+      ? { gradeName: { $regex: keyword, $options: "i" } }
       : {};
 
     const query = { $and: [searchQuery].filter(Boolean) };
 
-    const grading = await Grade.find(query)
-      .sort({ gradeName: -1 })
-      .skip(skip)
-      .limit(limit);
+    const grading = await Grade.find(query).sort({ gradeName: 1 });
 
     console.log("grading : ", grading);
 
@@ -89,9 +77,91 @@ async function getAllPaginatedGrades(req, res, next) {
       data: grading,
     });
   } catch (error) {
-    console.log(" <UNK> Error fetching getAllPaginatedGrades :", error);
+    console.log(" <UNK> Error fetching getAllGrades :", error);
     return next(error);
   }
 }
 
-module.exports = { addGradingSystem, getAllPaginatedGrades };
+// 📝 update
+async function updateGrading(req, res, next) {
+  try {
+    console.log("📥 Received grading params: ", req.params);
+    console.log("📥 Received grading body: ", req.body);
+
+    const { id } = req.params;
+    const { gradeName } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid grade type ID."));
+    }
+
+    const existingObject = await Grade.findById(id);
+
+    if (!existingObject || existingObject.length === 0) {
+      return next(createError(404, "No Grades found."));
+    }
+
+    const duplicateObject = await Grade.findOne({
+      gradeName,
+      _id: { $ne: id },
+    });
+
+    console.log("duplocaton", duplicateObject);
+
+    if (duplicateObject) {
+      console.log("click");
+      return next(createError(409, "Already exists."));
+    }
+
+    const updatedData = await Grade.findByIdAndUpdate(
+      id,
+      req.body,
+
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Updated successfully !.",
+      updatedData,
+    });
+  } catch (error) {
+    console.error("❌ updateSubject ", error);
+    return next(error);
+  }
+}
+
+// 📝 Delete Subjects
+async function deleteGrade(req, res, next) {
+  try {
+    console.log("deleted grade params ", req.params);
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid exam type ID."));
+    }
+
+    const deletedItem = await Grade.findByIdAndDelete(id);
+
+    console.log("✅ Grade deleted:", deletedItem);
+
+    if (!deletedItem) {
+      console.warn(`⚠️ Grade with ID "${id}" not found or already deleted.`);
+      return next(createError(404, "Grade not found or already deleted."));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted.",
+      deletedItem,
+    });
+  } catch (error) {
+    console.log("❌  Error -> deleteGrade  : ", error);
+    return next(error);
+  }
+}
+
+module.exports = { addGradingSystem, getAllGrades, updateGrading, deleteGrade };

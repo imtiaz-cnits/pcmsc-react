@@ -20,6 +20,8 @@ export const fetchGradeAPI = async () => {
 
 // ✅  GET - method (paginated)
 export const fetchedPaginatedGradingAPI = async (page, limit, keyword) => {
+  console.log("value : ", page, limit, keyword);
+
   const res = await axiosPrivate.get(
     `/exam-management/grading-system-paginated`,
     {
@@ -27,5 +29,28 @@ export const fetchedPaginatedGradingAPI = async (page, limit, keyword) => {
     },
   );
   console.log(" 🚀 fetchedPaginatedGradingAPI : ", res.data);
+  return res.data?.success ? res.data : [];
+};
+
+// ✅ PATCH
+export const updateGradingAPI = async ({ id, payload }) => {
+  console.log(" 🚀 updateGradingAPI inside before check : ", id, payload);
+  const res = await axiosPrivate.patch(
+    `/exam-management/grading-system/${id}`,
+    payload,
+  );
+
+  console.log(" 🚀 updateGradingAPI : ", res.data);
+
+  return res.data?.success ? res.data : [];
+};
+
+// ✅  Delete - method
+export const deleteGradingAPI = async (id) => {
+  const res = await axiosPrivate.delete(
+    `/exam-management/grading-system/${id}`,
+  );
+
+  console.log("🚀 deleteGradingAPI: ", res.data);
   return res.data?.success ? res.data : [];
 };
