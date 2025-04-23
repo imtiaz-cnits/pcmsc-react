@@ -1,5 +1,5 @@
 import { FilePenLine, Trash } from "lucide-react";
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import ShimmerTable from "../../components/shimmer/ShimmerTable";
 import {
   useAddGrade,
@@ -25,7 +25,7 @@ const GradePage = () => {
   const [markUpTo, setMarkUpTo] = useState("");
 
   const { mutate: addGrading } = useAddGrade();
-  const {mutate: updateGrading}=useUpdateGrading()
+  const { mutate: updateGrading } = useUpdateGrading();
   const { mutate: deleteGrade, isPending: isDeletePending } =
     useDeleteGrading();
   const {
@@ -35,17 +35,14 @@ const GradePage = () => {
     error,
   } = useFetchPaginatedGrade({ page, limit, keyword });
 
+  // ✅ Enable-Disable scrolling when modal is open-close
+  useEffect(() => {
+    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+  }, [isAddModalOpen]);
 
-    // ✅ Enable-Disable scrolling when modal is open-close
-    useEffect(() => {
-      document.body.style.overflow = isAddModalOpen ? "hidden" : "";
-    }, [isAddModalOpen]);
-  
-    useEffect(() => {
-      document.body.style.overflow = isEditModalOpen ? "hidden" : "";
-    }, [isEditModalOpen]);
-  
-
+  useEffect(() => {
+    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+  }, [isEditModalOpen]);
 
   const entriesOptions = [
     { value: 5, label: "5" },
@@ -117,21 +114,19 @@ const GradePage = () => {
       markFrom: Number(markFrom),
       markUpTo: Number(markUpTo),
       gradePoint: Number(gradePoint),
-
-    
     };
     updateGrading(
-      { id: editClickID, payload },{
-        onSuccess: ()=>{
-          setGradeName('')
-          setTotalSubjectMark('')
-          setMarkFrom('')
-          setMarkUpTo('')
-          setGradePoint('')
-          setIsEditModalOpen(false)
-        }
-      }
-      
+      { id: editClickID, payload },
+      {
+        onSuccess: () => {
+          setGradeName("");
+          setTotalSubjectMark("");
+          setMarkFrom("");
+          setMarkUpTo("");
+          setGradePoint("");
+          setIsEditModalOpen(false);
+        },
+      },
     );
 
     console.log("handle pyaload : ", payload, editClickID);

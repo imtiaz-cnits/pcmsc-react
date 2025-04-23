@@ -36,6 +36,8 @@ const {
   addExam,
   getAllAssignedExam,
   getAllPaginatedAssignedExams,
+  deleteAssignExam,
+  updateAssignedExam,
 } = require("../controllers/exam-management/examAssignController");
 
 // 🚀  Exam Type - CRUD
@@ -66,9 +68,10 @@ router.delete("/grading-system/:id", deleteGrade);
 
 // 🚀  Exam Assign To Class  List - CRUD
 router.post("/assigned-exam", addExam);
-router.get('/all-assigned-exams',getAllAssignedExam)
-router.get('/assigned-exams-paginated',getAllPaginatedAssignedExams)
-
+router.get("/all-assigned-exams", getAllAssignedExam);
+router.get("/assigned-exams-paginated", getAllPaginatedAssignedExams);
+router.patch("/assigned-exam/:id", updateAssignedExam);
+router.delete("/assigned-exam/:id", deleteAssignExam);
 
 // 🛠️ exports
 module.exports = router;

@@ -16,7 +16,7 @@ const examAssignSchema = mongoose.Schema(
     },
 
     className: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Class",
       required: true,
     },

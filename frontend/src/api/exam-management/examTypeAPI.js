@@ -13,7 +13,6 @@ export const addExamTypeAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
-
 // ✅  GET - method
 export const fetchedExamTypesAPI = async () => {
   const res = await axiosPrivate.get("/exam-management/exam-types");

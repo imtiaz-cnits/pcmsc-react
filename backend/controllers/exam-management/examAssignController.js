@@ -1,5 +1,6 @@
-const ExamAssign = require("../../models/examAssignModel");
 const createError = require("http-errors");
+const mongoose = require("mongoose");
+const ExamAssign = require("../../models/examAssignModel");
 
 // 📝 do add exam
 async function addExam(req, res, next) {
@@ -8,7 +9,7 @@ async function addExam(req, res, next) {
 
     const { session, examName, className, examDate, resultDateTime } = req.body;
 
-    //todo
+    // todo
     // const exists = await ExamAssign.findOne({
     //   subjectCode: { $regex: `^${subjectCode}$`, $options: "i" },
     // });
@@ -80,7 +81,7 @@ async function getAllPaginatedAssignedExams(req, res, next) {
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.max(1, Number(req.query.limit) || 5);
     const skip = (page - 1) * limit;
-    const keyword = req.query.keyword.trim();
+    const keyword = req.query.keyword.trim().toLowerCase();
 
     // todo need to be more optimistic
     const searchQuery = keyword
@@ -103,9 +104,7 @@ async function getAllPaginatedAssignedExams(req, res, next) {
       .populate("examName")
       .populate("className");
 
-    console.log("assignedExams : ", assignedExams);
-
-    const totalEntries = await ExamAssign.countDocuments(query);
+    const totalEntries = await ExamAssign.countDocuments();
 
     const totalPages = Math.ceil(totalEntries / limit);
 
@@ -113,7 +112,7 @@ async function getAllPaginatedAssignedExams(req, res, next) {
       success: true,
       message: "Successfully retrieved assignedExams",
       currentPage: page,
-      totalEntries: Number(totalEntries),
+      totalEntries,
       totalPages: Number(totalPages),
       count: assignedExams.length,
       data: assignedExams,
@@ -124,6 +123,96 @@ async function getAllPaginatedAssignedExams(req, res, next) {
   }
 }
 
+// 📝 update
+async function updateAssignedExam(req, res, next) {
+  try {
+    console.log("📥 Received assign exam params: ", req.params);
+    console.log("📥 Received assign exam body: ", req.body);
 
+    const { id } = req.params;
 
-module.exports = { addExam, getAllAssignedExam, getAllPaginatedAssignedExams };
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid exam type ID."));
+    }
+
+    // todo
+    // const existingObject = await ExamAssign.findById(id);
+
+    // if (!existingObject || existingObject.length === 0) {
+    //   return next(createError(404, "No subjects found."));
+    // }
+
+    // const duplicateObject = await ExamAssign.findOne({
+    //   subjectCode,
+    //   _id: { $ne: id },
+    // });
+
+    // console.log("duplocaton", duplicateObject);
+
+    // if (duplicateObject) {
+    //   console.log("click");
+    //   return next(createError(409, "Already exists."));
+    // }
+
+    const updatedData = await ExamAssign.findByIdAndUpdate(
+      id,
+      req.body,
+
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Updated successfully !.",
+      updatedData,
+    });
+  } catch (error) {
+    console.error("❌ updateAssignedExam ", error);
+    return next(error);
+  }
+}
+
+// 📝 Delete Assigned Exams
+async function deleteAssignExam(req, res, next) {
+  try {
+    console.log("deleteAssignExam params ", req.params);
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid exam type ID."));
+    }
+
+    const deletedItem = await ExamAssign.findByIdAndDelete(id);
+
+    console.log("✅ Assigned Exam deleted:", deletedItem);
+
+    if (!deletedItem) {
+      console.warn(
+        `⚠️ Assigned Exam with ID "${id}" not found or already deleted.`,
+      );
+      return next(
+        createError(404, " Assigned Exam not found or already deleted."),
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted.",
+      deletedItem,
+    });
+  } catch (error) {
+    console.log("❌  Error -> deleteAssignExam  : ", error);
+    return next(error);
+  }
+}
+
+module.exports = {
+  addExam,
+  getAllAssignedExam,
+  getAllPaginatedAssignedExams,
+  updateAssignedExam,
+  deleteAssignExam,
+};
