@@ -6,15 +6,14 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { fetchStudentBySIdAPI } from "../api/exam-management/migrationAPI.js";
 import {
   addStudentInfoAPI,
   deleteStudentInfoAPI,
   fetchAllStudentsAPI,
   fetchPaginatedStudentAPI,
-  fetchStudentByIDAPI,
   updateStudentAPI,
 } from "../api/student-management/studentAPI";
-import { fetchStudentBySIdAPI } from "../api/exam-management/migrationAPI.js";
 
 // ✅  POST - method
 export const useAddSutdent = () => {

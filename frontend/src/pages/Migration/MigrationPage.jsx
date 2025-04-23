@@ -1,36 +1,46 @@
+import { FilePenLine, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Select from "react-select";
 
+import { useRef } from "react";
 import productMemeberIMG from "../../assets/img/projuct-member-img-3.png";
-import { useFetchClasses } from "../../hook/useClass.js";
-import { useFetchSessions } from "../../hook/useSession.js";
-import { useFetchSections } from "../../hook/useSection.js";
-import { useFetchShifts } from "../../hook/useShift.js";
-import { Link } from "react-router-dom";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import { useFetchPaginatedStudent } from "../../hook/useStudent.js";
-import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
-import { useFetchStudentByStudentID, useMigrateStudent } from "../../hook/useMigration.js";
 import DatepickerComponent from "../../components/DatepickerComponent .jsx";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
+import { useFetchClasses } from "../../hook/useClass.js";
+import {
+  useDeleteMigrateStudent,
+  useFetchMigratePaginatedStudent,
+  useFetchStudentByStudentID,
+  useMigrateStudent,
+} from "../../hook/useMigration.js";
+import { useFetchSections } from "../../hook/useSection.js";
+import { useFetchSessions } from "../../hook/useSession.js";
+import { useFetchShifts } from "../../hook/useShift.js";
 
 const MigrationPage = () => {
+  const [isMigrateModalOpen, setIsMigrateModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isShimmering, setIsShimmering] = useState(false);
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [keyword, setKeyword] = useState("");
   const [filterChecker, setFilterChecker] = useState("");
   const [studentSearchID, setStudenSearchtID] = useState("");
-  const [studentName, setStudentName] = useState('');
-  const [studentID , setStudentID]=useState('')
-  const [registrationDate, setRegistrationDate] = useState('');
-  const [classRoll, setClassRoll] = useState('');
-  const [migrateClassName, setMigrateClassName] = useState('');
-  const [migrateShiftName, setMigrateShiftName] = useState('');
-  const [migrateSectionName, setMigrateSectionName] = useState('');
-  const [migrateSession, setMigrateSession] = useState('');
+  const [studentName, setStudentName] = useState("");
+  const [studentID, setStudentID] = useState("");
+  const [registrationDate, setRegistrationDate] = useState("");
+  const [classRoll, setClassRoll] = useState("");
+  const [migrateClassName, setMigrateClassName] = useState(null);
+  const [migrateShiftName, setMigrateShiftName] = useState(null);
+  const [migrateSectionName, setMigrateSectionName] = useState(null);
+  const [migrateSession, setMigrateSession] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
-
-
-
+  const migrateRef = useRef(null);
+  const filterRef = useRef(null);
 
   const [isQuickViewModal, setIsQuickViewModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -49,29 +59,46 @@ const MigrationPage = () => {
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
   const { data: shifts } = useFetchShifts();
-  const {mutate:migratedStudent}=useMigrateStudent()
+  const { mutate: migratedStudent } = useMigrateStudent();
+  const { mutate: deleteMigrateStudent, isPending: deletePending } =
+    useDeleteMigrateStudent();
 
   const {
-    data: students,
+    data: migrateStudents,
     isPending,
     isError,
     error,
-  } = useFetchPaginatedStudent({
+  } = useFetchMigratePaginatedStudent({
     page,
     limit,
-    filterChecker,
     keyword,
+    filterChecker,
     ...searchFilters,
   });
 
   const {
     data: studentship,
-    isPending: isstudentidPending,
-    isError: isstudentidError,
-    error: studentiderror,
+    isPending: isStudentShipPending,
+    isError: isStudentShipError,
+    error: studentshiperror,
   } = useFetchStudentByStudentID({ sid: studentSearchID });
 
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
 
+  const filterOptions = [
+    { value: "all", label: "All time" },
+    { value: "today", label: "Today" },
+    { value: "7", label: "Last 7 Days" },
+    { value: "30", label: "Last Month" },
+    { value: "365", label: "Last Year" },
+  ];
 
   const classOPtions = classes?.data?.map((item) => {
     return { value: item?._id, label: item?.nameLabel };
@@ -89,6 +116,31 @@ const MigrationPage = () => {
     return { value: item?._id, label: item?.nameLabel };
   });
 
+  const handleOutSideClick = (e) => {
+    if (filterRef.current && !filterRef.current.contains(e.target)) {
+      setIsFilterModalOpen(false);
+    }
+  };
+
+  const reset = () => {
+    if (migrateRef.current) {
+      migrateRef.current.reset();
+    }
+    setStudenSearchtID("");
+    setStudentName("");
+    setStudentID("");
+    setRegistrationDate("");
+    setClassRoll("");
+    setMigrateClassName(null);
+    setMigrateShiftName(null);
+    setMigrateSectionName(null);
+    setMigrateSession(null);
+  };
+
+  const handleReset = () => {
+    reset();
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -100,66 +152,57 @@ const MigrationPage = () => {
     });
   };
 
-
-  const handleMigrateSubmit = (e)=>{
-    e.preventDefault(); 
-    const payload={
+  const handleMigrateSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
       studentName,
       registrationDate,
       classRoll,
       className: migrateClassName ? migrateClassName?.value : null,
       shift: migrateShiftName ? migrateShiftName?.value : null,
       section: migrateSectionName ? migrateSectionName?.value : null,
-      session: migrateSession ? migrateSession?.value  : null
-    }
-
-    migratedStudent(payload)
-    console.log('migration payload : ',payload)
-  }
-
-  useEffect(() => {
-    const migrateModal = document.getElementById("migrateModal");
-    const migrateModalBtn = document.getElementById("migrateModalBtn");
-    const closeBtn = document.getElementById("closeBtn");
-
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+      session: migrateSession ? migrateSession?.value : null,
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    migratedStudent(payload);
+    console.log("migration payload : ", payload);
+  };
 
-    // Open the migrate modal and hide scroll
-    migrateModalBtn.addEventListener("click", () => {
-      migrateModal.classList.add("show");
-      disableScroll();
-    });
+  const handleFilterChange = (e, item) => {
+    e.preventDefault();
+    setFilterChecker(item.value);
+    setPage(1);
+    setIsFilterModalOpen(false);
+    console.log("filter value : ", item.value);
+  };
 
-    // Close the migrate modal and show scroll
-    closeBtn.addEventListener("click", () => {
-      migrateModal.classList.remove("show");
-      enableScroll();
-    });
+  const handleDelete = (e) => {
+    e.preventDefault();
+    deleteMigrateStudent(itemToDelete, {
+      onSuccess: () => {
+        setIsShimmering(true);
 
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === migrateModal) {
-        migrateModal.classList.remove("show");
-        enableScroll();
-      }
+        setTimeout(() => {
+          setIsShimmering(false);
+          if (migrateStudents?.count === 0 && page > 1) {
+            setPage((prev) => prev - 1);
+          }
+        }, 1000);
+      },
     });
+    setIsDeleteModalOpen(false);
+  };
 
-    // Close the student modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === studentModal) {
-        studentModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-  }, []);
+  const handleClose = (e) => {
+    e.preventDefault();
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteClick = (e, item) => {
+    console.log("handleDeleteClick : ", item?._id);
+    e.preventDefault();
+    setItemToDelete(item?._id);
+  };
 
   useEffect(() => {
     $(document).ready(function () {
@@ -216,6 +259,14 @@ const MigrationPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutSideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutSideClick);
+    };
+  }, [isFilterModalOpen]);
+
   const printTable = () => {
     const tableElement = document.getElementById("printTable");
     const originalContent = document.body.innerHTML;
@@ -233,18 +284,28 @@ const MigrationPage = () => {
     location.reload();
   };
 
-
-  useEffect(()=>{
-
-    setStudentName(studentship?.data?.name)
-   setStudentID(studentship?.data?.admissionNumber)
-
-
-  },[studentship,studentSearchID])
-
+  // pre-fill
+  useEffect(() => {
+    if (studentSearchID && studentship?.data) {
+      setStudentName(studentship?.data ? studentship?.data?.name : "");
+      setStudentID(studentship?.data ? studentship?.data?.admissionNumber : "");
+    }
+  }, [studentship, studentSearchID]);
 
   const isButtonDisabled =
     !selectedClass || !selectedShift || !selectedSection || !selectedSession;
+
+  if (isStudentShipError) {
+    let errorMsg = "Something went wrong. Please try again later!";
+
+    if (isStudentShipError && isStudentShipError instanceof Error) {
+      console.log("student ship Error: ", studentshiperror);
+      errorMsg =
+        studentshiperror?.response?.data?.message || studentshiperror?.message;
+
+      console.log("isStudentShipError : ", errorMsg);
+    }
+  }
 
   return (
     <>
@@ -258,6 +319,7 @@ const MigrationPage = () => {
                 id="migrateModalBtn"
                 type="button"
                 className="create-invoice"
+                onClick={() => setIsMigrateModalOpen(!isMigrateModalOpen)}
               >
                 + Migrate A Student
               </button>
@@ -327,6 +389,12 @@ const MigrationPage = () => {
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Student..."
+                        value={keyword}
+                        onChange={(e) => {
+                          e.preventDefault;
+                          setKeyword(e.target.value);
+                          setPage(1);
+                        }}
                       />
                       {/* <!-- Entries per page --> */}
                       <div
@@ -346,12 +414,18 @@ const MigrationPage = () => {
                               id="entries"
                               className="form-control"
                               style={{ width: "auto" }}
+                              value={limit}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                setLimit(e.target.value);
+                                setPage(1);
+                              }}
                             >
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="25">25</option>
-                              <option value="50">50</option>
-                              <option value="100">100</option>
+                              {entriesOptions.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                  {item.label}
+                                </option>
+                              ))}
                             </select>
                             <span className="dropdown-icon">&#9662;</span>
                             {/* <!-- Dropdown icon --> */}
@@ -360,7 +434,12 @@ const MigrationPage = () => {
 
                         <div className="input-group-append">
                           <div className="dropdown-custom">
-                            <button className="dropdown-button">
+                            <button
+                              className="dropdown-button"
+                              onClick={() =>
+                                setIsFilterModalOpen(!isFilterModalOpen)
+                              }
+                            >
                               <svg
                                 width="32"
                                 height="32"
@@ -396,23 +475,25 @@ const MigrationPage = () => {
                               </svg>
                               <span>Filter</span>
                             </button>
-                            <div className="dropdown-menus">
-                              <a href="#" data-filter="all">
-                                All time
-                              </a>
-                              <a href="#" data-filter="today">
-                                Today
-                              </a>
-                              <a href="#" data-filter="7">
-                                Last 7 Days
-                              </a>
-                              <a href="#" data-filter="30">
-                                Last Month
-                              </a>
-                              <a href="#" data-filter="365">
-                                Last Year
-                              </a>
-                            </div>
+
+                            {isFilterModalOpen && (
+                              <div
+                                ref={filterRef}
+                                className="dropdown-menus"
+                                style={{ display: "block" }}
+                              >
+                                {filterOptions.map((item) => (
+                                  <Link
+                                    key={item.value}
+                                    href="#"
+                                    onClick={(e) => handleFilterChange(e, item)}
+                                    data-filter={item.value}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -611,21 +692,33 @@ const MigrationPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isError ? (
+                      {migrateStudents?.isAnyFieldMissing ? (
                         <tr>
-                          <td
-                            colSpan="11"
-                            style={{ textAlign: "center", color: "#1f4529" }}
-                          >
-                            {error?.response?.data?.message ||
-                              error?.message ||
-                              "Something went wrong. Please try agina!"}
+                          <td colSpan={11} style={{ textAlign: "center" }}>
+                            Choose Class, Session, Section & Shift to
+                            proceed.....
                           </td>
                         </tr>
-                      ) : isPending ? (
-                        <ShimmerTable cols={11} rows={5} />
-                      ) : students?.data?.length > 0 ? (
-                        students?.data?.map((item, index) => (
+                      ) : isPending || isShimmering || deletePending ? (
+                        <ShimmerTable rows={limit} cols={11} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="11">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : migrateStudents?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={11} style={{ textAlign: "center" }}>
+                            No students found.
+                          </td>
+                        </tr>
+                      ) : (
+                        migrateStudents?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.createdAt}>
                             <td>
                               {String((page - 1) * limit + index + 1).padStart(
@@ -633,113 +726,37 @@ const MigrationPage = () => {
                                 "0",
                               )}
                             </td>
-                            <td>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  gap: "12px",
-                                }}
-                              >
-                                {/* Action State */}
-                                <div
-                                  style={{
-                                    backgroundColor: "#ffffff",
-                                    borderRadius: "12px",
-                                    padding: "8px 12px",
-                                    boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "12px",
-                                    border: "1px solid #e0e0e0",
-                                  }}
-                                >
-                                  {/* Edit Button */}
-                                  <Link
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      color: "#0a84ff",
-                                      cursor: "pointer",
-                                      fontSize: "15px",
-                                      fontWeight: 500,
-                                      padding: "4px 8px",
-                                      borderRadius: "8px",
-                                    }}
-                                    onMouseOver={(e) => {
-                                      e.currentTarget.style.background =
-                                        "#eaf4ff";
-                                      e.currentTarget.style.color = "#006ae6";
-                                    }}
-                                    onMouseOut={(e) => {
-                                      e.currentTarget.style.background = "none";
-                                      e.currentTarget.style.color = "#0a84ff";
-                                    }}
-                                  >
-                                    <FaRegEdit style={{ fontSize: "18px" }} />
-                                  </Link>
 
-                                  {/* Delete Button */}
+                            <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
                                   <button
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                      padding: "4px",
-                                      borderRadius: "8px",
-                                    }}
-                                    onMouseOver={(e) =>
-                                      (e.currentTarget.style.background =
-                                        "#fff0f0")
-                                    }
-                                    onMouseOut={(e) =>
-                                      (e.currentTarget.style.background =
-                                        "none")
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
+                                  >
+                                    <FilePenLine style={{ color: "#1f4529" }} />
+                                  </button>
+
+                                  <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
+                                    onClick={() =>
+                                      setIsDeleteModalOpen(!isDeleteModalOpen)
                                     }
                                   >
-                                    <FaRegTrashAlt
-                                      style={{
-                                        color: "lightcoral",
-                                        fontSize: "18px",
-                                      }}
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) =>
+                                        handleDeleteClick(e, item)
+                                      }
                                     />
                                   </button>
                                 </div>
-
-                                {/* Quick View Button */}
-                                <button
-                                  title="Quick View"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setSelectedStudent(item);
-                                    setIsQuickViewModal(!isQuickViewModal);
-                                  }}
-                                  style={{
-                                    backgroundColor: "#f9f9f9",
-                                    border: "1px solid #ddd",
-                                    padding: "6px 10px",
-                                    borderRadius: "12px",
-                                    cursor: "pointer",
-                                    fontSize: "16px",
-                                    color: "#333",
-                                  }}
-                                  onMouseOver={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#f1f1f1";
-                                    e.currentTarget.style.boxShadow =
-                                      "0 2px 8px rgba(0,0,0,0.06)";
-                                  }}
-                                  onMouseOut={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#f9f9f9";
-                                    e.currentTarget.style.boxShadow = "none";
-                                  }}
-                                >
-                                  <i className="fa-regular fa-eye" />
-                                </button>
                               </div>
                             </td>
+
                             <td>{item?.admissionNumber}</td>
                             <td>{item?.name}</td>
                             <td>{item?.fatherName}</td>
@@ -762,64 +779,67 @@ const MigrationPage = () => {
                             <td>{item?.studentRoll}</td>
                           </tr>
                         ))
-                      ) : (
-                        <tr>
-                          <td colSpan="11" style={{ textAlign: "center" }}>
-                            No Students found.
-                          </td>
-                        </tr>
                       )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                {!isError && (
+                {migrateStudents?.isAnyFieldMissing || isPending || (
                   <div className="my-3">
                     <span id="display-info">
-                      {students?.totalEntries
+                      {migrateStudents?.totalEntries
                         ? `Showing ${Math.min(
-                            limit * students?.currentPage,
-                            students?.totalEntries,
-                          )} of ${students?.totalEntries} entries`
-                        : "Loading Entries...."}
+                            limit * migrateStudents?.currentPage,
+                            migrateStudents?.totalEntries,
+                          )} of ${migrateStudents?.totalEntries} entries`
+                        : ""}
                     </span>
                   </div>
                 )}
 
-                <div id="pagination" className="pagination">
-                  {page > 1 && (
-                    <button
-                      id="prevBtn"
-                      className="btn"
-                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                      disabled={page === 1}
-                    >
-                      Prev
-                    </button>
-                  )}
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  {page < students?.totalPages && (
-                    <button
-                      id="nextBtn"
-                      className="btn"
-                      onClick={() =>
-                        setPage((prev) =>
-                          Math.min(prev + 1, students?.totalPages),
-                        )
-                      }
-                    >
-                      Next
-                    </button>
-                  )}
-                </div>
+                {migrateStudents?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                      >
+                        Prev
+                      </button>
+                    )}
+                    {[...Array(migrateStudents?.totalPages)].map((_, index) => {
+                      const pageNumber = index + 1;
+
+                      return (
+                        <Link
+                          key={index}
+                          href="#"
+                          className={`page-link page-link--${pageNumber} ${page === pageNumber ? "active" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(pageNumber);
+                          }}
+                        >
+                          {pageNumber}
+                        </Link>
+                      );
+                    })}
+                    {page < migrateStudents?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, migrateStudents?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -830,15 +850,25 @@ const MigrationPage = () => {
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleDelete}>
+                    Yes
+                  </button>
+                  <button id="confirmNo" onClick={handleClose}>
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -953,146 +983,150 @@ const MigrationPage = () => {
         <!-- Table Action Button Modal Start -->
 
         <!-- Migrate Students Pop Up Modal Start --> */}
-          <section id="migrateModal" className="modal migrateModal">
-            <div className="modal-content">
-              <div id="popup-modal">
-                <div className="form-container">
-                  <h3>Migrate A Student</h3>
-                  <form>
-                    {/* <!-- Row 1 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="search-students">
-                          Student's Search *
-                        </label>
-                        <input
-                          type="text"
-                          id="search-students"
-                          placeholder="Student Search..."
-                          value={studentSearchID}
-                          onChange={(e) => setStudenSearchtID(e.target.value)}
-                        />
+          {isMigrateModalOpen && (
+            <section id="migrateModal" className="modal migrateModal show">
+              <div className="modal-content">
+                <div id="popup-modal">
+                  <div className="form-container">
+                    <h3>Migrate A Student</h3>
+                    <form ref={migrateRef}>
+                      {/* <!-- Row 1 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="search-students">
+                            Student's Search *
+                          </label>
+                          <input
+                            type="text"
+                            id="search-students"
+                            placeholder="Student Search..."
+                            value={studentSearchID}
+                            onChange={(e) => setStudenSearchtID(e.target.value)}
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    {/* <!-- Row 2 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="name">Student's Name *</label>
-                        <input
-                          type="text"
-                          id="name"
-                          placeholder="Enter Name..."
-                          value={studentName}
-                          onChange={(e)=> setStudentName(e.target.value)}
-                        />
+                      {/* <!-- Row 2 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="name">Student's Name *</label>
+                          <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter Name..."
+                            value={studentName}
+                            onChange={(e) => setStudentName(e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="birth-certificate">
+                            Student's ID *
+                          </label>
+                          <input
+                            type="text"
+                            id="birth-certificate"
+                            placeholder="Enter ID"
+                            value={studentID}
+                            onChange={(e) => setStudentID(e.target.value)}
+                          />
+                        </div>
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="birth-certificate">
-                          Student's ID *
-                        </label>
-                        <input
-                          type="text"
-                          id="birth-certificate"
-                          placeholder="Enter ID"
-                          value={studentID}
-                          onChange={(e)=> setStudentID(e.target.value)}
+
+                      {/* <!-- Row 3 --> */}
+                      <div className="form-row">
+                        <DatepickerComponent
+                          title={"Registration Date *"}
+                          selectedDate={registrationDate}
+                          setSelectedDate={setRegistrationDate}
                         />
-                      </div>
-                    </div>
 
-                          
-                    {/* <!-- Row 3 --> */}
-                    <div className="form-row">
-                    <DatepickerComponent
-                        title={"Registration Date *"}
-                        selectedDate={registrationDate}
-                        setSelectedDate={setRegistrationDate}
-                      />
-
-
-
-                      <div className="form-group">
-                        <label htmlFor="Roll">Class Roll *</label>
-                        <input
-                          type="text"
-                          id="Roll"
-                          placeholder="Enter Class Roll"
-                          value={classRoll}
-                          onChange={(e)=> setClassRoll(e.target.value)}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="Class">Class Name*</label>
-                        <Select
+                        <div className="form-group">
+                          <label htmlFor="Roll">Class Roll *</label>
+                          <input
+                            type="text"
+                            id="Roll"
+                            placeholder="Enter Class Roll"
+                            value={classRoll}
+                            onChange={(e) => setClassRoll(e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="Class">Class Name*</label>
+                          <Select
                             options={classOPtions}
                             onChange={setMigrateClassName}
                             value={migrateClassName}
                             placeholder="Select Class"
                             menuPlacement="top"
                           />
+                        </div>
                       </div>
-                    </div>
 
-                    {/* <!-- Row 4 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="shift">Shift Name*</label>
-                        <Select
-                          options={shiftOptions}
-                          onChange={setMigrateShiftName}
-                          value={migrateShiftName}
-                          placeholder="Select Shift"
-                          menuPlacement="top"
-                        />
+                      {/* <!-- Row 4 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="shift">Shift Name*</label>
+                          <Select
+                            options={shiftOptions}
+                            onChange={setMigrateShiftName}
+                            value={migrateShiftName}
+                            placeholder="Select Shift"
+                            menuPlacement="top"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="shift">Section Name*</label>
+                          <Select
+                            options={sectionOptions}
+                            onChange={setMigrateSectionName}
+                            value={migrateSectionName}
+                            placeholder="Enter section name"
+                            menuPlacement="top"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="shift">Session*</label>
+                          <Select
+                            options={sessionOptions}
+                            onChange={setMigrateSession}
+                            value={migrateSession}
+                            placeholder="Enter section name"
+                            menuPlacement="top"
+                          />
+                        </div>
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="shift">Section Name*</label>
-                        <Select
-                          options={sectionOptions}
-                          onChange={setMigrateSectionName}
-                          value={migrateSectionName}
-                          placeholder="Enter section name"
-                          menuPlacement="top"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="shift">Session*</label>
-                        <Select
-                          options={sessionOptions}
-                          onChange={setMigrateSession}
-                          value={migrateSession}
-                          placeholder="Enter section name"
-                          menuPlacement="top"
-                        />
-                      </div>
-                    </div>
 
-                    {/* <!-- Actions --> */}
-                    <div className="form-actions">
-                      <button
-                        type="button"
-                        id="closeBtn"
-                        className="button close closeBtn"
-                      >
-                        Close
-                      </button>
-                      <button type="reset" className="button reset">
-                        Reset
-                      </button>
-                      <button type="submit" className="button save"
-                      
-                      onClick={handleMigrateSubmit}
-
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </form>
+                      {/* <!-- Actions --> */}
+                      <div className="form-actions">
+                        <button
+                          type="button"
+                          id="closeBtn"
+                          className="button close closeBtn"
+                          onClick={() => setIsMigrateModalOpen(false)}
+                        >
+                          Close
+                        </button>
+                        <button
+                          type="reset"
+                          className="button reset"
+                          onClick={handleReset}
+                        >
+                          Reset
+                        </button>
+                        <button
+                          type="submit"
+                          className="button save"
+                          onClick={handleMigrateSubmit}
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
           {/* <!-- Migrate Students - Pop Up Modal Start --> */}
         </div>
       </div>

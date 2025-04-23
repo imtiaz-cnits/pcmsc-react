@@ -22,6 +22,8 @@ const {
 const {
   getMigratedStudents,
   migrateStudent,
+  getAllPaginatedMigrations,
+  deleteMigrationStudent,
 } = require("../controllers/exam-management/migrationController");
 
 // 🚀  Exam Type - CRUD
@@ -41,6 +43,8 @@ router.delete("/subject/:id", deleteSubject);
 // 🚀  Student Migration - CRUD
 router.post("/migrate-student", migrateStudent);
 router.get("/student-id", getMigratedStudents);
+router.get("/paginated-student-migrations", getAllPaginatedMigrations);
+router.delete("/migrate-student/:id", deleteMigrationStudent);
 
 // 🛠️ exports
 module.exports = router;

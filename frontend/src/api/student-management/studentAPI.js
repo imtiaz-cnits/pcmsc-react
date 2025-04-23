@@ -54,8 +54,8 @@ export const fetchPaginatedStudentAPI = async (
       shift,
     };
   }
-  console.log("className value : ", className);
-  console.log("fetchPaginatedStudentAPI params : ", params);
+  // console.log("className value : ", className);
+  // console.log("fetchPaginatedStudentAPI params : ", params);
 
   const res = await axiosPrivate.get(`/student-management/students-paginated`, {
     // params: { page, limit, filterChecker, keyword },
@@ -68,20 +68,20 @@ export const fetchPaginatedStudentAPI = async (
 
 // ✅ PATCH - method
 export const updateStudentAPI = async ({ studentID, formData }) => {
-  console.log("form data ", formData);
-  console.log("form data id", studentID);
+  // console.log("form data ", formData);
+  // console.log("form data id", studentID);
   const res = await axiosPrivate.patch(
     `/student-management/student/${studentID}`,
     formData,
   );
 
-  console.log("⚙️ updateStudentAPI api :", res.data);
+  // console.log("⚙️ updateStudentAPI api :", res.data);
   return res.data?.success ? res.data : [];
 };
 
 // ✅  DELETE - method
 export const deleteStudentInfoAPI = async (id) => {
   const res = await axiosPrivate.delete(`/student-management/student/${id}`);
-  console.log("🚀 deleteStudentInfoAPI : ", res.data);
+  // console.log("🚀 deleteStudentInfoAPI : ", res.data);
   return res.data?.success ? res.data : [];
 };

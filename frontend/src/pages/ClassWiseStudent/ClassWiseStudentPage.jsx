@@ -110,20 +110,6 @@ const ClassWiseStudentPage = () => {
   };
 
   useEffect(() => {
-    console.log(
-      "drop down value :  ",
-      selectedClass,
-      selectedSession,
-      selectedSection,
-      selectedShift,
-    );
-  }, [selectedClass, selectedSession, selectedSection, selectedShift]);
-
-  useEffect(() => {
-    console.log("search filter  value : ", searchFilters);
-  }, [searchFilters]);
-
-  useEffect(() => {
     document.addEventListener("mousedown", handleOutSideClick);
 
     return () => {
