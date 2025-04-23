@@ -60,6 +60,15 @@ const ExamAssignToclassName = () => {
     }, [isEditModalOpen]);
   
 
+    const entriesOptions = [
+      { value: 5, label: "5" },
+      { value: 10, label: "10" },
+      { value: 25, label: "25" },
+      { value: 50, label: "50" },
+      { value: 75, label: "75" },
+      { value: 100, label: "100" },
+    ];
+
     const sessionOPtions = sessions?.data.map((item) => {
       return { value: item._id, label: item.nameLabel };
     });
@@ -183,12 +192,17 @@ const ExamAssignToclassName = () => {
                             id="entries"
                             className="form-control"
                             style={{ width: "auto" }}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setLimit(e.target.value);
+                              setPage(1);
+                            }}
                           >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
+                              {entriesOptions.map((item, index) => (
+                              <option key={index} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
                           </select>
                           <span className="dropdown-icon">&#9662;</span>
                           {/* <!-- Dropdown icon --> */}
@@ -202,6 +216,11 @@ const ExamAssignToclassName = () => {
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Subject..."
+                        onChange={(e) => {
+                          e.preventDefault;
+                          setKeyword(e.target.value);
+                          setPage(1);
+                        }}
                       />
                     </div>
                   </div>
@@ -309,27 +328,50 @@ const ExamAssignToclassName = () => {
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {assignedExam?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * assignedExam?.currentPage,
+                            assignedExam?.totalEntries,
+                          )} of ${assignedExam?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
 
-                <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
-                </div>
+{assignedExam?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                      >
+                        Prev
+                      </button>
+                    )}
+
+                    {`${page} of ${Number(assignedExam?.totalPages)}`}
+
+                    {page < assignedExam?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, assignedExam?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
+
               </div>
             </div>
           </div>

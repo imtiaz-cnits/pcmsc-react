@@ -44,7 +44,7 @@ export const useAddExamAssign = () => {
 //✅  GET - method
 export const useFetchPaginatedAssignedExam = ({ page, limit, keyword }) => {
   return useQuery({
-    queryKey: ["subjects", { page, limit, keyword }],
+    queryKey: ["exam-assign", { page, limit, keyword }],
     queryFn: () => fetchedPaginatedExamAssignAPI(page, limit, keyword),
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,

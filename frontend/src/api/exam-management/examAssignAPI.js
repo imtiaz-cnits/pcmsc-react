@@ -18,8 +18,13 @@ export const fetchExamAssignAPI = async () => {
 
 // ✅  GET - method (paginated)
 export const fetchedPaginatedExamAssignAPI = async (page, limit, keyword) => {
+
+
+  console.log('fetchedPaginatedExamAssignAPI keyword  ', keyword)
+
+
     const res = await axiosPrivate.get(`/exam-management/assigned-exams-paginated`, {
-      params: { page, limit, keyword },
+      params: { page, limit, keyword:keyword.trim() },
     });
     console.log("🚀 fetchedPaginatedExamAssignAPI : ", res.data);
     return res.data?.success ? res.data : [];
