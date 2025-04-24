@@ -21,6 +21,30 @@ const markEntrySchema = new mongoose.Schema(
       required: true,
     },
 
+    className: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Class",
+      required: true,
+    },
+
+    session: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Session",
+      required: true,
+    },
+
+    section: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: true,
+    },
+
+    shift: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shift",
+      required: true,
+    },
+
     subject: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subject",
@@ -32,6 +56,7 @@ const markEntrySchema = new mongoose.Schema(
       ref: "ExamType",
       required: true,
     },
+
     writtenMark: {
       type: Number,
       required: true,
