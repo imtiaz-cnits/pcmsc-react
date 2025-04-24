@@ -44,7 +44,7 @@ const markEntrySchema = new mongoose.Schema(
       min: 0,
       default: 0,
     },
-    total: {
+    totalMark: {
       type: Number,
       required: true,
       default: 0,
@@ -52,12 +52,6 @@ const markEntrySchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
-// pre calculate
-markEntrySchema.pre("save", function cal(next) {
-  this.total = this.writtenMark + this.oralMark;
-  next();
-});
 
 const MarkEntry = mongoose.model("MarkEntry", markEntrySchema);
 

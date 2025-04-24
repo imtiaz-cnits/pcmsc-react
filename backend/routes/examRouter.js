@@ -41,6 +41,8 @@ const {
 } = require("../controllers/exam-management/examAssignController");
 const {
   searchEligibleStudents,
+  markEntry,
+  fetchEntryMark,
 } = require("../controllers/exam-management/markEntryController");
 
 // 🚀  Exam Type - CRUD
@@ -78,6 +80,8 @@ router.delete("/assigned-exam/:id", deleteAssignExam);
 
 // 🚀  Mark Entry
 router.get("/students/search", searchEligibleStudents);
+router.post("/students/entry-mark", markEntry);
+router.get("/marks", fetchEntryMark);
 
 // 🛠️ exports
 module.exports = router;

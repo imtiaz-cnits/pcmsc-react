@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchExamTypes } from "../../hook/useExamType";
-import { useFetchEligibleStudents } from "../../hook/useMark";
+import { useFetchEligibleStudents, useMarkEntry } from "../../hook/useMark";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
@@ -16,7 +16,6 @@ const MarkEntryPage = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
   const [marksData, setMarksData] = useState([]);
-
   const [searchFilters, setSearchFilters] = useState({
     className: null,
     session: null,
@@ -26,6 +25,7 @@ const MarkEntryPage = () => {
     examName: null,
   });
 
+  const { mutate: markEntry } = useMarkEntry();
   const { data: classes } = useFetchClasses();
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
@@ -94,15 +94,24 @@ const MarkEntryPage = () => {
   const handleSave = (e) => {
     e.preventDefault();
 
-    const payload = marksData.map((entry) => ({
-      studentID: entry.studentId,
-      studentName: entry.studentName,
-      studentRoll: entry.studentRoll,
-      subject: selectedSubject.value,
-      examType: selectedExam.value,
-      writtenMark: Number(entry.writtenMark),
-      oralMark: Number(entry.oralMark),
-    }));
+    const payload = marksData.map((entry) => {
+      const written = Number(entry.writtenMark) || 0;
+      const oral = Number(entry.oralMark) || 0;
+      const total = written + oral;
+
+      return {
+        studentID: entry.studentId,
+        studentName: entry.studentName,
+        studentRoll: entry.studentRoll,
+        subject: selectedSubject.value,
+        examType: selectedExam.value,
+        writtenMark: written,
+        oralMark: oral,
+        totalMark: total,
+      };
+    });
+
+    markEntry(payload);
 
     console.log("payload : ", payload);
   };
@@ -299,28 +308,16 @@ const MarkEntryPage = () => {
                           </tr>
                         ))
                       )}
-
-                      <tr>
-                        <td>02</td>
-                        <td>202443</td>
-                        <td>MD: siyam</td>
-                        <td>06</td>
-                        <td>
-                          <input type="text" />
-                        </td>
-                        <td>
-                          <input type="text" />
-                        </td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
-
-                <div className="button-wrap">
-                  <button className="mark-btn" onClick={handleSave}>
-                    Save Mark
-                  </button>
-                </div>
+                {isPending || (
+                  <div className="button-wrap">
+                    <button className="mark-btn" onClick={handleSave}>
+                      Save Mark
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -14,3 +14,14 @@ export const fetchEligibleStudentsAPI = async (filters) => {
   console.log("🚀 fetchEligibleStudentsAPI api : ", res.data);
   return res.data?.success ? res.data : [];
 };
+
+// ✅  POST - method
+export const markEntryAPI = async (payload) => {
+  console.log(" markEntryAPI payload before ", payload);
+  const res = await axiosPrivate.post(
+    "/exam-management/students/entry-mark",
+    payload,
+  );
+  console.log(" 🚀 markEntryAPI ,", res.data);
+  return res.data?.success ? res.data : [];
+};
