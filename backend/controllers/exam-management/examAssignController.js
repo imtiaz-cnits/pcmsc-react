@@ -81,8 +81,13 @@ async function getAllPaginatedAssignedExams(req, res, next) {
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.max(1, Number(req.query.limit) || 5);
     const skip = (page - 1) * limit;
-    const keyword = req.query.keyword.trim().toLowerCase();
+    const keyword = req.query.keyword.trim();
+    const searchRegex = keyword !== "" ? new RegExp(keyword, "i") : null;
 
+    console.log("keywrod value ", keyword);
+    console.log("keyword  reg ", searchRegex);
+
+    /*
     // todo need to be more optimistic
     const searchQuery = keyword
       ? {
@@ -104,9 +109,98 @@ async function getAllPaginatedAssignedExams(req, res, next) {
       .populate("examName")
       .populate("className");
 
-    const totalEntries = await ExamAssign.countDocuments();
+  
+
+      */
+
+    const baseLookups = [
+      {
+        $lookup: {
+          from: "sessions",
+          localField: "session",
+          foreignField: "_id",
+          as: "session",
+        },
+      },
+      { $unwind: { path: "$session", preserveNullAndEmptyArrays: true } },
+
+      {
+        $lookup: {
+          from: "examtypes",
+          localField: "examName",
+          foreignField: "_id",
+          as: "examName",
+        },
+      },
+      { $unwind: { path: "$examName", preserveNullAndEmptyArrays: true } },
+
+      {
+        $lookup: {
+          from: "classes",
+          localField: "className",
+          foreignField: "_id",
+          as: "className",
+        },
+      },
+      { $unwind: { path: "$className", preserveNullAndEmptyArrays: true } },
+    ];
+
+    const keywordMatch = searchRegex
+      ? [
+          {
+            $match: {
+              $or: [
+                { "session.name": searchRegex },
+                { "session.nameLabel": searchRegex },
+                { "examName.examTypeName": searchRegex },
+                { "className.name": searchRegex },
+                { "className.nameLabel": searchRegex },
+                { examDate: searchRegex },
+                { resultDateTime: searchRegex },
+              ],
+            },
+          },
+        ]
+      : [];
+
+    const dataPipeline = [
+      ...baseLookups,
+      ...keywordMatch,
+      { $skip: skip },
+      { $limit: limit },
+    ];
+
+    const countPipeLine = [
+      ...baseLookups,
+      ...keywordMatch,
+      { $count: "total" },
+    ];
+
+    const assignedExams = await ExamAssign.aggregate(dataPipeline);
+    const countResult = await ExamAssign.aggregate(countPipeLine);
+
+    const rawResult = await ExamAssign.find({}).populate(
+      "session examName className",
+    );
+    console.log("raw result : ", JSON.stringify(rawResult, 2, null));
+
+    console.log("keyword match : ", keywordMatch);
+    console.log("baselookup : ", baseLookups);
+    console.log("assigned exams : ", assignedExams);
+    console.log("count result : ", countResult);
+
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
+    const collectionNames = collections.map((collection) => collection.name);
+    console.log("Collections:", collectionNames);
+
+    const totalEntries = countResult[0]?.total || 0;
 
     const totalPages = Math.ceil(totalEntries / limit);
+
+    console.log("total entries ", totalEntries);
+    console.log("total pages ", totalPages);
 
     return res.status(200).json({
       success: true,

@@ -12,8 +12,6 @@ import {
   updateAssignExamAPI,
 } from "../api/exam-management/examAssignAPI";
 
-
-
 //📌  POST - method
 export const useAddExamAssign = () => {
   const queryClient = useQueryClient();

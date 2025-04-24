@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const examAssignSchema = mongoose.Schema(
+const examAssignSchema = new mongoose.Schema(
   {
     session: {
       type: mongoose.Schema.Types.ObjectId,

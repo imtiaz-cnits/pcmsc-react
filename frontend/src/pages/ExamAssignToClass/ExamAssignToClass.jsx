@@ -15,7 +15,6 @@ import { useFetchExamTypes } from "../../hook/useExamType";
 import { useFetchSessions } from "../../hook/useSession";
 import EditExamAssignToClassPage from "./EditExamAssignToClassPage";
 
-
 const ExamAssignToclassName = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -339,7 +338,7 @@ const ExamAssignToclassName = () => {
                       ) : assignedExam?.totalEntries <= 0 ? (
                         <tr>
                           <td colSpan={10} style={{ textAlign: "center" }}>
-                            No Subjects found
+                            No exam records assigned to any class.
                           </td>
                         </tr>
                       ) : (

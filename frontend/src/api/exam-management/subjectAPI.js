@@ -15,6 +15,13 @@ export const fetchSubjectAPI = async () => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅  GET - method
+export const fetchedSubjectsAPI = async () => {
+  const res = await axiosPrivate.get("/exam-management/subjects");
+  console.log("🚀 fetchedSubjectsAPI api : ", res.data);
+  return res.data?.success ? res.data : [];
+};
+
 // ✅  GET - method (paginated)
 export const fetchedPaginatedSubjectsAPI = async (page, limit, keyword) => {
   const res = await axiosPrivate.get(`/exam-management/subjects-paginated`, {

@@ -1,7 +1,6 @@
 import Select from "react-select";
 import DatepickerComponent from "../../components/DatepickerComponent ";
 
-
 const EditExamAssignToClassPage = ({
   isEditModalOpen,
   setIsEditModalOpen,
