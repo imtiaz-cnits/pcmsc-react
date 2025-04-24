@@ -15,11 +15,11 @@ import ExamType from "../pages/ExamType/ExamType";
 import GeneratedAdmitCard from "../pages/GeneratedAdmitCard/GeneratedAdmitCard";
 import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
 import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
-import Grade from "../pages/Grade/Grade";
+import GradePage from "../pages/Grade/GradePage";
 import GroupPage from "../pages/Group/GroupPage";
-import MarkEntry from "../pages/MarkEntry/MarkEntry";
+import MarkEntryPage from "../pages/MarkEntry/MarkEntryPage.jsx";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
-import Migration from "../pages/Migration/Migration";
+import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 import Result from "../pages/Result/Result";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
 import Section from "../pages/Section/Section";
@@ -98,7 +98,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "migration",
-            element: <Migration />,
+            element: <MigrationPage />,
           },
         ],
       },
@@ -116,7 +116,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "grade",
-            element: <Grade />,
+            element: <GradePage />,
           },
           {
             path: "exam-assign",
@@ -124,7 +124,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "mark-entry",
-            element: <MarkEntry />,
+            element: <MarkEntryPage />,
           },
           {
             path: "result-sheet",

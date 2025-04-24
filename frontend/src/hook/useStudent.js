@@ -6,12 +6,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { fetchStudentBySIdAPI } from "../api/exam-management/migrationAPI.js";
 import {
   addStudentInfoAPI,
   deleteStudentInfoAPI,
   fetchAllStudentsAPI,
   fetchPaginatedStudentAPI,
-  fetchStudentByIDAPI,
   updateStudentAPI,
 } from "../api/student-management/studentAPI";
 
@@ -51,7 +51,7 @@ export const useFetchStudents = () => {
 export const useFetchStudentByID = (id) => {
   return useQuery({
     queryKey: ["students", id],
-    queryFn: () => fetchStudentByIDAPI(id),
+    queryFn: () => fetchStudentBySIdAPI(id),
     placeholderData: keepPreviousData,
 
     refetchOnWindowFocus: true,

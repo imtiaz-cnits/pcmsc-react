@@ -1,57 +1,48 @@
 import { FilePenLine, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import Select from "react-select";
+import { useState, useEffect } from "react";
 import ShimmerTable from "../../components/shimmer/ShimmerTable";
-import { useFetchClasses } from "../../hook/useClass";
 import {
-  useAddSubject,
-  useDeleteSubjects,
-  useFetchPaginatedSubject,
-} from "../../hook/useSubject";
+  useAddGrade,
+  useDeleteGrading,
+  useFetchPaginatedGrade,
+  useUpdateGrading,
+} from "../../hook/useGrade";
+import EditGradePage from "./EditGradePage";
 
-const Test = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+const GradePage = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isShimmering, setIsShimmering] = useState(false);
-  const [page, setPage] = useState(Number(searchParams.get("page")) || 1); // Initialize page from URL search params
-  const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5); // Initialize limit from URL search params
-  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
-  const [className, setClassName] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [subjectCode, setSubjectCode] = useState("");
-  const [subjectName, setSubjectName] = useState("");
-  const [totalMark, setTotalMark] = useState("");
-  const [writtenMark, setWrittenMark] = useState("");
-  const [oralMark, setOralMark] = useState("");
-  const [passMark, setPassMark] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [editClickID, setEditClickID] = useState("");
   const [deletedID, setDeletedID] = useState("");
-  const { data: classes } = useFetchClasses();
-  const { mutate: addSubject } = useAddSubject();
-  const { mutate: deleteSubject } = useDeleteSubjects();
+  const [gradeName, setGradeName] = useState("");
+  const [gradePoint, setGradePoint] = useState("");
+  const [totalSubjectMark, setTotalSubjectMark] = useState("");
+  const [markFrom, setMarkFrom] = useState("");
+  const [markUpTo, setMarkUpTo] = useState("");
 
+  const { mutate: addGrading } = useAddGrade();
+  const { mutate: updateGrading } = useUpdateGrading();
+  const { mutate: deleteGrade, isPending: isDeletePending } =
+    useDeleteGrading();
   const {
-    data: subjects,
+    data: grades,
     isPending,
     isError,
     error,
-  } = useFetchPaginatedSubject({ page, limit, keyword });
+  } = useFetchPaginatedGrade({ page, limit, keyword });
+
+  // ✅ Enable-Disable scrolling when modal is open-close
+  useEffect(() => {
+    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
+  }, [isAddModalOpen]);
 
   useEffect(() => {
-    document.body.style.overflow = isCreateModalOpen ? "hidden" : "";
-  }, [isCreateModalOpen]);
-
-  const classOptions = classes?.data.map((item) => {
-    return { value: item._id, label: item.nameLabel };
-  });
-
-  const statusOptions = [
-    { value: "Active", label: "Active" },
-    { value: "Pending", label: "Pending" },
-    { value: "Inactive", label: "Inactive" },
-  ];
+    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
+  }, [isEditModalOpen]);
 
   const entriesOptions = [
     { value: 5, label: "5" },
@@ -62,29 +53,83 @@ const Test = () => {
     { value: 100, label: "100" },
   ];
 
-  const handleCreateSubmit = (e) => {
+  const handleAddSubmit = (e) => {
     e.preventDefault();
+
+    if (
+      isNaN(gradePoint) ||
+      isNaN(totalSubjectMark) ||
+      isNaN(markFrom) ||
+      isNaN(markUpTo)
+    ) {
+      alert("Grade point and total marks must be valid numbers.");
+      return;
+    }
+
     const payload = {
-      subjectCode: subjectCode,
-      subjectName: subjectName,
-      totalMark: Number(totalMark),
-      writtenMark: Number(writtenMark),
-      oralMark: Number(oralMark),
-      passMark: Number(passMark),
-      className: className.value,
-      status: selectedStatus.value || "Active",
+      gradeName: gradeName,
+      totalSubjectMark: Number(totalSubjectMark),
+      markFrom: Number(markFrom),
+      markUpTo: Number(markUpTo),
+      gradePoint: Number(gradePoint),
     };
 
     console.log("payload", payload);
-    addSubject(payload);
-    setSubjectCode("");
-    setSubjectName("");
-    setTotalMark("");
-    setWrittenMark("");
-    setOralMark("");
-    setPassMark("");
-    setClassName(null);
-    setSelectedStatus(null);
+    addGrading(payload);
+    setGradeName("");
+    setTotalSubjectMark("");
+    setMarkFrom("");
+    setMarkUpTo("");
+    setGradePoint("");
+  };
+
+  const handleEditClickID = (e, item) => {
+    e.preventDefault();
+    console.log("edited click id : ", item);
+    setEditClickID(item?._id);
+    setGradeName(item?.gradeName);
+    setGradePoint(item?.gradePoint);
+    setMarkFrom(item?.markFrom);
+    setMarkUpTo(item?.markUpTo);
+    setTotalSubjectMark(item?.totalSubjectMark);
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      isNaN(gradePoint) ||
+      isNaN(totalSubjectMark) ||
+      isNaN(markFrom) ||
+      isNaN(markUpTo)
+    ) {
+      alert("Grade point and total marks must be valid numbers.");
+      return;
+    }
+
+    const payload = {
+      gradeName: gradeName,
+      totalSubjectMark: Number(totalSubjectMark),
+      markFrom: Number(markFrom),
+      markUpTo: Number(markUpTo),
+      gradePoint: Number(gradePoint),
+    };
+    updateGrading(
+      { id: editClickID, payload },
+      {
+        onSuccess: () => {
+          setGradeName("");
+          setTotalSubjectMark("");
+          setMarkFrom("");
+          setMarkUpTo("");
+          setGradePoint("");
+          setIsEditModalOpen(false);
+        },
+      },
+    );
+
+    console.log("handle pyaload : ", payload, editClickID);
   };
 
   const handleDeletedID = (e, item) => {
@@ -97,38 +142,9 @@ const Test = () => {
   const handleDeleteSubject = (e) => {
     e.preventDefault();
     console.log("deleted id : ", deletedID);
-    deleteSubject(deletedID, {
-      onSuccess: () => {
-        if (subjects?.count === 1 && page > 1) {
-          setIsShimmering(true);
-          setTimeout(() => {
-            setIsShimmering(false);
-            setPage((prev) => prev - 1);
-          }, 500);
-        }
-      },
-    });
+    deleteGrade(deletedID);
     setIsDeleteModalOpen(false);
   };
-
-  useEffect(() => {
-    // Sync search params with state changes
-    setSearchParams((prev) => {
-      const params = new URLSearchParams(prev);
-      params.set("page", page);
-      params.set("limit", limit);
-      if (keyword) {
-        params.set("keyword", keyword);
-      } else {
-        params.delete("keyword");
-      }
-      return params;
-    });
-  }, [page, limit, keyword, setSearchParams]);
-
-  useEffect(() => {
-    console.log("searchparams  value : ", searchParams);
-  }, [searchParams]);
 
   return (
     <>
@@ -140,18 +156,18 @@ const Test = () => {
               <div className="card-body">
                 {/* <!-- className heading Start --> */}
                 <div className="exam-heading">
-                  <h3 className="heading">Subject List</h3>
+                  <h3 className="heading">Grade List</h3>
                   <button
                     className="create-cls-btn"
                     id="exmModalBtn"
-                    onClick={() => setCreateModalOpen(!isCreateModalOpen)}
+                    onClick={() => setIsAddModalOpen(!isAddModalOpen)}
                   >
-                    Create Subject
+                    Add Grade
                   </button>
                 </div>
-                {/* <!-- className heading End -->
+                {/* <!-- className heading End --> */}
 
-              <!-- Action Buttons --> */}
+                {/* <!-- Action Buttons --> */}
                 <div className="button-wrapper mb-3">
                   {/* <!-- Search and Filter --> */}
                   <div className="input-group exam-group">
@@ -203,7 +219,7 @@ const Test = () => {
                 </div>
 
                 {/* <!-- Table --> */}
-                <div className="table-wrapper subject-table-wrapper">
+                <div className="table-wrapper grade-table-wrapper">
                   <table
                     id="printTable"
                     className="table table-bordered table-hover"
@@ -211,23 +227,20 @@ const Test = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Class Name</th>
-                        <th>Subject Code</th>
-                        <th>Subject Name</th>
-                        <th>Total Mark</th>
-                        <th>Writing Mark</th>
-                        <th>Oral Mark</th>
-                        <th>Pass Mark</th>
-                        <th>Status</th>
+                        <th>Grade Name</th>
+                        <th>Grade Point</th>
+                        <th>Total Sub Mark</th>
+                        <th>Mark Form</th>
+                        <th>Mark Up To</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {isPending || isShimmering ? (
-                        <ShimmerTable rows={limit} cols={10} />
+                      {isPending || isDeletePending ? (
+                        <ShimmerTable rows={limit} cols={7} />
                       ) : isError ? (
                         <tr>
-                          <td colSpan="10">
+                          <td colSpan="7">
                             <div className="error-msg">
                               {error?.response?.data?.message ||
                                 error?.message ||
@@ -235,30 +248,28 @@ const Test = () => {
                             </div>
                           </td>
                         </tr>
-                      ) : subjects?.totalEntries <= 0 ? (
+                      ) : grades?.totalEntries <= 0 ? (
                         <tr>
                           <td colSpan={10} style={{ textAlign: "center" }}>
-                            No Subjects found
+                            Not found
                           </td>
                         </tr>
                       ) : (
-                        subjects?.data?.length > 0 &&
-                        subjects?.data?.map((item, idx) => (
+                        grades?.data?.length > 0 &&
+                        grades?.data?.map((item, idx) => (
                           <tr key={item?._id}>
                             <td>
+                              {" "}
                               {String((page - 1) * limit + idx + 1).padStart(
                                 2,
                                 "0",
                               )}
                             </td>
-                            <td>{item?.className?.nameLabel}</td>
-                            <td>{item?.subjectCode}</td>
-                            <td>{item?.subjectName}</td>
-                            <td>{item?.totalMark}</td>
-                            <td>{item?.writtenMark}</td>
-                            <td>{item?.oralMark}</td>
-                            <td>{item?.passMark}</td>
-                            <td>{item?.status}</td>
+                            <td>{item?.gradeName}</td>
+                            <td>{item?.gradePoint}</td>
+                            <td>{item?.totalSubjectMark}</td>
+                            <td>{item?.markFrom}</td>
+                            <td>{item?.markUpTo}</td>
 
                             <td>
                               <div id="action_btn">
@@ -267,6 +278,7 @@ const Test = () => {
                                     href="#"
                                     className="link editButton"
                                     data-modal="action-editmodal"
+                                    onClick={(e) => handleEditClickID(e, item)}
                                   >
                                     <FilePenLine style={{ color: "#1f4529" }} />
                                   </button>
@@ -298,46 +310,32 @@ const Test = () => {
                 {isPending || (
                   <div className="my-3">
                     <span id="display-info">
-                      {subjects?.totalEntries
+                      {grades?.totalEntries
                         ? `Showing ${Math.min(
-                            limit * subjects?.currentPage,
-                            subjects?.totalEntries,
-                          )} of ${subjects?.totalEntries} entries`
+                            limit * grades?.currentPage,
+                            grades?.totalEntries,
+                          )} of ${grades?.totalEntries} entries`
                         : ""}
                     </span>
                   </div>
                 )}
-
-                {subjects?.totalPages > 1 && !isPending && (
-                  <div id="pagination" className="pagination">
-                    {page > 1 && (
-                      <button
-                        id="prevBtn"
-                        className="btn"
-                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={page === 1}
-                      >
-                        Prev
-                      </button>
-                    )}
-
-                    {`${page} of ${Number(subjects?.totalPages)}`}
-
-                    {page < subjects?.totalPages && (
-                      <button
-                        id="nextBtn"
-                        className="btn"
-                        onClick={() =>
-                          setPage((prev) =>
-                            Math.min(prev + 1, subjects?.totalPages),
-                          )
-                        }
-                      >
-                        Next
-                      </button>
-                    )}
-                  </div>
-                )}
+                {/* <div id="pagination" className="pagination">
+                  <button id="prevBtn" className="btn">
+                    Prev
+                  </button>
+                  <a href="#" className="page-link page-link--1">
+                    1
+                  </a>
+                  <a href="#" className="page-link page-link--2">
+                    2
+                  </a>
+                  <a href="#" className="page-link page-link--3">
+                    3
+                  </a>
+                  <button id="nextBtn" className="btn">
+                    Next
+                  </button>
+                </div> */}
               </div>
             </div>
           </div>
@@ -347,7 +345,21 @@ const Test = () => {
           {/* <!-- Table End -->
 
         <!-- Table Action Button Modal Start -->
-        <!-- Confirmation Modal Start --> */}
+        <!-- Confirmation Modal Start -->
+        <div id="confirmationModal" className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to delete this item?</p>
+            <div className="modal-buttons">
+              <button id="confirmYes">Yes</button>
+              <button id="confirmNo">No</button>
+            </div>
+          </div>
+        </div>
+
+        
+        <!-- Confirmation Modal End -->
+        <!-- Edit Modal Start --> */}
+
           {isDeleteModalOpen && (
             <div
               id="confirmationModal"
@@ -370,8 +382,6 @@ const Test = () => {
               </div>
             </div>
           )}
-          {/* <!-- Confirmation Modal End -->
-        <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -394,94 +404,68 @@ const Test = () => {
         <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Subject Pop Up Modal Start --> */}
-          {isCreateModalOpen && (
-            <div className="subject-modal">
+        <!-- Grade Pop Up Modal Start --> */}
+          {isAddModalOpen && (
+            <div className="grade-modal">
               <section id="exmModal" className="modal show">
                 <div className="modal-content">
                   <div id="popup-modal">
                     <div className="form-container">
-                      <h3>Add Subject</h3>
+                      <h3>Add Grade</h3>
                       <form>
                         {/* <!-- Row 1 --> */}
                         <div className="form-row row">
-                          <div className="form-group select-input-box col-lg-4">
-                            <label htmlFor="select-to">Class*</label>
-
-                            <Select
-                              options={classOptions}
-                              onChange={setClassName}
-                              value={className}
-                              placeholder="Select Class"
-                            />
-                          </div>
-                          <div className="form-group col-lg-4">
-                            <label htmlFor="shift">Subject Code*</label>
+                          <div className="form-group col-lg-6">
+                            <label htmlFor="shift">Grade Name *</label>
                             <input
                               type="text"
-                              placeholder="Select Code"
-                              value={subjectCode}
-                              onChange={(e) => setSubjectCode(e.target.value)}
+                              placeholder="Type Name"
+                              value={gradeName}
+                              onChange={(e) => setGradeName(e.target.value)}
                             />
                           </div>
-                          <div className="form-group col-lg-4">
-                            <label htmlFor="shift">Subject Name*</label>
+                          <div className="form-group col-lg-6">
+                            <label htmlFor="shift">Grade Point *</label>
                             <input
                               type="text"
-                              placeholder="Select Name"
-                              value={subjectName}
-                              onChange={(e) => setSubjectName(e.target.value)}
+                              placeholder="Type Point"
+                              value={gradePoint}
+                              onChange={(e) => setGradePoint(e.target.value)}
                             />
                           </div>
                         </div>
                         {/* <!-- Row 2 --> */}
                         <div className="form-row row">
-                          <div className="form-group col-lg-4">
-                            <label htmlFor="shift">Total Mark *</label>
+                          <div className="form-group col-lg-6">
+                            <label htmlFor="shift">Mark Form *</label>
                             <input
-                              type="number"
-                              placeholder="Select Mark"
-                              value={totalMark}
-                              onChange={(e) => setTotalMark(e.target.value)}
+                              type="text"
+                              placeholder="Type Form mark"
+                              value={markFrom}
+                              onChange={(e) => setMarkFrom(e.target.value)}
                             />
                           </div>
-                          <div className="form-group col-lg-4">
-                            <label htmlFor="shift">Writing Mark *</label>
+                          <div className="form-group col-lg-6">
+                            <label htmlFor="shift">Mark Up TO*</label>
                             <input
-                              type="number"
-                              placeholder="Select Mark"
-                              value={writtenMark}
-                              onChange={(e) => setWrittenMark(e.target.value)}
-                            />
-                          </div>
-                          <div className="form-group col-lg-4">
-                            <label htmlFor="shift">Oral Mark *</label>
-                            <input
-                              type="number"
-                              placeholder="Select Mark"
-                              value={oralMark}
-                              onChange={(e) => setOralMark(e.target.value)}
+                              type="text"
+                              placeholder="Type Up To"
+                              value={markUpTo}
+                              onChange={(e) => setMarkUpTo(e.target.value)}
                             />
                           </div>
                         </div>
                         {/* <!-- Row 3 --> */}
                         <div className="form-row row">
-                          <div className="form-group col-lg-4">
-                            <label htmlFor="shift">Pass Mark *</label>
+                          <div className="form-group col-lg-6">
+                            <label htmlFor="shift">Total Subject Mark *</label>
                             <input
                               type="number"
-                              placeholder="Select Mark"
-                              value={passMark}
-                              onChange={(e) => setPassMark(e.target.value)}
-                            />
-                          </div>
-                          <div className="form-group select-input-box col-lg-4">
-                            <label htmlFor="select-to">Status*</label>
-
-                            <Select
-                              options={statusOptions}
-                              value={selectedStatus}
-                              onChange={setSelectedStatus}
+                              placeholder="Type Mark"
+                              value={totalSubjectMark}
+                              onChange={(e) =>
+                                setTotalSubjectMark(e.target.value)
+                              }
                             />
                           </div>
                         </div>
@@ -492,14 +476,18 @@ const Test = () => {
                             type="button"
                             id="exmClose"
                             className="button close closeBtn"
-                            onClick={() => setCreateModalOpen(false)}
+                            onClick={(e) => {
+                              e.preventDefault();
+
+                              setIsAddModalOpen(false);
+                            }}
                           >
                             Close
                           </button>
                           <button
                             type="button"
                             className="button save"
-                            onClick={handleCreateSubmit}
+                            onClick={handleAddSubmit}
                           >
                             Save
                           </button>
@@ -511,9 +499,23 @@ const Test = () => {
               </section>
             </div>
           )}
-          {/* <!-- Subject Pop Up Modal End --> */}
-
-          {/* <!-- Subject Edit Pop Up Modal Start --> */}
+          {/* <!-- Grade Pop Up Modal Start --> */}
+          {/* <!-- Grade Edit Pop Up Modal Start --> */}
+          <EditGradePage
+            isEditModalOpen={isEditModalOpen}
+            gradeName={gradeName}
+            setGradeName={setGradeName}
+            gradePoint={gradePoint}
+            setGradePoint={setGradePoint}
+            markFrom={markFrom}
+            setMarkFrom={setMarkFrom}
+            markUpTo={markUpTo}
+            setMarkUpTo={setMarkUpTo}
+            totalSubjectMark={totalSubjectMark}
+            setTotalSubjectMark={setTotalSubjectMark}
+            setIsEditModalOpen={setIsEditModalOpen}
+            handleEditSubmit={handleEditSubmit}
+          />
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
@@ -521,4 +523,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default GradePage;

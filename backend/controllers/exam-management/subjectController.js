@@ -2,7 +2,7 @@ const createError = require("http-errors");
 const mongoose = require("mongoose");
 const Subject = require("../../models/subjectModel");
 
-// 📝 do add exam-type
+// 📝 do add subject
 async function addSubject(req, res, next) {
   try {
     // console.log("payloads ", req.body);
@@ -57,12 +57,9 @@ async function addSubject(req, res, next) {
 // 📝 get all subjects
 async function getAllSubjects(req, res, next) {
   try {
-    console.log("📥 Received request for getAllSubjects : ", req.body);
-
     const subjects = await Subject.find();
-    const totalDocuments = await Subject.countDocuments();
 
-    if (!subjects || subjects.length === 0) {
+    if (!subjects) {
       return next(createError(404, "Subject not found!"));
     }
 
@@ -71,11 +68,11 @@ async function getAllSubjects(req, res, next) {
     return res.status(200).json({
       success: true,
       message: "Subjects fetched successfully!",
-      totalEntries: totalDocuments,
+      count: subjects.length,
       data: subjects,
     });
   } catch (error) {
-    console.error("❌ Error fetching getAllSubjects :", error);
+    console.error("❌ Error fetching getAllSubjects:", error);
 
     // 💬 Passing the error to the next middleware
     return next(error);
@@ -107,7 +104,7 @@ async function getAllPaginatedSubjects(req, res, next) {
     const query = { $and: [searchQuery].filter(Boolean) };
 
     const subjects = await Subject.find(query)
-      .sort({ subjectCode: 1 })
+      .sort({ subjectCode: -1 })
       .skip(skip)
       .limit(limit)
       .populate("className");

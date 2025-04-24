@@ -13,6 +13,13 @@ export const addExamTypeAPI = async (payload) => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅  GET - method
+export const fetchedExamTypesAPI = async () => {
+  const res = await axiosPrivate.get("/exam-management/exam-types");
+  console.log("🚀 fetchedExamTypesAPI api : ", res.data);
+  return res.data?.success ? res.data : [];
+};
+
 // ✅  GET - method (paginated)
 export const fetchedPaginatedExamTypesAPI = async (page, limit, keyword) => {
   const res = await axiosPrivate.get("/exam-management/exam-types-paginated", {

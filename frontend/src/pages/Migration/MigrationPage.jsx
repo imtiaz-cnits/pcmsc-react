@@ -1,56 +1,208 @@
+import { FilePenLine, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Select from "react-select";
 
+import { useRef } from "react";
 import productMemeberIMG from "../../assets/img/projuct-member-img-3.png";
+import DatepickerComponent from "../../components/DatepickerComponent .jsx";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
+import { useFetchClasses } from "../../hook/useClass.js";
+import {
+  useDeleteMigrateStudent,
+  useFetchMigratePaginatedStudent,
+  useFetchStudentByStudentID,
+  useMigrateStudent,
+} from "../../hook/useMigration.js";
+import { useFetchSections } from "../../hook/useSection.js";
+import { useFetchSessions } from "../../hook/useSession.js";
+import { useFetchShifts } from "../../hook/useShift.js";
 
-const Migration = () => {
-  const [sclass, setSclass] = useState("");
-  const [session, setSession] = useState("");
-  const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState("");
+const MigrationPage = () => {
+  const [isMigrateModalOpen, setIsMigrateModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isShimmering, setIsShimmering] = useState(false);
 
-  useEffect(() => {
-    const migrateModal = document.getElementById("migrateModal");
-    const migrateModalBtn = document.getElementById("migrateModalBtn");
-    const closeBtn = document.getElementById("closeBtn");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [filterChecker, setFilterChecker] = useState("");
+  const [studentSearchID, setStudenSearchtID] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [studentID, setStudentID] = useState("");
+  const [registrationDate, setRegistrationDate] = useState("");
+  const [classRoll, setClassRoll] = useState("");
+  const [migrateClassName, setMigrateClassName] = useState(null);
+  const [migrateShiftName, setMigrateShiftName] = useState(null);
+  const [migrateSectionName, setMigrateSectionName] = useState(null);
+  const [migrateSession, setMigrateSession] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
-    // Function to disable scrolling
-    const disableScroll = () => {
-      document.body.style.overflow = "hidden";
+  const migrateRef = useRef(null);
+  const filterRef = useRef(null);
+
+  const [isQuickViewModal, setIsQuickViewModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSection, setSelectedSsection] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [searchFilters, setSearchFilters] = useState({
+    className: null,
+    session: null,
+    section: null,
+    shift: null,
+  });
+
+  const { data: classes } = useFetchClasses();
+  const { data: sessions } = useFetchSessions();
+  const { data: sections } = useFetchSections();
+  const { data: shifts } = useFetchShifts();
+  const { mutate: migratedStudent } = useMigrateStudent();
+  const { mutate: deleteMigrateStudent, isPending: deletePending } =
+    useDeleteMigrateStudent();
+
+  const {
+    data: migrateStudents,
+    isPending,
+    isError,
+    error,
+  } = useFetchMigratePaginatedStudent({
+    page,
+    limit,
+    keyword,
+    filterChecker,
+    ...searchFilters,
+  });
+
+  const {
+    data: studentship,
+    isPending: isStudentShipPending,
+    isError: isStudentShipError,
+    error: studentshiperror,
+  } = useFetchStudentByStudentID({ sid: studentSearchID });
+
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
+
+  const filterOptions = [
+    { value: "all", label: "All time" },
+    { value: "today", label: "Today" },
+    { value: "7", label: "Last 7 Days" },
+    { value: "30", label: "Last Month" },
+    { value: "365", label: "Last Year" },
+  ];
+
+  const classOPtions = classes?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const sessionOptions = sessions?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const sectionOptions = sections?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const shiftOptions = shifts?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const handleOutSideClick = (e) => {
+    if (filterRef.current && !filterRef.current.contains(e.target)) {
+      setIsFilterModalOpen(false);
+    }
+  };
+
+  const reset = () => {
+    if (migrateRef.current) {
+      migrateRef.current.reset();
+    }
+    setStudenSearchtID("");
+    setStudentName("");
+    setStudentID("");
+    setRegistrationDate("");
+    setClassRoll("");
+    setMigrateClassName(null);
+    setMigrateShiftName(null);
+    setMigrateSectionName(null);
+    setMigrateSession(null);
+  };
+
+  const handleReset = () => {
+    reset();
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    setSearchFilters({
+      className: selectedClass ? selectedClass.value : null,
+      session: selectedSession ? selectedSession.value : null,
+      section: selectedSection ? selectedSection.value : null,
+      shift: selectedShift ? selectedShift.value : null,
+    });
+  };
+
+  const handleMigrateSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
+      studentName,
+      registrationDate,
+      classRoll,
+      className: migrateClassName ? migrateClassName?.value : null,
+      shift: migrateShiftName ? migrateShiftName?.value : null,
+      section: migrateSectionName ? migrateSectionName?.value : null,
+      session: migrateSession ? migrateSession?.value : null,
     };
 
-    // Function to enable scrolling
-    const enableScroll = () => {
-      document.body.style.overflow = "";
-    };
+    migratedStudent(payload);
+    console.log("migration payload : ", payload);
+  };
 
-    // Open the migrate modal and hide scroll
-    migrateModalBtn.addEventListener("click", () => {
-      migrateModal.classList.add("show");
-      disableScroll();
-    });
+  const handleFilterChange = (e, item) => {
+    e.preventDefault();
+    setFilterChecker(item.value);
+    setPage(1);
+    setIsFilterModalOpen(false);
+    console.log("filter value : ", item.value);
+  };
 
-    // Close the migrate modal and show scroll
-    closeBtn.addEventListener("click", () => {
-      migrateModal.classList.remove("show");
-      enableScroll();
-    });
+  const handleDelete = (e) => {
+    e.preventDefault();
+    deleteMigrateStudent(itemToDelete, {
+      onSuccess: () => {
+        setIsShimmering(true);
 
-    // Close the migrate modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === migrateModal) {
-        migrateModal.classList.remove("show");
-        enableScroll();
-      }
+        setTimeout(() => {
+          setIsShimmering(false);
+          if (migrateStudents?.count === 0 && page > 1) {
+            setPage((prev) => prev - 1);
+          }
+        }, 1000);
+      },
     });
+    setIsDeleteModalOpen(false);
+  };
 
-    // Close the student modal by clicking outside it and show scroll
-    document.addEventListener("click", (e) => {
-      if (e.target === studentModal) {
-        studentModal.classList.remove("show");
-        enableScroll();
-      }
-    });
-  }, []);
+  const handleClose = (e) => {
+    e.preventDefault();
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteClick = (e, item) => {
+    console.log("handleDeleteClick : ", item?._id);
+    e.preventDefault();
+    setItemToDelete(item?._id);
+  };
 
   useEffect(() => {
     $(document).ready(function () {
@@ -107,6 +259,14 @@ const Migration = () => {
     });
   }, []);
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutSideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutSideClick);
+    };
+  }, [isFilterModalOpen]);
+
   const printTable = () => {
     const tableElement = document.getElementById("printTable");
     const originalContent = document.body.innerHTML;
@@ -124,6 +284,29 @@ const Migration = () => {
     location.reload();
   };
 
+  // pre-fill
+  useEffect(() => {
+    if (studentSearchID && studentship?.data) {
+      setStudentName(studentship?.data ? studentship?.data?.name : "");
+      setStudentID(studentship?.data ? studentship?.data?.admissionNumber : "");
+    }
+  }, [studentship, studentSearchID]);
+
+  const isButtonDisabled =
+    !selectedClass || !selectedShift || !selectedSection || !selectedSession;
+
+  if (isStudentShipError) {
+    let errorMsg = "Something went wrong. Please try again later!";
+
+    if (isStudentShipError && isStudentShipError instanceof Error) {
+      console.log("student ship Error: ", studentshiperror);
+      errorMsg =
+        studentshiperror?.response?.data?.message || studentshiperror?.message;
+
+      console.log("isStudentShipError : ", errorMsg);
+    }
+  }
+
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
@@ -136,6 +319,7 @@ const Migration = () => {
                 id="migrateModalBtn"
                 type="button"
                 className="create-invoice"
+                onClick={() => setIsMigrateModalOpen(!isMigrateModalOpen)}
               >
                 + Migrate A Student
               </button>
@@ -149,63 +333,49 @@ const Migration = () => {
                   <form className="form-wrapper">
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Class*</label>
-                      <select
+                      <Select
                         id="shift"
-                        value={sclass}
-                        onChange={(e) => setSclass(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Class
-                        </option>
-                        <option value="morning">One</option>
-                        <option value="evening">Two</option>
-                      </select>
+                        options={classOPtions}
+                        value={selectedClass}
+                        onChange={setSelectedClass}
+                      />
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Session*</label>
-                      <select
-                        id=""
-                        value={session}
-                        onChange={(e) => setSession(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Session
-                        </option>
-                        <option value="morning">2024</option>
-                        <option value="evening">2025</option>
-                      </select>
+                      <Select
+                        options={sessionOptions}
+                        value={selectedSession}
+                        onChange={setSelectedSession}
+                        placeholder="Select Session"
+                      ></Select>
                     </div>
                     <div className="form-group select-input-box">
                       <label htmlFor="select-to">Section*</label>
-                      <select
-                        id=""
-                        value={ssection}
-                        onChange={(e) => setSsection(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Section
-                        </option>
-                        <option value="morning">Science</option>
-                        <option value="evening">Commerce</option>
-                      </select>
+                      <Select
+                        options={sectionOptions}
+                        value={selectedSection}
+                        onChange={setSelectedSsection}
+                        placeholder="Select Section"
+                      ></Select>
                     </div>
                     <div className="form-group ">
                       <label htmlFor="shift">Shift Name*</label>
 
-                      <select
-                        id="shift"
-                        value={shift}
-                        onChange={(e) => setShift(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Shift
-                        </option>
-                        <option value="morning">Morning</option>
-                        <option value="evening">Evening</option>
-                      </select>
+                      <Select
+                        options={shiftOptions}
+                        value={selectedShift}
+                        onChange={setSelectedShift}
+                        placeholder="Select Shift"
+                      ></Select>
                     </div>
                   </form>
-                  <button className="search-btn">Search</button>
+                  <button
+                    className="search-btn"
+                    disabled={isButtonDisabled}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </button>
                 </div>
                 {/* <!-- Class Wise Form End --> */}
 
@@ -219,6 +389,12 @@ const Migration = () => {
                         id="searchInput"
                         className="form-control"
                         placeholder="Search Student..."
+                        value={keyword}
+                        onChange={(e) => {
+                          e.preventDefault;
+                          setKeyword(e.target.value);
+                          setPage(1);
+                        }}
                       />
                       {/* <!-- Entries per page --> */}
                       <div
@@ -238,12 +414,18 @@ const Migration = () => {
                               id="entries"
                               className="form-control"
                               style={{ width: "auto" }}
+                              value={limit}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                setLimit(e.target.value);
+                                setPage(1);
+                              }}
                             >
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="25">25</option>
-                              <option value="50">50</option>
-                              <option value="100">100</option>
+                              {entriesOptions.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                  {item.label}
+                                </option>
+                              ))}
                             </select>
                             <span className="dropdown-icon">&#9662;</span>
                             {/* <!-- Dropdown icon --> */}
@@ -252,7 +434,12 @@ const Migration = () => {
 
                         <div className="input-group-append">
                           <div className="dropdown-custom">
-                            <button className="dropdown-button">
+                            <button
+                              className="dropdown-button"
+                              onClick={() =>
+                                setIsFilterModalOpen(!isFilterModalOpen)
+                              }
+                            >
                               <svg
                                 width="32"
                                 height="32"
@@ -288,23 +475,25 @@ const Migration = () => {
                               </svg>
                               <span>Filter</span>
                             </button>
-                            <div className="dropdown-menus">
-                              <a href="#" data-filter="all">
-                                All time
-                              </a>
-                              <a href="#" data-filter="today">
-                                Today
-                              </a>
-                              <a href="#" data-filter="7">
-                                Last 7 Days
-                              </a>
-                              <a href="#" data-filter="30">
-                                Last Month
-                              </a>
-                              <a href="#" data-filter="365">
-                                Last Year
-                              </a>
-                            </div>
+
+                            {isFilterModalOpen && (
+                              <div
+                                ref={filterRef}
+                                className="dropdown-menus"
+                                style={{ display: "block" }}
+                              >
+                                {filterOptions.map((item) => (
+                                  <Link
+                                    key={item.value}
+                                    href="#"
+                                    onClick={(e) => handleFilterChange(e, item)}
+                                    data-filter={item.value}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -503,451 +692,154 @@ const Migration = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr data-date="2024-08-05">
-                        <td>01</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                      {migrateStudents?.isAnyFieldMissing ? (
+                        <tr>
+                          <td colSpan={11} style={{ textAlign: "center" }}>
+                            Choose Class, Session, Section & Shift to
+                            proceed.....
+                          </td>
+                        </tr>
+                      ) : isPending || isShimmering || deletePending ? (
+                        <ShimmerTable rows={limit} cols={11} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="11">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : migrateStudents?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={11} style={{ textAlign: "center" }}>
+                            No students found.
+                          </td>
+                        </tr>
+                      ) : (
+                        migrateStudents?.data?.map((item, index) => (
+                          <tr key={item?._id} data-date={item?.createdAt}>
+                            <td>
+                              {String((page - 1) * limit + index + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </td>
+
+                            <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
+                                  <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
+                                  >
+                                    <FilePenLine style={{ color: "#1f4529" }} />
+                                  </button>
+
+                                  <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
+                                    onClick={() =>
+                                      setIsDeleteModalOpen(!isDeleteModalOpen)
+                                    }
+                                  >
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) =>
+                                        handleDeleteClick(e, item)
+                                      }
+                                    />
+                                  </button>
                                 </div>
                               </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222101</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>1</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>02</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn editButton"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
+                            </td>
+
+                            <td>{item?.admissionNumber}</td>
+                            <td>{item?.name}</td>
+                            <td>{item?.fatherName}</td>
+                            <td>{item?.motherName}</td>
+                            <td>{item?.guardianPhone}</td>
+                            <td>
+                              <div className="client-item">
+                                <div className="image">
+                                  <img
+                                    src={item?.avatar?.imageURL}
+                                    alt="client"
+                                    className="rounded-circle mr-2"
+                                    width="30"
+                                  />
                                 </div>
                               </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222102</td>
-                        <td>Khandaker Shanto</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Shilpi Khatun</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>2</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>03</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn migrateModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222103</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>3</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>04</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222104</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>4</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>05</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222105</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>5</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>06</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222106</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Commerce</td>
-                        <td>6</td>
-                      </tr>
-                      <tr data-date="2024-08-05">
-                        <td>07</td>
-                        <td>
-                          <div id="action_btn">
-                            <div id="menu-wrap">
-                              <input type="checkbox" className="toggler" />
-                              <div className="dots">
-                                <div></div>
-                              </div>
-                              <div className="menu">
-                                <div>
-                                  <ul>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn"
-                                        data-modal="action-editmodal"
-                                      >
-                                        Edit
-                                      </a>
-                                    </li>
-                                    <li>
-                                      <a
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                      >
-                                        Delete
-                                      </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <button className="quick-view quickButton">
-                              <i className="fa-regular fa-eye"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>222107</td>
-                        <td>Md. Mizan Shekh</td>
-                        <td>Md. Sujon Shekh</td>
-                        <td>Mst. Rehana Akhter</td>
-                        <td>01752-414587</td>
-                        <td>
-                          <div className="client-item">
-                            <div className="image">
-                              <img
-                                src={productMemeberIMG}
-                                alt="client"
-                                className="rounded-circle mr-2"
-                                width="30"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>One</td>
-                        <td>Science</td>
-                        <td>7</td>
-                      </tr>
+                            </td>
+                            <td>{item?.className?.nameLabel}</td>
+                            <td>{item?.group?.nameLabel}</td>
+                            <td>{item?.studentRoll}</td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                {migrateStudents?.isAnyFieldMissing || isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {migrateStudents?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * migrateStudents?.currentPage,
+                            migrateStudents?.totalEntries,
+                          )} of ${migrateStudents?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
 
-                <div id="pagination" className="pagination">
-                  <button id="prevBtn" className="btn">
-                    Prev
-                  </button>
-                  <a href="#" className="page-link page-link--1">
-                    1
-                  </a>
-                  <a href="#" className="page-link page-link--2">
-                    2
-                  </a>
-                  <a href="#" className="page-link page-link--3">
-                    3
-                  </a>
-                  <button id="nextBtn" className="btn">
-                    Next
-                  </button>
-                </div>
+                {migrateStudents?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                      >
+                        Prev
+                      </button>
+                    )}
+                    {[...Array(migrateStudents?.totalPages)].map((_, index) => {
+                      const pageNumber = index + 1;
+
+                      return (
+                        <Link
+                          key={index}
+                          href="#"
+                          className={`page-link page-link--${pageNumber} ${page === pageNumber ? "active" : ""}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(pageNumber);
+                          }}
+                        >
+                          {pageNumber}
+                        </Link>
+                      );
+                    })}
+                    {page < migrateStudents?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, migrateStudents?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -958,15 +850,25 @@ const Migration = () => {
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleDelete}>
+                    Yes
+                  </button>
+                  <button id="confirmNo" onClick={handleClose}>
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -1081,127 +983,150 @@ const Migration = () => {
         <!-- Table Action Button Modal Start -->
 
         <!-- Migrate Students Pop Up Modal Start --> */}
-          <section id="migrateModal" className="modal migrateModal">
-            <div className="modal-content">
-              <div id="popup-modal">
-                <div className="form-container">
-                  <h3>Migrate A Student</h3>
-                  <form>
-                    {/* <!-- Row 1 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="search-students">
-                          Student's Search *
-                        </label>
-                        <input
-                          type="text"
-                          id="search-students"
-                          placeholder="Student Search..."
-                        />
+          {isMigrateModalOpen && (
+            <section id="migrateModal" className="modal migrateModal show">
+              <div className="modal-content">
+                <div id="popup-modal">
+                  <div className="form-container">
+                    <h3>Migrate A Student</h3>
+                    <form ref={migrateRef}>
+                      {/* <!-- Row 1 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="search-students">
+                            Student's Search *
+                          </label>
+                          <input
+                            type="text"
+                            id="search-students"
+                            placeholder="Student Search..."
+                            value={studentSearchID}
+                            onChange={(e) => setStudenSearchtID(e.target.value)}
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    {/* <!-- Row 2 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="name">Student's Name *</label>
-                        <input
-                          type="text"
-                          id="name"
-                          placeholder="Enter Name..."
-                        />
+                      {/* <!-- Row 2 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="name">Student's Name *</label>
+                          <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter Name..."
+                            value={studentName}
+                            onChange={(e) => setStudentName(e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="birth-certificate">
+                            Student's ID *
+                          </label>
+                          <input
+                            type="text"
+                            id="birth-certificate"
+                            placeholder="Enter ID"
+                            value={studentID}
+                            onChange={(e) => setStudentID(e.target.value)}
+                          />
+                        </div>
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="birth-certificate">
-                          Student's ID *
-                        </label>
-                        <input
-                          type="text"
-                          id="birth-certificate"
-                          placeholder="Enter ID"
-                        />
-                      </div>
-                    </div>
 
-                    {/* <!-- Row 3 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="Registration">
-                          Registration Date *
-                        </label>
-                        <input
-                          type="text"
-                          id="Registration"
-                          placeholder="Registration..."
+                      {/* <!-- Row 3 --> */}
+                      <div className="form-row">
+                        <DatepickerComponent
+                          title={"Registration Date *"}
+                          selectedDate={registrationDate}
+                          setSelectedDate={setRegistrationDate}
                         />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="Roll">Class Roll *</label>
-                        <input
-                          type="text"
-                          id="Roll"
-                          placeholder="Enter Class Roll"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="Class">Class Name*</label>
-                        <select id="shift">
-                          <option value="">Select Class</option>
-                          <option value="morning">One</option>
-                          <option value="evening">Two</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    {/* <!-- Row 4 --> */}
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label htmlFor="shift">Shift Name*</label>
-                        <select id="shift">
-                          <option value="">Select Shift</option>
-                          <option value="morning">Morning</option>
-                          <option value="evening">Evening</option>
-                        </select>
+                        <div className="form-group">
+                          <label htmlFor="Roll">Class Roll *</label>
+                          <input
+                            type="text"
+                            id="Roll"
+                            placeholder="Enter Class Roll"
+                            value={classRoll}
+                            onChange={(e) => setClassRoll(e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="Class">Class Name*</label>
+                          <Select
+                            options={classOPtions}
+                            onChange={setMigrateClassName}
+                            value={migrateClassName}
+                            placeholder="Select Class"
+                            menuPlacement="top"
+                          />
+                        </div>
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="shift">Section Name*</label>
-                        <select id="shift">
-                          <option value="">Select Section</option>
-                          <option value="morning">Science</option>
-                          <option value="evening">Commerce</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="shift">Session*</label>
-                        <select id="shift">
-                          <option value="">Select Session</option>
-                          <option value="morning">2024</option>
-                          <option value="evening">2025</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    {/* <!-- Actions --> */}
-                    <div className="form-actions">
-                      <button
-                        type="button"
-                        id="closeBtn"
-                        className="button close closeBtn"
-                      >
-                        Close
-                      </button>
-                      <button type="reset" className="button reset">
-                        Reset
-                      </button>
-                      <button type="submit" className="button save">
-                        Save
-                      </button>
-                    </div>
-                  </form>
+                      {/* <!-- Row 4 --> */}
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label htmlFor="shift">Shift Name*</label>
+                          <Select
+                            options={shiftOptions}
+                            onChange={setMigrateShiftName}
+                            value={migrateShiftName}
+                            placeholder="Select Shift"
+                            menuPlacement="top"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="shift">Section Name*</label>
+                          <Select
+                            options={sectionOptions}
+                            onChange={setMigrateSectionName}
+                            value={migrateSectionName}
+                            placeholder="Enter section name"
+                            menuPlacement="top"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="shift">Session*</label>
+                          <Select
+                            options={sessionOptions}
+                            onChange={setMigrateSession}
+                            value={migrateSession}
+                            placeholder="Enter section name"
+                            menuPlacement="top"
+                          />
+                        </div>
+                      </div>
+
+                      {/* <!-- Actions --> */}
+                      <div className="form-actions">
+                        <button
+                          type="button"
+                          id="closeBtn"
+                          className="button close closeBtn"
+                          onClick={() => setIsMigrateModalOpen(false)}
+                        >
+                          Close
+                        </button>
+                        <button
+                          type="reset"
+                          className="button reset"
+                          onClick={handleReset}
+                        >
+                          Reset
+                        </button>
+                        <button
+                          type="submit"
+                          className="button save"
+                          onClick={handleMigrateSubmit}
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
           {/* <!-- Migrate Students - Pop Up Modal Start --> */}
         </div>
       </div>
@@ -1210,4 +1135,4 @@ const Migration = () => {
   );
 };
 
-export default Migration;
+export default MigrationPage;

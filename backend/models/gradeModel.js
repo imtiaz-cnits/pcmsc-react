@@ -5,7 +5,6 @@ const gradeSchema = new mongoose.Schema(
     gradeName: {
       type: String,
       required: true,
-      enum: ["A+", "A", "A-", "B", "C", "D", "F"],
       uppercase: true,
       trim: true,
     },
@@ -13,8 +12,6 @@ const gradeSchema = new mongoose.Schema(
     gradePoint: {
       type: Number,
       required: true,
-      min: 0,
-      max: 5,
     },
     totalSubjectMark: {
       type: Number,
@@ -24,14 +21,10 @@ const gradeSchema = new mongoose.Schema(
     markFrom: {
       type: Number,
       required: true,
-      min: 0,
-      max: 100,
     },
     markUpTo: {
       type: Number,
       required: true,
-      min: 0,
-      max: 100,
     },
   },
   { timestamps: true },

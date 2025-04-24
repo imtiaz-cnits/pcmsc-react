@@ -51,7 +51,7 @@ async function getAllExamType(req, res, next) {
 
     return res.status(200).json({
       success: true,
-      message: "Fetched Successfully!",
+      message: "Exam Types Fetched Successfully!",
       count: exmatypes.length,
       data: exmatypes,
     });
@@ -67,10 +67,12 @@ async function getAllPaginatedExamTypes(req, res, next) {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 5;
     const skip = Number(page - 1) * limit;
-    const { keyword } = req.query;
+    const keyword = req.query.keyword.trim();
+
+    console.log("keyword value : ", keyword);
 
     const searchQuery = keyword
-      ? { examTypeName: { $regex: keyword.trim(), $options: "i" } }
+      ? { examTypeName: { $regex: keyword, $options: "i" } }
       : {};
 
     const query = { $and: [searchQuery].filter(Boolean) };

@@ -8,6 +8,7 @@ import {
   addSubjectAPI,
   deleteSubjectAPI,
   fetchedPaginatedSubjectsAPI,
+  fetchedSubjectsAPI,
   updateSubjectAPI,
 } from "../api/exam-management/subjectAPI";
 
@@ -41,6 +42,18 @@ export const useAddSubject = () => {
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["subjects"] });
     },
+  });
+};
+
+//✅  GET - method
+export const useFetchSubjects = () => {
+  return useQuery({
+    queryKey: ["subjects"],
+    queryFn: fetchedSubjectsAPI,
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
   });
 };
 
