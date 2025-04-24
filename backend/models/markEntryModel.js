@@ -2,41 +2,62 @@ const mongoose = require("mongoose");
 
 const markEntrySchema = new mongoose.Schema(
   {
-    class: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
+    studentID: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+
+    studentName: {
+      type: String,
+      trim: true,
       required: true,
     },
 
-    session: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Session",
+    studentRoll: {
+      type: String,
+      trim: true,
       required: true,
     },
 
-    section: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Section",
-      required: true,
-    },
-    shift: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Shift",
-      required: true,
-    },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subject",
       required: true,
     },
-    examName: {
+
+    examType: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ExamType",
       required: true,
     },
+    writtenMark: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    oralMark: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    total: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestamps: true },
 );
+
+// pre calculate
+markEntrySchema.pre("save", function cal(next) {
+  this.total = this.writtenMark + this.oralMark;
+  next();
+});
 
 const MarkEntry = mongoose.model("MarkEntry", markEntrySchema);
 

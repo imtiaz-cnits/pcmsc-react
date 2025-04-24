@@ -1,25 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchExamTypes } from "../../hook/useExamType";
+import { useFetchEligibleStudents } from "../../hook/useMark";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useFetchSubjects } from "../../hook/useSubject";
 
-const MarkEntry = () => {
-  const [sclass, setSclass] = useState("");
-  const [session, setSession] = useState("");
-  const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState("");
-  const [subject, setSubject] = useState("");
-  const [examinationName, setExaminationName] = useState("");
+const MarkEntryPage = () => {
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSection, setSelectedSsection] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [marksData, setMarksData] = useState([]);
+
+  const [searchFilters, setSearchFilters] = useState({
+    className: null,
+    session: null,
+    section: null,
+    shift: null,
+    subject: null,
+    examName: null,
+  });
+
   const { data: classes } = useFetchClasses();
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
   const { data: shifts } = useFetchShifts();
   const { data: subjects } = useFetchSubjects();
   const { data: exams } = useFetchExamTypes();
+
+  const {
+    data: eligibleStudents,
+    isPending,
+    isError,
+    error,
+  } = useFetchEligibleStudents(searchFilters);
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -44,6 +63,67 @@ const MarkEntry = () => {
   const examsOptions = exams?.data?.map((item) => {
     return { value: item?._id, label: item?.examTypeName };
   });
+
+  const isButtonDisabled =
+    !selectedClass ||
+    !selectedShift ||
+    !selectedSection ||
+    !selectedSession ||
+    !selectedSubject ||
+    !selectedExam;
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("handle search button is clicked ");
+    setSearchFilters({
+      className: selectedClass ? selectedClass.value : null,
+      session: selectedSession ? selectedSession.value : null,
+      section: selectedSection ? selectedSection.value : null,
+      shift: selectedShift ? selectedShift.value : null,
+      subject: selectedSubject ? selectedSubject.value : null,
+      examName: selectedExam ? selectedExam.value : null,
+    });
+  };
+
+  const handleMarkChange = (index, field, value) => {
+    const updated = [...marksData];
+    updated[index][field] = value;
+    setMarksData(updated);
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+
+    const payload = marksData.map((entry) => ({
+      studentID: entry.studentId,
+      studentName: entry.studentName,
+      studentRoll: entry.studentRoll,
+      subject: selectedSubject.value,
+      examType: selectedExam.value,
+      writtenMark: Number(entry.writtenMark),
+      oralMark: Number(entry.oralMark),
+    }));
+
+    console.log("payload : ", payload);
+  };
+
+  useEffect(() => {
+    console.log("now value : ", eligibleStudents?.data);
+    if (eligibleStudents?.data?.length > 0) {
+      const initialized = eligibleStudents?.data?.map((stu) => ({
+        studentId: stu?.studentID,
+        studentName: stu?.name,
+        studentRoll: stu?.studentRoll,
+        writtenMark: "",
+        oralMark: "",
+      }));
+      setMarksData(initialized);
+    }
+  }, [eligibleStudents]);
+
+  useEffect(() => {
+    console.log("search filter value : ", marksData);
+  }, [marksData]);
 
   return (
     <>
@@ -72,8 +152,8 @@ const MarkEntry = () => {
                             name=""
                             id=""
                             options={classOptions}
-                            value={sclass}
-                            onChange={setSclass}
+                            value={selectedClass}
+                            onChange={setSelectedClass}
                             placeholder="Select Class"
                           ></Select>
                         </div>
@@ -83,8 +163,8 @@ const MarkEntry = () => {
                           <Select
                             name=""
                             options={sessionOPtions}
-                            onChange={setSession}
-                            value={session}
+                            onChange={setSelectedSession}
+                            value={selectedSession}
                           ></Select>
                         </div>
                         <div className="form-group select-input-box">
@@ -92,8 +172,8 @@ const MarkEntry = () => {
 
                           <Select
                             options={sectionOptions}
-                            value={ssection}
-                            onChange={setSsection}
+                            value={selectedSection}
+                            onChange={setSelectedSsection}
                             placeholder="Select Section"
                           ></Select>
                         </div>
@@ -105,8 +185,8 @@ const MarkEntry = () => {
                             name=""
                             id=""
                             options={shiftOptions}
-                            value={shift}
-                            onChange={setShift}
+                            value={selectedShift}
+                            onChange={setSelectedShift}
                             placeholder="Select Shift"
                           ></Select>
                         </div>
@@ -117,8 +197,8 @@ const MarkEntry = () => {
                             name=""
                             id=""
                             options={subjectOptions}
-                            value={subject}
-                            onChange={setSubject}
+                            value={selectedSubject}
+                            onChange={setSelectedSubject}
                             placeholder="Select Subject"
                           ></Select>
                         </div>
@@ -128,15 +208,21 @@ const MarkEntry = () => {
                             name=""
                             id=""
                             options={examsOptions}
-                            value={examinationName}
-                            onChange={setExaminationName}
+                            value={selectedExam}
+                            onChange={setSelectedExam}
                             placeholder="Select Name"
                           ></Select>
                         </div>
                       </div>
                     </form>
                   </div>
-                  <button className="search-btn">Search</button>
+                  <button
+                    className="search-btn"
+                    disabled={isButtonDisabled}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </button>
                 </div>
                 {/* <!-- Form Start --> */}
 
@@ -154,18 +240,66 @@ const MarkEntry = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>01</td>
-                        <td>202423</td>
-                        <td>MD: Shanto</td>
-                        <td>03</td>
-                        <td>
-                          <input type="text" />
-                        </td>
-                        <td>
-                          <input type="text" />
-                        </td>
-                      </tr>
+                      {isPending ? (
+                        <tr>
+                          <td colSpan={6} style={{ textAlign: "center" }}>
+                            Choose Class, Session, Section & Shift to
+                            proceed.....
+                          </td>
+                        </tr>
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="10">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : eligibleStudents?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={10} style={{ textAlign: "center" }}>
+                            No Entries Found !
+                          </td>
+                        </tr>
+                      ) : (
+                        marksData.map((item, idx) => (
+                          <tr key={idx}>
+                            <td>{String(idx + 1).padStart(2, "0")}</td>
+                            <td>{item?.studentId}</td>
+                            <td>{item?.studentName}</td>
+                            <td>{item?.studentRoll}</td>
+                            <td>
+                              <input
+                                type="number"
+                                value={item.writtenMark}
+                                onChange={(e) =>
+                                  handleMarkChange(
+                                    idx,
+                                    "writtenMark",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                value={item.oralMark}
+                                onChange={(e) =>
+                                  handleMarkChange(
+                                    idx,
+                                    "oralMark",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                            </td>
+                          </tr>
+                        ))
+                      )}
+
                       <tr>
                         <td>02</td>
                         <td>202443</td>
@@ -183,7 +317,9 @@ const MarkEntry = () => {
                 </div>
 
                 <div className="button-wrap">
-                  <button className="mark-btn">Save Mark</button>
+                  <button className="mark-btn" onClick={handleSave}>
+                    Save Mark
+                  </button>
                 </div>
               </div>
             </div>
@@ -223,4 +359,4 @@ const MarkEntry = () => {
     </>
   );
 };
-export default MarkEntry;
+export default MarkEntryPage;

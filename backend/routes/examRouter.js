@@ -39,6 +39,9 @@ const {
   deleteAssignExam,
   updateAssignedExam,
 } = require("../controllers/exam-management/examAssignController");
+const {
+  searchEligibleStudents,
+} = require("../controllers/exam-management/markEntryController");
 
 // 🚀  Exam Type - CRUD
 router.post("/add-exam-type", addExamType);
@@ -72,6 +75,9 @@ router.get("/all-assigned-exams", getAllAssignedExam);
 router.get("/assigned-exams-paginated", getAllPaginatedAssignedExams);
 router.patch("/assigned-exam/:id", updateAssignedExam);
 router.delete("/assigned-exam/:id", deleteAssignExam);
+
+// 🚀  Mark Entry
+router.get("/students/search", searchEligibleStudents);
 
 // 🛠️ exports
 module.exports = router;

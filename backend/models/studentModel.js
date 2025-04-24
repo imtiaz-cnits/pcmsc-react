@@ -22,9 +22,9 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     studentRoll: {
       type: String,
-      unique: true,
       trim: true,
       required: true,
     },

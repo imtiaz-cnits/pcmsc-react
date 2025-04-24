@@ -17,7 +17,7 @@ import GeneratedTBSheet from "../pages/GeneratedTBSheet/GeneratedTBSheet";
 import GenerateIDCard from "../pages/GenerateIDCard/GenerateIDCard";
 import GradePage from "../pages/Grade/GradePage";
 import GroupPage from "../pages/Group/GroupPage";
-import MarkEntry from "../pages/MarkEntry/MarkEntry";
+import MarkEntryPage from "../pages/MarkEntry/MarkEntryPage.jsx";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 import Result from "../pages/Result/Result";
@@ -124,7 +124,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "mark-entry",
-            element: <MarkEntry />,
+            element: <MarkEntryPage />,
           },
           {
             path: "result-sheet",
