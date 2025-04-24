@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchSections } from "../../hook/useSection";
@@ -14,13 +14,21 @@ const Result = () => {
   const [selectedSection, setSelectedSsection] = useState(null);
   const [selectedShift, setSelectedShift] = useState(null);
   const [selectedExamination, setSelectedExamination] = useState(null);
+  const [searchFilters, setSearchFilters] = useState({
+    classRoll: "",
+    section: null,
+    className: null,
+    shift: null,
+    session: null,
+    examination: null,
+  });
 
   const { data: sections } = useFetchSections();
   const { data: classes } = useFetchClasses();
   const { data: shifts } = useFetchShifts();
   const { data: sessions } = useFetchSessions();
   const { data: examtypes } = useFetchExamTypes();
-  const { data: results } = useFetchStudentsResults();
+  const { data: results } = useFetchStudentsResults(searchFilters);
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -45,17 +53,21 @@ const Result = () => {
   const handleSearchQuery = (e) => {
     e.preventDefault();
 
-    const payload = {
+    console.log("button is clicked ");
+
+    setSearchFilters({
       classRoll,
       section: selectedSection ? selectedSection.value : null,
       className: selectedClass ? selectedClass.value : null,
       shift: selectedShift ? selectedShift.value : null,
       session: selectedSession ? selectedSession.value : null,
       examination: selectedExamination ? selectedExamination.value : null,
-    };
-
-    console.log("payload : ", payload);
+    });
   };
+
+  useEffect(() => {
+    console.log("filters value ", searchFilters);
+  }, [searchFilters]);
 
   const isButtonDisabled =
     !selectedClass ||

@@ -2,18 +2,18 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchEligibleStudentsResultAPI } from "../api/exam-management/resultAPI";
 
 //✅  GET - method
-export const useFetchStudentsResults = (payload) => {
+export const useFetchStudentsResults = (filters) => {
   const isFilterValid =
-    payload.selectedClass &&
-    payload.selectedSession &&
-    payload.selectedSection &&
-    payload.selectedShift &&
-    payload.selectedExamination &&
-    payload.classRoll;
+    filters.classRoll &&
+    filters.section &&
+    filters.className &&
+    filters.shift &&
+    filters.session &&
+    filters.examination;
 
   return useQuery({
-    queryKey: ["results"],
-    queryFn: () => fetchEligibleStudentsResultAPI(payload),
+    queryKey: ["results", filters],
+    queryFn: () => fetchEligibleStudentsResultAPI(filters),
     enabled: !!isFilterValid,
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
