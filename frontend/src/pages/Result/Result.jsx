@@ -1,13 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from 'react-router-dom';
 import Select from "react-select";
 import { useFetchClasses } from "../../hook/useClass";
-import { useFetchSections } from "../../hook/useSection";
-import { useFetchShifts } from "../../hook/useShift";
-import { useFetchSessions } from "../../hook/useSession";
 import { useFetchExamTypes } from "../../hook/useExamType";
 import { useFetchStudentsResults } from "../../hook/useResult";
+import { useFetchSections } from "../../hook/useSection";
+import { useFetchSessions } from "../../hook/useSession";
+import { useFetchShifts } from "../../hook/useShift";
 
 const Result = () => {
+
+  const [searchParams, setSearchParams]=useSearchParams()
+
   const [classRoll, setClassRoll] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
@@ -76,6 +80,9 @@ const Result = () => {
     !selectedShift ||
     !selectedExamination ||
     !classRoll;
+
+
+  
 
   return (
     <>

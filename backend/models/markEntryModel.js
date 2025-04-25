@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const markEntrySchema = new mongoose.Schema(
   {
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Student",
+      required: true,
+    },
+
     studentID: {
       type: String,
       required: true,
@@ -57,13 +63,27 @@ const markEntrySchema = new mongoose.Schema(
       required: true,
     },
 
+    mcqMark: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+
     writtenMark: {
       type: Number,
       required: true,
       min: 0,
       default: 0,
     },
-    oralMark: {
+    caMark: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+
+    ctMark: {
       type: Number,
       required: true,
       min: 0,
