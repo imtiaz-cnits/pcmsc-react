@@ -237,6 +237,7 @@ const Ok = () => {
                             <span>Student Name:</span>
                           </td>
                           <td>
+                            {/* // todo  */}
                             <span>{eligibleStudent?.data[0]?.name}</span>
                           </td>
                           <td>
