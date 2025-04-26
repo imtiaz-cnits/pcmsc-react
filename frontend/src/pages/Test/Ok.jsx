@@ -2,7 +2,10 @@ import { useSearchParams } from "react-router-dom";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
-import { useFetchMarkSheet } from "../../hook/useMarkSheet";
+import {
+  useFetchEligibleStudent,
+  useFetchMarkSheet,
+} from "../../hook/useMarkSheet";
 
 const Ok = () => {
   const [searchParams] = useSearchParams();
@@ -22,7 +25,21 @@ const Ok = () => {
     sessionID,
     examinationID,
   };
-  console.log("search params value : ", filters);
+
+  const studentFilters = {
+    roll,
+    sectionID,
+    classID,
+    shiftID,
+    sessionID,
+  };
+
+  const {
+    data: eligibleStudent,
+    isPending: isEligibleStudentPending,
+    isError: isEligibleStudentError,
+    error: eligibleStudentError,
+  } = useFetchEligibleStudent(studentFilters);
 
   const {
     data: reportCard,
@@ -211,71 +228,77 @@ const Ok = () => {
                 <h3>Progress Report</h3>
                 <div className="student-info-table">
                   <table className="student-info">
-                    <tr>
-                      <td>
-                        <span>Student Name:</span>
-                      </td>
-                      <td>
-                        <span>IMTIAZ AHMED</span>
-                      </td>
-                      <td>
-                        <span>Roll No:</span>
-                      </td>
-                      <td>
-                        <span>116988</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Father's Name:</span>
-                      </td>
-                      <td>
-                        <span>MD. IQBAL HOSSAIN</span>
-                      </td>
+                    {isEligibleStudentPending ? (
+                      <span>loadinggg </span>
+                    ) : (
+                      <>
+                        <tr>
+                          <td>
+                            <span>Student Name:</span>
+                          </td>
+                          <td>
+                            <span>{eligibleStudent?.data[0]?.name}</span>
+                          </td>
+                          <td>
+                            <span>Roll No:</span>
+                          </td>
+                          <td>
+                            <span>116988</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Father's Name:</span>
+                          </td>
+                          <td>
+                            <span>MD. IQBAL HOSSAIN</span>
+                          </td>
 
-                      <td>
-                        <span>Group:</span>
-                      </td>
-                      <td>
-                        <span>Boys</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Mother's Name:</span>
-                      </td>
-                      <td>
-                        <span> MOST. FERDOUSI IQBAL</span>
-                      </td>
-                      <td>
-                        <span>Exam:</span>
-                      </td>
-                      <td>
-                        <span>Annual Exam</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Student ID:</span>
-                      </td>
-                      <td>
-                        <span>212469</span>
-                      </td>
-                      <td>
-                        <span>Year/Session:</span>
-                      </td>
-                      <td>
-                        <span>2025</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>className:</span>
-                      </td>
-                      <td colSpan="3">
-                        <span>6/Six</span>
-                      </td>
-                    </tr>
+                          <td>
+                            <span>Group:</span>
+                          </td>
+                          <td>
+                            <span>Boys</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Mother's Name:</span>
+                          </td>
+                          <td>
+                            <span> MOST. FERDOUSI IQBAL</span>
+                          </td>
+                          <td>
+                            <span>Exam:</span>
+                          </td>
+                          <td>
+                            <span>Annual Exam</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Student ID:</span>
+                          </td>
+                          <td>
+                            <span>212469</span>
+                          </td>
+                          <td>
+                            <span>Year/Session:</span>
+                          </td>
+                          <td>
+                            <span>2025</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>className:</span>
+                          </td>
+                          <td colSpan="3">
+                            <span>6/Six</span>
+                          </td>
+                        </tr>
+                      </>
+                    )}
                   </table>
                 </div>
               </div>

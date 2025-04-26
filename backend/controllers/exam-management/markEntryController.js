@@ -64,6 +64,8 @@ async function markEntry(req, res, next) {
             caMark: student.caMark,
             ctMark: student.ctMark,
             totalMark: student.totalMark,
+            letterGrade: student.letterGrade,
+            gradePoint: student.gradePoint,
           },
         },
         upsert: true,

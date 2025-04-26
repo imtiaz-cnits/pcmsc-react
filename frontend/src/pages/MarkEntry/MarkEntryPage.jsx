@@ -8,6 +8,7 @@ import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useFetchSubjects } from "../../hook/useSubject";
+import { gradeCal } from "../../utils/gradeCal";
 
 const MarkEntryPage = () => {
   const [selectedClass, setSelectedClass] = useState(null);
@@ -109,6 +110,8 @@ const MarkEntryPage = () => {
 
       const total = mcq + written + CA + CT;
 
+      const gradeResult = gradeCal(total);
+
       return {
         student: entry.student,
         studentID: entry.studentId,
@@ -125,6 +128,8 @@ const MarkEntryPage = () => {
         caMark: CA,
         ctMark: CT,
         totalMark: total,
+        letterGrade: gradeResult.letterGrade,
+        gradePoint: gradeResult.gradePoint,
       };
     });
 

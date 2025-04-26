@@ -93,6 +93,14 @@ const markEntrySchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    letterGrade: {
+      type: String,
+      required: true,
+    },
+    gradePoint: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true },
 );
