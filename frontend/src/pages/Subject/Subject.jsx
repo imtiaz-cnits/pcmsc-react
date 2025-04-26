@@ -1,6 +1,7 @@
 import { FilePenLine, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import { Toaster } from "sonner";
 
 import ShimmerTable from "../../components/shimmer/ShimmerTable";
 import { useFetchClasses } from "../../hook/useClass";
@@ -186,6 +187,8 @@ const Subject = () => {
 
   return (
     <>
+      <Toaster position="top-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">

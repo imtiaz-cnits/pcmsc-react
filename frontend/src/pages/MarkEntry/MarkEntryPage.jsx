@@ -9,7 +9,6 @@ import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useFetchSubjects } from "../../hook/useSubject";
 
-
 const MarkEntryPage = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
@@ -27,7 +26,9 @@ const MarkEntryPage = () => {
     examName: null,
   });
 
-  const { mutate: markEntry } = useMarkEntry({examName : selectedExam ?  selectedExam?.label : null});
+  const { mutate: markEntry } = useMarkEntry({
+    examName: selectedExam ? selectedExam?.label : null,
+  });
   const { data: classes } = useFetchClasses();
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
@@ -42,11 +43,9 @@ const MarkEntryPage = () => {
     error,
   } = useFetchEligibleStudents(searchFilters);
 
-
-  useEffect(()=>{
-    console.log('exam types : ', selectedExam)
-  }, [selectedExam])
-
+  useEffect(() => {
+    console.log("exam types : ", selectedExam);
+  }, [selectedExam]);
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -103,15 +102,15 @@ const MarkEntryPage = () => {
     e.preventDefault();
 
     const payload = marksData.map((entry) => {
-      const mcq = Number(entry.mcqMark) || 0; 
+      const mcq = Number(entry.mcqMark) || 0;
       const written = Number(entry.writtenMark) || 0;
-      const CA = Number(entry.caMark) || 0; 
+      const CA = Number(entry.caMark) || 0;
       const CT = Number(entry.ctMark) || 0;
 
       const total = mcq + written + CA + CT;
 
       return {
-        student:entry.student,
+        student: entry.student,
         studentID: entry.studentId,
         studentName: entry.studentName,
         studentRoll: entry.studentRoll,
@@ -124,7 +123,7 @@ const MarkEntryPage = () => {
         mcqMark: mcq,
         writtenMark: written,
         caMark: CA,
-        ctMark:CT,
+        ctMark: CT,
         totalMark: total,
       };
     });
@@ -157,8 +156,8 @@ const MarkEntryPage = () => {
 
   return (
     <>
-          <Toaster position="bottom-right" richColors />
-    
+      <Toaster position="bottom-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">

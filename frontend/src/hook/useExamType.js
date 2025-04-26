@@ -4,6 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   addExamTypeAPI,
   deleteExamTypeAPI,
@@ -22,7 +23,7 @@ export const useAddExamType = () => {
     onError: (error) => {
       console.log("⚙️ error adding exam-type : ", error);
       if (error.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             "Failed to add exam-type . Try again!",
         );
@@ -38,7 +39,7 @@ export const useAddExamType = () => {
 
       await queryClient.invalidateQueries({ queryKey: ["exam-types"] });
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 
@@ -81,7 +82,7 @@ export const useUpdateExamType = () => {
     onError: (error) => {
       console.log("⚙️ error useUpdateExamType : ", error);
       if (error?.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             error.message ||
             '"An error occurred !. Please try again"',
@@ -101,7 +102,7 @@ export const useUpdateExamType = () => {
 
       await queryClient.invalidateQueries({ queryKey: ["exam-types"] });
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 
@@ -121,7 +122,7 @@ export const useDeleteExamType = () => {
     onError: (error) => {
       console.log("⚙️  error useDeleteExamType : ", error);
       if (error?.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             error.message ||
             '"An error occurred !. Please try again"',
@@ -140,7 +141,7 @@ export const useDeleteExamType = () => {
 
       await queryClient.invalidateQueries({ queryKey: ["exam-types"] });
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 

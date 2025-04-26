@@ -103,7 +103,7 @@ async function addStudentInfo(req, res, next) {
 
     return res.status(200).json({
       success: true,
-      message: "Student added successfully.",
+      message: "Student admitted successfully: ADM202 (Roll: 1001)",
       data: newStudentInfo,
     });
   } catch (error) {

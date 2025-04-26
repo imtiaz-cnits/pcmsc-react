@@ -47,6 +47,9 @@ const {
 const {
   getResult,
 } = require("../controllers/exam-management/resultController");
+const {
+  getMarkSheet,
+} = require("../controllers/exam-management/markSheetController");
 
 // 🚀  Exam Type - CRUD
 router.post("/add-exam-type", addExamType);
@@ -88,6 +91,9 @@ router.get("/marks", fetchEntryMark);
 
 // 🚀  Result
 router.get("/students/result/search", getResult);
+
+// 🚀  Mark Sheet
+router.get("/students/result/mark-sheet", getMarkSheet);
 
 // 🛠️ exports
 module.exports = router;

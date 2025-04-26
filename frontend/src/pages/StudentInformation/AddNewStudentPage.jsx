@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import Select from "react-select";
+import { Toaster } from "sonner";
 import "../../assets/css/all-modal.css";
 import DatepickerComponent from "../../components/DatepickerComponent ";
 import Shimmer from "../../components/Shimmer";
@@ -539,6 +540,7 @@ const AddNewStudentPage = () => {
 
   return (
     <>
+      <Toaster position="bottom-right" richColors />
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">

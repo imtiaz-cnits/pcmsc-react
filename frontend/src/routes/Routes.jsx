@@ -20,7 +20,7 @@ import GroupPage from "../pages/Group/GroupPage";
 import MarkEntryPage from "../pages/MarkEntry/MarkEntryPage.jsx";
 import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import MigrationPage from "../pages/Migration/MigrationPage.jsx";
-import Result from "../pages/Result/Result";
+import ResultPage from "../pages/Result/ResultPage.jsx";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
 import Section from "../pages/Section/Section";
 import Session from "../pages/Session/Session";
@@ -128,7 +128,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "result-sheet",
-            element: <Result />,
+            element: <ResultPage />,
           },
           {
             path: "combine-result",
@@ -197,7 +197,7 @@ export const router = createBrowserRouter([
     element: <Test />,
   },
   {
-    path: "ok",
+    path: "ok/mark-sheet",
     element: <Ok />,
   },
 ]);

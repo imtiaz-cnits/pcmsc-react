@@ -4,6 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   addSubjectAPI,
   deleteSubjectAPI,
@@ -21,7 +22,7 @@ export const useAddSubject = () => {
     onError: (error) => {
       console.log("⚙️ error adding useAddSubject : ", error);
       if (error.response) {
-        alert(
+        toast.error(
           error.response?.data?.message || "Failed to add subject . Try again!",
         );
       }
@@ -35,7 +36,7 @@ export const useAddSubject = () => {
       await queryClient.invalidateQueries({ queryKey: ["subjects"] });
 
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 
@@ -78,7 +79,7 @@ export const useUpdateSubject = () => {
     onError: (error) => {
       console.log("⚙️ error useUpdateSubject : ", error);
       if (error?.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             error.message ||
             '"An error occurred !. Please try again"',
@@ -98,7 +99,7 @@ export const useUpdateSubject = () => {
 
       await queryClient.invalidateQueries({ queryKey: ["subjects"] });
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 
@@ -118,7 +119,7 @@ export const useDeleteSubjects = () => {
     onError: (error) => {
       console.log("⚙️  error useDeleteSubjects : ", error);
       if (error?.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred !. Please try again",
         );
@@ -135,7 +136,7 @@ export const useDeleteSubjects = () => {
     onSuccess: async (data) => {
       console.log("🚀 useDeleteSubjects data : ", data);
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
       await queryClient.invalidateQueries({ queryKey: ["subjects"] });
     },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchExamTypes } from "../../hook/useExamType";
@@ -8,10 +8,8 @@ import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 
-const Result = () => {
-
-  const [searchParams, setSearchParams]=useSearchParams()
-
+const ResultPage = () => {
+  const navigate = useNavigate();
   const [classRoll, setClassRoll] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
@@ -67,6 +65,30 @@ const Result = () => {
       session: selectedSession ? selectedSession.value : null,
       examination: selectedExamination ? selectedExamination.value : null,
     });
+
+    const query = new URLSearchParams({
+      roll: classRoll,
+      section: selectedClass.value,
+      className: selectedClass.value,
+      shift: selectedShift.value,
+      session: selectedSession.value,
+      examination: selectedExamination.value,
+    }).toString();
+
+    console.log(
+      "url search params : ",
+      new URLSearchParams({
+        roll: classRoll,
+        section: selectedClass.value,
+        className: selectedClass.value,
+        shift: selectedShift.value,
+        session: selectedSession.value,
+        examination: selectedExamination.value,
+      }),
+    );
+    console.log("query string : ", query);
+
+    navigate(`/ok/mark-sheet?${query}`);
   };
 
   useEffect(() => {
@@ -80,9 +102,6 @@ const Result = () => {
     !selectedShift ||
     !selectedExamination ||
     !classRoll;
-
-
-  
 
   return (
     <>
@@ -186,4 +205,4 @@ const Result = () => {
   );
 };
 
-export default Result;
+export default ResultPage;

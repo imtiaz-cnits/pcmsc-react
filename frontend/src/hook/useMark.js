@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { toast } from 'sonner';
+import { toast } from "sonner";
 import {
   fetchEligibleStudentsAPI,
   markEntryAPI,
@@ -31,7 +31,7 @@ export const useFetchEligibleStudents = (filters) => {
 };
 
 //📌  POST - method
-export const useMarkEntry = ({examName}) => {
+export const useMarkEntry = ({ examName }) => {
   const queryClient = useQueryClient();
 
   return useMutation({
