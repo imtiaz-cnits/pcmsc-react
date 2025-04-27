@@ -63,7 +63,7 @@ async function getAllSubjects(req, res, next) {
       return next(createError(404, "Subject not found!"));
     }
 
-    console.log("🔑 Fetched all subjects:", subjects);
+    // console.log("🔑 Fetched all subjects:", subjects);
 
     return res.status(200).json({
       success: true,

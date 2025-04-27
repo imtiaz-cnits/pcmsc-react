@@ -6,6 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { fetchStudentBySIdAPI } from "../api/exam-management/migrationAPI.js";
 import {
   addStudentInfoAPI,
@@ -23,11 +24,17 @@ export const useAddSutdent = () => {
     mutationFn: addStudentInfoAPI,
     onError: (error) => {
       console.log("⚙️ error adding student : ", error);
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
     },
 
     onSuccess: async (data) => {
       console.log("🚀 Student added successfully: ", data);
       await queryClient.invalidateQueries({ queryKey: ["students"] });
+      if (data?.success) {
+        toast.success(data?.message);
+      }
     },
 
     onSettled: async () => {

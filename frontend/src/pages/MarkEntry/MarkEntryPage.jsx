@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import { Toaster } from "sonner";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchExamTypes } from "../../hook/useExamType";
 import { useFetchEligibleStudents, useMarkEntry } from "../../hook/useMark";
@@ -25,7 +26,9 @@ const MarkEntryPage = () => {
     examName: null,
   });
 
-  const { mutate: markEntry } = useMarkEntry();
+  const { mutate: markEntry } = useMarkEntry({
+    examName: selectedExam ? selectedExam?.label : null,
+  });
   const { data: classes } = useFetchClasses();
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
@@ -39,6 +42,10 @@ const MarkEntryPage = () => {
     isError,
     error,
   } = useFetchEligibleStudents(searchFilters);
+
+  useEffect(() => {
+    console.log("exam types : ", selectedExam);
+  }, [selectedExam]);
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -95,36 +102,49 @@ const MarkEntryPage = () => {
     e.preventDefault();
 
     const payload = marksData.map((entry) => {
+      const mcq = Number(entry.mcqMark) || 0;
       const written = Number(entry.writtenMark) || 0;
-      const oral = Number(entry.oralMark) || 0;
-      const total = written + oral;
+      const CA = Number(entry.caMark) || 0;
+      const CT = Number(entry.ctMark) || 0;
+
+      const total = mcq + written + CA + CT;
 
       return {
+        student: entry.student,
         studentID: entry.studentId,
         studentName: entry.studentName,
         studentRoll: entry.studentRoll,
-        subject: selectedSubject.value,
-        examType: selectedExam.value,
+        className: selectedClass ? selectedClass.value : null,
+        session: selectedSession ? selectedSession.value : null,
+        section: selectedSection ? selectedSection.value : null,
+        shift: selectedShift ? selectedShift.value : null,
+        subject: selectedSubject ? selectedSubject.value : null,
+        examType: selectedExam ? selectedExam.value : null,
+        mcqMark: mcq,
         writtenMark: written,
-        oralMark: oral,
+        caMark: CA,
+        ctMark: CT,
         totalMark: total,
       };
     });
 
     markEntry(payload);
 
-    console.log("payload : ", payload);
+    console.log("payload of backend data : ", payload);
   };
 
   useEffect(() => {
     console.log("now value : ", eligibleStudents?.data);
     if (eligibleStudents?.data?.length > 0) {
       const initialized = eligibleStudents?.data?.map((stu) => ({
+        student: stu?._id,
         studentId: stu?.studentID,
         studentName: stu?.name,
         studentRoll: stu?.studentRoll,
+        mcqMark: "",
         writtenMark: "",
-        oralMark: "",
+        caMark: "",
+        ctMark: "",
       }));
       setMarksData(initialized);
     }
@@ -136,6 +156,8 @@ const MarkEntryPage = () => {
 
   return (
     <>
+      <Toaster position="bottom-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
@@ -244,8 +266,10 @@ const MarkEntryPage = () => {
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th>Roll</th>
+                        <th>MCQ Mark</th>
                         <th>Written Mark</th>
-                        <th>Oral Mark</th>
+                        <th>CA Mark</th>
+                        <th>CT Mark</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -279,6 +303,21 @@ const MarkEntryPage = () => {
                             <td>{item?.studentId}</td>
                             <td>{item?.studentName}</td>
                             <td>{item?.studentRoll}</td>
+
+                            <td>
+                              <input
+                                type="number"
+                                value={item.mcq}
+                                onChange={(e) =>
+                                  handleMarkChange(
+                                    idx,
+                                    "mcqMark",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                            </td>
+
                             <td>
                               <input
                                 type="number"
@@ -299,7 +338,21 @@ const MarkEntryPage = () => {
                                 onChange={(e) =>
                                   handleMarkChange(
                                     idx,
-                                    "oralMark",
+                                    "caMark",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                            </td>
+
+                            <td>
+                              <input
+                                type="number"
+                                value={item.oralMark}
+                                onChange={(e) =>
+                                  handleMarkChange(
+                                    idx,
+                                    "ctMark",
                                     e.target.value,
                                   )
                                 }

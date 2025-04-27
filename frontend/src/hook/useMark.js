@@ -4,11 +4,11 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   fetchEligibleStudentsAPI,
   markEntryAPI,
 } from "../api/exam-management/markAPI";
-
 //✅  GET - method
 export const useFetchEligibleStudents = (filters) => {
   const isFilterValid =
@@ -31,7 +31,7 @@ export const useFetchEligibleStudents = (filters) => {
 };
 
 //📌  POST - method
-export const useMarkEntry = () => {
+export const useMarkEntry = ({ examName }) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -54,7 +54,7 @@ export const useMarkEntry = () => {
       await queryClient.invalidateQueries({ queryKey: ["mark-entry"] });
 
       if (data?.success) {
-        alert(data?.message);
+        toast.success(`${data?.message} ${examName}!.`);
       }
     },
 
