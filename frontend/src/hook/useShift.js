@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import {
   addShiftAPI,
   deleteShiftAPI,
@@ -74,12 +74,9 @@ export const useAddShifts = () => {
       console.log("Shifts variables : ", variables);
       await queryClient.invalidateQueries({ queryKey: ["shifts"] });
 
-
       if (data?.success) {
         toast.success(data?.message);
       }
-
-     
     },
 
     onSettled: async () => {
@@ -227,7 +224,6 @@ export const useDeleteShift = () => {
     // ✅ Success: Invalidate and Refetch Data
     onSuccess: async (data) => {
       console.log("✅ Shift deleted successfully: ", data);
-      
 
       await queryClient.invalidateQueries({ queryKey: ["shifts"] });
       if (data?.success) {

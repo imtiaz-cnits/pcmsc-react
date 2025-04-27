@@ -68,10 +68,9 @@ const Ok = () => {
     location.reload(); // Reload the page to restore functionality
   };
 
-  useEffect(()=>{
-
-    console.log('report card : ', reportCard?.data)
-  }, [reportCard])
+  useEffect(() => {
+    console.log("report card : ", reportCard?.data);
+  }, [reportCard]);
 
   return (
     <>
@@ -264,7 +263,9 @@ const Ok = () => {
                             <span>Group:</span>
                           </td>
                           <td>
-                            <span>{eligibleStudent?.data[0]?.group?.nameLabel}</span>
+                            <span>
+                              {eligibleStudent?.data[0]?.group?.nameLabel}
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -279,7 +280,9 @@ const Ok = () => {
                           </td>
                           <td>
                             {/* // todo */}
-                            <span>{reportCard?.data[0]?.examType?.examTypeName}</span>
+                            <span>
+                              {reportCard?.data[0]?.examType?.examTypeName}
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -293,7 +296,9 @@ const Ok = () => {
                             <span>Year/Session:</span>
                           </td>
                           <td>
-                            <span>{eligibleStudent?.data[0]?.session?.nameLabel}</span>
+                            <span>
+                              {eligibleStudent?.data[0]?.session?.nameLabel}
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -301,7 +306,9 @@ const Ok = () => {
                             <span>Class:</span>
                           </td>
                           <td colSpan="3">
-                            <span>{eligibleStudent?.data[0]?.className?.nameLabel}</span>
+                            <span>
+                              {eligibleStudent?.data[0]?.className?.nameLabel}
+                            </span>
                           </td>
                         </tr>
                       </>
@@ -334,62 +341,55 @@ const Ok = () => {
                       </tr>
                     </thead>
                     <tbody>
-
-{isPending || isEligibleStudentPending ? (<span>Loading......</span>) : isError ? (<span>erorrr ...</span>) : reportCard.totalEntries <=0 ? (
-
-<p>not found </p>
-
-) : reportCard?.data?.length > 0 && reportCard?.data?.map((item,idx)=>(
-
-
-  <>
-  
-  <tr key={`${idx}-subject-info`}>
-                        <td>
-                          <span>{item?.subject?.subjectCode}</span>
-                        </td>
-                        <td className="subject">
-                          <span>{item?.subject?.subjectName}</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>{item?.mcqMark}</span>
-                        </td>
-                        <td>
-                          <span>{item?.writtenMark}</span>
-                        </td>
-                        <td>
-                          <span>{item?.caMark}</span>
-                        </td>
-                        <td>
-                          <span>{item?.ctMark}</span>
-                        </td>
-                        <td>
-                          <span>{item?.totalMark}</span>
-                        </td>
-                        <td>
-                          <span>{item?.letterGrade}</span>
-                        </td>
-                        <td>
-                          <span>{item?.gradePoint}</span>
-                        </td>
-                      </tr>
-
-
-                     
-  
-  </>
-
-)) 
-
-
-}
-<tr>
+                      {isPending || isEligibleStudentPending ? (
+                        <span>Loading......</span>
+                      ) : isError ? (
+                        <span>erorrr ...</span>
+                      ) : reportCard.totalEntries <= 0 ? (
+                        <p>not found </p>
+                      ) : (
+                        reportCard?.data?.length > 0 &&
+                        reportCard?.data?.map((item, idx) => (
+                          <>
+                            <tr key={`${idx}-subject-info`}>
+                              <td>
+                                <span>{item?.subject?.subjectCode}</span>
+                              </td>
+                              <td className="subject">
+                                <span>{item?.subject?.subjectName}</span>
+                              </td>
+                              <td>
+                                <span>100</span>
+                              </td>
+                              <td>
+                                <span>99.3</span>
+                              </td>
+                              <td>
+                                <span>{item?.mcqMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.writtenMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.caMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.ctMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.totalMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.letterGrade}</span>
+                              </td>
+                              <td>
+                                <span>{item?.gradePoint}</span>
+                              </td>
+                            </tr>
+                          </>
+                        ))
+                      )}
+                      <tr>
                         <td colSpan="2">
                           <span>Total Exam Marks</span>
                         </td>
@@ -400,7 +400,12 @@ const Ok = () => {
                           <span>Obtained Marks & GPA</span>
                         </td>
                         <td>
-                          <span>990</span>
+                          <span>
+                            {reportCard?.data?.reduce(
+                              (acc, cur) => acc + cur.totalMark,
+                              0,
+                            )}
+                          </span>
                         </td>
                         <td>
                           <span>A</span>
@@ -409,8 +414,6 @@ const Ok = () => {
                           <span>4.9</span>
                         </td>
                       </tr>
-
-
                     </tbody>
                   </table>
                 </div>

@@ -147,7 +147,7 @@ const Shift = () => {
 
   return (
     <>
-          <Toaster position="top-center" richColors />
+      <Toaster position="top-center" richColors />
 
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">

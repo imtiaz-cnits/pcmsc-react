@@ -3,7 +3,6 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Shimmer from "../../components/Shimmer.jsx";
 import { Toaster } from "sonner";
 
-
 import {
   useAddSession,
   useDeleteSession,
@@ -131,7 +130,7 @@ const Session = () => {
 
   return (
     <>
-          <Toaster position="top-center" richColors />
+      <Toaster position="top-center" richColors />
 
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">

@@ -45,7 +45,7 @@ async function getEligibleStudent(req, res, next) {
       session: sessionID,
       shift: shiftID,
       section: sectionID,
-    }).populate("shift section session group className")
+    }).populate("shift section session group className");
 
     console.log("eligible Students length : ", eligibleStudents.length);
     console.log("eligible Students : ", eligibleStudents);

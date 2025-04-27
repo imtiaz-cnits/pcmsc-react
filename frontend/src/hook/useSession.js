@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import {
   addSessionAPI,
   deleteSessionAPI,
@@ -126,7 +126,6 @@ export const useUpdateSession = () => {
       if (data?.success) {
         toast.success(data?.message);
       }
-
     },
 
     onSettled: async () => {
