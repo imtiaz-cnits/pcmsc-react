@@ -14,7 +14,7 @@ async function getMarkSheet(req, res, next) {
       shift: shiftID,
       examType: examinationID,
       section: sectionID,
-    }).populate("student");
+    }).populate("student className session section shift subject examType");
 
     // console.log("report card length : ", reportCard.length);
     // console.log("report card : ", reportCard);
@@ -45,7 +45,7 @@ async function getEligibleStudent(req, res, next) {
       session: sessionID,
       shift: shiftID,
       section: sectionID,
-    });
+    }).populate("shift section session group className")
 
     console.log("eligible Students length : ", eligibleStudents.length);
     console.log("eligible Students : ", eligibleStudents);

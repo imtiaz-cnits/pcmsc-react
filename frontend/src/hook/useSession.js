@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 import {
   addSessionAPI,
   deleteSessionAPI,
@@ -22,6 +22,10 @@ export const useAddSession = () => {
 
     onError: (error) => {
       console.log("error adding session : ", error);
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while updating the class. Please try again.",
+      );
 
       console.log(
         "❌ An error occurred while saving the session. Please try again. : ",
@@ -35,8 +39,8 @@ export const useAddSession = () => {
       console.log("data", data);
       console.log("variables", variables);
 
-      toast.success(data?.message || "Session added!");
       await queryClient.invalidateQueries({ queryKey: ["sessions"] });
+      toast.success(data?.message);
       console.log(
         "✅ After Backend Response (Cache Data): ",
         queryClient.getQueryData(["sessions"]),
@@ -99,7 +103,7 @@ export const useUpdateSession = () => {
       console.log("⚙️ error updating class variables : ", variables);
 
       if (error?.response) {
-        toast(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred while updating the class. Please try again.",
         );
@@ -117,11 +121,12 @@ export const useUpdateSession = () => {
       console.log("🚀 update class onSuccess data value :", data);
       console.log("🚀 update  :", payload, sessionId);
 
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
+
       if (data?.success) {
-        toast(data?.message);
+        toast.success(data?.message);
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
     },
 
     onSettled: async () => {
@@ -166,6 +171,9 @@ export const useDeleteSession = () => {
       console.log("Session deleted successfully: ", data);
 
       await queryClient.invalidateQueries({ queryKey: ["sessions"] });
+      if (data?.success) {
+        toast.success(data?.message);
+      }
     },
 
     onSettled: async () => {

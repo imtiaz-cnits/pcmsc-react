@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Shimmer from "../../components/Shimmer.jsx";
+import { Toaster } from "sonner";
+
+
 import {
   useAddSession,
   useDeleteSession,
@@ -129,6 +131,8 @@ const Session = () => {
 
   return (
     <>
+          <Toaster position="top-center" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
@@ -508,7 +512,6 @@ const Session = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
-      <Toaster />
     </>
   );
 };
