@@ -7,6 +7,7 @@ import {
   useFetchMarkSheet,
 } from "../../hook/useMarkSheet";
 import { useEffect } from "react";
+import { totalGradeCal } from "../../utils/gradeCal";
 
 const Ok = () => {
   const [searchParams] = useSearchParams();
@@ -48,6 +49,20 @@ const Ok = () => {
     isError,
     error,
   } = useFetchMarkSheet(filters);
+
+  useEffect(() => {
+    if (!isPending && reportCard?.data?.length) {
+      const { letterGrade, gradePoint } = totalGradeCal(
+        reportCard?.data,
+        reportCard?.count,
+      );
+      console.log("value : ", letterGrade, gradePoint);
+    }
+  }, [reportCard, isPending]);
+
+  const finalGrade = totalGradeCal(reportCard?.data, reportCard?.count);
+
+  console.log("final grade : ", finalGrade);
 
   const printMarksheet = () => {
     const marksheet = document.querySelector(".marksheet-container");
@@ -389,31 +404,38 @@ const Ok = () => {
                           </>
                         ))
                       )}
-                      <tr>
-                        <td colSpan="2">
-                          <span>Total Exam Marks</span>
-                        </td>
-                        <td>
-                          <span>1000</span>
-                        </td>
-                        <td colSpan="5">
-                          <span>Obtained Marks & GPA</span>
-                        </td>
-                        <td>
-                          <span>
-                            {reportCard?.data?.reduce(
-                              (acc, cur) => acc + cur.totalMark,
-                              0,
-                            )}
-                          </span>
-                        </td>
-                        <td>
-                          <span>A</span>
-                        </td>
-                        <td>
-                          <span>4.9</span>
-                        </td>
-                      </tr>
+
+                      {isPending || isEligibleStudentPending ? (
+                        <span>loading.. </span>
+                      ) : isError ? (
+                        <span>error ...</span>
+                      ) : (
+                        <tr>
+                          <td colSpan="2">
+                            <span>Total Exam Marks</span>
+                          </td>
+                          <td>
+                            <span>1000</span>
+                          </td>
+                          <td colSpan="5">
+                            <span>Obtained Marks & GPA</span>
+                          </td>
+                          <td>
+                            <span>
+                              {reportCard?.data?.reduce(
+                                (acc, cur) => acc + cur.totalMark,
+                                0,
+                              )}
+                            </span>
+                          </td>
+                          <td>
+                            <span>{finalGrade.letterGrade}</span>
+                          </td>
+                          <td>
+                            <span>{finalGrade.gradePoint}</span>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
