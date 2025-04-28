@@ -8,6 +8,7 @@ import {
 } from "../../hook/useMarkSheet";
 import { useEffect } from "react";
 import { totalGradeCal } from "../../utils/gradeCal";
+import SkeletonLoader from "../../components/skeleton/SkeletonLoader";
 
 const Ok = () => {
   const [searchParams] = useSearchParams();
@@ -249,7 +250,7 @@ const Ok = () => {
                 <div className="student-info-table">
                   <table className="student-info">
                     {isEligibleStudentPending || isPending ? (
-                      <span>loadinggg </span>
+                      <SkeletonLoader />
                     ) : (
                       <>
                         <tr>
@@ -357,9 +358,10 @@ const Ok = () => {
                     </thead>
                     <tbody>
                       {isPending || isEligibleStudentPending ? (
-                        <span>Loading......</span>
+                        <SkeletonLoader />
                       ) : isError ? (
-                        <span>erorrr ...</span>
+                        <SkeletonLoader />
+
                       ) : reportCard.totalEntries <= 0 ? (
                         <p>not found </p>
                       ) : (
@@ -406,9 +408,9 @@ const Ok = () => {
                       )}
 
                       {isPending || isEligibleStudentPending ? (
-                        <span>loading.. </span>
+                       <SkeletonLoader />
                       ) : isError ? (
-                        <span>error ...</span>
+                        <SkeletonLoader />
                       ) : (
                         <tr>
                           <td colSpan="2">
