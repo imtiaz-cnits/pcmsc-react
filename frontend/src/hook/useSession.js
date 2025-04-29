@@ -24,7 +24,7 @@ export const useAddSession = () => {
       console.log("error adding session : ", error);
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while updating the class. Please try again.",
+          "An error occurred while updating the session. Please try again.",
       );
 
       console.log(
@@ -34,13 +34,14 @@ export const useAddSession = () => {
     },
 
     // ✅ Success: Invalidate and Refetch Data
-    onSuccess: async (data, variables) => {
+    onSuccess: async (data) => {
       console.log("✅ Session added successfully: ", data);
       console.log("data", data);
-      console.log("variables", variables);
 
       await queryClient.invalidateQueries({ queryKey: ["sessions"] });
-      toast.success(data?.message);
+      if (data?.success) {
+        toast.success(data?.message);
+      }
       console.log(
         "✅ After Backend Response (Cache Data): ",
         queryClient.getQueryData(["sessions"]),
@@ -68,15 +69,14 @@ export const useFetchSessions = () => {
 };
 
 //✅  GET - method (paginated)
-export const useFetchPaginatedSessions = (page) => {
+export const useFetchPaginatedSessions = ({ page, limit, keyword }) => {
   return useQuery({
-    queryKey: ["sessions", page],
-    queryFn: async () => await fetchedPaginatedSessions(page),
+    queryKey: ["sessions", { page, limit, keyword }],
+    queryFn: async () => await fetchedPaginatedSessions(page, limit, keyword),
     gcTime: 1000 * 60 * 15,
     staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: true,
-    retry: 2,
   });
 };
 
@@ -98,22 +98,21 @@ export const useUpdateSession = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateSessionAPI,
-    onError: (error, variables) => {
-      console.log("⚙️ error updating class : ", error);
-      console.log("⚙️ error updating class variables : ", variables);
+    onError: (error) => {
+      console.log("⚙️ error updating session : ", error);
 
       if (error?.response) {
         toast.error(
           error.response?.data?.message ||
-            "An error occurred while updating the class. Please try again.",
+            "An error occurred while updating the session. Please try again.",
         );
       }
 
       console.log(
-        "❌ An error occurred while updating the class. Please try again. : ",
+        "❌ An error occurred while updating the session. Please try again. : ",
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to update class . Try again!",
+          "Failed to update session . Try again!",
       );
     },
 
@@ -141,38 +140,26 @@ export const useDeleteSession = () => {
   return useMutation({
     mutationFn: deleteSessionAPI,
 
-    onMutate: async (sessionId) => {
-      console.log("⏳ [Session] Attempting to add session:", sessionId);
-
-      await queryClient.cancelQueries({ queryKey: ["sessions"] });
-
-      const prevSessions = queryClient.getQueryData(["sessions"]);
-
-      console.log("🔍 Before Update (Cache Data):", prevSessions);
-
-      queryClient.setQueryData(["sessions", sessionId], (oldData) => {
-        return oldData?.filter((session) => session._id !== sessionId);
-      });
-
-      return { prevSessions };
-    },
-
-    onError: (error, _, context) => {
+    onError: (error) => {
       console.log("Error in deleting session: ", error);
-
-      // rollback
-      if (context?.prevSessions) {
-        queryClient.setQueryData(["sessions"], context.prevSessions);
+      if (error.response) {
+        toast.error(
+          error.response?.data?.message || "Failed to add section . Try again!",
+        );
       }
+
+      console.log(
+        "❌ An error occurred while saving the section. Please try again. : ",
+        error.response?.data?.message || "Failed to add section . Try again!",
+      );
     },
 
     onSuccess: async (data) => {
       console.log("Session deleted successfully: ", data);
-
-      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
       if (data?.success) {
         toast.success(data?.message);
       }
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
     },
 
     onSettled: async () => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import Shimmer from "../../components/Shimmer.jsx";
+import { FilePenLine, Trash } from "lucide-react";
+
 import { Toaster } from "sonner";
 
 import {
@@ -9,14 +9,19 @@ import {
   useFetchPaginatedSessions,
   useUpdateSession,
 } from "../../hook/useSession.js";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
 
-const Session = () => {
+const SessionPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
   const [session, setSession] = useState("");
   const [sessionStatus, setSessionStatus] = useState("");
   const [editSessionId, setEditSessionId] = useState("");
+  const [deletedID, setDeletedID] = useState("");
   const [warn, setWarn] = useState("");
   const { mutate: addSession } = useAddSession();
   const { mutate: updateSession } = useUpdateSession();
@@ -27,7 +32,7 @@ const Session = () => {
     isPending,
     isError,
     error,
-  } = useFetchPaginatedSessions(page);
+  } = useFetchPaginatedSessions({ page, limit, keyword });
 
   // ✅ Enable-Disable scrolling when modal is open-close
   useEffect(() => {
@@ -43,6 +48,15 @@ const Session = () => {
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
+  ];
+
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
   ];
 
   const handleAddSession = (e) => {
@@ -101,36 +115,39 @@ const Session = () => {
     setSessionStatus("");
     setWarn("");
     setEditSessionId("");
-    setIsEditModalOpen(!isEditModalOpen);
+    setKeyword("");
+    setIsEditModalOpen(false);
   };
 
-  const handleSessionDelete = (e, item) => {
+  const handleDeletedID = (e, item) => {
     e.preventDefault();
-    console.log("after deleting  session value : ", item);
-    deleteSession(item?._id, {
+    console.log("deleted id : ", item?._id);
+    setDeletedID(item?._id);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  };
+
+  const handleSessionDelete = (e) => {
+    e.preventDefault();
+    deleteSession(deletedID, {
       onSuccess: () => {
         if (sessions?.data?.length === 1 && page > 1) {
           setPage((prevState) => prevState - 1);
         }
       },
     });
+    setKeyword("");
+    setIsDeleteModalOpen(false);
   };
 
-  if (isError) {
-    console.log("inside session list error : ", error);
-    if (error instanceof Error) {
-      const errorMsg =
-        error.response?.data?.message ||
-        error.message ||
-        "Something went wrong. Please! try again later!";
-
-      return <p>{errorMsg}</p>;
-    }
-  }
+  const handleSearchQuery = (e) => {
+    e.preventDefault();
+    setPage(1);
+    setKeyword(e.target.value);
+  };
 
   return (
     <>
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-right" richColors />
 
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
@@ -150,93 +167,107 @@ const Session = () => {
                 </div>
                 {/* <!-- Class heading End --> */}
 
-                {sessions?.total <= 0 ? (
-                  <tr>
-                    <td colSpan="4" style={{ textAlign: "center" }}>
-                      No Sessions Found
-                    </td>
-                  </tr>
-                ) : (
-                  <>
-                    {/* <!-- Action Buttons --> */}
-                    <div className="button-wrapper mb-3">
-                      {/* <!-- Search and Filter --> */}
-                      <div className="input-group class-group">
-                        {/* <!-- Entries per page --> */}
-                        <div>
-                          <div className="entries-page">
-                            <label htmlFor="entries" className="mr-2">
-                              Entries:
-                            </label>
-                            <div className="select-container dropdown-button">
-                              <select
-                                id="entries"
-                                className="form-control"
-                                style={{ width: "auto" }}
-                              >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                              </select>
-                              <span className="dropdown-icon">&#9662;</span>
-                              {/* <!-- Dropdown icon --> */}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="class-search">
-                          <input
-                            style={{ width: "20%", margin: "0" }}
-                            type="text"
-                            id="searchInput"
+                {/* <!-- Action Buttons --> */}
+                <div className="button-wrapper mb-3">
+                  {/* <!-- Search and Filter --> */}
+                  <div className="input-group class-group">
+                    {/* <!-- Entries per page --> */}
+                    <div>
+                      <div className="entries-page">
+                        <label htmlFor="entries" className="mr-2">
+                          Entries:
+                        </label>
+                        <div className="select-container dropdown-button">
+                          <select
+                            id="entries"
                             className="form-control"
-                            placeholder="Search Class..."
-                          />
+                            value={limit}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setLimit(Number(e.target.value));
+                              setPage(1);
+                              setKeyword("");
+                            }}
+                            style={{ width: "auto" }}
+                          >
+                            {entriesOptions.map((item, index) => (
+                              <option key={index} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="dropdown-icon">&#9662;</span>
+                          {/* <!-- Dropdown icon --> */}
                         </div>
                       </div>
                     </div>
+                    <div className="class-search">
+                      <input
+                        style={{ width: "20%", margin: "0" }}
+                        type="text"
+                        id="searchInput"
+                        className="form-control"
+                        placeholder="Search Session..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                    {/* <!-- Table --> */}
-                    <div className="table-wrapper">
-                      <table
-                        id="printTable"
-                        className="table table-bordered table-hover"
-                      >
-                        <thead>
-                          <tr>
-                            <th>Sl No:</th>
-                            <th>Session Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {isPending ? (
-                            <Shimmer count={5} />
-                          ) : (
-                            sessions?.data?.length > 0 &&
-                            sessions?.data?.map((item, index) => (
-                              <tr key={item?._id}>
-                                <td>{(page - 1) * 5 + index + 1}</td>
-                                <td
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    gap: "20px",
-                                  }}
-                                >
-                                  {item?.nameLabel}
-                                </td>
-                                <td>{item?.label}</td>
-                                <td
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    gap: "20px",
-                                  }}
-                                >
+                {/* <!-- Table --> */}
+                <div className="table-wrapper">
+                  <table
+                    id="printTable"
+                    className="table table-bordered table-hover"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Sl No:</th>
+                        <th>Session Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {isPending ? (
+                        <ShimmerTable rows={limit} cols={4} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="4">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : sessions?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: "center" }}>
+                            No Session found
+                          </td>
+                        </tr>
+                      ) : (
+                        sessions?.data?.length > 0 &&
+                        sessions?.data?.map((item, idx) => (
+                          <tr key={item?._id}>
+                            <td>
+                              {String((page - 1) * limit + idx + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </td>
+                            <td>{item?.nameLabel}</td>
+                            <td>{item?.label}</td>
+
+                            <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
                                   <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
                                     style={{
                                       background: "none",
                                       border: "none",
@@ -246,89 +277,115 @@ const Session = () => {
                                       handleSessionEditClick(e, item)
                                     }
                                   >
-                                    <FaRegEdit
-                                      style={{
-                                        color: "lightgreen",
-                                        fontSize: "25px",
-                                      }}
-                                    />
+                                    <FilePenLine style={{ color: "#1f4529" }} />
                                   </button>
+
                                   <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
                                     style={{
                                       background: "none",
                                       border: "none",
                                       cursor: "pointer",
-                                      padding: 0,
                                     }}
-                                    onClick={(e) =>
-                                      handleSessionDelete(e, item)
-                                    }
                                   >
-                                    <FaRegTrashAlt
-                                      style={{
-                                        color: "red",
-                                        fontSize: "25px",
-                                      }}
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) => handleDeletedID(e, item)}
                                     />
                                   </button>
-                                </td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                    {/* <!-- Pagination and Display Info --> */}
-                    <div className="my-3">
-                      <span id="display-info"></span>
-                    </div>
+                                </div>
 
-                    <div id="pagination" className="pagination">
+                                {/* <!-- <button class="quick-view quickButton">
+                            <i class="fa-regular fa-eye"></i>
+                          </button> --> */}
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                {/* <!-- Pagination and Display Info --> */}
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {sessions?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * sessions?.currentPage,
+                            sessions?.totalEntries,
+                          )} of ${sessions?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
+
+                {sessions?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
                       <button
                         id="prevBtn"
                         className="btn"
-                        onClick={() =>
-                          setPage((prevState) => Math.max(prevState - 1, 1))
-                        }
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                         disabled={page === 1}
                       >
                         Prev
                       </button>
-                      {page} of {sessions?.totalPages}
+                    )}
+
+                    {`${page} of ${Number(sessions?.totalPages)}`}
+
+                    {page < sessions?.totalPages && (
                       <button
                         id="nextBtn"
                         className="btn"
                         onClick={() =>
-                          setPage((prevState) =>
-                            Math.min(prevState + 1, sessions?.totalPages),
+                          setPage((prev) =>
+                            Math.min(prev + 1, sessions?.totalPages),
                           )
                         }
-                        disabled={page === sessions?.totalPages}
                       >
                         Next
                       </button>
-                    </div>
-                  </>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2023. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
           {/* <!-- Table End --> */}
 
           {/* <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleSessionDelete}>
+                    Yes
+                  </button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -515,4 +572,4 @@ const Session = () => {
   );
 };
 
-export default Session;
+export default SessionPage;

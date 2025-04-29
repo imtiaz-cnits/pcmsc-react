@@ -10,20 +10,17 @@ import { FilePenLine, Trash } from "lucide-react";
 import { Toaster } from "sonner";
 import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
 
-const Section = () => {
+const SectionPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [section, setSection] = useState("");
   const [sectionStatus, setSectionStatus] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [keyword, setKeyword] = useState("");
-
   const [editSectionId, setEditSectionId] = useState("");
   const [deletedID, setDeletedID] = useState("");
-
   const [warn, setWarn] = useState("");
   const { mutate: addSection } = useAddSections();
   const { mutate: updateSection } = useUpdateSection();
@@ -157,10 +154,6 @@ const Section = () => {
     setKeyword(e.target.value);
   };
 
-  useEffect(() => {
-    console.log("edit modal value ", isEditModalOpen);
-  }, [isEditModalOpen]);
-
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -250,7 +243,7 @@ const Section = () => {
                         <ShimmerTable rows={limit} cols={4} />
                       ) : isError ? (
                         <tr>
-                          <td colSpan="10">
+                          <td colSpan="4">
                             <div className="error-msg">
                               {error?.response?.data?.message ||
                                 error?.message ||
@@ -260,8 +253,8 @@ const Section = () => {
                         </tr>
                       ) : sections?.totalEntries <= 0 ? (
                         <tr>
-                          <td colSpan={10} style={{ textAlign: "center" }}>
-                            No Sections found
+                          <td colSpan={4} style={{ textAlign: "center" }}>
+                            No Section found
                           </td>
                         </tr>
                       ) : (
@@ -275,15 +268,7 @@ const Section = () => {
                                   "0",
                                 )}
                               </td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                {item?.nameLabel}
-                              </td>
+                              <td>{item?.nameLabel}</td>
                               <td>{item?.label}</td>
 
                               <td>
@@ -597,4 +582,4 @@ const Section = () => {
     </>
   );
 };
-export default Section;
+export default SectionPage;

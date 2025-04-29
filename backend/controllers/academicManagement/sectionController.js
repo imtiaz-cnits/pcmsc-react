@@ -163,13 +163,6 @@ async function updateSection(req, res, next) {
       },
     );
 
-    if (!updatedSection) {
-      console.log(`⚠️ Section not found [ID: ${sectionId}]`);
-      return next(createError(404, "Section not found!"));
-    }
-
-    console.log("✅ Successfully updated section:", updatedSection);
-
     return res.status(200).json({
       success: true,
       message: "Section updated successfully!",
