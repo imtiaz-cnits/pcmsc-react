@@ -34,6 +34,7 @@ import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Ok from "../pages/Test/Ok";
 import Test from "../pages/Test/Test";
+import Tester from "../pages/Test/Tester";
 import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
 
@@ -200,4 +201,8 @@ export const router = createBrowserRouter([
     path: "ok/mark-sheet",
     element: <Ok />,
   },
+  {
+    path: 'tester',
+    element: <Tester />
+  }
 ]);
