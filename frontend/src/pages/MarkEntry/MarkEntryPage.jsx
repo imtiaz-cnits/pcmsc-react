@@ -146,14 +146,14 @@ const MarkEntryPage = () => {
         studentId: stu?.studentID,
         studentName: stu?.name,
         studentRoll: stu?.studentRoll,
-        mcqMark: "",
-        writtenMark: "",
-        caMark: "",
-        ctMark: "",
+        mcqMark: stu.mcqMark ?? '',
+        writtenMark: stu.writtenMark ?? "",
+        caMark: stu.caMark ?? "",
+        ctMark: stu.ctMark ?? "",
       }));
       setMarksData(initialized);
     }
-  }, [eligibleStudents]);
+  }, [eligibleStudents, searchFilters]);
 
   useEffect(() => {
     console.log("search filter value : ", marksData);
@@ -312,7 +312,7 @@ const MarkEntryPage = () => {
                             <td>
                               <input
                                 type="number"
-                                value={item.mcq}
+                                value={item.mcqMark}
                                 onChange={(e) =>
                                   handleMarkChange(
                                     idx,
@@ -339,7 +339,7 @@ const MarkEntryPage = () => {
                             <td>
                               <input
                                 type="number"
-                                value={item.oralMark}
+                                value={item.caMark}
                                 onChange={(e) =>
                                   handleMarkChange(
                                     idx,
@@ -353,7 +353,7 @@ const MarkEntryPage = () => {
                             <td>
                               <input
                                 type="number"
-                                value={item.oralMark}
+                                value={item.ctMark}
                                 onChange={(e) =>
                                   handleMarkChange(
                                     idx,

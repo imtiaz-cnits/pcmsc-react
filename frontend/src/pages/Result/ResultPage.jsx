@@ -88,7 +88,7 @@ const ResultPage = () => {
     );
     console.log("query string : ", query);
 
-    navigate(`/ok/mark-sheet?${query}`);
+    navigate(`/exam-management/mark-sheet?${query}`);
   };
 
   useEffect(() => {

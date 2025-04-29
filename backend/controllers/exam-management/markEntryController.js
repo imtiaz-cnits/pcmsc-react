@@ -23,7 +23,7 @@ async function searchEligibleStudents(req, res, next) {
       shift,
       subject,
       examType: examName,
-    });
+    }).populate("session className section shift subject examType");
 
     const marksMap = {};
     markEntries.forEach((entry) => {
@@ -50,7 +50,7 @@ async function searchEligibleStudents(req, res, next) {
       success: true,
       totalEntries,
       message: "Students Fetched Successfully !",
-      data: students,
+      data: studentsWithMarks,
     });
   } catch (error) {
     console.log(" error in searchEligibleStudents ", error);

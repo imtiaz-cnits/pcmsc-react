@@ -1,15 +1,95 @@
 import { useState } from "react";
+import { useFetchClasses } from "../../hook/useClass";
+import { useFetchSessions } from "../../hook/useSession";
+import { useFetchSections } from "../../hook/useSection";
+import { useFetchShifts } from "../../hook/useShift";
+import { useFetchSubjects } from "../../hook/useSubject";
+import { useFetchExamTypes } from "../../hook/useExamType";
+import { useFetchEligibleStudents } from "../../hook/useMark";
+import Select from "react-select";
+import { Toaster } from "sonner";
 
 const Tester = () => {
-  const [sclass, setSclass] = useState("");
-  const [session, setSession] = useState("");
-  const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState("");
-  const [subject, setSubject] = useState("");
-  const [examinationName, setExaminationName] = useState("");
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSection, setSelectedSsection] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [marksData, setMarksData] = useState([]);
+  const [searchFilters, setSearchFilters] = useState({
+    className: null,
+    session: null,
+    section: null,
+    shift: null,
+    subject: null,
+    examName: null,
+  });
+
+const { data: classes } = useFetchClasses();
+  const { data: sessions } = useFetchSessions();
+  const { data: sections } = useFetchSections();
+  const { data: shifts } = useFetchShifts();
+  const { data: subjects } = useFetchSubjects();
+  const { data: exams } = useFetchExamTypes();
+
+  const {
+    data: eligibleStudents,
+    isPending,
+    isError,
+    error,
+  } = useFetchEligibleStudents(searchFilters);
+
+
+  const classOptions = classes?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sessionOPtions = sessions?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sectionOptions = sections?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const shiftOptions = shifts?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const subjectOptions = subjects?.data?.map((item) => {
+    return { value: item?._id, label: item?.subjectName };
+  });
+
+  const examsOptions = exams?.data?.map((item) => {
+    return { value: item?._id, label: item?.examTypeName };
+  });
+
+  const isButtonDisabled =
+    !selectedClass ||
+    !selectedShift ||
+    !selectedSection ||
+    !selectedSession ||
+    !selectedSubject ||
+    !selectedExam;
+
+    const handleSearch = (e) => {
+      e.preventDefault();
+      console.log("handle search button is clicked ");
+      setSearchFilters({
+        className: selectedClass ? selectedClass.value : null,
+        session: selectedSession ? selectedSession.value : null,
+        section: selectedSection ? selectedSection.value : null,
+        shift: selectedShift ? selectedShift.value : null,
+        subject: selectedSubject ? selectedSubject.value : null,
+        examName: selectedExam ? selectedExam.value : null,
+      });
+    };
 
   return (
     <>
+      <Toaster position="bottom-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
@@ -31,103 +111,82 @@ const Tester = () => {
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Class*</label>
 
-                          <select
+                          <Select
                             name=""
                             id=""
-                            value={sclass}
-                            onChange={(e) => setSclass(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Class
-                            </option>
-                            <option value="One">One</option>
-                            <option value="Two">Two</option>
-                          </select>
+                            options={classOptions}
+                            value={selectedClass}
+                            onChange={setSelectedClass}
+                            placeholder="Select Class"
+                          ></Select>
                         </div>
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Session*</label>
 
-                          <select
+                          <Select
                             name=""
-                            id=""
-                            onChange={(e) => setSession(e.target.value)}
-                            value={session}
-                          >
-                            <option value="" disabled>
-                              Select Session
-                            </option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                          </select>
+                            options={sessionOPtions}
+                            onChange={setSelectedSession}
+                            value={selectedSession}
+                          ></Select>
                         </div>
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Section*</label>
-
-                          <select
-                            value={ssection}
-                            onChange={(e) => setSsection(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Section
-                            </option>
-                            <option value="Science">Science</option>
-                            <option value="Commerce">Commerce</option>
-                            <option value="Arts">Arts</option>
-                          </select>
+                         
+                          <Select
+                            options={sectionOptions}
+                            value={selectedSection}
+                            onChange={setSelectedSsection}
+                            placeholder="Select Section"
+                          ></Select>
                         </div>
                       </div>
                       <div className="form-row">
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Shift*</label>
-                          <select
+                          <Select
                             name=""
                             id=""
-                            value={shift}
-                            onChange={(e) => setShift(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Shift
-                            </option>
-                            <option value="Morning">Morning</option>
-                            <option value="Day">Day</option>
-                          </select>
+                            options={shiftOptions}
+                            value={selectedShift}
+                            onChange={setSelectedShift}
+                            placeholder="Select Shift"
+                          ></Select>
                         </div>
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Subject*</label>
 
-                          <select
+                          <Select
                             name=""
                             id=""
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Subject
-                            </option>
-                            <option value="Bangla">Bangla</option>
-                            <option value="English">English</option>
-                          </select>
+                            options={subjectOptions}
+                            value={selectedSubject}
+                            onChange={setSelectedSubject}
+                            placeholder="Select Subject"
+                          ></Select>
                         </div>
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Exam Name*</label>
-                          <select
+                          <Select
                             name=""
                             id=""
-                            value={examinationName}
-                            onChange={(e) => setExaminationName(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              {" "}
-                              Select Name
-                            </option>
-                            <option value="1st Semester">1st Semester</option>
-                            <option value="2nd Semester">2nd Semester</option>
-                          </select>
+                            options={examsOptions}
+                            value={selectedExam}
+                            onChange={setSelectedExam}
+                            placeholder="Select Name"
+                          ></Select>
+
                         </div>
                       </div>
                     </form>
                   </div>
-                  <button className="search-btn">Search</button>
+                  <button
+                    className="search-btn"
+                    disabled={isButtonDisabled}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </button>
                 </div>
                 {/* <!-- Form Start --> */}
 

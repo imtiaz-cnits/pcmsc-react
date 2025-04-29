@@ -40,15 +40,12 @@ const Ok = () => {
   const {
     data: eligibleStudent,
     isPending: isEligibleStudentPending,
-    isError: isEligibleStudentError,
-    error: eligibleStudentError,
   } = useFetchEligibleStudent(studentFilters);
 
   const {
     data: reportCard,
     isPending,
     isError,
-    error,
   } = useFetchMarkSheet(filters);
 
   useEffect(() => {
