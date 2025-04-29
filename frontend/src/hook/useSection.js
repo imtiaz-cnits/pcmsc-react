@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 import {
   addSectionAPI,
   deleteSectionAPI,
@@ -21,39 +21,15 @@ export const useAddSections = () => {
   return useMutation({
     mutationFn: addSectionAPI,
 
-    // 📝 Optimistic Update: Before API Call
-    // onMutate: async (variables) => {
-    //   console.log("⏳ [Section] Attempting to add shift:", variables);
-
-    //   await queryClient.cancelQueries({ queryKey: ["sections"] });
-
-    //   const prevSections = queryClient.getQueryData(["sections"]);
-
-    //   console.log("🔍 Before Update (Cache Data):", prevSections);
-
-    //   const afterOptimistic = queryClient.setQueryData(
-    //     ["sections"],
-    //     (oldData) => {
-    //       console.log("inside optimistic old dat : ", oldData);
-
-    //       return [
-    //         ...(Array.isArray(oldData) ? oldData : []),
-    //         { ...variables, id: Date.now() },
-    //       ];
-    //     },
-    //   );
-
-    //   console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
-
-    //   return { prevSections };
-    // },
+   
+   
 
     onError: (error) => {
       console.log("error adding section : ", error);
       // ⚙️ rollback cache
 
       if (error.response) {
-        toast(
+        toast.error(
           error.response?.data?.message || "Failed to add section . Try again!",
         );
       }
@@ -68,24 +44,18 @@ export const useAddSections = () => {
     onSuccess: async (data, variables) => {
       console.log("✅ Sections added successfully: ", data);
       console.log("Sections variables : ", variables);
+      await queryClient.invalidateQueries({ queryKey: ["sections"] });
 
       if (data?.success) {
-        toast("Sections added successfully");
+        toast.success(data?.message);
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
-      console.log(
-        "✅ After Backend Response (Cache Data): ",
-        queryClient.getQueryData(["sections"]),
-      );
+     
     },
 
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["sections"] });
-      console.log(
-        "✅ After Backend Response (onSettled Cache Data): ",
-        queryClient.getQueryData(["sections"]),
-      );
+      
     },
   });
 };
@@ -125,7 +95,7 @@ export const useUpdateSection = () => {
       console.log("⚙️ error updating section variables : ", variables);
 
       if (error?.response) {
-        toast(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred while updating the section. Please try again.",
         );
@@ -142,12 +112,12 @@ export const useUpdateSection = () => {
     onSuccess: async (data, { sectionId, payload }) => {
       console.log("🚀 update section onSuccess data value :", data);
       console.log("🚀 update section payload , id  :", payload, sectionId);
+      await queryClient.invalidateQueries({ queryKey: ["sections"] });
 
       if (data?.success) {
-        toast(data?.message);
+        toast.success(data?.message);
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["sections"] });
     },
 
     onSettled: async () => {
@@ -163,45 +133,14 @@ export const useDeleteSection = () => {
   return useMutation({
     mutationFn: deleteSectionAPI,
 
-    // 📝 Optimistic Update: Before API Call
-    onMutate: async (sectionId) => {
-      console.log("⏳ [Section] Attempting to add section:", sectionId);
-
-      await queryClient.cancelQueries({ queryKey: ["sections"] });
-
-      const prevSection = queryClient.getQueryData(["sections"]);
-      console.log("🔍 Before Update (Cache Data):", prevSection);
-
-      const afterOptimistic = queryClient.setQueryData(
-        ["sections"],
-        (oldData) => {
-          return oldData?.filter((section) => section?._id !== sectionId);
-        },
-      );
-
-      // const afterOptimistic = queryClient.setQueryData(
-      //   ["shifts"],
-      //   (oldData) => {
-      //     return oldData?.map((shift) =>
-      //       shift._id === shiftId ? { ...shift, isDeleting: true } : shift,
-      //     );
-      //   },
-      // );
-
-      console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
-      return { prevSection, sectionId };
-    },
-
-    onError: (error, sectionId, context) => {
+  
+    onError: (error) => {
       console.log("error deleting section : ", error);
 
-      // ⚙️ rollback cache
-      if (context?.prevSection) {
-        queryClient.setQueryData(["sections"], context.prevSection);
-      }
+   
 
       if (error?.response) {
-        toast(error.response?.data?.message);
+        toast.error(error.response?.data?.message);
       }
 
       console.log(
@@ -215,9 +154,12 @@ export const useDeleteSection = () => {
     // ✅ Success: Invalidate and Refetch Data
     onSuccess: async (data) => {
       console.log("✅ Section deleted successfully: ", data);
-      toast.success(data?.message || "Section deleted successfully!");
 
       await queryClient.invalidateQueries({ queryKey: ["sections"] });
+
+      if (data?.success) {
+        toast.success(data?.message);
+      }
 
       // queryClient.setQueryData(["shifts"], (oldData) =>
       //   oldData?.filter((shift) => shift._id !== variables),

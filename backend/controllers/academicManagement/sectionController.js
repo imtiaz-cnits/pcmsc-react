@@ -25,7 +25,7 @@ async function addSection(req, res, next) {
     // 👤 create new add class object
     const newSection = new Section({
       name,
-      nameLabel: name,
+      nameLabel: name.charAt(0).toUpperCase() + name.slice(1),
       label,
       status,
     });
@@ -144,6 +144,7 @@ async function updateSection(req, res, next) {
     // updated payload
     const updatePayload = {
       name: section,
+      nameLabel: section.charAt(0).toUpperCase() + section.slice(1),
       label,
       status,
     };
@@ -175,6 +176,23 @@ async function updateSection(req, res, next) {
     });
   } catch (error) {
     console.error("❌ Error updating section:", error);
+    // custom Mongoose Error
+    if (error.name === "ValidationError") {
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    // MongoServerError
+    if (error.name === "MongoServerError") {
+      if (error.errorResponse.code === 11000) {
+        return res.status(403).json({
+          success: false,
+          error: "MongoServerError",
+          message: "Section already exists!",
+        });
+      }
+    }
     return next(error);
   }
 }

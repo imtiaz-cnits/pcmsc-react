@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../../assets/css/all-modal.css";
 import {
@@ -8,14 +7,22 @@ import {
   useFetchPaginatedShifts,
   useUpdateSection,
 } from "../../hook/useSection.js";
+import { FilePenLine, Trash } from "lucide-react";
+import { Toaster } from "sonner";
+
+
 
 const Section = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [section, setSection] = useState("");
   const [sectionStatus, setSectionStatus] = useState("");
   const [page, setPage] = useState(1);
   const [editSectionId, setEditSectionId] = useState("");
+  const [deletedID, setDeletedID] = useState("");
+
   const [warn, setWarn] = useState("");
   const { mutate: addSection } = useAddSections();
   const { mutate: updateSection } = useUpdateSection();
@@ -113,16 +120,24 @@ const Section = () => {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
-  const handleSectionDelete = (e, item) => {
+  const handleDeletedID = (e, item) => {
     e.preventDefault();
-    console.log("after deleting  section value : ", item);
-    deleteSection(item?._id, {
+    console.log("deleted id : ", item?._id);
+    setDeletedID(item?._id);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  };
+
+
+  const handleSectionDelete = (e) => {
+    e.preventDefault();
+    deleteSection(deletedID, {
       onSuccess: () => {
         if (sections?.data?.length === 1 && page > 1) {
           setPage((prev) => prev - 1);
         }
       },
     });
+    setIsDeleteModalOpen(false)
   };
 
   useEffect(() => {
@@ -146,6 +161,8 @@ const Section = () => {
 
   return (
     <>
+      <Toaster position="top-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
@@ -233,45 +250,52 @@ const Section = () => {
                                 {item?.nameLabel}
                               </td>
                               <td>{item?.label}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e) => handleEditClick(e, item)}
-                                >
-                                  <FaRegEdit
+
+
+                              <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
+                                  <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
                                     style={{
-                                      color: "lightgreen",
-                                      fontSize: "25px",
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
                                     }}
-                                  />
-                                </button>
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    padding: 0,
-                                  }}
-                                  onClick={(e) => handleSectionDelete(e, item)}
-                                >
-                                  <FaRegTrashAlt
-                                    style={{
-                                      color: "red",
-                                      fontSize: "25px",
+                                    onClick={(e) => handleEditClick(e, item)}
+
+                                  >
+                                    <FilePenLine style={{ color: "#1f4529" }} />
+                                  </button>
+
+                                  <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
+                                     style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
                                     }}
-                                  />
-                                </button>
-                              </td>
+                                  >
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) => handleDeletedID(e, item)}
+                                    />
+                                  </button>
+                                </div>
+
+                                {/* <!-- <button class="quick-view quickButton">
+                            <i class="fa-regular fa-eye"></i>
+                          </button> --> */}
+                              </div>
+                            </td>
+
+                           
+
+
                             </tr>
                           );
                         })}
@@ -318,15 +342,28 @@ const Section = () => {
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+           {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleSectionDelete}>
+                    Yes
+                  </button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -509,7 +546,6 @@ const Section = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
-      <Toaster />
     </>
   );
 };
