@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../../assets/css/all-modal.css";
 import {
   useAddSections,
   useDeleteSection,
-  useFetchPaginatedShifts,
+  useFetchPaginatedSections,
   useUpdateSection,
 } from "../../hook/useSection.js";
 import { FilePenLine, Trash } from "lucide-react";
 import { Toaster } from "sonner";
-
-
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
 
 const Section = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -20,6 +18,9 @@ const Section = () => {
   const [section, setSection] = useState("");
   const [sectionStatus, setSectionStatus] = useState("");
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+
   const [editSectionId, setEditSectionId] = useState("");
   const [deletedID, setDeletedID] = useState("");
 
@@ -33,7 +34,7 @@ const Section = () => {
     isPending,
     isError,
     error,
-  } = useFetchPaginatedShifts(page);
+  } = useFetchPaginatedSections({ page, limit, keyword });
 
   useEffect(() => {
     if (isAddModalOpen) {
@@ -56,6 +57,15 @@ const Section = () => {
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
+  ];
+
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
   ];
 
   //
@@ -83,6 +93,7 @@ const Section = () => {
     setWarn("");
     setSection("");
     setSectionStatus("");
+    setIsAddModalOpen(false);
   };
 
   const handleEditClick = (e, item) => {
@@ -117,7 +128,7 @@ const Section = () => {
     setSectionStatus("");
     setWarn("");
     setEditSectionId("");
-    setIsEditModalOpen(!isEditModalOpen);
+    setIsEditModalOpen(false);
   };
 
   const handleDeletedID = (e, item) => {
@@ -126,7 +137,6 @@ const Section = () => {
     setDeletedID(item?._id);
     setIsDeleteModalOpen(!isDeleteModalOpen);
   };
-
 
   const handleSectionDelete = (e) => {
     e.preventDefault();
@@ -137,27 +147,19 @@ const Section = () => {
         }
       },
     });
-    setIsDeleteModalOpen(false)
+    setKeyword("");
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleSearchQuery = (e) => {
+    e.preventDefault();
+    setPage(1);
+    setKeyword(e.target.value);
   };
 
   useEffect(() => {
     console.log("edit modal value ", isEditModalOpen);
   }, [isEditModalOpen]);
-
-  //todo shimmer effect
-  if (isPending) return <>Loading ...</>;
-
-  if (isError) {
-    if (error instanceof Error) {
-      console.log("inside section list ", error);
-
-      return (
-        <p>{error.response?.data?.message}</p> || <p>{error.message}</p> || (
-          <p>Something went wrong. Please! try again later!</p>
-        )
-      );
-    }
-  }
 
   return (
     <>
@@ -195,13 +197,20 @@ const Section = () => {
                           <select
                             id="entries"
                             className="form-control"
+                            value={limit}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setLimit(Number(e.target.value));
+                              setPage(1);
+                              setKeyword("");
+                            }}
                             style={{ width: "auto" }}
                           >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
+                            {entriesOptions.map((item, index) => (
+                              <option key={index} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
                           </select>
                           <span className="dropdown-icon">&#9662;</span>
                           {/* <!-- Dropdown icon --> */}
@@ -214,7 +223,9 @@ const Section = () => {
                         type="text"
                         id="searchInput"
                         className="form-control"
-                        placeholder="Search Class..."
+                        placeholder="Search Section..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
                       />
                     </div>
                   </div>
@@ -235,11 +246,35 @@ const Section = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {sections?.data &&
-                        sections?.data?.map((item, index) => {
+                      {isPending ? (
+                        <ShimmerTable rows={limit} cols={4} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="10">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : sections?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={10} style={{ textAlign: "center" }}>
+                            No Sections found
+                          </td>
+                        </tr>
+                      ) : (
+                        sections?.data?.length > 0 &&
+                        sections?.data?.map((item, idx) => {
                           return (
                             <tr key={item?._id}>
-                              <td>{(page - 1) * 5 + index + 1}</td>
+                              <td>
+                                {String((page - 1) * limit + idx + 1).padStart(
+                                  2,
+                                  "0",
+                                )}
+                              </td>
                               <td
                                 style={{
                                   display: "flex",
@@ -251,98 +286,111 @@ const Section = () => {
                               </td>
                               <td>{item?.label}</td>
 
-
                               <td>
-                              <div id="action_btn">
-                                <div style={{ display: "flex", gap: "8px" }}>
-                                  <button
-                                    href="#"
-                                    className="link editButton"
-                                    data-modal="action-editmodal"
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={(e) => handleEditClick(e, item)}
+                                <div id="action_btn">
+                                  <div style={{ display: "flex", gap: "8px" }}>
+                                    <button
+                                      href="#"
+                                      className="link editButton"
+                                      data-modal="action-editmodal"
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={(e) => handleEditClick(e, item)}
+                                    >
+                                      <FilePenLine
+                                        style={{ color: "#1f4529" }}
+                                      />
+                                    </button>
 
-                                  >
-                                    <FilePenLine style={{ color: "#1f4529" }} />
-                                  </button>
+                                    <button
+                                      href="#"
+                                      className="link custom-open-modal-btn openModalBtn deleteButton"
+                                      data-modal="action-deletemodal"
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      <Trash
+                                        style={{ color: "lightcoral" }}
+                                        onClick={(e) =>
+                                          handleDeletedID(e, item)
+                                        }
+                                      />
+                                    </button>
+                                  </div>
 
-                                  <button
-                                    href="#"
-                                    className="link custom-open-modal-btn openModalBtn deleteButton"
-                                    data-modal="action-deletemodal"
-                                     style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                  >
-                                    <Trash
-                                      style={{ color: "lightcoral" }}
-                                      onClick={(e) => handleDeletedID(e, item)}
-                                    />
-                                  </button>
-                                </div>
-
-                                {/* <!-- <button class="quick-view quickButton">
+                                  {/* <!-- <button class="quick-view quickButton">
                             <i class="fa-regular fa-eye"></i>
                           </button> --> */}
-                              </div>
-                            </td>
-
-                           
-
-
+                                </div>
+                              </td>
                             </tr>
                           );
-                        })}
+                        })
+                      )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {sections?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * sections?.currentPage,
+                            sections?.totalEntries,
+                          )} of ${sections?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
 
-                <div id="pagination" className="pagination">
-                  <button
-                    id="prevBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prevState) => Math.max(prevState - 1, 1))
-                    }
-                    disabled={page === 1}
-                  >
-                    Prev
-                  </button>
-                  {page} of {sections?.totalPages}
-                  <button
-                    id="nextBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prev) =>
-                        Math.min(prev + 1, sections?.totalPages),
-                      )
-                    }
-                    disabled={page === sections?.totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
+                {sections?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                      >
+                        Prev
+                      </button>
+                    )}
+
+                    {`${page} of ${Number(sections?.totalPages)}`}
+
+                    {page < sections?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, sections?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2023. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
           {/* <!-- Table End -->
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-           {isDeleteModalOpen && (
+          {isDeleteModalOpen && (
             <div
               id="confirmationModal"
               className="modal"

@@ -110,10 +110,7 @@ async function getAllPaginatedClasses(req, res, next) {
         }
       : {};
 
-    const classes = await ClassModel.find(searchQuery)
-      .skip(skip)
-      .limit(limit)
-      .sort({ name: 1, nameLabel: 1 });
+    const classes = await ClassModel.find(searchQuery).skip(skip).limit(limit);
 
     const total = await ClassModel.countDocuments();
 

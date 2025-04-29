@@ -99,22 +99,23 @@ async function getAllPaginatedSections(req, res, next) {
     const limit = parseInt(req.query.limit, 10) || 5;
     const skip = (page - 1) * limit;
 
-    const sections = await Section.find({}).skip(skip).limit(limit);
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const sections = await Section.find(searchQuery).skip(skip).limit(limit);
 
     const total = await Section.countDocuments();
 
     const totalPages = Math.ceil(total / limit);
-
-    // if (total <= 0) {
-    //   console.log("⚠️ No shifts found");
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "No shifts found",
-    //     currentPage: page,
-    //     totalPages,
-    //     total,
-    //   });
-    // }
 
     console.log("✅ Retrieved shifts: ", sections);
     return res.status(200).json({
@@ -122,7 +123,7 @@ async function getAllPaginatedSections(req, res, next) {
       count: sections.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: sections,
     });
   } catch (error) {

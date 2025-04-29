@@ -243,11 +243,6 @@ const ClassPage = () => {
                         id="printTable"
                         className="table table-bordered table-hover"
                       >
-
-
-
-
-
                         <thead>
                           <tr>
                             <th>Sl No:</th>
@@ -271,49 +266,53 @@ const ClassPage = () => {
                                 <td>{item?.nameLabel}</td>
                                 <td>{item?.label}</td>
 
-
                                 <td>
-                              <div id="action_btn">
-                                <div style={{ display: "flex", gap: "8px" }}>
-                                  <button
-                                    href="#"
-                                    className="link editButton"
-                                    data-modal="action-editmodal"
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={(e) => handleEditClick(e, item)}
+                                  <div id="action_btn">
+                                    <div
+                                      style={{ display: "flex", gap: "8px" }}
+                                    >
+                                      <button
+                                        href="#"
+                                        className="link editButton"
+                                        data-modal="action-editmodal"
+                                        style={{
+                                          background: "none",
+                                          border: "none",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={(e) =>
+                                          handleEditClick(e, item)
+                                        }
+                                      >
+                                        <FilePenLine
+                                          style={{ color: "#1f4529" }}
+                                        />
+                                      </button>
 
-                                  >
-                                    <FilePenLine style={{ color: "#1f4529" }} />
-                                  </button>
+                                      <button
+                                        href="#"
+                                        className="link custom-open-modal-btn openModalBtn deleteButton"
+                                        data-modal="action-deletemodal"
+                                        style={{
+                                          background: "none",
+                                          border: "none",
+                                          cursor: "pointer",
+                                        }}
+                                      >
+                                        <Trash
+                                          style={{ color: "lightcoral" }}
+                                          onClick={(e) =>
+                                            handleDeletedID(e, item)
+                                          }
+                                        />
+                                      </button>
+                                    </div>
 
-                                  <button
-                                    href="#"
-                                    className="link custom-open-modal-btn openModalBtn deleteButton"
-                                    data-modal="action-deletemodal"
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                  >
-                                    <Trash
-                                      style={{ color: "lightcoral" }}
-                                      onClick={(e) => handleDeletedID(e, item)}
-                                    />
-                                  </button>
-                                </div>
-
-                                {/* <!-- <button class="quick-view quickButton">
+                                    {/* <!-- <button class="quick-view quickButton">
                             <i class="fa-regular fa-eye"></i>
                           </button> --> */}
-                              </div>
-                            </td>
-
-
+                                  </div>
+                                </td>
                               </tr>
                             ))
                           )}

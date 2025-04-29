@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import {
   addSectionAPI,
   deleteSectionAPI,
@@ -14,15 +14,11 @@ import {
 } from "../api/academic-management/sectionAPI.js";
 
 //POST - method
-//todo optimistic opacity
 export const useAddSections = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addSectionAPI,
-
-   
-   
 
     onError: (error) => {
       console.log("error adding section : ", error);
@@ -49,13 +45,10 @@ export const useAddSections = () => {
       if (data?.success) {
         toast.success(data?.message);
       }
-
-     
     },
 
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["sections"] });
-      
     },
   });
 };
@@ -73,11 +66,10 @@ export const useFetchSections = () => {
 };
 
 // GET - method
-//todo optimistic opacity
-export const useFetchPaginatedShifts = (page) => {
+export const useFetchPaginatedSections = ({ page, limit, keyword }) => {
   return useQuery({
-    queryKey: ["sections", page],
-    queryFn: () => fetchedPaginatedSections(page),
+    queryKey: ["sections", { page, limit, keyword }],
+    queryFn: () => fetchedPaginatedSections(page, limit, keyword),
     gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 3,
     placeholderData: keepPreviousData,
@@ -117,7 +109,6 @@ export const useUpdateSection = () => {
       if (data?.success) {
         toast.success(data?.message);
       }
-
     },
 
     onSettled: async () => {
@@ -127,17 +118,13 @@ export const useUpdateSection = () => {
 };
 
 // DELETE - method
-//todo optimistic opacity
 export const useDeleteSection = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSectionAPI,
 
-  
     onError: (error) => {
       console.log("error deleting section : ", error);
-
-   
 
       if (error?.response) {
         toast.error(error.response?.data?.message);
