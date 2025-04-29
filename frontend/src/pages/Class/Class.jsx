@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Toaster } from "sonner";
+import { FilePenLine, Trash } from "lucide-react";
+
 import Shimmer from "../../components/Shimmer.jsx";
 import {
   useAddClass,
@@ -8,9 +10,11 @@ import {
   useFetchPaginatedClasses,
   useUpdateClass,
 } from "../../hook/useClass.js";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
 
 const ClassPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
@@ -19,6 +23,7 @@ const ClassPage = () => {
   const [className, setClassName] = useState("");
   const [classStatus, setClassStatus] = useState("");
   const [editClassId, setEditClassId] = useState("");
+  const [deletedID, setDeletedID] = useState("");
   const [warn, setWarn] = useState("");
   const {
     data: classes,
@@ -112,16 +117,25 @@ const ClassPage = () => {
     setIsEditModalOpen(false);
   };
 
-  const handleClassDelete = (e, id) => {
+  const handleDeletedID = (e, item) => {
+    e.preventDefault();
+    console.log("deleted id : ", item?._id);
+    setDeletedID(item?._id);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  };
+
+  const handleClassDelete = (e) => {
     e.preventDefault();
     console.log("after deleting  class value : ", classes);
-    deleteClass(id, {
+    deleteClass(deletedID, {
       onSuccess: () => {
         if (classes?.count === 1 && page > 1) {
           setPage((prev) => prev - 1);
         }
       },
     });
+    setKeyword("");
+    setIsDeleteModalOpen(false);
   };
 
   const handleSearchQuery = (e) => {
@@ -144,7 +158,7 @@ const ClassPage = () => {
 
   return (
     <>
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-right" richColors />
       {/* <!-- Hero Main Content Start --> */}
 
       {/* Sidebar */}
@@ -229,17 +243,22 @@ const ClassPage = () => {
                         id="printTable"
                         className="table table-bordered table-hover"
                       >
+
+
+
+
+
                         <thead>
                           <tr>
                             <th>Sl No:</th>
-                            <th>Student Name</th>
+                            <th>Class Name</th>
                             <th>Status</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           {isPending ? (
-                            <Shimmer count={5} />
+                            <ShimmerTable rows={limit} cols={4} />
                           ) : (
                             classes?.data?.length > 0 &&
                             classes?.data?.map((item, index) => (
@@ -251,48 +270,50 @@ const ClassPage = () => {
                                 </td>
                                 <td>{item?.nameLabel}</td>
                                 <td>{item?.label}</td>
-                                <td
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    gap: "20px",
-                                  }}
-                                >
+
+
+                                <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
                                   <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
                                     style={{
                                       background: "none",
                                       border: "none",
                                       cursor: "pointer",
                                     }}
                                     onClick={(e) => handleEditClick(e, item)}
+
                                   >
-                                    <FaRegEdit
-                                      style={{
-                                        color: "lightgreen",
-                                        fontSize: "25px",
-                                      }}
-                                    />
+                                    <FilePenLine style={{ color: "#1f4529" }} />
                                   </button>
+
                                   <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
                                     style={{
                                       background: "none",
                                       border: "none",
                                       cursor: "pointer",
-                                      padding: 0,
-                                    }}
-                                    onClick={(e) => {
-                                      handleClassDelete(e, item?._id);
-                                      setKeyword("");
                                     }}
                                   >
-                                    <FaRegTrashAlt
-                                      style={{
-                                        color: "red",
-                                        fontSize: "25px",
-                                      }}
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) => handleDeletedID(e, item)}
                                     />
                                   </button>
-                                </td>
+                                </div>
+
+                                {/* <!-- <button class="quick-view quickButton">
+                            <i class="fa-regular fa-eye"></i>
+                          </button> --> */}
+                              </div>
+                            </td>
+
+
                               </tr>
                             ))
                           )}
@@ -340,15 +361,29 @@ const ClassPage = () => {
 
           {/* <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleClassDelete}>
+                    Yes
+                  </button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">

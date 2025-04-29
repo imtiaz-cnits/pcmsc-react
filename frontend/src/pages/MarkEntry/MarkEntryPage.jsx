@@ -146,7 +146,7 @@ const MarkEntryPage = () => {
         studentId: stu?.studentID,
         studentName: stu?.name,
         studentRoll: stu?.studentRoll,
-        mcqMark: stu.mcqMark ?? '',
+        mcqMark: stu.mcqMark ?? "",
         writtenMark: stu.writtenMark ?? "",
         caMark: stu.caMark ?? "",
         ctMark: stu.ctMark ?? "",

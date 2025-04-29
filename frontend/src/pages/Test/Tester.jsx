@@ -26,7 +26,7 @@ const Tester = () => {
     examName: null,
   });
 
-const { data: classes } = useFetchClasses();
+  const { data: classes } = useFetchClasses();
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
   const { data: shifts } = useFetchShifts();
@@ -39,7 +39,6 @@ const { data: classes } = useFetchClasses();
     isError,
     error,
   } = useFetchEligibleStudents(searchFilters);
-
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -73,18 +72,18 @@ const { data: classes } = useFetchClasses();
     !selectedSubject ||
     !selectedExam;
 
-    const handleSearch = (e) => {
-      e.preventDefault();
-      console.log("handle search button is clicked ");
-      setSearchFilters({
-        className: selectedClass ? selectedClass.value : null,
-        session: selectedSession ? selectedSession.value : null,
-        section: selectedSection ? selectedSection.value : null,
-        shift: selectedShift ? selectedShift.value : null,
-        subject: selectedSubject ? selectedSubject.value : null,
-        examName: selectedExam ? selectedExam.value : null,
-      });
-    };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("handle search button is clicked ");
+    setSearchFilters({
+      className: selectedClass ? selectedClass.value : null,
+      session: selectedSession ? selectedSession.value : null,
+      section: selectedSection ? selectedSection.value : null,
+      shift: selectedShift ? selectedShift.value : null,
+      subject: selectedSubject ? selectedSubject.value : null,
+      examName: selectedExam ? selectedExam.value : null,
+    });
+  };
 
   return (
     <>
@@ -132,7 +131,7 @@ const { data: classes } = useFetchClasses();
                         </div>
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Section*</label>
-                         
+
                           <Select
                             options={sectionOptions}
                             value={selectedSection}
@@ -175,7 +174,6 @@ const { data: classes } = useFetchClasses();
                             onChange={setSelectedExam}
                             placeholder="Select Name"
                           ></Select>
-
                         </div>
                       </div>
                     </form>

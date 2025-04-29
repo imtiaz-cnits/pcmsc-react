@@ -26,7 +26,7 @@ async function addClass(req, res, next) {
     // 👤 create new add class object
     const newClass = new ClassModel({
       name,
-      nameLabel: name,
+      nameLabel: name.charAt(0).toUpperCase() + name.slice(1),
       label,
       status,
     });
@@ -68,7 +68,7 @@ async function addClass(req, res, next) {
 // 📝 get all classes
 async function getAllClasses(req, res, next) {
   try {
-    const classes = await ClassModel.find();
+    const classes = await ClassModel.find({});
 
     if (!classes) {
       return next(createError(404, "Class not found!"));
@@ -137,16 +137,22 @@ async function getAllPaginatedClasses(req, res, next) {
 // 📝 update
 async function updateClass(req, res, next) {
   try {
-    console.log("class params : ", req.params);
-    console.log("class body : ", req.body);
+    console.log("updated class params : ", req.params);
+    console.log("updated class body : ", req.body);
     const { id: classId } = req.params;
-    const classData = req.body;
+    const { name, label, status } = req.body;
 
-    const updatedClass = await ClassModel.findByIdAndUpdate(
-      classId,
-      classData,
-      { new: true, runValidators: true },
-    );
+    const payload = {
+      name,
+      nameLabel: name.charAt(0).toUpperCase() + name.slice(1),
+      label: label || "Active",
+      status: status || "active",
+    };
+
+    const updatedClass = await ClassModel.findByIdAndUpdate(classId, payload, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updatedClass) {
       return next(createError(404, "Class not found!"));
@@ -161,6 +167,23 @@ async function updateClass(req, res, next) {
     });
   } catch (error) {
     // console.error("📌 ❌ update class error : ", error);
+    if (error.name === "ValidationError") {
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    // MongoServerError
+    if (error.name === "MongoServerError") {
+      if (error.errorResponse.code === 11000) {
+        return res.status(403).json({
+          success: false,
+          error: "MongoServerError",
+          message: "Class already exists!",
+        });
+      }
+    }
+
     return next(error);
   }
 }

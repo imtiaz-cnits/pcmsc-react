@@ -1,20 +1,15 @@
 import { useState } from "react";
 import SkeletonLoader from "../../components/skeleton/SkeletonLoader";
 
-const Test = ()=>{
+const Test = () => {
+  const [isPending, setIsPending] = useState(true);
 
- const [isPending , setIsPending] = useState(true)
-
-  return(
+  return (
     <>
-    {isPending ? <SkeletonLoader /> : 'no'}
-    <button
-    
-    onClick={()=> setIsPending(!isPending)}
-
-    >click</button>
+      {isPending ? <SkeletonLoader /> : "no"}
+      <button onClick={() => setIsPending(!isPending)}>click</button>
     </>
-  )
-}
+  );
+};
 
 export default Test;

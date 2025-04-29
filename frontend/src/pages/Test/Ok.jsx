@@ -37,16 +37,10 @@ const Ok = () => {
     sessionID,
   };
 
-  const {
-    data: eligibleStudent,
-    isPending: isEligibleStudentPending,
-  } = useFetchEligibleStudent(studentFilters);
+  const { data: eligibleStudent, isPending: isEligibleStudentPending } =
+    useFetchEligibleStudent(studentFilters);
 
-  const {
-    data: reportCard,
-    isPending,
-    isError,
-  } = useFetchMarkSheet(filters);
+  const { data: reportCard, isPending, isError } = useFetchMarkSheet(filters);
 
   useEffect(() => {
     if (!isPending && reportCard?.data?.length) {
@@ -358,7 +352,6 @@ const Ok = () => {
                         <SkeletonLoader />
                       ) : isError ? (
                         <SkeletonLoader />
-
                       ) : reportCard.totalEntries <= 0 ? (
                         <p>not found </p>
                       ) : (
@@ -405,7 +398,7 @@ const Ok = () => {
                       )}
 
                       {isPending || isEligibleStudentPending ? (
-                       <SkeletonLoader />
+                        <SkeletonLoader />
                       ) : isError ? (
                         <SkeletonLoader />
                       ) : (
