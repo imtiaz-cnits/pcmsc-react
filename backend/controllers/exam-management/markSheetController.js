@@ -99,7 +99,6 @@ async function getHighestMark(req, res, next) {
         },
       },
       { $unwind: { path: "$subject", preserveNullAndEmptyArrays: true } },
-      // Populate other fields if needed
       {
         $lookup: {
           from: "students",
@@ -109,7 +108,6 @@ async function getHighestMark(req, res, next) {
         },
       },
       { $unwind: { path: "$student", preserveNullAndEmptyArrays: true } },
-      // Project only required fields
       {
         $project: {
           subject: {
