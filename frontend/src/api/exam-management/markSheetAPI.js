@@ -12,7 +12,7 @@ export const fetchStudentMarksheetAPI = async (filters) => {
 
 // ✅  GET - method
 export const fetchEligibleStudentAPI = async (studentFilters) => {
-  console.log('inside studentfilter ', studentFilters)
+  console.log("inside studentfilter ", studentFilters);
   const query = new URLSearchParams(studentFilters).toString();
   const res = await axiosPrivate.get(
     `/exam-management/students/result/mark-sheet/eligible-student?${query}`,
@@ -21,12 +21,11 @@ export const fetchEligibleStudentAPI = async (studentFilters) => {
   return res.data?.success ? res.data : [];
 };
 
-
 // ✅  GET - method
 export const fetchHighestMarkAPI = async (markFilter) => {
-  console.log('inside mark api : ', markFilter)
+  console.log("inside mark api : ", markFilter);
   const query = new URLSearchParams(markFilter).toString();
-  console.log('highest mark query :', query)
+  console.log("highest mark query :", query);
   const res = await axiosPrivate.get(
     `/exam-management/students/result/mark-sheet/mark-student?${query}`,
   );

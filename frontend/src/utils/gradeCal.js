@@ -69,25 +69,17 @@ export function totalGradeCal(student, totalEntries) {
   return GradePointCal(Number(totalGradePoint / totalEntries));
 }
 
+export function getHighestTotalMark(arr) {
+  if (!Array.isArray(arr) || arr.length === 0) {
+    return null;
+  }
 
- 
-export function getHighestTotalMark(arr){
-    if(!Array.isArray(arr) || arr.length === 0){
-        return null
-    }
+  const res = arr.reduce((acc, item) => {
+    return item.totalMark > acc.totalMark ? item : acc;
+  });
 
-    const res = arr.reduce((acc , item)=>{
-
-  
-        return item.totalMark > acc.totalMark ? item : acc
-        
-
-    })
-
-
-    return res; 
+  return res;
 }
-
 
 /*
 

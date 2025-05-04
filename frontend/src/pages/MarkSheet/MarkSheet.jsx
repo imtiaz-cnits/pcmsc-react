@@ -36,16 +36,13 @@ const MarkSheet = () => {
     sessionID,
   };
 
-
   const { data: eligibleStudent, isPending: isEligibleStudentPending } =
     useFetchEligibleStudent(studentFilters);
 
   const { data: reportCard, isPending, isError } = useFetchMarkSheet(filters);
 
-  const {data: highestMarkReportCard , isPending: ishMarkPending} = useFetchHighestMark(filters)
-
-
- 
+  const { data: highestMarkReportCard, isPending: ishMarkPending } =
+    useFetchHighestMark(filters);
 
   const finalGrade = totalGradeCal(reportCard?.data, reportCard?.count);
 
@@ -56,7 +53,6 @@ const MarkSheet = () => {
     };
     return acc;
   }, {});
-
 
   const printMarksheet = () => {
     const marksheet = document.querySelector(".marksheet-container");
@@ -346,7 +342,9 @@ const MarkSheet = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isPending || isEligibleStudentPending || ishMarkPending ? (
+                      {isPending ||
+                      isEligibleStudentPending ||
+                      ishMarkPending ? (
                         <SkeletonLoader />
                       ) : isError ? (
                         <SkeletonLoader />
@@ -368,9 +366,8 @@ const MarkSheet = () => {
                               </td>
                               <td>
                                 <span>
-
-                                {highestMarkMap[item?.subject?._id]?.maxMark || 'N/A'}{" "}
-                           
+                                  {highestMarkMap[item?.subject?._id]
+                                    ?.maxMark || "N/A"}{" "}
                                 </span>
                               </td>
                               <td>

@@ -27,10 +27,9 @@ export const useFetchEligibleStudent = (studentFilters) => {
   });
 };
 
-
 //✅  GET - method
 export const useFetchHighestMark = (markFilter) => {
-  console.log('checker ', markFilter)
+  console.log("checker ", markFilter);
   return useQuery({
     queryKey: ["mark-sheet-mark", markFilter],
     queryFn: () => fetchHighestMarkAPI(markFilter),
