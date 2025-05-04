@@ -52,6 +52,7 @@ const {
   getEligibleStudent,
   getHighestMark,
 } = require("../controllers/exam-management/markSheetController");
+const { getGTBSheet } = require("../controllers/exam-management/gtbController");
 
 // 🚀  Exam Type - CRUD
 router.post("/add-exam-type", addExamType);
@@ -98,6 +99,9 @@ router.get("/students/result/search", getResult);
 router.get("/students/result/mark-sheet", getMarkSheet);
 router.get("/students/result/mark-sheet/eligible-student", getEligibleStudent);
 router.get("/students/result/mark-sheet/mark-student", getHighestMark);
+
+// 🚀  GTB Sheet
+router.get("/students/result/all/gtb-sheet", getGTBSheet);
 
 // 🛠️ exports
 module.exports = router;

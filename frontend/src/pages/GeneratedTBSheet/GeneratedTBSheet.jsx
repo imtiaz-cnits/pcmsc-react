@@ -1,8 +1,25 @@
+import { useSearchParams } from "react-router-dom";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
+import { useFetchGTBSheet } from "../../hook/useGTBSheet";
 
 const GeneratedTBSheet = () => {
+  const [searchParams] = useSearchParams();
+
+  const sectionID = searchParams.get("section");
+  const classID = searchParams.get("className");
+  const shiftID = searchParams.get("shift");
+  const sessionID = searchParams.get("session");
+  const filters = {
+    classID,
+    sessionID,
+    sectionID,
+    shiftID,
+  };
+
+  const { data: gtb, isPending, isError } = useFetchGTBSheet(filters);
+
   const printTbSheet = () => {
     const tabulation = document.querySelector(".tabulation");
 
