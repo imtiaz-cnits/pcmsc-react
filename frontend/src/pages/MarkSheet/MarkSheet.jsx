@@ -2,13 +2,13 @@ import { useSearchParams } from "react-router-dom";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
+import SkeletonLoader from "../../components/skeleton/SkeletonLoader";
 import {
   useFetchEligibleStudent,
+  useFetchHighestMark,
   useFetchMarkSheet,
 } from "../../hook/useMarkSheet";
-import { useEffect } from "react";
 import { totalGradeCal } from "../../utils/gradeCal";
-import SkeletonLoader from "../../components/skeleton/SkeletonLoader";
 
 const MarkSheet = () => {
   const [searchParams] = useSearchParams();
@@ -36,24 +36,27 @@ const MarkSheet = () => {
     sessionID,
   };
 
+
   const { data: eligibleStudent, isPending: isEligibleStudentPending } =
     useFetchEligibleStudent(studentFilters);
 
   const { data: reportCard, isPending, isError } = useFetchMarkSheet(filters);
 
-  useEffect(() => {
-    if (!isPending && reportCard?.data?.length) {
-      const { letterGrade, gradePoint } = totalGradeCal(
-        reportCard?.data,
-        reportCard?.count,
-      );
-      console.log("value : ", letterGrade, gradePoint);
-    }
-  }, [reportCard, isPending]);
+  const {data: highestMarkReportCard , isPending: ishMarkPending} = useFetchHighestMark(filters)
+
+
+ 
 
   const finalGrade = totalGradeCal(reportCard?.data, reportCard?.count);
 
-  console.log("final grade : ", finalGrade);
+  const highestMarkMap = highestMarkReportCard?.data?.reduce((acc, item) => {
+    acc[item.subject._id] = {
+      maxMark: item.maxMark,
+      studentName: item.studentName,
+    };
+    return acc;
+  }, {});
+
 
   const printMarksheet = () => {
     const marksheet = document.querySelector(".marksheet-container");
@@ -343,7 +346,7 @@ const MarkSheet = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {isPending || isEligibleStudentPending ? (
+                      {isPending || isEligibleStudentPending || ishMarkPending ? (
                         <SkeletonLoader />
                       ) : isError ? (
                         <SkeletonLoader />
@@ -364,7 +367,11 @@ const MarkSheet = () => {
                                 <span>100</span>
                               </td>
                               <td>
-                                <span>99.3</span>
+                                <span>
+
+                                {highestMarkMap[item?.subject?._id]?.maxMark || 'N/A'}{" "}
+                           
+                                </span>
                               </td>
                               <td>
                                 <span>{item?.mcqMark}</span>

@@ -50,6 +50,7 @@ const {
 const {
   getMarkSheet,
   getEligibleStudent,
+  getHighestMark,
 } = require("../controllers/exam-management/markSheetController");
 
 // 🚀  Exam Type - CRUD
@@ -96,6 +97,7 @@ router.get("/students/result/search", getResult);
 // 🚀  Mark Sheet
 router.get("/students/result/mark-sheet", getMarkSheet);
 router.get("/students/result/mark-sheet/eligible-student", getEligibleStudent);
+router.get("/students/result/mark-sheet/mark-student", getHighestMark);
 
 // 🛠️ exports
 module.exports = router;

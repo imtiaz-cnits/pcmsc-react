@@ -62,14 +62,32 @@ export function totalGradeCal(student, totalEntries) {
   }
 
   const totalGradePoint = student.reduce((acc, cur) => {
-    console.log(Number(cur.gradePoint));
     const total = Number(acc) + Number(cur.gradePoint);
     return total;
   }, 0.0);
 
-  console.log(totalGradePoint / totalEntries);
   return GradePointCal(Number(totalGradePoint / totalEntries));
 }
+
+
+ 
+export function getHighestTotalMark(arr){
+    if(!Array.isArray(arr) || arr.length === 0){
+        return null
+    }
+
+    const res = arr.reduce((acc , item)=>{
+
+  
+        return item.totalMark > acc.totalMark ? item : acc
+        
+
+    })
+
+
+    return res; 
+}
+
 
 /*
 
