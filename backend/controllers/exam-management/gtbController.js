@@ -104,7 +104,7 @@ async function getGTBSheet(req, res, next) {
           ? student.totalGradePoints / student.subjectCount
           : 0;
 
-      const finalGradePoint = parseFloat(avgGradePoint.toFixed(2));
+      const finalGradePoint = avgGradePoint.toFixed(2);
       const finalLetterGrade = getLetterGrade(finalGradePoint);
 
       return {
