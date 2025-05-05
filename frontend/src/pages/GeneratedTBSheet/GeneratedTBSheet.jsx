@@ -189,8 +189,6 @@ const GeneratedTBSheet = () => {
                         <td>{item.totalMarks}</td>
                         <td>{item.finalLetterGrade}</td>
                         <td>{item.finalGradePoint}</td>
-                        <td>A+</td>
-                        <td>5</td>
                         <td>1</td>
                       </tr>
                     ))
