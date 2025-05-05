@@ -1,115 +1,150 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Select from "react-select";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import "../../assets/css/table-funtion.css";
+import { useFetchClasses } from "../../hook/useClass";
+import { useFetchSections } from "../../hook/useSection";
+import { useFetchSessions } from "../../hook/useSession";
+import { useFetchShifts } from "../../hook/useShift";
 
-/* eslint-disable react/no-unknown-property */
-const AdmitCard = () => {
-  const [sclass, setSclass] = useState("");
-  const [session, setSession] = useState("");
-  const [ssection, setSsection] = useState("");
-  const [shift, setShift] = useState("");
+const AdmitCardPage = () => {
+  const navigate = useNavigate();
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSection, setSelectedSsection] = useState(null);
+  const [selectedShift, setSelectedShift] = useState(null);
+
+  const { data: classes } = useFetchClasses();
+  const { data: sessions } = useFetchSessions();
+  const { data: sections } = useFetchSections();
+  const { data: shifts } = useFetchShifts();
+
+  const classOptions = classes?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sessionOPtions = sessions?.data.map((item) => {
+    return { value: item._id, label: item.nameLabel };
+  });
+
+  const sectionOptions = sections?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const shiftOptions = shifts?.data?.map((item) => {
+    return { value: item?._id, label: item?.nameLabel };
+  });
+
+  const isButtonDisabled =
+    !selectedClass || !selectedShift || !selectedSection || !selectedSession;
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const query = new URLSearchParams({
+      className: selectedClass.value,
+      section: selectedSection.value,
+      shift: selectedShift.value,
+      session: selectedSession.value,
+    }).toString();
+
+    navigate(`/exam-management/generated-admit-card?${query}`);
+  };
 
   return (
     <>
       {/* <!-- Hero Main Content Start --> */}
-      <div class="main-content">
-        <div class="page-content">
-          <div class="data-table">
-            <div class="card mark-entry-wrap">
-              <div class="card-body">
+      <div className="main-content">
+        <div className="page-content">
+          <div className="data-table">
+            <div className="card mark-entry-wrap">
+              <div className="card-body">
                 {/* <!-- Class heading Start --> */}
-                <div class="exam-heading">
-                  <h3 class="heading">Admit Card</h3>
+                <div className="exam-heading">
+                  <h3 className="heading">Admit Card</h3>
                 </div>
                 {/* <!-- Class heading End --> */}
 
                 {/* <!-- Form Start --> */}
-                <div class="class-wise-form mb-2">
-                  <div class="mark-entry-form">
-                    <form class="form-wrapper row" style={{ width: "auto" }}>
-                      <div class="form-row col-lg-6">
-                        <div class="form-group select-input-box">
-                          <label for="select-to">Class*</label>
+                <div className="class-wise-form mb-2">
+                  <div className="mark-entry-form">
+                    <form
+                      className="form-wrapper row"
+                      style={{ width: "auto" }}
+                    >
+                      <div className="form-row col-lg-6">
+                        <div className="form-group select-input-box">
+                          <label htmlFor="select-to">Class*</label>
 
-                          <select
-                            value={sclass}
-                            onChange={(e) => setSclass(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              <span>Select Class</span>
-                            </option>
-                            <option value="One">One</option>
-                            <option value="Two">Two</option>
-                          </select>
-                        </div>
-                        <div class="form-group select-input-box">
-                          <label for="select-to">Session*</label>
-
-                          <select
+                          <Select
                             name=""
                             id=""
-                            onChange={(e) => setSession(e.target.value)}
-                            value={session}
-                          >
-                            <option value="" disabled>
-                              Select Session
-                            </option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                          </select>
+                            options={classOptions}
+                            value={selectedClass}
+                            onChange={setSelectedClass}
+                            placeholder="Select Class"
+                          ></Select>
+                        </div>
+                        <div className="form-group select-input-box">
+                          <label htmlFor="select-to">Session*</label>
+                          <Select
+                            name=""
+                            options={sessionOPtions}
+                            onChange={setSelectedSession}
+                            value={selectedSession}
+                          ></Select>
                         </div>
                       </div>
-                      <div class="form-row col-lg-6">
-                        <div class="form-group select-input-box">
-                          <label for="select-to">Section*</label>
-                          <select
-                            value={ssection}
-                            onChange={(e) => setSsection(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Section
-                            </option>
-                            <option value="Science">Science</option>
-                            <option value="Commerce">Commerce</option>
-                            <option value="Arts">Arts</option>
-                          </select>
+                      <div className="form-row col-lg-6">
+                        <div className="form-group select-input-box">
+                          <label htmlFor="select-to">Section*</label>
+
+                          <Select
+                            options={sectionOptions}
+                            value={selectedSection}
+                            onChange={setSelectedSsection}
+                            placeholder="Select Section"
+                          ></Select>
                         </div>
-                        <div class="form-group select-input-box">
-                          <label for="select-to">Shift*</label>
-                          <select
+                        <div className="form-group select-input-box">
+                          <label htmlFor="select-to">Shift*</label>
+                          <Select
                             name=""
                             id=""
-                            value={shift}
-                            onChange={(e) => setShift(e.target.value)}
-                          >
-                            <option value="" disabled>
-                              Select Shift
-                            </option>
-                            <option value="Morning">Morning</option>
-                            <option value="Day">Day</option>
-                          </select>
+                            options={shiftOptions}
+                            value={selectedShift}
+                            onChange={setSelectedShift}
+                            placeholder="Select Shift"
+                          ></Select>
                         </div>
                       </div>
                     </form>
                   </div>
-                  <button class="search-btn">Search</button>
+                  <button
+                    className="search-btn"
+                    disabled={isButtonDisabled}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </button>
                 </div>
                 {/* <!-- Form Start --> */}
               </div>
             </div>
           </div>
-          <div class="copyright">
+          <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
           {/* <!-- Table End -->
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" class="modal">
-            <div class="modal-content">
+          <div id="confirmationModal" className="modal">
+            <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
-              <div class="modal-buttons">
+              <div className="modal-buttons">
                 <button id="confirmYes">Yes</button>
                 <button id="confirmNo">No</button>
               </div>
@@ -117,10 +152,10 @@ const AdmitCard = () => {
           </div>
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
-          <div id="editModal" class="modal">
-            <div class="modal-content">
+          <div id="editModal" className="modal">
+            <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
-              <div class="modal-buttons">
+              <div className="modal-buttons">
                 <button id="editYes">Yes</button>
                 <button id="editNo">No</button>
               </div>
@@ -135,4 +170,4 @@ const AdmitCard = () => {
   );
 };
 
-export default AdmitCard;
+export default AdmitCardPage;
