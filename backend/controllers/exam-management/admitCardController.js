@@ -77,6 +77,7 @@ async function getGenaratedAdmitCard(req, res, next) {
         },
       },
       { $unwind: { path: "$examType", preserveNullAndEmptyArrays: true } },
+      { $sort: { "student.studentRoll": 1 } },
       {
         $project: {
           examineName: "$student.name",

@@ -1943,6 +1943,12 @@ input::-webkit-inner-spin-button {
   margin-top: 20px;
 }
 
+.admit-card .section .info table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Added to ensure fixed column widths */
+}
+
 .admit-card .section .info table strong {
   display: block;
   color: var(--black);
@@ -1956,6 +1962,7 @@ input::-webkit-inner-spin-button {
   vertical-align: text-top;
   padding: 0px 0 !important;
 }
+
 .admit-card .section .info table td:nth-child(2) {
   padding-left: 10px !important;
 }
@@ -1967,6 +1974,13 @@ input::-webkit-inner-spin-button {
 
 .admit-card .section .info table td:nth-child(4) {
   display: inline-block;
+}
+
+/* Removed hardcoded width for td:nth-child(3) */
+.admit-card .section .subject {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .admit-card .section .subject {

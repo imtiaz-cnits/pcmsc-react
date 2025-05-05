@@ -3,6 +3,7 @@ import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
 import productMemberIMG from "../../assets/img/projuct-member-img-3.png";
+import AdmitCardLoader from "../../components/skeleton/AdmitCardLoader";
 import { useFetchGAdmitCardSheet } from "../../hook/useAdmitCard";
 
 const GeneratedAdmitCard = () => {
@@ -50,15 +51,28 @@ const GeneratedAdmitCard = () => {
       <div className="main-content">
         <div className="page-content">
           <div className="admit-card admit-container">
-
-
-            {isPending ? <>Loading...</> : isError ? <>error</> : 
-
-              (admitcards?.data?.count <1) ? <>no entries</> : (
-
-                admitcards?.data?.length > 0 && admitcards?.data?.map((item,idx)=>(
-
-                  <div className="admit-wrapper" key={idx}>
+            {isPending ? (
+              <AdmitCardLoader />
+            ) : isError ? (
+              <tr>
+                <td colSpan="4">
+                  <div className="error-msg">
+                    {error?.response?.data?.message ||
+                      error?.message ||
+                      "Something went wrong. Please try again!"}
+                  </div>
+                </td>
+              </tr>
+            ) : admitcards?.data?.count < 1 ? (
+              <tr>
+                <td colSpan={4} style={{ textAlign: "center" }}>
+                  No Entries found
+                </td>
+              </tr>
+            ) : (
+              admitcards?.data?.length > 0 &&
+              admitcards?.data?.map((item, idx) => (
+                <div className="admit-wrapper" key={idx}>
                   <button className="print-admit" onClick={printMarkAdmit}>
                     <span>
                       <svg
@@ -192,22 +206,12 @@ const GeneratedAdmitCard = () => {
                     <p>Vice Principal</p>
                   </div>
                 </div>
-
-                ))
-              )
-            }
-          
-
-
-
-
-
-            
-           
+              ))
+            )}
           </div>
 
           <div className="copyright">
-            <p>&copy; 2024. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
         </div>
       </div>
