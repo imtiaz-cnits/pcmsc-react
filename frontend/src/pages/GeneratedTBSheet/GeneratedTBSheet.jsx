@@ -1,3 +1,4 @@
+import React from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
@@ -123,64 +124,77 @@ const GeneratedTBSheet = () => {
                 <thead>
                   <tr>
                     <th rowSpan="2">Student Info.</th>
-                    <th colSpan="3">Bangla</th>
-                    <th colSpan="3">English</th>
-                    <th colSpan="3">Math</th>
-                    <th colSpan="3">Physics</th>
-                    <th colSpan="3">ICT</th>
+                    {gtb?.subjectList.map((subject) => (
+                      <th key={subject.id} colSpan="5">
+                        {subject.name || "N/A"}
+                      </th>
+                    ))}
                     <th rowSpan="2">T.M</th>
                     <th rowSpan="2">G</th>
                     <th rowSpan="2">P</th>
                     <th rowSpan="2">PT</th>
                   </tr>
                   <tr>
-                    <th>Written Mark</th>
-                    <th>Oral Mark</th>
-                    <th>Total Mark</th>
-                    <th>Written Mark</th>
-                    <th>Oral Mark</th>
-                    <th>Total Mark</th>
-                    <th>Written Mark</th>
-                    <th>Oral Mark</th>
-                    <th>Total Mark</th>
-                    <th>Written Mark</th>
-                    <th>Oral Mark</th>
-                    <th>Total Mark</th>
-                    <th>Written Mark</th>
-                    <th>Oral Mark</th>
-                    <th>Total Mark</th>
+                    {gtb?.subjectList.map((subject) => (
+                      <React.Fragment key={subject.id}>
+                        <th>MCQ Mark</th>
+                        <th>Written Mark</th>
+                        <th>CA Mark</th>
+                        <th>CT Mark</th>
+                        <th>Total Mark</th>
+                      </React.Fragment>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="student-info">
-                      <h2>
-                        <span className="name">MD: Shanto</span>
-                      </h2>
-                      <h2>
-                        Roll: <span className="roll">5</span>
-                      </h2>
-                    </td>
-                    <td>80</td>
-                    <td>10</td>
-                    <td>10</td>
-                    <td>80</td>
-                    <td>10</td>
-                    <td>10</td>
-                    <td>80</td>
-                    <td>10</td>
-                    <td>10</td>
-                    <td>80</td>
-                    <td>10</td>
-                    <td>10</td>
-                    <td>80</td>
-                    <td>10</td>
-                    <td>10</td>
-                    <td>90</td>
-                    <td>A+</td>
-                    <td>5</td>
-                    <td>1</td>
-                  </tr>
+                  {isPending ? (
+                    <>Loading ...</>
+                  ) : (
+                    gtb?.data?.length > 0 &&
+                    gtb?.data?.map((item) => (
+                      <tr key={item?.studentID}>
+                        <td className="student-info">
+                          <h2>
+                            <span className="name">{item?.studentName}</span>
+                          </h2>
+                          <h2>
+                            Roll:{" "}
+                            <span className="roll">{item?.studentRoll}</span>
+                          </h2>
+                        </td>
+                        {gtb?.subjectList.map((subject) => {
+                          const subjectData = item?.subjects.find(
+                            (sub) => sub.subjectID === subject.id,
+                          );
+                          return (
+                            <React.Fragment key={subject.id}>
+                              <td>
+                                {subjectData ? subjectData.mcqMark : "N/A"}
+                              </td>
+                              <td>
+                                {subjectData ? subjectData.writtenMark : "N/A"}
+                              </td>
+                              <td>
+                                {subjectData ? subjectData.caMark : "N/A"}
+                              </td>
+                              <td>
+                                {subjectData ? subjectData.ctMark : "N/A"}
+                              </td>
+                              <td>
+                                {subjectData ? subjectData.totalMark : "N/A"}
+                              </td>
+                            </React.Fragment>
+                          );
+                        })}
+                        <td>{item.totalMarks}</td>
+                        <td>{item.finalLetterGrade}</td>
+                        <td>{item.finalGradePoint}</td>
+                        <td>A+</td>
+                        <td>5</td>
+                        <td>1</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

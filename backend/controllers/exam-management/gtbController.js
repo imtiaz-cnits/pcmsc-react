@@ -1,6 +1,15 @@
 const { ObjectId } = require("mongoose").Types;
 const MarkEntry = require("../../models/markEntryModel");
 
+function getLetterGrade(gradePoint) {
+  if (gradePoint >= 5.0) return "A+";
+  if (gradePoint >= 4.0) return "A";
+  if (gradePoint >= 3.5) return "A-";
+  if (gradePoint >= 3.0) return "B";
+  if (gradePoint >= 2.0) return "C";
+  return "F";
+}
+
 async function getGTBSheet(req, res, next) {
   try {
     const { classID, sessionID, sectionID, shiftID } = req.query;
@@ -25,8 +34,8 @@ async function getGTBSheet(req, res, next) {
     };
 
     const markEntries = await MarkEntry.find(filters)
-      .populate("subject", "name") // Assuming subject collection has 'name' field
-      .populate("student", "name studentRoll") // Assuming student collection has 'name' and 'studentRoll'
+      .populate("subject", "subjectName")
+      .populate("student", "name studentRoll")
       .lean();
 
     const reportCard = markEntries.reduce((acc, entry) => {
@@ -45,7 +54,6 @@ async function getGTBSheet(req, res, next) {
         letterGrade,
       } = entry;
 
-      // Find or create student entry in accumulator
       let studentEntry = acc.find((item) => item.studentID === studentID);
       if (!studentEntry) {
         studentEntry = {
@@ -54,41 +62,72 @@ async function getGTBSheet(req, res, next) {
           studentRoll: studentRoll || student?.studentRoll,
           subjects: [],
           totalMarks: 0,
+          totalGradePoints: 0,
+          subjectCount: 0,
         };
         acc.push(studentEntry);
       }
 
-      // Add subject details
       studentEntry.subjects.push({
         subjectID: subject._id,
-        subjectName: subject.name,
+        subjectName: subject.subjectName,
         mcqMark,
         writtenMark,
         caMark,
         ctMark,
         totalMark,
-        gradePoint,
+        gradePoint: parseFloat(gradePoint), // ensure number
         letterGrade,
       });
 
-      // Update total marks
       studentEntry.totalMarks += totalMark;
+      studentEntry.totalGradePoints += parseFloat(gradePoint); // ensure number
+      studentEntry.subjectCount += 1;
 
       return acc;
     }, []);
 
-    reportCard.sort((a, b) => a.studentRoll.localeCompare(b.studentRoll));
+    // Compute final report card and subject list
+    const subjectMap = new Map();
+    const finalReportCard = reportCard.map((student) => {
+      student.subjects.forEach((sub) => {
+        if (!subjectMap.has(sub.subjectID.toString())) {
+          subjectMap.set(sub.subjectID.toString(), {
+            id: sub.subjectID,
+            name: sub.subjectName,
+          });
+        }
+      });
 
-    console.log("data of gtb : ", reportCard);
+      const avgGradePoint =
+        student.subjectCount > 0
+          ? student.totalGradePoints / student.subjectCount
+          : 0;
+
+      const finalGradePoint = parseFloat(avgGradePoint.toFixed(2));
+      const finalLetterGrade = getLetterGrade(finalGradePoint);
+
+      return {
+        ...student,
+        finalGradePoint,
+        finalLetterGrade,
+      };
+    });
+
+    const subjectList = Array.from(subjectMap.values());
+
+    // Sort the report card by student roll
+    finalReportCard.sort((a, b) => a.studentRoll.localeCompare(b.studentRoll));
 
     const totalEntries = await MarkEntry.countDocuments();
 
     return res.status(200).json({
       success: true,
       message: "GTBs Sheet fetch successfully !.",
-      count: reportCard.length,
+      count: finalReportCard.length,
       totalEntries,
-      data: reportCard,
+      subjectList, // return subjectList along with the report card
+      data: finalReportCard,
     });
   } catch (error) {
     console.log("error : getGTBSheet ", error);
