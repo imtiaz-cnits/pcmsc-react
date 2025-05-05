@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
+import SkeletonLoader from "../../components/skeleton/SkeletonLoader";
 import { useFetchGTBSheet } from "../../hook/useGTBSheet";
 
 const GeneratedTBSheet = () => {
@@ -19,7 +20,27 @@ const GeneratedTBSheet = () => {
     shiftID,
   };
 
-  const { data: gtb, isPending, isError } = useFetchGTBSheet(filters);
+  const { data: gtb, isPending } = useFetchGTBSheet(filters);
+
+  const rankedData = React.useMemo(() => {
+    if (!gtb?.data?.length) return [];
+
+    const sorted = [...gtb.data].sort((a, b) => b.totalMarks - a.totalMarks);
+    let lastMarks = null;
+    let lastRank = 0;
+    let position = 1;
+
+    return sorted.map((student, index) => {
+      if (student.totalMarks === lastMarks) {
+        return { ...student, position: lastRank };
+      } else {
+        lastMarks = student.totalMarks;
+        lastRank = position;
+        position = index + 2;
+        return { ...student, position: lastRank };
+      }
+    });
+  }, [gtb]);
 
   const printTbSheet = () => {
     const tabulation = document.querySelector(".tabulation");
@@ -148,10 +169,10 @@ const GeneratedTBSheet = () => {
                 </thead>
                 <tbody>
                   {isPending ? (
-                    <>Loading ...</>
+                    <SkeletonLoader />
                   ) : (
-                    gtb?.data?.length > 0 &&
-                    gtb?.data?.map((item) => (
+                    rankedData.length > 0 &&
+                    rankedData.map((item) => (
                       <tr key={item?.studentID}>
                         <td className="student-info">
                           <h2>
@@ -189,7 +210,7 @@ const GeneratedTBSheet = () => {
                         <td>{item.totalMarks}</td>
                         <td>{item.finalLetterGrade}</td>
                         <td>{item.finalGradePoint}</td>
-                        <td>1</td>
+                        <td>{ordinal(item.position)}</td>
                       </tr>
                     ))
                   )}
@@ -231,6 +252,12 @@ const GeneratedTBSheet = () => {
       {/* <!-- Hero Main Content End --> */}
     </>
   );
+};
+
+const ordinal = (n) => {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 };
 
 export default GeneratedTBSheet;
