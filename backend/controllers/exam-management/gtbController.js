@@ -76,12 +76,12 @@ async function getGTBSheet(req, res, next) {
         caMark,
         ctMark,
         totalMark,
-        gradePoint: parseFloat(gradePoint), // ensure number
+        gradePoint: parseFloat(gradePoint),
         letterGrade,
       });
 
       studentEntry.totalMarks += totalMark;
-      studentEntry.totalGradePoints += parseFloat(gradePoint); // ensure number
+      studentEntry.totalGradePoints += parseFloat(gradePoint);
       studentEntry.subjectCount += 1;
 
       return acc;

@@ -53,6 +53,9 @@ const {
   getHighestMark,
 } = require("../controllers/exam-management/markSheetController");
 const { getGTBSheet } = require("../controllers/exam-management/gtbController");
+const {
+  getGenaratedAdmitCard,
+} = require("../controllers/exam-management/admitCardController");
 
 // 🚀  Exam Type - CRUD
 router.post("/add-exam-type", addExamType);
@@ -102,6 +105,9 @@ router.get("/students/result/mark-sheet/mark-student", getHighestMark);
 
 // 🚀  GTB Sheet
 router.get("/students/result/all/gtb-sheet", getGTBSheet);
+
+// 🚀  Admit Card
+router.get("/students/result/all/generated/admit-card", getGenaratedAdmitCard);
 
 // 🛠️ exports
 module.exports = router;

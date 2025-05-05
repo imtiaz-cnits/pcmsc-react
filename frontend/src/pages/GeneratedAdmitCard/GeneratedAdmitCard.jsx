@@ -2,8 +2,30 @@ import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
 import productMemberIMG from "../../assets/img/projuct-member-img-3.png";
+import { useSearchParams } from "react-router-dom";
+import { useFetchGAdmitCardSheet } from "../../hook/useAdmitCard";
 
 const GeneratedAdmitCard = () => {
+  const [searchParams] = useSearchParams();
+
+  const sectionID = searchParams.get("section");
+  const classID = searchParams.get("className");
+  const shiftID = searchParams.get("shift");
+  const sessionID = searchParams.get("session");
+  const filters = {
+    classID,
+    sessionID,
+    sectionID,
+    shiftID,
+  };
+
+  const {
+    data: admitcards,
+    isPending,
+    isError,
+    error,
+  } = useFetchGAdmitCardSheet(filters);
+
   const printMarkAdmit = () => {
     const admitcard = document.querySelector(".admit-container");
 
