@@ -87,7 +87,6 @@ async function getGTBSheet(req, res, next) {
       return acc;
     }, []);
 
-    // Compute final report card and subject list
     const subjectMap = new Map();
     const finalReportCard = reportCard.map((student) => {
       student.subjects.forEach((sub) => {
@@ -116,7 +115,6 @@ async function getGTBSheet(req, res, next) {
 
     const subjectList = Array.from(subjectMap.values());
 
-    // Sort the report card by student roll
     finalReportCard.sort((a, b) => a.studentRoll.localeCompare(b.studentRoll));
 
     const totalEntries = await MarkEntry.countDocuments();
@@ -126,7 +124,7 @@ async function getGTBSheet(req, res, next) {
       message: "GTBs Sheet fetch successfully !.",
       count: finalReportCard.length,
       totalEntries,
-      subjectList, // return subjectList along with the report card
+      subjectList,
       data: finalReportCard,
     });
   } catch (error) {
