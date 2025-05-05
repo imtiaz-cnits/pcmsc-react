@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import ShimmerTable from "../../components/shimmer/ShimmerTable";
-import { FilePenLine, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import {
   useAddShifts,
   useDeleteShift,
   useFetchPaginatedShifts,
   useUpdateShift,
-} from "../../hook/useShift";
+} from "../../hook/useShift.js";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
+import { FilePenLine, Trash } from "lucide-react";
 
-const Test = () => {
+const ShiftPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -566,4 +566,4 @@ const Test = () => {
     </>
   );
 };
-export default Test;
+export default ShiftPage;

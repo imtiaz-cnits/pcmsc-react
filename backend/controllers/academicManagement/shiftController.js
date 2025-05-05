@@ -103,31 +103,27 @@ async function getAllShift(req, res, next) {
 // 📝 Get all shifts with pagination
 async function getAllShiftsPagination(req, res, next) {
   try {
-    // console.log("📥 Received request for shifts: ", req.query);
-
-    // const limit = Math.max(parseInt(req.query.limit, 10) || 5, 1);
-    // const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
-
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 5;
     const skip = (page - 1) * limit;
 
-    const shifts = await Shift.find({}).skip(skip).limit(limit);
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const shifts = await Shift.find(searchQuery).skip(skip).limit(limit);
 
     const total = await Shift.countDocuments();
 
     const totalPages = Math.ceil(total / limit);
-
-    // if (total <= 0) {
-    //   console.log("⚠️ No shifts found");
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "No shifts found",
-    //     currentPage: page,
-    //     totalPages,
-    //     total,
-    //   });
-    // }
 
     console.log("✅ Retrieved shifts: ", shifts);
     return res.status(200).json({
@@ -135,7 +131,7 @@ async function getAllShiftsPagination(req, res, next) {
       count: shifts.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: shifts,
     });
   } catch (error) {
@@ -147,17 +143,16 @@ async function getAllShiftsPagination(req, res, next) {
 // 📝 Update Shift
 async function updateShift(req, res, next) {
   try {
-    // console.log("shift params : ", req.params);
     const { id } = req.params;
-    const { shift, label, status } = req.body;
+    const { name, label, status } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(createError(400, "Invalid grade type ID."));
     }
 
     const payload = {
-      shift,
-      nameLabel: shift,
+      name,
+      nameLabel: name,
       label: label || "Active",
       status: status || "active",
     };

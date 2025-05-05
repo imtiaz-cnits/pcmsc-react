@@ -22,7 +22,6 @@ import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 import ResultPage from "../pages/Result/ResultPage.jsx";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
-import Shift from "../pages/Shift/Shift.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
 import AddNewStudentPage from "../pages/StudentInformation/AddNewStudentPage.jsx";
 import EditStudentProfilePage from "../pages/StudentInformation/EditStudentProfilePage.jsx";
@@ -37,6 +36,7 @@ import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
 import SectionPage from "../pages/Section/SectionPage.jsx";
 import SessionPage from "../pages/Session/SessionPage.jsx";
+import ShiftPage from "../pages/Shift/ShiftPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -61,7 +61,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "shift",
-            element: <Shift />,
+            element: <ShiftPage />,
           },
           {
             path: "section",
