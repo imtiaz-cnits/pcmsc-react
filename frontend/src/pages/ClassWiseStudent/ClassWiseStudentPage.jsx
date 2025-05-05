@@ -723,7 +723,7 @@ const ClassWiseStudentPage = () => {
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                {!isError && (
+                {isPending || (
                   <div className="my-3">
                     <span id="display-info">
                       {students?.totalEntries
@@ -731,39 +731,25 @@ const ClassWiseStudentPage = () => {
                             limit * students?.currentPage,
                             students?.totalEntries,
                           )} of ${students?.totalEntries} entries`
-                        : "Loading Entries...."}
+                        : ""}
                     </span>
                   </div>
                 )}
 
-                {limit <= 5 && !isError && (
+                {students?.totalPages > 1 && !isPending && (
                   <div id="pagination" className="pagination">
                     {page > 1 && (
                       <button
                         id="prevBtn"
                         className="btn"
                         onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
                       >
                         Prev
                       </button>
                     )}
 
-                    {[...Array(students?.totalPages)].map((_, index) => {
-                      const pageNumber = index + 1;
-                      return (
-                        <a
-                          href="#"
-                          key={pageNumber}
-                          className={`page-link page-number-link ${page} ${page === pageNumber ? "active" : ""}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setPage(pageNumber);
-                          }}
-                        >
-                          {pageNumber}
-                        </a>
-                      );
-                    })}
+                    {`${page} of ${Number(students?.totalPages)}`}
 
                     {page < students?.totalPages && (
                       <button
