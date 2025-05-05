@@ -84,7 +84,7 @@ async function getGenaratedAdmitCard(req, res, next) {
           fatherName: "$student.fatherName",
           motherName: "$student.motherName",
           regNo: "$student.admissionNumber",
-          exmType: "$examType.nameLabel",
+          exmType: "$examType.examTypeName",
           session: "$session.nameLabel",
           group: "$student.group.nameLabel",
         },
