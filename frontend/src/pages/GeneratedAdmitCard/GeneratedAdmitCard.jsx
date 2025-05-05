@@ -18,7 +18,6 @@ const GeneratedAdmitCard = () => {
     sectionID,
     shiftID,
   };
-
   const {
     data: admitcards,
     isPending,
