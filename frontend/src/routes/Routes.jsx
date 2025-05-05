@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
 import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
-import AdmitCard from "../pages/AdmitCard/AdmitCard";
+import AdmitCardPage from "../pages/AdmitCard/AdmitCardPage";
 import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Signup from "../pages/Auth/Signup/Signup";
@@ -22,6 +22,9 @@ import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 import ResultPage from "../pages/Result/ResultPage.jsx";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
+import SectionPage from "../pages/Section/SectionPage.jsx";
+import SessionPage from "../pages/Session/SessionPage.jsx";
+import ShiftPage from "../pages/Shift/ShiftPage.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
 import AddNewStudentPage from "../pages/StudentInformation/AddNewStudentPage.jsx";
 import EditStudentProfilePage from "../pages/StudentInformation/EditStudentProfilePage.jsx";
@@ -34,9 +37,6 @@ import Test from "../pages/Test/Test";
 import Tester from "../pages/Test/Tester";
 import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
-import SectionPage from "../pages/Section/SectionPage.jsx";
-import SessionPage from "../pages/Session/SessionPage.jsx";
-import ShiftPage from "../pages/Shift/ShiftPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -141,7 +141,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "admit-card",
-            element: <AdmitCard />,
+            element: <AdmitCardPage />,
           },
           {
             path: "generated-admit-card",
