@@ -254,7 +254,7 @@ const SectionPage = () => {
                       ) : sections?.totalEntries <= 0 ? (
                         <tr>
                           <td colSpan={4} style={{ textAlign: "center" }}>
-                            No Section found
+                            No Entries found
                           </td>
                         </tr>
                       ) : (

@@ -123,7 +123,7 @@ async function getAllPaginatedClasses(req, res, next) {
       count: classes.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: classes,
     });
   } catch (error) {

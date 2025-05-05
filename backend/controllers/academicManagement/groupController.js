@@ -109,7 +109,7 @@ async function getAllPaginatedGroups(req, res, next) {
       count: groups.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: groups,
     });
   } catch (error) {

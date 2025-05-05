@@ -176,152 +176,164 @@ const ClassPage = () => {
                   </button>
                 </div>
 
-                {classes?.total <= 0 ? (
-                  <tr>
-                    <td colSpan="4" style={{ textAlign: "center" }}>
-                      No Classes Found
-                    </td>
-                  </tr>
-                ) : (
-                  <>
-                    {/* <!-- Class heading End --> */}
+                {/* <!-- Class heading End --> */}
 
-                    {/* <!-- Action Buttons --> */}
-                    <div className="button-wrapper mb-3">
-                      {/* <!-- Search and Filter --> */}
-                      <div className="input-group class-group">
-                        {/* <!-- Entries per page --> */}
-                        <div>
-                          <div className="entries-page">
-                            <label htmlFor="entries" className="mr-2">
-                              Entries:
-                            </label>
-                            <div className="select-container dropdown-button">
-                              <select
-                                id="entries"
-                                className="form-control"
-                                value={limit}
-                                onChange={(e) => {
-                                  e.preventDefault();
-                                  setLimit(Number(e.target.value));
-                                  setPage(1);
-                                  setKeyword("");
-                                }}
-                                style={{ width: "auto" }}
-                              >
-                                {entriesOptions.map((item, index) => (
-                                  <option key={index} value={item.value}>
-                                    {item.label}
-                                  </option>
-                                ))}
-                              </select>
-                              <span className="dropdown-icon">&#9662;</span>
-                              {/* <!-- Dropdown icon --> */}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="class-search">
-                          <input
-                            style={{ width: "20%", margin: "0" }}
-                            type="text"
-                            id="searchInput"
+                {/* <!-- Action Buttons --> */}
+                <div className="button-wrapper mb-3">
+                  {/* <!-- Search and Filter --> */}
+                  <div className="input-group class-group">
+                    {/* <!-- Entries per page --> */}
+                    <div>
+                      <div className="entries-page">
+                        <label htmlFor="entries" className="mr-2">
+                          Entries:
+                        </label>
+                        <div className="select-container dropdown-button">
+                          <select
+                            id="entries"
                             className="form-control"
-                            placeholder="Search Class..."
-                            value={keyword}
-                            onChange={handleSearchQuery}
-                          />
+                            value={limit}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setLimit(Number(e.target.value));
+                              setPage(1);
+                              setKeyword("");
+                            }}
+                            style={{ width: "auto" }}
+                          >
+                            {entriesOptions.map((item, index) => (
+                              <option key={index} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="dropdown-icon">&#9662;</span>
+                          {/* <!-- Dropdown icon --> */}
                         </div>
                       </div>
                     </div>
+                    <div className="class-search">
+                      <input
+                        style={{ width: "20%", margin: "0" }}
+                        type="text"
+                        id="searchInput"
+                        className="form-control"
+                        placeholder="Search Class..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                    {/* <!-- Table --> */}
-                    <div className="table-wrapper">
-                      <table
-                        id="printTable"
-                        className="table table-bordered table-hover"
-                      >
-                        <thead>
-                          <tr>
-                            <th>Sl No:</th>
-                            <th>Class Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {isPending ? (
-                            <ShimmerTable rows={limit} cols={4} />
-                          ) : (
-                            classes?.data?.length > 0 &&
-                            classes?.data?.map((item, index) => (
-                              <tr key={item?._id}>
-                                <td>
-                                  {String(
-                                    (page - 1) * limit + index + 1,
-                                  ).padStart(2, "0")}
-                                </td>
-                                <td>{item?.nameLabel}</td>
-                                <td>{item?.label}</td>
+                {/* <!-- Table --> */}
+                <div className="table-wrapper">
+                  <table
+                    id="printTable"
+                    className="table table-bordered table-hover"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Sl No:</th>
+                        <th>Class Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {isPending ? (
+                        <ShimmerTable rows={limit} cols={4} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="4">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : classes?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: "center" }}>
+                            No Section found
+                          </td>
+                        </tr>
+                      ) : (
+                        classes?.data?.length > 0 &&
+                        classes?.data?.map((item, index) => (
+                          <tr key={item?._id}>
+                            <td>
+                              {String((page - 1) * limit + index + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </td>
+                            <td>{item?.nameLabel}</td>
+                            <td>{item?.label}</td>
 
-                                <td>
-                                  <div id="action_btn">
-                                    <div
-                                      style={{ display: "flex", gap: "8px" }}
-                                    >
-                                      <button
-                                        href="#"
-                                        className="link editButton"
-                                        data-modal="action-editmodal"
-                                        style={{
-                                          background: "none",
-                                          border: "none",
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={(e) =>
-                                          handleEditClick(e, item)
-                                        }
-                                      >
-                                        <FilePenLine
-                                          style={{ color: "#1f4529" }}
-                                        />
-                                      </button>
+                            <td>
+                              <div id="action_btn">
+                                <div style={{ display: "flex", gap: "8px" }}>
+                                  <button
+                                    href="#"
+                                    className="link editButton"
+                                    data-modal="action-editmodal"
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => handleEditClick(e, item)}
+                                  >
+                                    <FilePenLine style={{ color: "#1f4529" }} />
+                                  </button>
 
-                                      <button
-                                        href="#"
-                                        className="link custom-open-modal-btn openModalBtn deleteButton"
-                                        data-modal="action-deletemodal"
-                                        style={{
-                                          background: "none",
-                                          border: "none",
-                                          cursor: "pointer",
-                                        }}
-                                      >
-                                        <Trash
-                                          style={{ color: "lightcoral" }}
-                                          onClick={(e) =>
-                                            handleDeletedID(e, item)
-                                          }
-                                        />
-                                      </button>
-                                    </div>
+                                  <button
+                                    href="#"
+                                    className="link custom-open-modal-btn openModalBtn deleteButton"
+                                    data-modal="action-deletemodal"
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    <Trash
+                                      style={{ color: "lightcoral" }}
+                                      onClick={(e) => handleDeletedID(e, item)}
+                                    />
+                                  </button>
+                                </div>
 
-                                    {/* <!-- <button class="quick-view quickButton">
+                                {/* <!-- <button class="quick-view quickButton">
                             <i class="fa-regular fa-eye"></i>
                           </button> --> */}
-                                  </div>
-                                </td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                    {/* <!-- Pagination and Display Info --> */}
-                    <div className="my-3">
-                      <span id="display-info">{`Showing ${Math.min(limit * page, classes?.total)} of ${classes?.total} entries`}</span>
-                    </div>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                {/* <!-- Pagination and Display Info --> */}
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {classes?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * classes?.currentPage,
+                            classes?.totalEntries,
+                          )} of ${classes?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
 
-                    <div id="pagination" className="pagination">
+                {classes?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
                       <button
                         id="prevBtn"
                         className="btn"
@@ -330,7 +342,11 @@ const ClassPage = () => {
                       >
                         Prev
                       </button>
-                      {classes?.currentPage} of {classes?.totalPages}
+                    )}
+
+                    {`${page} of ${Number(classes?.totalPages)}`}
+
+                    {page < classes?.totalPages && (
                       <button
                         id="nextBtn"
                         className="btn"
@@ -339,19 +355,18 @@ const ClassPage = () => {
                             Math.min(prev + 1, classes?.totalPages),
                           )
                         }
-                        disabled={page === classes?.totalPages}
                       >
                         Next
                       </button>
-                    </div>
-                  </>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
           </div>
 
           <div className="copyright">
-            <p>&copy; 2023. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
           {/* <!-- Table End --> */}
 
