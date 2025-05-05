@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Toaster } from "sonner";
 import { FilePenLine, Trash } from "lucide-react";
-
-import Shimmer from "../../components/Shimmer.jsx";
 import {
   useAddClass,
   useDeleteClass,

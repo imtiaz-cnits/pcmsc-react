@@ -1,4 +1,5 @@
 // external imports
+const mongoose = require("mongoose");
 const createError = require("http-errors");
 const ClassModel = require("../../models/classModel");
 
@@ -136,24 +137,33 @@ async function updateClass(req, res, next) {
   try {
     console.log("updated class params : ", req.params);
     console.log("updated class body : ", req.body);
-    const { id: classId } = req.params;
+    const { id } = req.params;
     const { name, label, status } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid grade type ID."));
+    }
 
     const payload = {
       name,
-      nameLabel: name.charAt(0).toUpperCase() + name.slice(1),
+      nameLabel: name,
       label: label || "Active",
       status: status || "active",
     };
 
-    const updatedClass = await ClassModel.findByIdAndUpdate(classId, payload, {
+    const existingItem = await ClassModel.findOne({
+      name: payload.name,
+      _id: { $ne: id },
+    });
+
+    if (existingItem) {
+      return next(createError(403, "Already Exists!"));
+    }
+
+    const updatedClass = await ClassModel.findByIdAndUpdate(id, payload, {
       new: true,
       runValidators: true,
     });
-
-    if (!updatedClass) {
-      return next(createError(404, "Class not found!"));
-    }
 
     // console.log("🚀 updated class value : ", updatedClass);
 

@@ -8,8 +8,10 @@ import {
   addGroupAPI,
   deleteGroupAPI,
   fetchedGroupsAPI,
+  fetchedPaginatedGroup,
   updateGroupAPI,
 } from "../api/academic-management/groupAPI";
+import { toast } from "sonner";
 
 //📌  POST - method
 export const useAddGroup = () => {
@@ -21,7 +23,7 @@ export const useAddGroup = () => {
       console.log("⚙️ error adding group : ", error);
 
       if (error.response) {
-        alert(
+        toast.error(
           error.response?.data?.message || "Failed to add group . Try again!",
         );
       }
@@ -36,7 +38,7 @@ export const useAddGroup = () => {
       await queryClient.invalidateQueries({ queryKey: ["groups"] });
 
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 
@@ -58,6 +60,19 @@ export const useFetchGroups = () => {
   });
 };
 
+//✅  GET - method (paginated)
+export const useFetchPaginatedGroup = ({ page, limit, keyword }) => {
+  return useQuery({
+    queryKey: ["groups", { page, limit, keyword }],
+    queryFn: () => fetchedPaginatedGroup(page, limit, keyword),
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
+};
+
 //✅  PATCH - method
 export const useUpdateGroup = () => {
   const queryClient = useQueryClient();
@@ -68,7 +83,7 @@ export const useUpdateGroup = () => {
       console.log("⚙️ error updating group variables : ", variables);
 
       if (error?.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred while updating the group. Please try again.",
         );
@@ -88,7 +103,7 @@ export const useUpdateGroup = () => {
 
       await queryClient.invalidateQueries({ queryKey: ["groups", groupID] });
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 
@@ -108,7 +123,7 @@ export const useDeleteGroup = () => {
     onError: (error) => {
       console.log("⚙️  error deleting group : ", error);
       if (error?.response) {
-        alert(
+        toast.error(
           error.response?.data?.message ||
             "An error occurred !. Please try again",
         );
@@ -127,7 +142,7 @@ export const useDeleteGroup = () => {
 
       await queryClient.invalidateQueries({ queryKey: ["groups"] });
       if (data?.success) {
-        alert(data?.message);
+        toast.success(data?.message);
       }
     },
 

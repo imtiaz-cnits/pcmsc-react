@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createError = require("http-errors");
 const Section = require("../../models/sectionModel");
 
@@ -137,31 +138,34 @@ async function updateSection(req, res, next) {
   try {
     console.log("section params : ", req.params);
     console.log("section body : ", req.body);
-    const { id: sectionId } = req.params;
-    const { name: section, label, status } = req.body;
+    const { id } = req.params;
+    const { name, label, status } = req.body;
 
-    console.log(`🔄 Updating section [ID: ${sectionId}] with data:`, req.body);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid grade type ID."));
+    }
 
     // updated payload
-    const updatePayload = {
-      name: section,
-      nameLabel: section.charAt(0).toUpperCase() + section.slice(1),
-      label,
-      status,
+    const payload = {
+      name,
+      nameLabel: name,
+      label: label || "Active",
+      status: status || "active",
     };
 
-    console.log(
-      `🔄 Before => Updating section [ID: ${sectionId}] with data:`,
-      updatePayload,
-    );
+    const existingItem = await Section.findOne({
+      name: payload.name,
+      _id: { $ne: id },
+    });
 
-    const updatedSection = await Section.findByIdAndUpdate(
-      sectionId,
-      updatePayload,
-      {
-        new: true,
-      },
-    );
+    if (existingItem) {
+      return next(createError(403, "Already Exists!"));
+    }
+
+    const updatedSection = await Section.findByIdAndUpdate(id, payload, {
+      new: true,
+      runValidators: true,
+    });
 
     return res.status(200).json({
       success: true,

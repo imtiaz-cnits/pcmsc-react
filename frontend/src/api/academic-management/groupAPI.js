@@ -17,11 +17,21 @@ export const fetchedGroupsAPI = async () => {
   return res.data?.success ? res.data : [];
 };
 
+// ✅  GET - method (paginated)
+export const fetchedPaginatedGroup = async (page, limit, keyword) => {
+  console.log("fetchedPaginatedGroup api : ", page, limit);
+  const res = await axiosPrivate.get(`/academic-management/group-paginated`, {
+    params: { page, limit, keyword },
+  });
+  console.log("fetchedPaginatedGroup :", res.data);
+  return res.data?.success ? res.data : [];
+};
+
 // ✅ UPDATE
-export const updateGroupAPI = async ({ editId, payload }) => {
-  console.log("updateGroupAPI", editId, payload);
+export const updateGroupAPI = async ({ groupID, payload }) => {
+  console.log("updateGroupAPI", groupID, payload);
   const res = await axiosPrivate.patch(
-    `/academic-management/group/${editId}`,
+    `/academic-management/group/${groupID}`,
     payload,
   );
 
