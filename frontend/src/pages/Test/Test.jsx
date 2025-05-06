@@ -1,11 +1,5 @@
-import AdmitCardLoader from "../../components/skeleton/AdmitCardLoader";
-
 const Test = () => {
-  return (
-    <>
-      <AdmitCardLoader />
-    </>
-  );
+  return <>{/* <AddStudentSkeleton /> */}</>;
 };
 
 export default Test;

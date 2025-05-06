@@ -8,12 +8,13 @@ import { useFetchGAdmitCardSheet } from "../../hook/useAdmitCard";
 
 const GeneratedAdmitCard = () => {
   const [searchParams] = useSearchParams();
-
+  const studentRoll = searchParams.get("roll");
   const sectionID = searchParams.get("section");
   const classID = searchParams.get("className");
   const shiftID = searchParams.get("shift");
   const sessionID = searchParams.get("session");
   const filters = {
+    studentRoll,
     classID,
     sessionID,
     sectionID,

@@ -253,6 +253,7 @@ html ::-webkit-scrollbar-thumb {
   display: inline-block;
   text-align: left;
 }
+
 .class-wise-form .form-group label {
   font-size: 16px;
   font-weight: 600;

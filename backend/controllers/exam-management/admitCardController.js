@@ -3,7 +3,9 @@ const MarkEntry = require("../../models/markEntryModel");
 
 async function getGenaratedAdmitCard(req, res, next) {
   try {
-    const { classID, sessionID, sectionID, shiftID } = req.query;
+    console.log("query : ", req.query);
+
+    const { studentRoll, classID, sessionID, sectionID, shiftID } = req.query;
 
     if (
       !ObjectId.isValid(classID) ||
@@ -17,12 +19,20 @@ async function getGenaratedAdmitCard(req, res, next) {
       });
     }
 
-    const filters = {
-      className: new ObjectId(classID),
-      section: new ObjectId(sectionID),
-      session: new ObjectId(sessionID),
-      shift: new ObjectId(shiftID),
-    };
+    const filters = studentRoll
+      ? {
+          studentRoll,
+          className: new ObjectId(classID),
+          section: new ObjectId(sectionID),
+          session: new ObjectId(sessionID),
+          shift: new ObjectId(shiftID),
+        }
+      : {
+          className: new ObjectId(classID),
+          section: new ObjectId(sectionID),
+          session: new ObjectId(sessionID),
+          shift: new ObjectId(shiftID),
+        };
 
     const admitCards = await MarkEntry.aggregate([
       { $match: filters },

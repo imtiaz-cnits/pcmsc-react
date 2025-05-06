@@ -11,6 +11,7 @@ import { useFetchShifts } from "../../hook/useShift";
 
 const AdmitCardPage = () => {
   const navigate = useNavigate();
+  const [studentRoll, setStudentRoll] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
   const [selectedSection, setSelectedSsection] = useState(null);
@@ -44,6 +45,7 @@ const AdmitCardPage = () => {
     e.preventDefault();
 
     const query = new URLSearchParams({
+      roll: studentRoll,
       className: selectedClass.value,
       section: selectedSection.value,
       shift: selectedShift.value,
@@ -70,10 +72,24 @@ const AdmitCardPage = () => {
                 {/* <!-- Form Start --> */}
                 <div className="class-wise-form mb-2">
                   <div className="mark-entry-form">
+                    <div className="form-row"></div>
                     <form
                       className="form-wrapper row"
                       style={{ width: "auto" }}
                     >
+                      <div className="form-group">
+                        <label htmlFor="search-students">
+                          Student's Roll *
+                        </label>
+                        <input
+                          type="text"
+                          id="search-students"
+                          placeholder="Student roll..."
+                          value={studentRoll}
+                          onChange={(e) => setStudentRoll(e.target.value)}
+                        />
+                      </div>
+
                       <div className="form-row col-lg-6">
                         <div className="form-group select-input-box">
                           <label htmlFor="select-to">Class*</label>
