@@ -123,7 +123,7 @@ async function getAllPaginatedAssignedExams(req, res, next) {
           as: "className",
         },
       },
-      { $unwind: { path: "$className", preserveNullAndEmptyArrays: true } },
+      // { $unwind: { path: "$className", preserveNullAndEmptyArrays: true } },
     ];
 
     const keywordMatch = searchRegex
