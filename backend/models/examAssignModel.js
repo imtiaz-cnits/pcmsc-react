@@ -15,11 +15,13 @@ const examAssignSchema = new mongoose.Schema(
       required: true,
     },
 
-    className: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
-      required: true,
-    },
+    className: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Class",
+        required: true,
+      },
+    ],
 
     examDate: {
       type: String,
