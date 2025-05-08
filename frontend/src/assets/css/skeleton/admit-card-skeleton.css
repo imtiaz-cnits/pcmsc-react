@@ -1,0 +1,109 @@
+/* Skeleton Loader Styles */
+.skeleton-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-text,
+.skeleton-logo,
+.skeleton-image,
+.skeleton-button {
+  background: #e0e0e0; /* Fallback background */
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Header Skeleton */
+.skeleton-serial {
+  width: 80px;
+  height: 12px;
+  margin-bottom: 3px;
+}
+
+.skeleton-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  width: 300px;
+  height: 16px;
+  margin: 0 auto 4px;
+}
+
+.skeleton-subtitle {
+  width: 200px;
+  height: 12px;
+  margin: 0 auto 4px;
+}
+
+.skeleton-badge {
+  width: 120px;
+  height: 24px;
+  border-radius: 30px;
+  margin: 3px auto 0;
+}
+
+.skeleton-button {
+  width: 80px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+/* Table Skeleton */
+.skeleton-table-label {
+  width: 120px;
+  height: 12px;
+  margin: 4px 0;
+}
+
+.skeleton-table-value {
+  width: 150px;
+  height: 12px;
+  margin: 4px 0;
+}
+
+/* Profile Image Skeleton */
+.skeleton-image {
+  width: 60px;
+  height: 68px;
+  border-radius: 4px;
+  border: 1px solid var(--stroke);
+}
+
+/* Footer Skeleton */
+.skeleton-footer {
+  width: 100px;
+  height: 12px;
+  border-top: 1px dotted var(--stroke);
+}
+
+.skeleton-footer-center {
+  width: 150px;
+  height: 10px;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .skeleton-logo {
+    display: none;
+  }
+  .skeleton-title {
+    width: 250px;
+  }
+  .skeleton-subtitle {
+    width: 180px;
+  }
+}

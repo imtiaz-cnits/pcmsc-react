@@ -20,12 +20,11 @@ export const fetchSessionAPI = async () => {
 };
 
 // ✅  GET - method (paginated)
-export const fetchedPaginatedSessions = async (page) => {
-  const res = await axiosPrivate.get(
-    `/academic-management/session-paginated?page=${page}`,
-  );
-  console.log("full response api : ", res);
-  console.log("paginated value and total", res.data);
+export const fetchedPaginatedSessions = async (page, limit, keyword) => {
+  const res = await axiosPrivate.get(`/academic-management/session-paginated`, {
+    params: { page, limit, keyword },
+  });
+
   return res.data?.success ? res.data : [];
 };
 

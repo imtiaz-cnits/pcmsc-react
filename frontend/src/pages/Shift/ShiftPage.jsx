@@ -1,71 +1,73 @@
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import "../../assets/css/all-modal.css";
+import { Toaster } from "sonner";
 import {
-  useAddSections,
-  useDeleteSection,
+  useAddShifts,
+  useDeleteShift,
   useFetchPaginatedShifts,
-  useUpdateSection,
-} from "../../hook/useSection.js";
+  useUpdateShift,
+} from "../../hook/useShift.js";
+import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
+import { FilePenLine, Trash } from "lucide-react";
 
-const Section = () => {
+const ShiftPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [section, setSection] = useState("");
-  const [sectionStatus, setSectionStatus] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [keyword, setKeyword] = useState("");
+  const [shift, setShift] = useState("");
+  const [shiftStatus, setShiftStatus] = useState("");
   const [editSectionId, setEditSectionId] = useState("");
+  const [deletedID, setDeletedID] = useState("");
   const [warn, setWarn] = useState("");
-  const { mutate: addSection } = useAddSections();
-  const { mutate: updateSection } = useUpdateSection();
-  const { mutate: deleteSection } = useDeleteSection();
+  const { mutate: addSection } = useAddShifts();
+  const { mutate: updateShift } = useUpdateShift();
+  const { mutate: deleteSection } = useDeleteShift();
 
   const {
-    data: sections,
+    data: shifts,
     isPending,
     isError,
     error,
-  } = useFetchPaginatedShifts(page);
+  } = useFetchPaginatedShifts({ page, limit, keyword });
 
   useEffect(() => {
-    if (isAddModalOpen) {
-      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
-    } else {
-      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
-    }
+    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
   }, [isAddModalOpen]);
 
   useEffect(() => {
-    if (isEditModalOpen) {
-      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
-    } else {
-      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
-    }
+    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
   }, [isEditModalOpen]);
 
-  // add class modal options
-  const sectionStatusOptions = [
+  const shiftStatusOptions = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "inactive", label: "Inactive" },
   ];
 
-  //
+  const entriesOptions = [
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 25, label: "25" },
+    { value: 50, label: "50" },
+    { value: 75, label: "75" },
+    { value: 100, label: "100" },
+  ];
+
   const handleAddSubmit = (e) => {
     e.preventDefault();
 
-    if (!section.trim()) {
+    if (!shift.trim()) {
       setWarn("name is required and cannot be empty");
       return;
     }
 
-    const label =
-      sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
+    const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
 
     const payload = {
-      name: section,
-      status: sectionStatus || "active",
+      name: shift,
+      status: shiftStatus || "active",
       label: label || "Active",
     };
 
@@ -74,78 +76,75 @@ const Section = () => {
     console.log("payload", payload);
     addSection(payload);
     setWarn("");
-    setSection("");
-    setSectionStatus("");
+    setShift("");
+    setShiftStatus("");
+    setIsAddModalOpen(false);
   };
 
   const handleEditClick = (e, item) => {
     e.preventDefault();
-    console.log("Edit button clicked for section:", item);
-    console.log("Edit button clicked for section id :", item?._id);
     setEditSectionId(item?._id);
-    setSection(item?.name);
-    setSectionStatus(item?.status);
+    setShift(item?.name);
+    setShiftStatus(item?.status);
     setIsEditModalOpen(true);
   };
 
   const handleEditSubmit = (e) => {
     e.preventDefault();
 
-    if (!section) {
-      setWarn("Section name is required and cannot be empty");
+    if (!shift) {
+      setWarn("Name cannot be empty");
       return;
     }
 
-    const label =
-      sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
+    const label = shiftStatus?.charAt(0).toUpperCase() + shiftStatus.slice(1);
 
     const updatedPayload = {
-      name: section,
+      name: shift,
       label: label || "Active",
-      status: sectionStatus || "active",
+      status: shiftStatus || "active",
     };
 
-    updateSection({ sectionId: editSectionId, payload: updatedPayload });
-    setSection("");
-    setSectionStatus("");
+    console.log("now checker : ", updatedPayload);
+
+    updateShift({ shiftId: editSectionId, payload: updatedPayload });
+    setShift("");
+    setShiftStatus("");
     setWarn("");
     setEditSectionId("");
-    setIsEditModalOpen(!isEditModalOpen);
+    setIsEditModalOpen(false);
   };
 
-  const handleSectionDelete = (e, item) => {
+  const handleDeletedID = (e, item) => {
     e.preventDefault();
-    console.log("after deleting  section value : ", item);
-    deleteSection(item?._id, {
+    console.log("deleted id : ", item?._id);
+    setDeletedID(item?._id);
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  };
+
+  const handleSectionDelete = (e) => {
+    e.preventDefault();
+    deleteSection(deletedID, {
       onSuccess: () => {
-        if (sections?.data?.length === 1 && page > 1) {
+        if (shifts?.data?.length === 1 && page > 1) {
           setPage((prev) => prev - 1);
         }
       },
     });
+    setKeyword("");
+    setIsDeleteModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("edit modal value ", isEditModalOpen);
-  }, [isEditModalOpen]);
-
-  //todo shimmer effect
-  if (isPending) return <>Loading ...</>;
-
-  if (isError) {
-    if (error instanceof Error) {
-      console.log("inside section list ", error);
-
-      return (
-        <p>{error.response?.data?.message}</p> || <p>{error.message}</p> || (
-          <p>Something went wrong. Please! try again later!</p>
-        )
-      );
-    }
-  }
+  const handleSearchQuery = (e) => {
+    e.preventDefault();
+    setPage(1);
+    setKeyword(e.target.value);
+  };
 
   return (
     <>
+      <Toaster position="top-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
       <div className="main-content">
         <div className="page-content">
@@ -154,12 +153,12 @@ const Section = () => {
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
-                  <h3 className="heading">Section List</h3>
+                  <h3 className="heading">Shift List</h3>
                   <button
                     className="create-cls-btn"
                     onClick={() => setIsAddModalOpen(!isAddModalOpen)}
                   >
-                    Add Section
+                    Add Shift
                   </button>
                 </div>
                 {/* <!-- Class heading End --> */}
@@ -178,13 +177,20 @@ const Section = () => {
                           <select
                             id="entries"
                             className="form-control"
+                            value={limit}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setLimit(Number(e.target.value));
+                              setPage(1);
+                              setKeyword("");
+                            }}
                             style={{ width: "auto" }}
                           >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
+                            {entriesOptions.map((item, index) => (
+                              <option key={index} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
                           </select>
                           <span className="dropdown-icon">&#9662;</span>
                           {/* <!-- Dropdown icon --> */}
@@ -197,7 +203,9 @@ const Section = () => {
                         type="text"
                         id="searchInput"
                         className="form-control"
-                        placeholder="Search Class..."
+                        placeholder="Search Shift..."
+                        value={keyword}
+                        onChange={handleSearchQuery}
                       />
                     </div>
                   </div>
@@ -212,121 +220,170 @@ const Section = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Section Name</th>
+                        <th>Shift Name</th>
                         <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {sections?.data &&
-                        sections?.data?.map((item, index) => {
+                      {isPending ? (
+                        <ShimmerTable rows={limit} cols={4} />
+                      ) : isError ? (
+                        <tr>
+                          <td colSpan="4">
+                            <div className="error-msg">
+                              {error?.response?.data?.message ||
+                                error?.message ||
+                                "Something went wrong. Please try again!"}
+                            </div>
+                          </td>
+                        </tr>
+                      ) : shifts?.totalEntries <= 0 ? (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: "center" }}>
+                            No Entries found
+                          </td>
+                        </tr>
+                      ) : (
+                        shifts?.data?.length > 0 &&
+                        shifts?.data?.map((item, idx) => {
                           return (
                             <tr key={item?._id}>
-                              <td>{(page - 1) * 5 + index + 1}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                {item?.nameLabel}
+                              <td>
+                                {String((page - 1) * limit + idx + 1).padStart(
+                                  2,
+                                  "0",
+                                )}
                               </td>
+                              <td>{item?.nameLabel}</td>
                               <td>{item?.label}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  gap: "20px",
-                                }}
-                              >
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e) => handleEditClick(e, item)}
-                                >
-                                  <FaRegEdit
-                                    style={{
-                                      color: "lightgreen",
-                                      fontSize: "25px",
-                                    }}
-                                  />
-                                </button>
-                                <button
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    padding: 0,
-                                  }}
-                                  onClick={(e) => handleSectionDelete(e, item)}
-                                >
-                                  <FaRegTrashAlt
-                                    style={{
-                                      color: "red",
-                                      fontSize: "25px",
-                                    }}
-                                  />
-                                </button>
+
+                              <td>
+                                <div id="action_btn">
+                                  <div style={{ display: "flex", gap: "8px" }}>
+                                    <button
+                                      href="#"
+                                      className="link editButton"
+                                      data-modal="action-editmodal"
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={(e) => handleEditClick(e, item)}
+                                    >
+                                      <FilePenLine
+                                        style={{ color: "#1f4529" }}
+                                      />
+                                    </button>
+
+                                    <button
+                                      href="#"
+                                      className="link custom-open-modal-btn openModalBtn deleteButton"
+                                      data-modal="action-deletemodal"
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      <Trash
+                                        style={{ color: "lightcoral" }}
+                                        onClick={(e) =>
+                                          handleDeletedID(e, item)
+                                        }
+                                      />
+                                    </button>
+                                  </div>
+
+                                  {/* <!-- <button class="quick-view quickButton">
+                            <i class="fa-regular fa-eye"></i>
+                          </button> --> */}
+                                </div>
                               </td>
                             </tr>
                           );
-                        })}
+                        })
+                      )}
                     </tbody>
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                <div className="my-3">
-                  <span id="display-info"></span>
-                </div>
+                {isPending || (
+                  <div className="my-3">
+                    <span id="display-info">
+                      {shifts?.totalEntries
+                        ? `Showing ${Math.min(
+                            limit * shifts?.currentPage,
+                            shifts?.totalEntries,
+                          )} of ${shifts?.totalEntries} entries`
+                        : ""}
+                    </span>
+                  </div>
+                )}
 
-                <div id="pagination" className="pagination">
-                  <button
-                    id="prevBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prevState) => Math.max(prevState - 1, 1))
-                    }
-                    disabled={page === 1}
-                  >
-                    Prev
-                  </button>
-                  {page} of {sections?.totalPages}
-                  <button
-                    id="nextBtn"
-                    className="btn"
-                    onClick={() =>
-                      setPage((prev) =>
-                        Math.min(prev + 1, sections?.totalPages),
-                      )
-                    }
-                    disabled={page === sections?.totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
+                {shifts?.totalPages > 1 && !isPending && (
+                  <div id="pagination" className="pagination">
+                    {page > 1 && (
+                      <button
+                        id="prevBtn"
+                        className="btn"
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                      >
+                        Prev
+                      </button>
+                    )}
+
+                    {`${page} of ${Number(shifts?.totalPages)}`}
+
+                    {page < shifts?.totalPages && (
+                      <button
+                        id="nextBtn"
+                        className="btn"
+                        onClick={() =>
+                          setPage((prev) =>
+                            Math.min(prev + 1, shifts?.totalPages),
+                          )
+                        }
+                      >
+                        Next
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2023. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
           {/* <!-- Table End -->
 
         <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
-          <div id="confirmationModal" className="modal">
-            <div className="modal-content">
-              <p>Are you sure you want to delete this item?</p>
-              <div className="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
+          {isDeleteModalOpen && (
+            <div
+              id="confirmationModal"
+              className="modal"
+              style={{ display: "flex" }}
+            >
+              <div className="modal-content">
+                <p>Are you sure you want to delete this item?</p>
+                <div className="modal-buttons">
+                  <button id="confirmYes" onClick={handleSectionDelete}>
+                    Yes
+                  </button>
+                  <button
+                    id="confirmNo"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -361,7 +418,7 @@ const Section = () => {
                 <div className="modal-content">
                   <div id="popup-modal">
                     <div className="form-container">
-                      <h3>Add Section</h3>
+                      <h3>Add Shift</h3>
                       <form>
                         {/* <!-- Row 1 --> */}
                         <div
@@ -370,14 +427,14 @@ const Section = () => {
                         >
                           <div className="form-group">
                             <label htmlFor="search-students">
-                              Section Name *
+                              Shift Name *
                             </label>
                             <input
                               type="text"
                               id="search-students"
                               placeholder="Section Name"
-                              value={section}
-                              onChange={(e) => setSection(e.target.value)}
+                              value={shift}
+                              onChange={(e) => setShift(e.target.value)}
                             />
                           </div>
 
@@ -388,13 +445,13 @@ const Section = () => {
                           <div className="form-group">
                             <label htmlFor="search-students">Status *</label>
                             <select
-                              value={sectionStatus}
-                              onChange={(e) => setSectionStatus(e.target.value)}
+                              value={shiftStatus}
+                              onChange={(e) => setShiftStatus(e.target.value)}
                             >
                               <option value="" disabled>
                                 Select status
                               </option>
-                              {sectionStatusOptions.map((option, index) => (
+                              {shiftStatusOptions.map((option, index) => (
                                 <option key={index} value={option.value}>
                                   {option.label}
                                 </option>
@@ -428,9 +485,6 @@ const Section = () => {
               </section>
             )}
           </div>
-          {/* <!-- Section Add Pop Up Modal Start --> */}
-
-          {/* <!-- Section Edit Pop Up Modal Start --> */}
 
           <div className="section-modal">
             {isEditModalOpen && (
@@ -441,7 +495,7 @@ const Section = () => {
                 <div className="modal-content">
                   <div id="popup-modal">
                     <div className="form-container">
-                      <h3>Update Section</h3>
+                      <h3>Update Shift</h3>
                       <form>
                         {/* <!-- Row 1 --> */}
                         <div
@@ -450,27 +504,27 @@ const Section = () => {
                         >
                           <div className="form-group">
                             <label htmlFor="search-students">
-                              Section Name *
+                              Shift Name *
                             </label>
                             <input
                               type="text"
                               id="search-students"
                               placeholder="Section Name"
-                              value={section}
-                              onChange={(e) => setSection(e.target.value)}
+                              value={shift}
+                              onChange={(e) => setShift(e.target.value)}
                             />
                           </div>
 
                           <div className="form-group">
                             <label htmlFor="search-students">Status *</label>
                             <select
-                              value={sectionStatus}
-                              onChange={(e) => setSectionStatus(e.target.value)}
+                              value={shiftStatus}
+                              onChange={(e) => setShiftStatus(e.target.value)}
                             >
                               <option value="" disabled>
                                 Select status
                               </option>
-                              {sectionStatusOptions.map((option, index) => (
+                              {shiftStatusOptions.map((option, index) => (
                                 <option key={index} value={option.value}>
                                   {option.label}
                                 </option>
@@ -509,8 +563,7 @@ const Section = () => {
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
-      <Toaster />
     </>
   );
 };
-export default Section;
+export default ShiftPage;

@@ -1,8 +1,59 @@
+import { useSearchParams } from "react-router-dom";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import logo from "../../assets/img/logo.png";
+import SkeletonLoader from "../../components/skeleton/SkeletonLoader";
+import {
+  useFetchEligibleStudent,
+  useFetchHighestMark,
+  useFetchMarkSheet,
+} from "../../hook/useMarkSheet";
+import { totalGradeCal } from "../../utils/gradeCal";
 
 const MarkSheet = () => {
+  const [searchParams] = useSearchParams();
+  const roll = searchParams.get("roll");
+  const sectionID = searchParams.get("section");
+  const classID = searchParams.get("className");
+  const shiftID = searchParams.get("shift");
+  const sessionID = searchParams.get("session");
+  const examinationID = searchParams.get("examination");
+
+  const filters = {
+    roll,
+    sectionID,
+    classID,
+    shiftID,
+    sessionID,
+    examinationID,
+  };
+
+  const studentFilters = {
+    roll,
+    sectionID,
+    classID,
+    shiftID,
+    sessionID,
+  };
+
+  const { data: eligibleStudent, isPending: isEligibleStudentPending } =
+    useFetchEligibleStudent(studentFilters);
+
+  const { data: reportCard, isPending, isError } = useFetchMarkSheet(filters);
+
+  const { data: highestMarkReportCard, isPending: ishMarkPending } =
+    useFetchHighestMark(filters);
+
+  const finalGrade = totalGradeCal(reportCard?.data, reportCard?.count);
+
+  const highestMarkMap = highestMarkReportCard?.data?.reduce((acc, item) => {
+    acc[item.subject._id] = {
+      maxMark: item.maxMark,
+      studentName: item.studentName,
+    };
+    return acc;
+  }, {});
+
   const printMarksheet = () => {
     const marksheet = document.querySelector(".marksheet-container");
 
@@ -183,71 +234,86 @@ const MarkSheet = () => {
                 <h3>Progress Report</h3>
                 <div className="student-info-table">
                   <table className="student-info">
-                    <tr>
-                      <td>
-                        <span>Student Name:</span>
-                      </td>
-                      <td>
-                        <span>IMTIAZ AHMED</span>
-                      </td>
-                      <td>
-                        <span>Roll No:</span>
-                      </td>
-                      <td>
-                        <span>116988</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Father's Name:</span>
-                      </td>
-                      <td>
-                        <span>MD. IQBAL HOSSAIN</span>
-                      </td>
+                    {isEligibleStudentPending || isPending ? (
+                      <SkeletonLoader />
+                    ) : (
+                      <>
+                        <tr>
+                          <td>
+                            <span>Student Name:</span>
+                          </td>
+                          <td>
+                            <span>{eligibleStudent?.data[0]?.name}</span>
+                          </td>
+                          <td>
+                            <span>Roll No:</span>
+                          </td>
+                          <td>
+                            <span>{eligibleStudent?.data[0]?.studentRoll}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Father's Name:</span>
+                          </td>
+                          <td>
+                            <span>{eligibleStudent?.data[0]?.fatherName}</span>
+                          </td>
 
-                      <td>
-                        <span>Group:</span>
-                      </td>
-                      <td>
-                        <span>Boys</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Mother's Name:</span>
-                      </td>
-                      <td>
-                        <span> MOST. FERDOUSI IQBAL</span>
-                      </td>
-                      <td>
-                        <span>Exam:</span>
-                      </td>
-                      <td>
-                        <span>Annual Exam</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>Student ID:</span>
-                      </td>
-                      <td>
-                        <span>212469</span>
-                      </td>
-                      <td>
-                        <span>Year/Session:</span>
-                      </td>
-                      <td>
-                        <span>2025</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>className:</span>
-                      </td>
-                      <td colSpan="3">
-                        <span>6/Six</span>
-                      </td>
-                    </tr>
+                          <td>
+                            <span>Group:</span>
+                          </td>
+                          <td>
+                            <span>
+                              {eligibleStudent?.data[0]?.group?.nameLabel}
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Mother's Name:</span>
+                          </td>
+                          <td>
+                            <span> {eligibleStudent?.data[0]?.motherName}</span>
+                          </td>
+                          <td>
+                            <span>Exam:</span>
+                          </td>
+                          <td>
+                            {/* // todo */}
+                            <span>
+                              {reportCard?.data[0]?.examType?.examTypeName}
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Student ID:</span>
+                          </td>
+                          <td>
+                            <span>{eligibleStudent?.data[0]?.studentID}</span>
+                          </td>
+                          <td>
+                            <span>Year/Session:</span>
+                          </td>
+                          <td>
+                            <span>
+                              {eligibleStudent?.data[0]?.session?.nameLabel}
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span>Class:</span>
+                          </td>
+                          <td colSpan="3">
+                            <span>
+                              {eligibleStudent?.data[0]?.className?.nameLabel}
+                            </span>
+                          </td>
+                        </tr>
+                      </>
+                    )}
                   </table>
                 </div>
               </div>
@@ -276,551 +342,91 @@ const MarkSheet = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Bangla</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>English</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Mathematics</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Science</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Religion & Moral Education</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>History and Social Science</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Digital Technology</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Life and Livelihood</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Art and Culture</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Health and Well-Being</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Health and Well-Being</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Health and Well-Being</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Health and Well-Being</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Health and Well-Being</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span>101</span>
-                        </td>
-                        <td className="subject">
-                          <span>Health and Well-Being</span>
-                        </td>
-                        <td>
-                          <span>100</span>
-                        </td>
-                        <td>
-                          <span>99.3</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>98</span>
-                        </td>
-                        <td>
-                          <span>29</span>
-                        </td>
-                        <td>
-                          <span>-</span>
-                        </td>
-                        <td>
-                          <span>97.6</span>
-                        </td>
-                        <td>
-                          <span>A+</span>
-                        </td>
-                        <td>
-                          <span>5.0</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colSpan="2">
-                          <span>Total Exam Marks</span>
-                        </td>
-                        <td>
-                          <span>1000</span>
-                        </td>
-                        <td colSpan="5">
-                          <span>Obtained Marks & GPA</span>
-                        </td>
-                        <td>
-                          <span>990</span>
-                        </td>
-                        <td>
-                          <span>A</span>
-                        </td>
-                        <td>
-                          <span>4.9</span>
-                        </td>
-                      </tr>
+                      {isPending ||
+                      isEligibleStudentPending ||
+                      ishMarkPending ? (
+                        <SkeletonLoader />
+                      ) : isError ? (
+                        <SkeletonLoader />
+                      ) : reportCard.totalEntries <= 0 ? (
+                        <p>not found </p>
+                      ) : (
+                        reportCard?.data?.length > 0 &&
+                        reportCard?.data?.map((item, idx) => (
+                          <>
+                            <tr key={`${idx}-subject-info`}>
+                              <td>
+                                <span>{item?.subject?.subjectCode}</span>
+                              </td>
+                              <td className="subject">
+                                <span>{item?.subject?.subjectName}</span>
+                              </td>
+                              <td>
+                                <span>100</span>
+                              </td>
+                              <td>
+                                <span>
+                                  {highestMarkMap[item?.subject?._id]
+                                    ?.maxMark || "N/A"}{" "}
+                                </span>
+                              </td>
+                              <td>
+                                <span>{item?.mcqMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.writtenMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.caMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.ctMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.totalMark}</span>
+                              </td>
+                              <td>
+                                <span>{item?.letterGrade}</span>
+                              </td>
+                              <td>
+                                <span>{item?.gradePoint}</span>
+                              </td>
+                            </tr>
+                          </>
+                        ))
+                      )}
+
+                      {isPending || isEligibleStudentPending ? (
+                        <SkeletonLoader />
+                      ) : isError ? (
+                        <SkeletonLoader />
+                      ) : (
+                        <tr>
+                          <td colSpan="2">
+                            <span>Total Exam Marks</span>
+                          </td>
+                          <td>
+                            <span>1000</span>
+                          </td>
+                          <td colSpan="5">
+                            <span>Obtained Marks & GPA</span>
+                          </td>
+                          <td>
+                            <span>
+                              {reportCard?.data?.reduce(
+                                (acc, cur) => acc + cur.totalMark,
+                                0,
+                              )}
+                            </span>
+                          </td>
+                          <td>
+                            <span>{finalGrade.letterGrade}</span>
+                          </td>
+                          <td>
+                            <span>{finalGrade.gradePoint}</span>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>

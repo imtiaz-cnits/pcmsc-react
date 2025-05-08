@@ -18,10 +18,10 @@ export const fetchedShiftsAPI = async () => {
 };
 
 // ✅  GET - method
-export const fetchedPaginatedShifts = async (page) => {
-  const res = await axiosPrivate.get(
-    `/academic-management/shifts-paginated?page=${page}`,
-  );
+export const fetchedPaginatedShifts = async (page, limit, keyword) => {
+  const res = await axiosPrivate.get(`/academic-management/shifts-paginated`, {
+    params: { page, limit, keyword },
+  });
   console.log("🚀 paginated value and total", res.data);
   return res.data?.success ? res.data : {};
 };
@@ -36,13 +36,13 @@ export const fetchShiftEntries = async (limit) => {
 };
 
 // PATCH - method
-export const updateShiftAPI = async ({ shiftId, updatedData }) => {
-  console.log("inside mutation session id : ", shiftId);
+export const updateShiftAPI = async ({ shiftId, payload }) => {
+  console.log("inside mutation session id : ", shiftId, payload);
   const res = await axiosPrivate.patch(
     `/academic-management/shift/${shiftId}`,
-    updatedData,
+    payload,
   );
-  console.log("mutation updated", res.data);
+  console.log("updateShiftAPI", res.data);
   return res.data?.success ? res.data : [];
 };
 

@@ -17,7 +17,6 @@ const {
   getAllShiftsPagination,
   deleteShift,
   updateShift,
-  getAllShiftsEntries,
 } = require("../controllers/academicManagement/shiftController");
 const {
   addSection,
@@ -39,6 +38,7 @@ const {
   getAllGroups,
   deleteGroup,
   updateGroup,
+  getAllPaginatedGroups,
 } = require("../controllers/academicManagement/groupController");
 
 // 🔍 Class - CRUD
@@ -52,7 +52,6 @@ router.delete("/class/:id", deleteClass);
 router.post("/add-shift", addShift);
 router.get("/shifts", getAllShift);
 router.get("/shifts-paginated", getAllShiftsPagination);
-router.get("/shifts-entries", getAllShiftsEntries);
 router.patch("/shift/:id", updateShift);
 router.delete("/shift/:id", deleteShift);
 
@@ -74,8 +73,7 @@ router.delete("/session/:id", deleteSession);
 // 🚀 Group - CRUD
 router.post("/add-group", addGroup);
 router.get("/groups", getAllGroups);
-router.get("/session-paginated", getAllPaginatedSession);
-router.get("/session-entries", getAllEntriesSession);
+router.get("/group-paginated", getAllPaginatedGroups);
 router.patch("/group/:id", updateGroup);
 router.delete("/group/:id", deleteGroup);
 

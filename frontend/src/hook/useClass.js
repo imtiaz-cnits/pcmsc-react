@@ -100,11 +100,11 @@ export const useUpdateClass = () => {
       console.log("🚀 update class onSuccess data value :", data);
       console.log("🚀 update  :", payload, classID);
 
+      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
+
       if (data?.success) {
         toast.success(data?.message);
       }
-
-      await queryClient.invalidateQueries({ queryKey: ["classes", classID] });
     },
 
     onSettled: async () => {
@@ -139,8 +139,10 @@ export const useDeleteClass = () => {
 
     onSuccess: async (data) => {
       console.log("🚀 Class deleted successfully: ", data);
-      alert(data?.message || "Class deleted successfully!");
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
+      if (data?.success) {
+        toast.success(data?.message);
+      }
     },
 
     onSettled: async () => {

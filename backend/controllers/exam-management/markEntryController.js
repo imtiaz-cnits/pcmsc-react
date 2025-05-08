@@ -5,7 +5,7 @@ async function searchEligibleStudents(req, res, next) {
   try {
     // console.log("payloads ", req.query);
 
-    const { className, session, section, shift } = req.query;
+    const { className, session, section, shift, subject, examName } = req.query;
 
     const query = { className, session, section, shift };
 
@@ -13,13 +13,44 @@ async function searchEligibleStudents(req, res, next) {
 
     const totalEntries = await Student.countDocuments(query);
 
-    // console.log("studens data : ", students);
+    const studentIds = students.map((s) => s._id);
+
+    const markEntries = await MarkEntry.find({
+      student: { $in: studentIds },
+      className,
+      session,
+      section,
+      shift,
+      subject,
+      examType: examName,
+    }).populate("session className section shift subject examType");
+
+    const marksMap = {};
+    markEntries.forEach((entry) => {
+      marksMap[entry.student.toString()] = entry;
+    });
+
+    const studentsWithMarks = students.map((stu) => {
+      const existingMark = marksMap[stu._id.toString()];
+      return {
+        _id: stu._id,
+        studentID: stu.studentID,
+        name: stu.name,
+        studentRoll: stu.studentRoll,
+        mcqMark: existingMark ? existingMark.mcqMark : "",
+        writtenMark: existingMark ? existingMark.writtenMark : "",
+        caMark: existingMark ? existingMark.caMark : "",
+        ctMark: existingMark ? existingMark.ctMark : "",
+      };
+    });
+
+    console.log("studens data : ", studentsWithMarks);
 
     return res.status(200).json({
       success: true,
       totalEntries,
       message: "Students Fetched Successfully !",
-      data: students,
+      data: studentsWithMarks,
     });
   } catch (error) {
     console.log(" error in searchEligibleStudents ", error);
@@ -64,6 +95,8 @@ async function markEntry(req, res, next) {
             caMark: student.caMark,
             ctMark: student.ctMark,
             totalMark: student.totalMark,
+            letterGrade: student.letterGrade,
+            gradePoint: student.gradePoint,
           },
         },
         upsert: true,

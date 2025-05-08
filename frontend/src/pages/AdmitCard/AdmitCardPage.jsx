@@ -1,8 +1,6 @@
-/* eslint-disable react/no-unknown-property */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import "../../assets/css/all-modal.css";
 import "../../assets/css/bootstrap.min.css";
 import "../../assets/css/style.css";
 import "../../assets/css/table-funtion.css";
@@ -11,8 +9,9 @@ import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 
-const TabulationSheet = () => {
+const AdmitCardPage = () => {
   const navigate = useNavigate();
+  const [studentRoll, setStudentRoll] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
   const [selectedSection, setSelectedSsection] = useState(null);
@@ -46,13 +45,14 @@ const TabulationSheet = () => {
     e.preventDefault();
 
     const query = new URLSearchParams({
-      section: selectedSection.value,
+      roll: studentRoll,
       className: selectedClass.value,
+      section: selectedSection.value,
       shift: selectedShift.value,
       session: selectedSession.value,
     }).toString();
 
-    navigate(`/exam-management/generated-tb-sheet?${query}`);
+    navigate(`/exam-management/generated-admit-card?${query}`);
   };
 
   return (
@@ -65,20 +65,34 @@ const TabulationSheet = () => {
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
                 <div className="exam-heading">
-                  <h3 className="heading">Tabulation Sheet</h3>
+                  <h3 className="heading">Admit Card</h3>
                 </div>
                 {/* <!-- Class heading End --> */}
 
                 {/* <!-- Form Start --> */}
                 <div className="class-wise-form mb-2">
                   <div className="mark-entry-form">
+                    <div className="form-row"></div>
                     <form
                       className="form-wrapper row"
                       style={{ width: "auto" }}
                     >
+                      <div className="form-group">
+                        <label htmlFor="search-students">
+                          Student's Roll *
+                        </label>
+                        <input
+                          type="text"
+                          id="search-students"
+                          placeholder="Student roll..."
+                          value={studentRoll}
+                          onChange={(e) => setStudentRoll(e.target.value)}
+                        />
+                      </div>
+
                       <div className="form-row col-lg-6">
                         <div className="form-group select-input-box">
-                          <label for="select-to">Class*</label>
+                          <label htmlFor="select-to">Class*</label>
 
                           <Select
                             name=""
@@ -90,8 +104,7 @@ const TabulationSheet = () => {
                           ></Select>
                         </div>
                         <div className="form-group select-input-box">
-                          <label for="select-to">Session*</label>
-
+                          <label htmlFor="select-to">Session*</label>
                           <Select
                             name=""
                             options={sessionOPtions}
@@ -102,7 +115,8 @@ const TabulationSheet = () => {
                       </div>
                       <div className="form-row col-lg-6">
                         <div className="form-group select-input-box">
-                          <label for="select-to">Section*</label>
+                          <label htmlFor="select-to">Section*</label>
+
                           <Select
                             options={sectionOptions}
                             value={selectedSection}
@@ -111,8 +125,7 @@ const TabulationSheet = () => {
                           ></Select>
                         </div>
                         <div className="form-group select-input-box">
-                          <label for="select-to">Shift*</label>
-
+                          <label htmlFor="select-to">Shift*</label>
                           <Select
                             name=""
                             id=""
@@ -140,10 +153,10 @@ const TabulationSheet = () => {
           <div className="copyright">
             <p>&copy; 2023. All Rights Reserved.</p>
           </div>
-          {/* <!-- Table End --> */}
+          {/* <!-- Table End -->
 
-          {/* <!-- Table Action Button Modal Start --> */}
-          {/* <!-- Confirmation Modal Start --> */}
+        <!-- Table Action Button Modal Start -->
+        <!-- Confirmation Modal Start --> */}
           <div id="confirmationModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -153,8 +166,8 @@ const TabulationSheet = () => {
               </div>
             </div>
           </div>
-          {/* <!-- Confirmation Modal End --> */}
-          {/* <!-- Edit Modal Start --> */}
+          {/* <!-- Confirmation Modal End -->
+        <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
             <div className="modal-content">
               <p>Are you sure you want to delete this item?</p>
@@ -164,8 +177,8 @@ const TabulationSheet = () => {
               </div>
             </div>
           </div>
-          {/* <!-- Edit Modal End --> */}
-          {/* <!-- Table Action Button Modal Start --> */}
+          {/* <!-- Edit Modal End -->
+        <!-- Table Action Button Modal Start --> */}
         </div>
       </div>
       {/* <!-- Hero Main Content End --> */}
@@ -173,4 +186,4 @@ const TabulationSheet = () => {
   );
 };
 
-export default TabulationSheet;
+export default AdmitCardPage;

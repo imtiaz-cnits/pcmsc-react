@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createError = require("http-errors");
 const Section = require("../../models/sectionModel");
 
@@ -25,7 +26,7 @@ async function addSection(req, res, next) {
     // 👤 create new add class object
     const newSection = new Section({
       name,
-      nameLabel: name,
+      nameLabel: name.charAt(0).toUpperCase() + name.slice(1),
       label,
       status,
     });
@@ -99,22 +100,23 @@ async function getAllPaginatedSections(req, res, next) {
     const limit = parseInt(req.query.limit, 10) || 5;
     const skip = (page - 1) * limit;
 
-    const sections = await Section.find({}).skip(skip).limit(limit);
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const sections = await Section.find(searchQuery).skip(skip).limit(limit);
 
     const total = await Section.countDocuments();
 
     const totalPages = Math.ceil(total / limit);
-
-    // if (total <= 0) {
-    //   console.log("⚠️ No shifts found");
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "No shifts found",
-    //     currentPage: page,
-    //     totalPages,
-    //     total,
-    //   });
-    // }
 
     console.log("✅ Retrieved shifts: ", sections);
     return res.status(200).json({
@@ -122,7 +124,7 @@ async function getAllPaginatedSections(req, res, next) {
       count: sections.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: sections,
     });
   } catch (error) {
@@ -136,37 +138,34 @@ async function updateSection(req, res, next) {
   try {
     console.log("section params : ", req.params);
     console.log("section body : ", req.body);
-    const { id: sectionId } = req.params;
-    const { name: section, label, status } = req.body;
+    const { id } = req.params;
+    const { name, label, status } = req.body;
 
-    console.log(`🔄 Updating section [ID: ${sectionId}] with data:`, req.body);
-
-    // updated payload
-    const updatePayload = {
-      name: section,
-      label,
-      status,
-    };
-
-    console.log(
-      `🔄 Before => Updating section [ID: ${sectionId}] with data:`,
-      updatePayload,
-    );
-
-    const updatedSection = await Section.findByIdAndUpdate(
-      sectionId,
-      updatePayload,
-      {
-        new: true,
-      },
-    );
-
-    if (!updatedSection) {
-      console.log(`⚠️ Section not found [ID: ${sectionId}]`);
-      return next(createError(404, "Section not found!"));
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid grade type ID."));
     }
 
-    console.log("✅ Successfully updated section:", updatedSection);
+    // updated payload
+    const payload = {
+      name,
+      nameLabel: name,
+      label: label || "Active",
+      status: status || "active",
+    };
+
+    const existingItem = await Section.findOne({
+      name: payload.name,
+      _id: { $ne: id },
+    });
+
+    if (existingItem) {
+      return next(createError(403, "Already Exists!"));
+    }
+
+    const updatedSection = await Section.findByIdAndUpdate(id, payload, {
+      new: true,
+      runValidators: true,
+    });
 
     return res.status(200).json({
       success: true,
@@ -175,6 +174,23 @@ async function updateSection(req, res, next) {
     });
   } catch (error) {
     console.error("❌ Error updating section:", error);
+    // custom Mongoose Error
+    if (error.name === "ValidationError") {
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    // MongoServerError
+    if (error.name === "MongoServerError") {
+      if (error.errorResponse.code === 11000) {
+        return res.status(403).json({
+          success: false,
+          error: "MongoServerError",
+          message: "Section already exists!",
+        });
+      }
+    }
     return next(error);
   }
 }

@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Select from "react-select";
-import Shimmer from "../../components/Shimmer";
 import { useFetchClasses } from "../../hook/useClass";
 import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
 import { useFetchShifts } from "../../hook/useShift";
 import { useFetchPaginatedStudent } from "../../hook/useStudent";
+import ShimmerTable from "../../components/shimmer/ShimmerTable";
 
 const ClassWiseStudentPage = () => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -573,7 +573,7 @@ const ClassWiseStudentPage = () => {
                           </td>
                         </tr>
                       ) : isPending ? (
-                        <Shimmer count={10} />
+                        <ShimmerTable rows={limit} cols={11} />
                       ) : students?.data?.length > 0 ? (
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.createdAt}>
@@ -723,7 +723,7 @@ const ClassWiseStudentPage = () => {
                   </table>
                 </div>
                 {/* <!-- Pagination and Display Info --> */}
-                {!isError && (
+                {isPending || (
                   <div className="my-3">
                     <span id="display-info">
                       {students?.totalEntries
@@ -731,39 +731,25 @@ const ClassWiseStudentPage = () => {
                             limit * students?.currentPage,
                             students?.totalEntries,
                           )} of ${students?.totalEntries} entries`
-                        : "Loading Entries...."}
+                        : ""}
                     </span>
                   </div>
                 )}
 
-                {limit <= 5 && !isError && (
+                {students?.totalPages > 1 && !isPending && (
                   <div id="pagination" className="pagination">
                     {page > 1 && (
                       <button
                         id="prevBtn"
                         className="btn"
                         onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
                       >
                         Prev
                       </button>
                     )}
 
-                    {[...Array(students?.totalPages)].map((_, index) => {
-                      const pageNumber = index + 1;
-                      return (
-                        <a
-                          href="#"
-                          key={pageNumber}
-                          className={`page-link page-number-link ${page} ${page === pageNumber ? "active" : ""}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setPage(pageNumber);
-                          }}
-                        >
-                          {pageNumber}
-                        </a>
-                      );
-                    })}
+                    {`${page} of ${Number(students?.totalPages)}`}
 
                     {page < students?.totalPages && (
                       <button

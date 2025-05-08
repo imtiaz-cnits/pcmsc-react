@@ -18,10 +18,10 @@ export const fetchedSectionsAPI = async () => {
 };
 
 //with paginated
-export const fetchedPaginatedSections = async (page) => {
-  const res = await axiosPrivate.get(
-    `/academic-management/section-paginated?page=${page}`,
-  );
+export const fetchedPaginatedSections = async (page, limit, keyword) => {
+  const res = await axiosPrivate.get(`/academic-management/section-paginated`, {
+    params: { page, limit, keyword },
+  });
   console.log("paginated value and total", res.data);
   return res.data?.success ? res.data : {};
 };

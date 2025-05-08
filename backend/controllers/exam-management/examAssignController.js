@@ -5,23 +5,10 @@ const ExamAssign = require("../../models/examAssignModel");
 // 📝 do add exam
 async function addExam(req, res, next) {
   try {
-    console.log("payloads ", req.body);
-
     const { session, examName, className, examDate, resultDateTime } = req.body;
 
-    // todo
-    // const exists = await ExamAssign.findOne({
-    //   subjectCode: { $regex: `^${subjectCode}$`, $options: "i" },
-    // });
-
-    // console.log("exists", exists);
-
-    // if (exists) {
-    //   return res.status(409).json({ message: "Already exists." });
-    // }
-
     // 👤 create new add exam-type object
-    const newSubject = new ExamAssign({
+    const newExamObj = new ExamAssign({
       session,
       examName,
       className,
@@ -29,12 +16,12 @@ async function addExam(req, res, next) {
       resultDateTime,
     });
 
-    await newSubject.save();
+    await newExamObj.save();
 
     return res.status(200).json({
       success: true,
       message: "Successfully added!",
-      data: newSubject,
+      data: newExamObj,
     });
   } catch (error) {
     console.log(" ❌ Error in addExam : ", error);
@@ -46,8 +33,6 @@ async function addExam(req, res, next) {
 // 📝 get all assigned exams
 async function getAllAssignedExam(req, res, next) {
   try {
-    console.log("📥 Received request for getAllAssignedExam : ", req.body);
-
     const assignedExam = await ExamAssign.find();
     const totalDocuments = await ExamAssign.countDocuments();
 
@@ -60,13 +45,13 @@ async function getAllAssignedExam(req, res, next) {
     return res.status(200).json({
       success: true,
       message: "Exams fetched successfully!",
+      count: assignedExam.length,
       totalEntries: totalDocuments,
       data: assignedExam,
     });
   } catch (error) {
     console.error("❌ Error fetching getAllAssignedExam :", error);
 
-    // 💬 Passing the error to the next middleware
     return next(error);
   }
 }
@@ -74,18 +59,14 @@ async function getAllAssignedExam(req, res, next) {
 // 📝 Get all paginated assigned exams
 async function getAllPaginatedAssignedExams(req, res, next) {
   try {
-    console.log(
-      "📥 Received request for getAllPaginatedSubjects : ",
-      req.query,
-    );
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.max(1, Number(req.query.limit) || 5);
     const skip = (page - 1) * limit;
     const keyword = req.query.keyword.trim();
     const searchRegex = keyword !== "" ? new RegExp(keyword, "i") : null;
 
-    console.log("keywrod value ", keyword);
-    console.log("keyword  reg ", searchRegex);
+    // console.log("keywrod value ", keyword);
+    // console.log("keyword  reg ", searchRegex);
 
     /*
     // todo need to be more optimistic
@@ -142,7 +123,7 @@ async function getAllPaginatedAssignedExams(req, res, next) {
           as: "className",
         },
       },
-      { $unwind: { path: "$className", preserveNullAndEmptyArrays: true } },
+      // { $unwind: { path: "$className", preserveNullAndEmptyArrays: true } },
     ];
 
     const keywordMatch = searchRegex
@@ -178,35 +159,38 @@ async function getAllPaginatedAssignedExams(req, res, next) {
 
     const assignedExams = await ExamAssign.aggregate(dataPipeline);
     const countResult = await ExamAssign.aggregate(countPipeLine);
+    const total = await ExamAssign.countDocuments();
 
-    const rawResult = await ExamAssign.find({}).populate(
-      "session examName className",
-    );
-    console.log("raw result : ", JSON.stringify(rawResult, 2, null));
+    // const rawResult = await ExamAssign.find({}).populate(
+    //   "session examName className",
+    // );
+    // console.log("raw result : ", JSON.stringify(rawResult, 2, null));
 
-    console.log("keyword match : ", keywordMatch);
-    console.log("baselookup : ", baseLookups);
-    console.log("assigned exams : ", assignedExams);
-    console.log("count result : ", countResult);
+    // console.log("keyword match : ", keywordMatch);
+    // console.log("baselookup : ", baseLookups);
+    // console.log("assigned exams : ", assignedExams);
+    // console.log("count result : ", countResult);
 
-    const collections = await mongoose.connection.db
-      .listCollections()
-      .toArray();
-    const collectionNames = collections.map((collection) => collection.name);
-    console.log("Collections:", collectionNames);
+    // const collections = await mongoose.connection.db
+    //   .listCollections()
+    //   .toArray();
+    // const collectionNames = collections.map((collection) => collection.name);
+    // console.log("Collections:", collectionNames);
 
     const totalEntries = countResult[0]?.total || 0;
 
     const totalPages = Math.ceil(totalEntries / limit);
 
-    console.log("total entries ", totalEntries);
-    console.log("total pages ", totalPages);
+    // console.log("total entries ", totalEntries);
+    // console.log("total pages ", totalPages);
 
     return res.status(200).json({
       success: true,
       message: "Successfully retrieved assignedExams",
       currentPage: page,
+
       totalEntries,
+      total,
       totalPages: Number(totalPages),
       count: assignedExams.length,
       data: assignedExams,
@@ -220,8 +204,8 @@ async function getAllPaginatedAssignedExams(req, res, next) {
 // 📝 update
 async function updateAssignedExam(req, res, next) {
   try {
-    console.log("📥 Received assign exam params: ", req.params);
-    console.log("📥 Received assign exam body: ", req.body);
+    // console.log("📥 Received assign exam params: ", req.params);
+    // console.log("📥 Received assign exam body: ", req.body);
 
     const { id } = req.params;
 

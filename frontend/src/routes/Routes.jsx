@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
 import AcademicManagement from "../pages/AcademicManagement/AcademicManagement";
-import AdmitCard from "../pages/AdmitCard/AdmitCard";
+import AdmitCardPage from "../pages/AdmitCard/AdmitCardPage";
 import Admin from "../pages/Auth/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Signup from "../pages/Auth/Signup/Signup";
@@ -22,9 +22,9 @@ import MarkSheet from "../pages/MarkSheet/MarkSheet";
 import MigrationPage from "../pages/Migration/MigrationPage.jsx";
 import ResultPage from "../pages/Result/ResultPage.jsx";
 import SeatPlan from "../pages/SeatPlan/SeatPlan";
-import Section from "../pages/Section/Section";
-import Session from "../pages/Session/Session";
-import Shift from "../pages/Shift/Shift.jsx";
+import SectionPage from "../pages/Section/SectionPage.jsx";
+import SessionPage from "../pages/Session/SessionPage.jsx";
+import ShiftPage from "../pages/Shift/ShiftPage.jsx";
 import SMSManagement from "../pages/SMSManagement/SMSManagement";
 import AddNewStudentPage from "../pages/StudentInformation/AddNewStudentPage.jsx";
 import EditStudentProfilePage from "../pages/StudentInformation/EditStudentProfilePage.jsx";
@@ -34,6 +34,7 @@ import Subject from "../pages/Subject/Subject";
 import TabulationSheet from "../pages/TabulationSheet/TabulationSheet";
 import Ok from "../pages/Test/Ok";
 import Test from "../pages/Test/Test";
+import Tester from "../pages/Test/Tester";
 import TodoComponent from "../pages/Test/Todo.jsx";
 import ProtectedRoute from "./PrivateRoute";
 
@@ -60,15 +61,15 @@ export const router = createBrowserRouter([
           },
           {
             path: "shift",
-            element: <Shift />,
+            element: <ShiftPage />,
           },
           {
             path: "section",
-            element: <Section />,
+            element: <SectionPage />,
           },
           {
             path: "session",
-            element: <Session />,
+            element: <SessionPage />,
           },
           {
             path: "group",
@@ -140,7 +141,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "admit-card",
-            element: <AdmitCard />,
+            element: <AdmitCardPage />,
           },
           {
             path: "generated-admit-card",
@@ -199,5 +200,9 @@ export const router = createBrowserRouter([
   {
     path: "ok/mark-sheet",
     element: <Ok />,
+  },
+  {
+    path: "tester",
+    element: <Tester />,
   },
 ]);

@@ -324,6 +324,11 @@ const Subject = () => {
                                     href="#"
                                     className="link editButton"
                                     data-modal="action-editmodal"
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                    }}
                                     onClick={(e) => handleEditClickID(e, item)}
                                   >
                                     <FilePenLine style={{ color: "#1f4529" }} />
@@ -333,6 +338,11 @@ const Subject = () => {
                                     href="#"
                                     className="link custom-open-modal-btn openModalBtn deleteButton"
                                     data-modal="action-deletemodal"
+                                    style={{
+                                      background: "none",
+                                      border: "none",
+                                      cursor: "pointer",
+                                    }}
                                   >
                                     <Trash
                                       style={{ color: "lightcoral" }}
@@ -400,7 +410,7 @@ const Subject = () => {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2023. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
           {/* <!-- Table End -->
 

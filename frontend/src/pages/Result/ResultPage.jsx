@@ -68,7 +68,7 @@ const ResultPage = () => {
 
     const query = new URLSearchParams({
       roll: classRoll,
-      section: selectedClass.value,
+      section: selectedSection.value,
       className: selectedClass.value,
       shift: selectedShift.value,
       session: selectedSession.value,
@@ -79,7 +79,7 @@ const ResultPage = () => {
       "url search params : ",
       new URLSearchParams({
         roll: classRoll,
-        section: selectedClass.value,
+        section: selectedSection.value,
         className: selectedClass.value,
         shift: selectedShift.value,
         session: selectedSession.value,
@@ -88,7 +88,7 @@ const ResultPage = () => {
     );
     console.log("query string : ", query);
 
-    navigate(`/ok/mark-sheet?${query}`);
+    navigate(`/exam-management/mark-sheet?${query}`);
   };
 
   useEffect(() => {

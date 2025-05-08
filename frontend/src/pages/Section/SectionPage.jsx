@@ -1,36 +1,60 @@
 import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
-import { FilePenLine, Trash } from "lucide-react";
+import "../../assets/css/all-modal.css";
 import {
-  useAddClass,
-  useDeleteClass,
-  useFetchPaginatedClasses,
-  useUpdateClass,
-} from "../../hook/useClass.js";
+  useAddSections,
+  useDeleteSection,
+  useFetchPaginatedSections,
+  useUpdateSection,
+} from "../../hook/useSection.js";
+import { FilePenLine, Trash } from "lucide-react";
+import { Toaster } from "sonner";
 import ShimmerTable from "../../components/shimmer/ShimmerTable.jsx";
 
-const ClassPage = () => {
+const SectionPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [section, setSection] = useState("");
+  const [sectionStatus, setSectionStatus] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [keyword, setKeyword] = useState("");
-
-  const [className, setClassName] = useState("");
-  const [classStatus, setClassStatus] = useState("");
-  const [editClassId, setEditClassId] = useState("");
+  const [editSectionId, setEditSectionId] = useState("");
   const [deletedID, setDeletedID] = useState("");
   const [warn, setWarn] = useState("");
+  const { mutate: addSection } = useAddSections();
+  const { mutate: updateSection } = useUpdateSection();
+  const { mutate: deleteSection } = useDeleteSection();
+
   const {
-    data: classes,
+    data: sections,
     isPending,
     isError,
     error,
-  } = useFetchPaginatedClasses({ page, limit, keyword });
-  const { mutate: addClass } = useAddClass();
-  const { mutate: deleteClass } = useDeleteClass();
-  const { mutate: updateClass } = useUpdateClass();
+  } = useFetchPaginatedSections({ page, limit, keyword });
+
+  useEffect(() => {
+    if (isAddModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
+  }, [isAddModalOpen]);
+
+  useEffect(() => {
+    if (isEditModalOpen) {
+      document.body.style.overflow = "hidden"; // ✅ Disable scrolling when modal is open
+    } else {
+      document.body.style.overflow = ""; // ✅ Enable scrolling when modal is closed
+    }
+  }, [isEditModalOpen]);
+
+  // add class modal options
+  const sectionStatusOptions = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "inactive", label: "Inactive" },
+  ];
 
   const entriesOptions = [
     { value: 5, label: "5" },
@@ -41,76 +65,66 @@ const ClassPage = () => {
     { value: 100, label: "100" },
   ];
 
-  // ✅ Enable-Disable scrolling when modal is open-close
-  useEffect(() => {
-    document.body.style.overflow = isAddModalOpen ? "hidden" : "";
-  }, [isAddModalOpen]);
-
-  useEffect(() => {
-    document.body.style.overflow = isEditModalOpen ? "hidden" : "";
-  }, [isEditModalOpen]);
-
-  const classNameOptions = [
-    { value: "active", label: "Active" },
-    { value: "pending", label: "Pending" },
-    { value: "inactive", label: "Inactive" },
-  ];
-
-  const handleSubmit = (e) => {
+  //
+  const handleAddSubmit = (e) => {
     e.preventDefault();
 
-    if (!className.trim()) {
-      setWarn("Class name is required and cannot be empty");
+    if (!section.trim()) {
+      setWarn("name is required and cannot be empty");
       return;
     }
 
-    const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
-    console.log("status : ", classStatus);
-    console.log("class name ", className);
+    const label =
+      sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
+
     const payload = {
-      name: className,
+      name: section,
+      status: sectionStatus || "active",
       label: label || "Active",
-      status: classStatus || "active",
     };
+
+    console.log("before payload : ", payload);
+
     console.log("payload", payload);
-    addClass(payload);
+    addSection(payload);
     setWarn("");
-    setClassName("");
-    setClassStatus("");
+    setSection("");
+    setSectionStatus("");
     setIsAddModalOpen(false);
   };
 
   const handleEditClick = (e, item) => {
     e.preventDefault();
-    console.log("Edit button clicked for class:", item);
-    console.log("Edit button clicked for class id :", item?._id);
-    setEditClassId(item?._id);
-    setClassName(item?.name);
-    setClassStatus(item?.status);
+    console.log("Edit button clicked for section:", item);
+    console.log("Edit button clicked for section id :", item?._id);
+    setEditSectionId(item?._id);
+    setSection(item?.name);
+    setSectionStatus(item?.status);
     setIsEditModalOpen(true);
   };
 
   const handleEditSubmit = (e) => {
     e.preventDefault();
 
-    if (!className) {
-      setWarn("Class name is required and cannot be empty");
+    if (!section) {
+      setWarn("Section name is required and cannot be empty");
       return;
     }
 
-    const label = classStatus?.charAt(0).toUpperCase() + classStatus.slice(1);
+    const label =
+      sectionStatus?.charAt(0).toUpperCase() + sectionStatus.slice(1);
 
     const updatedPayload = {
-      name: className,
+      name: section,
       label: label || "Active",
-      status: classStatus || "active",
+      status: sectionStatus || "active",
     };
 
-    updateClass({ classId: editClassId, payload: updatedPayload });
-    setClassName("");
-    setClassStatus("");
+    updateSection({ sectionId: editSectionId, payload: updatedPayload });
+    setSection("");
+    setSectionStatus("");
     setWarn("");
-    setEditClassId("");
+    setEditSectionId("");
     setIsEditModalOpen(false);
   };
 
@@ -121,12 +135,11 @@ const ClassPage = () => {
     setIsDeleteModalOpen(!isDeleteModalOpen);
   };
 
-  const handleClassDelete = (e) => {
+  const handleSectionDelete = (e) => {
     e.preventDefault();
-    console.log("after deleting  class value : ", classes);
-    deleteClass(deletedID, {
+    deleteSection(deletedID, {
       onSuccess: () => {
-        if (classes?.count === 1 && page > 1) {
+        if (sections?.data?.length === 1 && page > 1) {
           setPage((prev) => prev - 1);
         }
       },
@@ -141,25 +154,11 @@ const ClassPage = () => {
     setKeyword(e.target.value);
   };
 
-  if (isError) {
-    console.log("inside class list error : ", error);
-    if (error instanceof Error) {
-      const errorMsg =
-        error.response?.data?.message ||
-        error.message ||
-        "Something went wrong. Please! try again later!";
-
-      return <p>{errorMsg}</p>;
-    }
-  }
-
   return (
     <>
       <Toaster position="top-right" richColors />
+
       {/* <!-- Hero Main Content Start --> */}
-
-      {/* Sidebar */}
-
       <div className="main-content">
         <div className="page-content">
           <div className="data-table">
@@ -167,15 +166,14 @@ const ClassPage = () => {
               <div className="card-body">
                 {/* <!-- Class heading Start --> */}
                 <div className="class-heading">
-                  <h3 className="heading">Class List</h3>
+                  <h3 className="heading">Section List</h3>
                   <button
                     className="create-cls-btn"
-                    onClick={() => setIsAddModalOpen(true)}
+                    onClick={() => setIsAddModalOpen(!isAddModalOpen)}
                   >
-                    Add Class
+                    Add Section
                   </button>
                 </div>
-
                 {/* <!-- Class heading End --> */}
 
                 {/* <!-- Action Buttons --> */}
@@ -218,7 +216,7 @@ const ClassPage = () => {
                         type="text"
                         id="searchInput"
                         className="form-control"
-                        placeholder="Search Class..."
+                        placeholder="Search Section..."
                         value={keyword}
                         onChange={handleSearchQuery}
                       />
@@ -235,7 +233,7 @@ const ClassPage = () => {
                     <thead>
                       <tr>
                         <th>Sl No:</th>
-                        <th>Class Name</th>
+                        <th>Section Name</th>
                         <th>Status</th>
                         <th>Action</th>
                       </tr>
@@ -253,66 +251,72 @@ const ClassPage = () => {
                             </div>
                           </td>
                         </tr>
-                      ) : classes?.totalEntries <= 0 ? (
+                      ) : sections?.totalEntries <= 0 ? (
                         <tr>
                           <td colSpan={4} style={{ textAlign: "center" }}>
-                            No Section found
+                            No Entries found
                           </td>
                         </tr>
                       ) : (
-                        classes?.data?.length > 0 &&
-                        classes?.data?.map((item, index) => (
-                          <tr key={item?._id}>
-                            <td>
-                              {String((page - 1) * limit + index + 1).padStart(
-                                2,
-                                "0",
-                              )}
-                            </td>
-                            <td>{item?.nameLabel}</td>
-                            <td>{item?.label}</td>
+                        sections?.data?.length > 0 &&
+                        sections?.data?.map((item, idx) => {
+                          return (
+                            <tr key={item?._id}>
+                              <td>
+                                {String((page - 1) * limit + idx + 1).padStart(
+                                  2,
+                                  "0",
+                                )}
+                              </td>
+                              <td>{item?.nameLabel}</td>
+                              <td>{item?.label}</td>
 
-                            <td>
-                              <div id="action_btn">
-                                <div style={{ display: "flex", gap: "8px" }}>
-                                  <button
-                                    href="#"
-                                    className="link editButton"
-                                    data-modal="action-editmodal"
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={(e) => handleEditClick(e, item)}
-                                  >
-                                    <FilePenLine style={{ color: "#1f4529" }} />
-                                  </button>
+                              <td>
+                                <div id="action_btn">
+                                  <div style={{ display: "flex", gap: "8px" }}>
+                                    <button
+                                      href="#"
+                                      className="link editButton"
+                                      data-modal="action-editmodal"
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={(e) => handleEditClick(e, item)}
+                                    >
+                                      <FilePenLine
+                                        style={{ color: "#1f4529" }}
+                                      />
+                                    </button>
 
-                                  <button
-                                    href="#"
-                                    className="link custom-open-modal-btn openModalBtn deleteButton"
-                                    data-modal="action-deletemodal"
-                                    style={{
-                                      background: "none",
-                                      border: "none",
-                                      cursor: "pointer",
-                                    }}
-                                  >
-                                    <Trash
-                                      style={{ color: "lightcoral" }}
-                                      onClick={(e) => handleDeletedID(e, item)}
-                                    />
-                                  </button>
-                                </div>
+                                    <button
+                                      href="#"
+                                      className="link custom-open-modal-btn openModalBtn deleteButton"
+                                      data-modal="action-deletemodal"
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      <Trash
+                                        style={{ color: "lightcoral" }}
+                                        onClick={(e) =>
+                                          handleDeletedID(e, item)
+                                        }
+                                      />
+                                    </button>
+                                  </div>
 
-                                {/* <!-- <button class="quick-view quickButton">
+                                  {/* <!-- <button class="quick-view quickButton">
                             <i class="fa-regular fa-eye"></i>
                           </button> --> */}
-                              </div>
-                            </td>
-                          </tr>
-                        ))
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
                       )}
                     </tbody>
                   </table>
@@ -321,17 +325,17 @@ const ClassPage = () => {
                 {isPending || (
                   <div className="my-3">
                     <span id="display-info">
-                      {classes?.totalEntries
+                      {sections?.totalEntries
                         ? `Showing ${Math.min(
-                            limit * classes?.currentPage,
-                            classes?.totalEntries,
-                          )} of ${classes?.totalEntries} entries`
+                            limit * sections?.currentPage,
+                            sections?.totalEntries,
+                          )} of ${sections?.totalEntries} entries`
                         : ""}
                     </span>
                   </div>
                 )}
 
-                {classes?.totalPages > 1 && !isPending && (
+                {sections?.totalPages > 1 && !isPending && (
                   <div id="pagination" className="pagination">
                     {page > 1 && (
                       <button
@@ -344,15 +348,15 @@ const ClassPage = () => {
                       </button>
                     )}
 
-                    {`${page} of ${Number(classes?.totalPages)}`}
+                    {`${page} of ${Number(sections?.totalPages)}`}
 
-                    {page < classes?.totalPages && (
+                    {page < sections?.totalPages && (
                       <button
                         id="nextBtn"
                         className="btn"
                         onClick={() =>
                           setPage((prev) =>
-                            Math.min(prev + 1, classes?.totalPages),
+                            Math.min(prev + 1, sections?.totalPages),
                           )
                         }
                       >
@@ -364,13 +368,12 @@ const ClassPage = () => {
               </div>
             </div>
           </div>
-
           <div className="copyright">
             <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
           </div>
-          {/* <!-- Table End --> */}
+          {/* <!-- Table End -->
 
-          {/* <!-- Table Action Button Modal Start -->
+        <!-- Table Action Button Modal Start -->
         <!-- Confirmation Modal Start --> */}
           {isDeleteModalOpen && (
             <div
@@ -381,7 +384,7 @@ const ClassPage = () => {
               <div className="modal-content">
                 <p>Are you sure you want to delete this item?</p>
                 <div className="modal-buttons">
-                  <button id="confirmYes" onClick={handleClassDelete}>
+                  <button id="confirmYes" onClick={handleSectionDelete}>
                     Yes
                   </button>
                   <button
@@ -394,7 +397,6 @@ const ClassPage = () => {
               </div>
             </div>
           )}
-
           {/* <!-- Confirmation Modal End -->
         <!-- Edit Modal Start --> */}
           <div id="editModal" className="modal">
@@ -419,49 +421,52 @@ const ClassPage = () => {
         <!-- Quick View Modal End -->
         <!-- Table Action Button Modal Start -->
 
-        <!-- Create Class Pop Up Modal Start --> */}
-          <div className="createClassModal">
+        <!-- Section Add Pop Up Modal Start --> */}
+          <div className="section-modal">
             {isAddModalOpen && (
-              <section id="createClassModal" className="modal show">
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
                 <div className="modal-content">
                   <div id="popup-modal">
                     <div className="form-container">
-                      <h3>Add Class</h3>
+                      <h3>Add Section</h3>
                       <form>
                         {/* <!-- Row 1 --> */}
-                        <div className="form-row">
+                        <div
+                          className="form-row"
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <div className="form-group">
                             <label htmlFor="search-students">
-                              Class Name *
+                              Section Name *
                             </label>
                             <input
                               type="text"
                               id="search-students"
-                              placeholder="Class"
-                              value={className}
-                              onChange={(e) => setClassName(e.target.value)}
+                              placeholder="Section Name"
+                              value={section}
+                              onChange={(e) => setSection(e.target.value)}
                             />
                           </div>
-                        </div>
-                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
-                        <div className="form-row">
+
+                          {warn && (
+                            <p style={{ color: "lightcoral" }}>{warn}</p>
+                          )}
+
                           <div className="form-group">
-                            <label htmlFor="search-students">
-                              Status Name *
-                            </label>
+                            <label htmlFor="search-students">Status *</label>
                             <select
-                              id="search-students"
-                              placeholder="Class"
-                              value={classStatus}
-                              onChange={(e) => setClassStatus(e.target.value)}
+                              value={sectionStatus}
+                              onChange={(e) => setSectionStatus(e.target.value)}
                             >
                               <option value="" disabled>
-                                Select Status
+                                Select status
                               </option>
-
-                              {classNameOptions?.map((option, index) => (
-                                <option key={index} value={option?.value}>
-                                  {option?.label}
+                              {sectionStatusOptions.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                  {option.label}
                                 </option>
                               ))}
                             </select>
@@ -472,15 +477,16 @@ const ClassPage = () => {
                         <div className="form-actions">
                           <button
                             type="button"
+                            id="classBtn"
                             className="button close closeBtn"
-                            onClick={() => setIsAddModalOpen(false)}
+                            onClick={() => setIsAddModalOpen(!isAddModalOpen)}
                           >
                             Close
                           </button>
                           <button
                             type="button"
                             className="button save"
-                            onClick={handleSubmit}
+                            onClick={handleAddSubmit}
                           >
                             Save
                           </button>
@@ -492,52 +498,51 @@ const ClassPage = () => {
               </section>
             )}
           </div>
+          {/* <!-- Section Add Pop Up Modal Start --> */}
 
-          {/* <!-- Create Class Pop Up Modal Start --> */}
+          {/* <!-- Section Edit Pop Up Modal Start --> */}
 
-          {/* <!-- Edit Class Pop Up Modal Start --> */}
-          <div className="createClassModal">
+          <div className="section-modal">
             {isEditModalOpen && (
-              <section id="createClassModal" className="modal show">
+              <section
+                id="createClassModal"
+                className="modal migrateModal show"
+              >
                 <div className="modal-content">
                   <div id="popup-modal">
                     <div className="form-container">
-                      <h3>Update Class</h3>
+                      <h3>Update Section</h3>
                       <form>
                         {/* <!-- Row 1 --> */}
-                        <div className="form-row">
+                        <div
+                          className="form-row"
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <div className="form-group">
                             <label htmlFor="search-students">
-                              Class Name *
+                              Section Name *
                             </label>
                             <input
                               type="text"
                               id="search-students"
-                              placeholder="Class"
-                              value={className}
-                              onChange={(e) => setClassName(e.target.value)}
+                              placeholder="Section Name"
+                              value={section}
+                              onChange={(e) => setSection(e.target.value)}
                             />
                           </div>
-                        </div>
-                        {warn && <p style={{ color: "lightcoral" }}>{warn}</p>}
-                        <div className="form-row">
+
                           <div className="form-group">
-                            <label htmlFor="search-students">
-                              Status Name *
-                            </label>
+                            <label htmlFor="search-students">Status *</label>
                             <select
-                              id="search-students"
-                              placeholder="Class"
-                              value={classStatus}
-                              onChange={(e) => setClassStatus(e.target.value)}
+                              value={sectionStatus}
+                              onChange={(e) => setSectionStatus(e.target.value)}
                             >
                               <option value="" disabled>
-                                Select Status
+                                Select status
                               </option>
-
-                              {classNameOptions?.map((option, index) => (
-                                <option key={index} value={option?.value}>
-                                  {option?.label}
+                              {sectionStatusOptions.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                  {option.label}
                                 </option>
                               ))}
                             </select>
@@ -548,8 +553,9 @@ const ClassPage = () => {
                         <div className="form-actions">
                           <button
                             type="button"
+                            id="classBtn"
                             className="button close closeBtn"
-                            onClick={() => setIsEditModalOpen(false)}
+                            onClick={() => setIsEditModalOpen(!isEditModalOpen)}
                           >
                             Close
                           </button>
@@ -569,13 +575,11 @@ const ClassPage = () => {
             )}
           </div>
 
-          {/* <!-- Edit Class Pop Up Modal Start --> */}
+          {/* <!-- Section Edit Pop Up Modal Start --> */}
         </div>
       </div>
-
       {/* <!-- Hero Main Content End --> */}
     </>
   );
 };
-
-export default ClassPage;
+export default SectionPage;

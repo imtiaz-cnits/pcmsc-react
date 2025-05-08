@@ -96,22 +96,23 @@ async function getAllPaginatedSession(req, res, next) {
     const limit = parseInt(req.query.limit, 10) || 5;
     const skip = (page - 1) * limit;
 
-    const sessions = await Session.find({}).skip(skip).limit(limit);
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const sessions = await Session.find(searchQuery).skip(skip).limit(limit);
 
     const total = await Session.countDocuments();
 
     const totalPages = Math.ceil(total / limit);
-
-    // if (total <= 0) {
-    //   console.log("⚠️ No shifts found");
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "No shifts found",
-    //     currentPage: page,
-    //     totalPages,
-    //     total,
-    //   });
-    // }
 
     console.log("✅ Retrieved session: ", sessions);
     return res.status(200).json({
@@ -119,7 +120,7 @@ async function getAllPaginatedSession(req, res, next) {
       count: sessions.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: sessions,
     });
   } catch (error) {
@@ -155,13 +156,14 @@ async function updateSession(req, res, next) {
   try {
     console.log("session params : ", req.params);
     const { id: sessionId } = req.params;
-    const updatePayload = req.body;
+    const { name: section, label, status } = req.body;
 
-    console.log(
-      `🔄 Updating session [ID: ${sessionId}] with data:`,
-      updatePayload,
-    );
-
+    const updatePayload = {
+      name: section,
+      nameLabel: section.charAt(0).toUpperCase() + section.slice(1),
+      label,
+      status,
+    };
     const updatedSession = await Session.findByIdAndUpdate(
       sessionId,
       updatePayload,
@@ -170,11 +172,6 @@ async function updateSession(req, res, next) {
         runValidators: true,
       },
     );
-
-    if (!updatedSession) {
-      console.warn(`⚠️ Session not found [ID: ${sessionId}]`);
-      return next(createError(404, "Session not found!"));
-    }
 
     console.log("✅ Successfully updated session:", updatedSession);
 
@@ -185,6 +182,22 @@ async function updateSession(req, res, next) {
     });
   } catch (error) {
     console.error("❌ Error updating session:", error);
+    if (error.name === "ValidationError") {
+      return res.status(403).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    // MongoServerError
+    if (error.name === "MongoServerError") {
+      if (error.errorResponse.code === 11000) {
+        return res.status(403).json({
+          success: false,
+          error: "MongoServerError",
+          message: "Section already exists!",
+        });
+      }
+    }
     return next(error);
   }
 }

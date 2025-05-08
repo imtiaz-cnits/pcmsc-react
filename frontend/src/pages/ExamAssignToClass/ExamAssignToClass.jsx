@@ -354,7 +354,11 @@ const ExamAssignToclassName = () => {
                             </td>
                             <td>{item?.session?.nameLabel}</td>
                             <td>{item?.examName?.examTypeName}</td>
-                            <td>{item?.className?.nameLabel}</td>
+                            <td>
+                              {item?.className
+                                ?.map((item) => item.nameLabel)
+                                .join(", ")}
+                            </td>
                             <td>{item?.examDate}</td>
                             <td>
                               {new Date(item?.resultDateTime)
@@ -541,6 +545,7 @@ const ExamAssignToclassName = () => {
                           <div className="form-group col-12">
                             <label htmlFor="shift">Class Name*</label>
                             <Select
+                              isMulti
                               options={classOptions}
                               value={className}
                               onChange={setClassName}

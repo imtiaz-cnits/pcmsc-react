@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createError = require("http-errors");
 const Group = require("../../models/groupModel");
 
@@ -7,19 +8,8 @@ async function addGroup(req, res, next) {
     console.log("📥 Received group data: ", req.body);
     const { name, status, label } = req.body;
 
-    // if (!name || !status || !label) {
-    //   return next(createError(709, "All fields required"));
-    // }
-
-    // check if already exists
-    // todo fixed !already exits or not issue
     const existingGroup = await Group.findOne({ name });
     const totalDocuments = await Group.countDocuments();
-
-    // console.log("existing group and total documents  : ", {
-    //   count: totalDocuments,
-    //   data: existingGroup,
-    // });
 
     if (existingGroup) {
       return next(createError(403, "Already exists!"));
@@ -33,8 +23,6 @@ async function addGroup(req, res, next) {
       status,
     });
 
-    // console.log("🚀 Adding Group to DB: ", newGroup);
-
     await newGroup.save();
 
     return res.status(200).json({
@@ -44,8 +32,6 @@ async function addGroup(req, res, next) {
       data: newGroup,
     });
   } catch (error) {
-    // console.log(" 📌 addSession Error : ", error);
-    // custom Mongoose Error
     if (error.name === "ValidationError") {
       return res.status(403).json({
         success: false,
@@ -93,13 +79,69 @@ async function getAllGroups(req, res, next) {
   }
 }
 
+// 📝 Get all class with pagination
+async function getAllPaginatedGroups(req, res, next) {
+  try {
+    console.log("query : ", req.query);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+    const skip = (page - 1) * limit;
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const groups = await Group.find(searchQuery).skip(skip).limit(limit);
+
+    const total = await Group.countDocuments();
+
+    const totalPages = Math.ceil(total / limit);
+
+    return res.status(200).json({
+      success: true,
+      count: groups.length,
+      currentPage: page,
+      totalPages,
+      totalEntries: total,
+      data: groups,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching groups: ", error);
+    return next(error);
+  }
+}
+
 // 📝 update group
 async function updateGroup(req, res, next) {
   try {
-    const { id } = req.params;
-    const payload = req.body;
+    console.log("params value : ", req.params);
+    console.log("body value : ", req.body);
 
-    const existingGroup = await Group.findOne({ name: payload.name });
+    const { id } = req.params;
+    const { name, label, status } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid grade type ID."));
+    }
+
+    const payload = {
+      name,
+      nameLabel: name,
+      label: label || "Active",
+      status: status || "active",
+    };
+
+    const existingGroup = await Group.findOne({
+      name: payload.name,
+      _id: { $ne: id },
+    });
 
     if (existingGroup) {
       return next(createError(403, "Already Exists!"));
@@ -109,11 +151,12 @@ async function updateGroup(req, res, next) {
       new: true,
       runValidators: true,
     });
-    const totalDocuments = await Group.countDocuments();
 
     if (!updatedItem) {
       return next(createError(404, "Group not found!"));
     }
+
+    const totalDocuments = await Group.countDocuments();
 
     console.log("🚀 update item value and counts : ", {
       count: totalDocuments,
@@ -161,4 +204,10 @@ async function deleteGroup(req, res, next) {
   }
 }
 
-module.exports = { addGroup, getAllGroups, updateGroup, deleteGroup };
+module.exports = {
+  addGroup,
+  getAllGroups,
+  updateGroup,
+  deleteGroup,
+  getAllPaginatedGroups,
+};

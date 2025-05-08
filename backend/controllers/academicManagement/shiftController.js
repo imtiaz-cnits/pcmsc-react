@@ -1,4 +1,5 @@
 // external imports
+const mongoose = require("mongoose");
 
 const createError = require("http-errors");
 const Shift = require("../../models/shiftModel");
@@ -102,31 +103,27 @@ async function getAllShift(req, res, next) {
 // 📝 Get all shifts with pagination
 async function getAllShiftsPagination(req, res, next) {
   try {
-    // console.log("📥 Received request for shifts: ", req.query);
-
-    // const limit = Math.max(parseInt(req.query.limit, 10) || 5, 1);
-    // const skip = Math.max(parseInt(req.query.skip, 10) || 0, 0);
-
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 5;
     const skip = (page - 1) * limit;
 
-    const shifts = await Shift.find({}).skip(skip).limit(limit);
+    const { keyword } = req.query;
+    const searchQuery = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { nameLabel: { $regex: keyword, $options: "i" } },
+            { label: { $regex: keyword, $options: "i" } },
+            { status: { $regex: keyword, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const shifts = await Shift.find(searchQuery).skip(skip).limit(limit);
 
     const total = await Shift.countDocuments();
 
     const totalPages = Math.ceil(total / limit);
-
-    // if (total <= 0) {
-    //   console.log("⚠️ No shifts found");
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "No shifts found",
-    //     currentPage: page,
-    //     totalPages,
-    //     total,
-    //   });
-    // }
 
     console.log("✅ Retrieved shifts: ", shifts);
     return res.status(200).json({
@@ -134,7 +131,7 @@ async function getAllShiftsPagination(req, res, next) {
       count: shifts.length,
       currentPage: page,
       totalPages,
-      total,
+      totalEntries: total,
       data: shifts,
     });
   } catch (error) {
@@ -143,69 +140,41 @@ async function getAllShiftsPagination(req, res, next) {
   }
 }
 
-// 📝 Get all shifts with entries
-async function getAllShiftsEntries(req, res, next) {
-  try {
-    // console.log("entries value :", req.query);
-    const entries = parseInt(req.query.limit, 10);
-
-    // console.log("entries value and tyeof : ", entries, typeof entries);
-
-    const entriesValue = await Shift.find({}).limit(entries);
-
-    const totalEntries = await Shift.countDocuments();
-
-    if (totalEntries < 1) {
-      return next(createError(403, "not found"));
-    }
-
-    return res.status(200).json({
-      success: true,
-      totalEntries,
-      data: entriesValue,
-    });
-  } catch (error) {
-    console.log("entries error : ", error);
-    return next(error);
-  }
-}
-
 // 📝 Update Shift
 async function updateShift(req, res, next) {
   try {
-    // console.log("shift params : ", req.params);
-    const { id: shiftId } = req.params;
-    const { shift, label, status } = req.body;
+    const { id } = req.params;
+    const { name, label, status } = req.body;
 
-    // console.log(`🔄 Updating section [ID: ${shiftId}] with data:`, req.body);
-
-    // updated payload
-    const updatePayload = {
-      name: shift,
-      label,
-      status,
-    };
-
-    // console.log(
-    //   `🔄 Before => Updating shift [ID: ${shiftId}] with data:`,
-    //   updatePayload,
-    // );
-
-    const updatedShift = await Shift.findByIdAndUpdate(shiftId, updatePayload, {
-      new: true,
-    });
-
-    if (!updatedShift) {
-      console.warn(`⚠️ Shift not found [ID: ${shiftId}]`);
-      return next(createError(404, "Shift not found!"));
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createError(400, "Invalid grade type ID."));
     }
 
-    // console.log("✅ Successfully updated shift:", updatedShift);
+    const payload = {
+      name,
+      nameLabel: name,
+      label: label || "Active",
+      status: status || "active",
+    };
+
+    const existingItem = await Shift.findOne({
+      name: payload.shift,
+      _id: { $ne: id },
+    });
+
+    if (existingItem) {
+      return next(createError(403, "Already Exists!"));
+    }
+
+    const updatedShift = await Shift.findByIdAndUpdate(id, payload, {
+      new: true,
+      runValidators: true,
+    });
 
     return res.status(200).json({
       success: true,
       message: "Shift updated successfully!",
-      data: updatedShift, // ✅ Use `data` instead of `updatedData` for consistency
+      data: updatedShift,
     });
   } catch (error) {
     console.error("❌ Error updating shift:", error);
@@ -251,5 +220,4 @@ module.exports = {
   getAllShiftsPagination,
   updateShift,
   deleteShift,
-  getAllShiftsEntries,
 };

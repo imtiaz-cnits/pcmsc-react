@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   addShiftAPI,
   deleteShiftAPI,
@@ -14,50 +14,17 @@ import {
   updateShiftAPI,
 } from "../api/academic-management/shiftApi.js";
 
-//POST - method
-//todo optimistic opacity
 export const useAddShifts = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addShiftAPI,
 
-    // 📝 Optimistic Update: Before API Call
-    // onMutate: async (variables) => {
-    //   console.log("⏳ [Shift] Attempting to add shift:", variables);
-
-    //   await queryClient.cancelQueries({ queryKey: ["shifts"] });
-
-    //   const prevShifts = queryClient.getQueryData(["shifts"]);
-
-    //   console.log("🔍 Before Update (Cache Data):", prevShifts);
-
-    //   const afterOptimistic = queryClient.setQueryData(
-    //     ["shifts"],
-    //     (oldData) => {
-    //       console.log("inside optimistic old data : ", oldData);
-
-    //       return [
-    //         ...(Array.isArray(oldData) ? oldData : []),
-    //         { ...variables, id: Date.now() },
-    //       ];
-    //     },
-    //   );
-
-    //   console.log("✅ After Optimistic Update (Cache Data):", afterOptimistic);
-
-    //   return { prevShifts };
-    // },
-
     onError: (error) => {
       console.log("error adding session : ", error);
-      // ⚙️ rollback cache
-      // if (context?.prevShifts) {
-      //   queryClient.setQueryData(["shifts"], context.prevShifts);
-      // }
 
       if (error.response) {
-        toast(
+        toast.error(
           error.response?.data?.message || "Failed to add session . Try again!",
         );
       }
@@ -72,20 +39,11 @@ export const useAddShifts = () => {
     onSuccess: async (data, variables) => {
       console.log("✅ Shifts added successfully: ", data);
       console.log("Shifts variables : ", variables);
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
 
       if (data?.success) {
-        toast("Shifts added successfully");
+        toast.success(data?.message);
       }
-
-      // queryClient.setQueryData(["shifts"], (oldData) => {
-      //   return [...oldData, data];
-      // });
-      // await queryClient.invalidateQueries({ queryKey: ["shifts"] });
-      // console.log(
-      //   "✅ After Backend Response (Cache Data): ",
-      //   queryClient.getQueryData(["shifts"]),
-      // );
-      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
     },
 
     onSettled: async () => {
@@ -111,10 +69,10 @@ export const useFetchShifts = () => {
 };
 
 // ✅  GET - method (paginated)
-export const useFetchPaginatedShifts = (page) => {
+export const useFetchPaginatedShifts = ({ page, limit, keyword }) => {
   return useQuery({
-    queryKey: ["shifts", page],
-    queryFn: () => fetchedPaginatedShifts(page),
+    queryKey: ["shifts", { page, limit, keyword }],
+    queryFn: () => fetchedPaginatedShifts(page, limit, keyword),
     gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 3,
     placeholderData: keepPreviousData,
@@ -140,22 +98,13 @@ export const useUpdateShift = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    // mutationFn: async ({ shiftId, updatedData }) => {
-    //   console.log("inside mutation session id : ", shiftId);
-    //   const res = await axiosPrivate.patch(
-    //     `/academic-management/shift/${shiftId}`,
-    //     updatedData,
-    //   );
-    //   console.log("mutation updated", res);
-    //   return res.data;
-    // },
     mutationFn: updateShiftAPI,
 
     onError: (error) => {
       console.log("error updating shift : ", error);
 
       if (error?.response) {
-        toast(error.response?.data?.message);
+        toast.error(error.response?.data?.message);
       }
 
       console.log(
@@ -165,7 +114,14 @@ export const useUpdateShift = () => {
           "Failed to delete shift . Try again!",
       );
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ["shifts"] });
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+
+    onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: ["shifts"] });
     },
   });
@@ -230,9 +186,11 @@ export const useDeleteShift = () => {
     // ✅ Success: Invalidate and Refetch Data
     onSuccess: async (data) => {
       console.log("✅ Shift deleted successfully: ", data);
-      toast.success(data?.message || "Shift deleted successfully!");
 
       await queryClient.invalidateQueries({ queryKey: ["shifts"] });
+      if (data?.success) {
+        toast.success(data?.message);
+      }
 
       // queryClient.setQueryData(["shifts"], (oldData) =>
       //   oldData?.filter((shift) => shift._id !== variables),

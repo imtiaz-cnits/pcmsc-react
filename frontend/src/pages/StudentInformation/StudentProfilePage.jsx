@@ -3,11 +3,11 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../../assets/css/all-modal.css";
 import "../../assets/css/style.css";
-import Shimmer from "../../components/Shimmer";
 import {
   useDeleteStudent,
   useFetchPaginatedStudent,
 } from "../../hook/useStudent";
+import ShimmerTable from "../../components/shimmer/ShimmerTable";
 
 const StudentProfilePage = () => {
   const [isQuickViewModalOpen, setIsQuickViewModalOpen] = useState(false);
@@ -509,7 +509,7 @@ const StudentProfilePage = () => {
                           </td>
                         </tr>
                       ) : isPending ? (
-                        <Shimmer count={10} />
+                        <ShimmerTable rows={limit} cols={11} />
                       ) : students?.data?.length > 0 ? (
                         students?.data?.map((item, index) => (
                           <tr key={item?._id} data-date={item?.admissionDate}>

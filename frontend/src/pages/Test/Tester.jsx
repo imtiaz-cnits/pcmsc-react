@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
-import Select from "react-select";
-import { Toaster } from "sonner";
+import { useState } from "react";
 import { useFetchClasses } from "../../hook/useClass";
-import { useFetchExamTypes } from "../../hook/useExamType";
-import { useFetchEligibleStudents, useMarkEntry } from "../../hook/useMark";
-import { useFetchSections } from "../../hook/useSection";
 import { useFetchSessions } from "../../hook/useSession";
+import { useFetchSections } from "../../hook/useSection";
 import { useFetchShifts } from "../../hook/useShift";
 import { useFetchSubjects } from "../../hook/useSubject";
-import { gradeCal } from "../../utils/gradeCal";
+import { useFetchExamTypes } from "../../hook/useExamType";
+import { useFetchEligibleStudents } from "../../hook/useMark";
+import Select from "react-select";
+import { Toaster } from "sonner";
 
-const MarkEntryPage = () => {
+const Tester = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
   const [selectedSection, setSelectedSsection] = useState(null);
@@ -27,9 +26,6 @@ const MarkEntryPage = () => {
     examName: null,
   });
 
-  const { mutate: markEntry } = useMarkEntry({
-    examName: selectedExam ? selectedExam?.label : null,
-  });
   const { data: classes } = useFetchClasses();
   const { data: sessions } = useFetchSessions();
   const { data: sections } = useFetchSections();
@@ -43,10 +39,6 @@ const MarkEntryPage = () => {
     isError,
     error,
   } = useFetchEligibleStudents(searchFilters);
-
-  useEffect(() => {
-    console.log("exam types : ", selectedExam);
-  }, [selectedExam]);
 
   const classOptions = classes?.data.map((item) => {
     return { value: item._id, label: item.nameLabel };
@@ -92,72 +84,6 @@ const MarkEntryPage = () => {
       examName: selectedExam ? selectedExam.value : null,
     });
   };
-
-  const handleMarkChange = (index, field, value) => {
-    const updated = [...marksData];
-    updated[index][field] = value;
-    setMarksData(updated);
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-
-    const payload = marksData.map((entry) => {
-      const mcq = Number(entry.mcqMark) || 0;
-      const written = Number(entry.writtenMark) || 0;
-      const CA = Number(entry.caMark) || 0;
-      const CT = Number(entry.ctMark) || 0;
-
-      const total = mcq + written + CA + CT;
-
-      const gradeResult = gradeCal(total);
-
-      return {
-        student: entry.student,
-        studentID: entry.studentId,
-        studentName: entry.studentName,
-        studentRoll: entry.studentRoll,
-        className: selectedClass ? selectedClass.value : null,
-        session: selectedSession ? selectedSession.value : null,
-        section: selectedSection ? selectedSection.value : null,
-        shift: selectedShift ? selectedShift.value : null,
-        subject: selectedSubject ? selectedSubject.value : null,
-        examType: selectedExam ? selectedExam.value : null,
-        mcqMark: mcq,
-        writtenMark: written,
-        caMark: CA,
-        ctMark: CT,
-        totalMark: total,
-        letterGrade: gradeResult.letterGrade,
-        gradePoint: gradeResult.gradePoint,
-      };
-    });
-
-    markEntry(payload);
-
-    console.log("payload of backend data : ", payload);
-  };
-
-  useEffect(() => {
-    console.log("now value : ", eligibleStudents?.data);
-    if (eligibleStudents?.data?.length > 0) {
-      const initialized = eligibleStudents?.data?.map((stu) => ({
-        student: stu?._id,
-        studentId: stu?.studentID,
-        studentName: stu?.name,
-        studentRoll: stu?.studentRoll,
-        mcqMark: stu.mcqMark ?? "",
-        writtenMark: stu.writtenMark ?? "",
-        caMark: stu.caMark ?? "",
-        ctMark: stu.ctMark ?? "",
-      }));
-      setMarksData(initialized);
-    }
-  }, [eligibleStudents, searchFilters]);
-
-  useEffect(() => {
-    console.log("search filter value : ", marksData);
-  }, [marksData]);
 
   return (
     <>
@@ -271,111 +197,42 @@ const MarkEntryPage = () => {
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th>Roll</th>
-                        <th>MCQ Mark</th>
                         <th>Written Mark</th>
-                        <th>CA Mark</th>
-                        <th>CT Mark</th>
+                        <th>Oral Mark</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {isPending ? (
-                        <tr>
-                          <td colSpan={6} style={{ textAlign: "center" }}>
-                            Choose Class, Session, Section & Shift to
-                            proceed.....
-                          </td>
-                        </tr>
-                      ) : isError ? (
-                        <tr>
-                          <td colSpan="10">
-                            <div className="error-msg">
-                              {error?.response?.data?.message ||
-                                error?.message ||
-                                "Something went wrong. Please try again!"}
-                            </div>
-                          </td>
-                        </tr>
-                      ) : eligibleStudents?.totalEntries <= 0 ? (
-                        <tr>
-                          <td colSpan={10} style={{ textAlign: "center" }}>
-                            No Entries Found !
-                          </td>
-                        </tr>
-                      ) : (
-                        marksData.map((item, idx) => (
-                          <tr key={idx}>
-                            <td>{String(idx + 1).padStart(2, "0")}</td>
-                            <td>{item?.studentId}</td>
-                            <td>{item?.studentName}</td>
-                            <td>{item?.studentRoll}</td>
-
-                            <td>
-                              <input
-                                type="number"
-                                value={item.mcqMark}
-                                onChange={(e) =>
-                                  handleMarkChange(
-                                    idx,
-                                    "mcqMark",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                value={item.writtenMark}
-                                onChange={(e) =>
-                                  handleMarkChange(
-                                    idx,
-                                    "writtenMark",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                value={item.caMark}
-                                onChange={(e) =>
-                                  handleMarkChange(
-                                    idx,
-                                    "caMark",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                value={item.ctMark}
-                                onChange={(e) =>
-                                  handleMarkChange(
-                                    idx,
-                                    "ctMark",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                            </td>
-                          </tr>
-                        ))
-                      )}
+                      <tr>
+                        <td>01</td>
+                        <td>202423</td>
+                        <td>MD: Shanto</td>
+                        <td>03</td>
+                        <td>
+                          <input type="text" />
+                        </td>
+                        <td>
+                          <input type="text" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>02</td>
+                        <td>202443</td>
+                        <td>MD: siyam</td>
+                        <td>06</td>
+                        <td>
+                          <input type="text" />
+                        </td>
+                        <td>
+                          <input type="text" />
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
-                {isPending || (
-                  <div className="button-wrap">
-                    <button className="mark-btn" onClick={handleSave}>
-                      Save Mark
-                    </button>
-                  </div>
-                )}
+
+                <div className="button-wrap">
+                  <button className="mark-btn">Save Mark</button>
+                </div>
               </div>
             </div>
           </div>
@@ -414,4 +271,4 @@ const MarkEntryPage = () => {
     </>
   );
 };
-export default MarkEntryPage;
+export default Tester;
